@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="library_search_controls">Recherche et filtres</string>
+    <string name="library_search_hide">Masquer la recherche et les filtres</string>
+    <string name="library_search_show">Afficher la recherche et les filtres</string>
+</resources>

@@ -23,9 +23,9 @@ Valkyr rassemble les jeux des sources que *vous* ajoutez dans une seule grande l
 
 *Les captures d’écran utilisent des titres de jeux inventés et des fichiers vides de substitution, et montrent l’application en anglais.*
 
-**Dernière version : [5.6.0](https://github.com/Tufein/Valkyr/releases/tag/v5.6.0)** (build Android 68).
+**Dernière version : [5.7.0](https://github.com/Tufein/Valkyr/releases/tag/v5.7.0)** (build Android 69).
 
-Jusqu’à la 3.9.0, l’application s’appelait Dogmatix+. Valkyr 5.6.0 a son propre identifiant d’application et s’installe donc à côté de l’ancienne : utilisez *Réglages → Sauvegarder* dans l’ancienne appli et *Restaurer une sauvegarde* dans Valkyr, puis supprimez l’ancienne.
+Jusqu’à la 3.9.0, l’application s’appelait Dogmatix+. Valkyr 5.7.0 a son propre identifiant d’application et s’installe donc à côté de l’ancienne : utilisez *Réglages → Sauvegarder* dans l’ancienne appli et *Restaurer une sauvegarde* dans Valkyr, puis supprimez l’ancienne.
 
 ## Installation
 

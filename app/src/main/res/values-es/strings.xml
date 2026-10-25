@@ -1286,7 +1286,7 @@
     <string name="downloads_eta_minutes">unos %1$d min</string>
     <string name="whats_new_title">Novedades de Valkyr %1$s</string>
     <string-array name="whats_new_items">
-        <item>Vincula RomM con un código corto, instala juegos enviados desde la web de RomM y define un orden de fuentes propio para capturas.</item>
+        <item>Pliega la búsqueda, los filtros rápidos y las consolas en una barra compacta para dejar más espacio a los juegos. La búsqueda y los filtros se conservan; toca la barra o pulsa Y para volver a buscar.</item>
     </string-array>
 
     <!-- 4.0 -->

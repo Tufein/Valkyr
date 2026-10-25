@@ -1312,7 +1312,7 @@
     <string name="downloads_eta_minutes">about %1$d min</string>
     <string name="whats_new_title">New in Valkyr %1$s</string>
     <string-array name="whats_new_items">
-        <item>Pair RomM with a short code, install games sent from the RomM web page, and set a separate source order for screenshots.</item>
+        <item>Fold search, quick filters and console chips into one compact bar to give games more room. Your search and filters stay in place; tap the bar or press Y to open search again.</item>
     </string-array>
 
     <!-- 4.0 -->

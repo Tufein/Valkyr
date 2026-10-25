@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="library_search_controls">Zoeken en filters</string>
+    <string name="library_search_hide">Zoeken en filters inklappen</string>
+    <string name="library_search_show">Zoeken en filters uitklappen</string>
+</resources>

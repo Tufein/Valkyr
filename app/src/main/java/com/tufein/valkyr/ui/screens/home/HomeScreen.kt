@@ -101,6 +101,7 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -255,6 +256,21 @@ fun HomeScreen(
     val filterFocus = remember { FocusRequester() }
     val listFocus = remember { FocusRequester() }
     var searchActive by remember { mutableStateOf(false) }
+    var searchCollapsed by rememberSaveable { mutableStateOf(false) }
+    val searchToggleFocus = remember { FocusRequester() }
+    val keyboard = LocalSoftwareKeyboardController.current
+    val activateSearch: () -> Unit = {
+        if (searchCollapsed) {
+            searchCollapsed = false
+            // Compose the inactive field first; its initial unfocused event must not dismiss
+            // the Y shortcut before the field can acquire focus.
+            scope.launch {
+                withFrameNanos { }
+                withFrameNanos { }
+                searchActive = true
+            }
+        } else searchActive = true
+    }
     var filtersHaveFocus by remember { mutableStateOf(false) }
     var listHasFocus by remember { mutableStateOf(false) }
     var showFilterSheet by remember { mutableStateOf(false) }
@@ -287,6 +303,20 @@ fun HomeScreen(
     LaunchedEffect(focusedItem) { SecondScreenState.focus(focusedItem) }
     // With touch there is no cursor: the game whose details are open goes to the second screen.
     LaunchedEffect(detailsState?.item) { detailsState?.item?.let { SecondScreenState.focus(it) } }
+    val setSearchExpanded: (Boolean) -> Unit = { expanded ->
+        if (!expanded) {
+            keyboard?.hide()
+            focusManager.clearFocus()
+            searchActive = false
+        }
+        searchCollapsed = !expanded
+        if (Gamepad.connected.value) scope.launch {
+            withFrameNanos { }
+            withFrameNanos { }
+            val target = if (expanded) searchToggleFocus else if (shelvesNow.value) shelvesFocus else listFocus
+            if (!target.requestFocusWhenReady(3)) searchToggleFocus.requestFocusWhenReady(2)
+        }
+    }
     // Folding hides whichever side holds the focus, so it is handed over explicitly
     // (two frames later when expanding: the panel has to be laid out first).
     val collapseFilters = {
@@ -790,7 +820,7 @@ fun HomeScreen(
     }
 
     // 7.0: the Search shortcut puts the cursor in the search box (the same as the Y button).
-    LaunchedEffect(Unit) { viewModel.searchRequests.collect { searchActive = true } }
+    LaunchedEffect(Unit) { viewModel.searchRequests.collect { activateSearch() } }
     // 3.5.0: "Set up a new handheld" asked for the missing favourites / a collection: its preview.
     LaunchedEffect(Unit) { viewModel.bulkRequests.collect { showBulk = true } }
 
@@ -801,7 +831,7 @@ fun HomeScreen(
                 GamepadButton.X -> focusedItem?.takeIf { listHasFocus }?.let { viewModel.openDetails(it) }
                 // Select stars the row under the cursor, or the game whose details card is open.
                 GamepadButton.FAVOURITE -> (viewModel.details.value?.item ?: focusedItem?.takeIf { listHasFocus })?.let(toggleFavourite)
-                GamepadButton.Y -> searchActive = true
+                GamepadButton.Y -> activateSearch()
                 // 6.0: Start = surprise me (a random game of the current list opens its details card).
                 GamepadButton.START -> if (viewModel.details.value == null && !searchActive) results.randomOrNull()?.let(openGame)
                 GamepadButton.PREV_PANEL -> if (isLandscape) {
@@ -931,29 +961,48 @@ fun HomeScreen(
                             .fillMaxSize()
                             .padding(start = 12.dp, end = 12.dp, top = 12.dp)
                     ) {
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                            SearchField(
-                                value = query,
-                                onValueChange = viewModel::setSearch,
-                                active = searchActive,
-                                onActivate = { searchActive = true },
-                                onDismiss = { searchActive = false; runCatching { (if (shelvesNow.value) shelvesFocus else listFocus).requestFocus() } },
-                                focusRequester = searchFocus,
-                                contentShift = contentShift,
-                                height = SearchHeight,
-                                cornerRadius = 16.dp,
-                                modifier = Modifier.weight(1f)
-                            )
-                            // The panel is folded while the shelves show: this opens it (and the list).
-                            if (showShelves) FilterButton(count = activeFilterCount) { expandFilters() }
-                        }
-                        if (query.isEmpty() && recentSearches.isNotEmpty()) RecentSearchesRow(
-                            recentSearches, onPick = viewModel::setSearch, onClear = viewModel::clearRecentSearches,
-                            modifier = Modifier.padding(top = 8.dp)
+                        LibrarySearchPanel(
+                            expanded = !searchCollapsed,
+                            query = query,
+                            filterCount = activeFilterCount,
+                            onExpandedChange = setSearchExpanded,
+                            toggleFocus = searchToggleFocus,
+                            search = { toggle ->
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                                    SearchField(
+                                        value = query,
+                                        onValueChange = viewModel::setSearch,
+                                        active = searchActive,
+                                        onActivate = activateSearch,
+                                        onDismiss = { searchActive = false; runCatching { (if (shelvesNow.value) shelvesFocus else listFocus).requestFocus() } },
+                                        focusRequester = searchFocus,
+                                        trailing = toggle,
+                                        contentShift = contentShift,
+                                        height = SearchHeight,
+                                        cornerRadius = 16.dp,
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    // The panel is folded while the shelves show: this opens it (and the list).
+                                    if (showShelves) FilterButton(count = activeFilterCount) { expandFilters() }
+                                }
+                            },
+                            controls = {
+                                if (query.isEmpty() && recentSearches.isNotEmpty()) RecentSearchesRow(
+                                    recentSearches, onPick = viewModel::setSearch, onClear = viewModel::clearRecentSearches,
+                                    modifier = Modifier.padding(top = 8.dp)
+                                )
+                                quickRow(Modifier.padding(top = 8.dp), FilterLayout.EDGE_LANDSCAPE)
+                                if (!showShelves) ConsoleChips(
+                                    options = consoleOptions,
+                                    selected = selectedConsoles,
+                                    onSelect = viewModel::setConsoleSelection,
+                                    modifier = Modifier.padding(top = 8.dp),
+                                    horizontalPadding = FilterLayout.EDGE_LANDSCAPE
+                                )
+                            }
                         )
-                        quickRow(Modifier.padding(top = 8.dp), FilterLayout.EDGE_LANDSCAPE)
                         if (showShelves) shelvesPanel(Modifier.weight(1f).padding(top = 8.dp)) {
-                            ConsoleChips(
+                            if (!searchCollapsed) ConsoleChips(
                                 options = consoleOptions,
                                 selected = selectedConsoles,
                                 onSelect = { viewModel.setConsoleSelection(it); focusListAfterChange() },
@@ -961,21 +1010,14 @@ fun HomeScreen(
                                 horizontalPadding = FilterLayout.EDGE_LANDSCAPE
                             )
                         } else {
-                        if (query.isEmpty() && activeFilterCount == 0 && !viewMode.isBrowse) ContinuePlayingShelf(
+                        if (!searchCollapsed && query.isEmpty() && activeFilterCount == 0 && !viewMode.isBrowse) ContinuePlayingShelf(
                             onOpenGame = openGame,
                             modifier = Modifier.padding(top = 8.dp)
                         )
-                        if (query.isEmpty() && activeFilterCount == 0 && onOpenGame != null && !viewMode.isBrowse) com.tufein.valkyr.ui.screens.next.UpNextShelf(
+                        if (!searchCollapsed && query.isEmpty() && activeFilterCount == 0 && onOpenGame != null && !viewMode.isBrowse) com.tufein.valkyr.ui.screens.next.UpNextShelf(
                             onOpenGame = onOpenGame,
                             onOpenAll = { navController.navigate(NavRoutes.UpNext.route) },
                             modifier = Modifier.padding(top = 8.dp)
-                        )
-                        if (!showShelves) ConsoleChips(
-                            options = consoleOptions,
-                            selected = selectedConsoles,
-                            onSelect = viewModel::setConsoleSelection,
-                            modifier = Modifier.padding(top = 8.dp),
-                            horizontalPadding = FilterLayout.EDGE_LANDSCAPE
                         )
                         if (tableRows && !viewMode.isBrowse) TableHeader(contentShift, showCover = listCovers) else Text(
                             resultsLabel(results.size, hasMoreResults),
@@ -1048,44 +1090,57 @@ fun HomeScreen(
             }
         } else {
             Column(modifier = Modifier.fillMaxSize()) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    SearchField(
-                        value = query,
-                        onValueChange = viewModel::setSearch,
-                        active = searchActive,
-                        onActivate = { searchActive = true },
-                        onDismiss = { searchActive = false; runCatching { (if (shelvesNow.value) shelvesFocus else listFocus).requestFocus() } },
-                        focusRequester = searchFocus,
-                        height = SearchHeight,
-                        cornerRadius = 16.dp,
-                        modifier = Modifier.weight(1f)
-                    )
-                    FilterButton(count = activeFilterCount) { showFilterSheet = true }
-                }
-                if (query.isEmpty() && recentSearches.isNotEmpty()) RecentSearchesRow(
-                    recentSearches, onPick = viewModel::setSearch, onClear = viewModel::clearRecentSearches,
-                    modifier = Modifier.padding(start = FilterLayout.EDGE_PORTRAIT.dp, end = FilterLayout.EDGE_PORTRAIT.dp, top = 8.dp)
-                )
-                // The shelves have their own Continue playing and New for you.
-                if (!showShelves && query.isEmpty() && activeFilterCount == 0 && !viewMode.isBrowse) ContinuePlayingShelf(
-                    onOpenGame = openGame,
-                    modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 6.dp)
-                )
-                if (!showShelves && query.isEmpty() && activeFilterCount == 0 && onOpenGame != null && !viewMode.isBrowse) com.tufein.valkyr.ui.screens.next.UpNextShelf(
-                    onOpenGame = onOpenGame,
-                    onOpenAll = { navController.navigate(NavRoutes.UpNext.route) },
-                    modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 6.dp)
-                )
-                quickRow(Modifier.padding(top = 8.dp), FilterLayout.EDGE_PORTRAIT)
-                ConsoleChips(
-                    options = consoleOptions,
-                    selected = selectedConsoles,
-                    onSelect = viewModel::setConsoleSelection,
-                    modifier = Modifier.padding(vertical = 8.dp)
+                LibrarySearchPanel(
+                    expanded = !searchCollapsed,
+                    query = query,
+                    filterCount = activeFilterCount,
+                    onExpandedChange = setSearchExpanded,
+                    toggleFocus = searchToggleFocus,
+                    modifier = if (searchCollapsed) Modifier.padding(horizontal = 16.dp) else Modifier,
+                    search = { toggle ->
+                        Row(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            SearchField(
+                                value = query,
+                                onValueChange = viewModel::setSearch,
+                                active = searchActive,
+                                onActivate = activateSearch,
+                                onDismiss = { searchActive = false; runCatching { (if (shelvesNow.value) shelvesFocus else listFocus).requestFocus() } },
+                                focusRequester = searchFocus,
+                                trailing = toggle,
+                                height = SearchHeight,
+                                cornerRadius = 16.dp,
+                                modifier = Modifier.weight(1f)
+                            )
+                            FilterButton(count = activeFilterCount) { showFilterSheet = true }
+                        }
+                    },
+                    controls = {
+                        if (query.isEmpty() && recentSearches.isNotEmpty()) RecentSearchesRow(
+                            recentSearches, onPick = viewModel::setSearch, onClear = viewModel::clearRecentSearches,
+                            modifier = Modifier.padding(start = FilterLayout.EDGE_PORTRAIT.dp, end = FilterLayout.EDGE_PORTRAIT.dp, top = 8.dp)
+                        )
+                        // The shelves have their own Continue playing and New for you.
+                        if (!showShelves && query.isEmpty() && activeFilterCount == 0 && !viewMode.isBrowse) ContinuePlayingShelf(
+                            onOpenGame = openGame,
+                            modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 6.dp)
+                        )
+                        if (!showShelves && query.isEmpty() && activeFilterCount == 0 && onOpenGame != null && !viewMode.isBrowse) com.tufein.valkyr.ui.screens.next.UpNextShelf(
+                            onOpenGame = onOpenGame,
+                            onOpenAll = { navController.navigate(NavRoutes.UpNext.route) },
+                            modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 6.dp)
+                        )
+                        quickRow(Modifier.padding(top = 8.dp), FilterLayout.EDGE_PORTRAIT)
+                        ConsoleChips(
+                            options = consoleOptions,
+                            selected = selectedConsoles,
+                            onSelect = viewModel::setConsoleSelection,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                    }
                 )
                 if (showShelves) shelvesPanel(Modifier.weight(1f), null) else {
                 Row(
@@ -1181,7 +1236,7 @@ fun HomeScreen(
                                 // 3.9.0: B closes an open filter row first, then the sheet (not only
                                 // through the system's B-to-Back fallback, which some pads lack).
                                 Key.ButtonB -> { if (expandedFilter != null) expandedFilter = null else showFilterSheet = false; true }
-                                Key.ButtonY -> { showFilterSheet = false; searchActive = true; true }
+                                Key.ButtonY -> { showFilterSheet = false; activateSearch(); true }
                                 Key.ButtonL2 -> { showFilterSheet = false; Gamepad.presses.tryEmit(GamepadButton.PREV_TAB); true }
                                 Key.ButtonR2 -> { showFilterSheet = false; Gamepad.presses.tryEmit(GamepadButton.NEXT_TAB); true }
                                 else -> false

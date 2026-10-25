@@ -1312,7 +1312,7 @@
     <string name="downloads_eta_minutes">etwa %1$d min</string>
     <string name="whats_new_title">Neu in Valkyr %1$s</string>
     <string-array name="whats_new_items">
-        <item>RomM mit einem kurzen Code koppeln, von der RomM-Webseite gesendete Spiele installieren und eine eigene Quellenreihenfolge für Screenshots festlegen.</item>
+        <item>Klappe Suche, Schnellfilter und Konsolen in eine kompakte Leiste ein, damit mehr Platz für Spiele bleibt. Suche und Filter bleiben erhalten; tippe auf die Leiste oder drücke Y, um die Suche wieder zu öffnen.</item>
     </string-array>
 
     <!-- 4.0 -->
