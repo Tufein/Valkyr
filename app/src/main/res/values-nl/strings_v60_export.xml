@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 6.0: Folder mode (Syncthing) and export notes -->
+    <string name="exp60_section">Mapmodus (Syncthing)</string>
+    <string name="exp60_mode_title">Mapmodus (Syncthing)</string>
+    <string name="exp60_mode_hint">Spiegel saves en states naar een map die Syncthing synchroniseert, in plaats van RomM. Valkyr maakt zelf geen netwerkverbinding; Syncthing verplaatst de map. Gewijzigde saves krijgen eerst een back-up, conflicten wachten op jouw keuze en er wordt niets verwijderd. Tip: zet .dogmatix-* in de .stignore van de map, zodat de tijdelijke bestanden van Valkyr niet worden gesynchroniseerd.</string>
+    <string name="exp60_dir_title">Syncthing-map</string>
+    <string name="exp60_dir_hint">Kies de map die Syncthing synchroniseert. Saves komen in saves/, states in states/. Voor dit apparaat gelden de saves- en statesmappen hierboven.</string>
+    <string name="exp60_needs_setup">Zet de mapmodus aan en kies eerst de map.</string>
+    <string name="exp60_running">Synchroniseren met de map…</string>
+    <string name="exp60_busy">Er loopt al een savesynchronisatie. Probeer het zo opnieuw.</string>
+    <string name="exp60_failed">Niet gesynchroniseerd: %1$s</string>
+    <string name="exp60_never">Nog niet met de map gesynchroniseerd.</string>
+    <string name="exp60_sync_title">Synchroniseren met de map</string>
+    <string name="exp60_sync_action">Synchroniseren</string>
+    <string name="exp60_summary">%1$d naar de map · %2$d naar dit apparaat · %3$d ongewijzigd</string>
+    <string name="exp60_conflict_device">%1$s is op dit apparaat én in de map gewijzigd. Er wordt niets vervangen voordat jij kiest. Deze: het bestand op dit apparaat. Andere: het bestand in de map.</string>
+    <string name="exp60_conflict_copy">%1$s: Syncthing heeft twee versies bewaard (conflictkopie van %2$s, %3$s). Deze: de conflictkopie van Syncthing. Andere: het bestand dat op zijn plek staat. Er wordt niets verwijderd.</string>
+    <string name="exp60_keep_this">Deze houden</string>
+    <string name="exp60_keep_other">Andere houden</string>
+    <string name="exp60_keep_both">Beide houden (kopie)</string>
+    <string name="exp60_note_batocera">BIOS-bestanden horen in de map bios naast roms (de SHARE-partitie), niet in roms. Voer na het kopiëren START > Game Settings > Update Gamelists uit. Valkyr schrijft geen gamelists.</string>
+    <string name="exp60_note_knulli">BIOS-bestanden horen in /userdata/bios, naast de map roms. Valkyr schrijft geen gamelists.</string>
+    <string name="exp60_note_rocknix">Voer na het kopiëren START > Game Settings > Tools > Update Gamelists uit. Valkyr schrijft geen gamelists. BIOS-locaties staan op de systeempagina’s van rocknix.org.</string>
+    <string name="exp60_note_muos">BIOS-bestanden horen in MUOS/bios op de opslag met de map MUOS. Valkyr schrijft geen lijst-, naam- of artworkbestanden; voeg die toe met de eigen tools van muOS.</string>
+</resources>
