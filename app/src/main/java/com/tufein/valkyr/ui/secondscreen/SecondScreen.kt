@@ -191,7 +191,7 @@ class SecondScreenPresenter(
     }
 
     private fun update() {
-        val display = chooseDisplay(displayManager, activity.display?.displayId ?: Display.DEFAULT_DISPLAY)
+        val display = chooseDisplay(displayManager, activity.displayIdCompat())
         if (display == null) { presentation?.dismiss(); presentation = null; return }
         if (presentation?.display?.displayId == display.displayId) return
         presentation?.dismiss()
@@ -635,3 +635,13 @@ private fun rowStatus(d: DownloadItemModel, held: Boolean): String = when (d.sta
         else stringResource(R.string.status_downloading, (d.progress.coerceIn(0f, 1f) * 100).toInt())
     else -> stringResource(R.string.status_downloading, (d.progress.coerceIn(0f, 1f) * 100).toInt())
 }
+
+
+/** The id of the display this context is shown on (Context.getDisplay needs API 30; the app supports 29). */
+internal fun android.content.Context.displayIdCompat(): Int =
+    if (android.os.Build.VERSION.SDK_INT >= 30) display?.displayId ?: Display.DEFAULT_DISPLAY
+    else {
+        @Suppress("DEPRECATION")
+        (getSystemService(android.content.Context.WINDOW_SERVICE) as? android.view.WindowManager)?.defaultDisplay?.displayId
+            ?: Display.DEFAULT_DISPLAY
+    }

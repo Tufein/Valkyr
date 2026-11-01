@@ -63,7 +63,7 @@ object SecondScreenLauncher {
     /** The id of the display the hub can be started on from [context]'s display, or null (single screen). */
     fun targetDisplayId(context: Context): Int? {
         val dm = context.getSystemService(DisplayManager::class.java) ?: return null
-        val own = context.display?.displayId ?: Display.DEFAULT_DISPLAY
+        val own = context.displayIdCompat()
         val displays = dm.getDisplays(DisplayManager.DISPLAY_CATEGORY_PRESENTATION)
             .map { DualScreen.DisplayInfo(it.displayId, it.isValid, true) }
         return DualScreen.launchTarget(displays, own)
