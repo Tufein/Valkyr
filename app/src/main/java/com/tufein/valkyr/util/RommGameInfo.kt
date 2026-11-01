@@ -59,7 +59,9 @@ data class RommGameInfo(
     val platformName: String,
     val props: RommUserProps,
     /** False when the server sent no `rom_user` with play data (RomM before 3.7): the status pills are hidden. */
-    val propsSupported: Boolean
+    val propsSupported: Boolean,
+    /** The manual RomM itself stores for the game (`path_manual`), as a full URL on the server; null when it has none. */
+    val manualUrl: String? = null
 )
 
 /**
@@ -127,7 +129,9 @@ object RommGameDetails {
             screenshots = shots.toList(),
             platformName = o.text("platform_display_name") ?: o.text("platform_custom_name") ?: o.text("platform_name") ?: o.text("platform_slug").orEmpty(),
             props = parseProps(user) ?: RommUserProps(),
-            propsSupported = user != null && PROP_FIELDS.any { user.has(it) }
+            propsSupported = user != null && PROP_FIELDS.any { user.has(it) },
+            // Only the server's own copy: the provider link (`url_manual`) points outside the user's RomM and is never fetched.
+            manualUrl = o.text("path_manual")?.let { serverUrl(baseUrl, it) }
         )
     }
 

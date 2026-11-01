@@ -53,6 +53,7 @@ object SettingSchema {
         putAll(SaveMerge.SETTING_TYPES)
         putAll(RommRemoteInstall.SETTING_TYPES)
         putAll(CoverArtwork.SETTING_TYPES)
+        putAll(Manuals.SETTING_TYPES)
     }
 
     fun localName(name: String): String =

@@ -78,6 +78,7 @@ import com.tufein.valkyr.ui.common.Legend
 import com.tufein.valkyr.ui.components.DialogButton
 import com.tufein.valkyr.ui.components.LegendEntry
 import com.tufein.valkyr.ui.components.closeOnGamepadB
+import com.tufein.valkyr.ui.screens.offline.OfflineChip
 import com.tufein.valkyr.ui.components.rememberInitialFocus
 import com.tufein.valkyr.ui.components.ContentEntry
 
@@ -308,6 +309,9 @@ fun DownloadScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 if (!selectionMode) {
+                    item(key = "offline-chip") {
+                        OfflineChip(com.tufein.valkyr.util.OfflineMode.Screen.DOWNLOADS)
+                    }
                     item(key = "queue-header") {
                         if (queueView.filtered) {
                             Text(

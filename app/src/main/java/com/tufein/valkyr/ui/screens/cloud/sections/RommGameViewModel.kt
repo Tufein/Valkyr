@@ -2,6 +2,7 @@ package com.tufein.valkyr.ui.screens.cloud.sections
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tufein.valkyr.data.service.NetworkMonitor
 import com.tufein.valkyr.data.service.RommErrorKind
 import com.tufein.valkyr.data.service.RommGameService
 import com.tufein.valkyr.data.service.rommErrorKind
@@ -53,7 +54,8 @@ data class RommGameUiState(
  */
 @HiltViewModel
 class RommGameViewModel @Inject constructor(
-    private val service: RommGameService
+    private val service: RommGameService,
+    private val network: NetworkMonitor
 ) : ViewModel() {
 
     private val _ui = MutableStateFlow(RommGameUiState())
@@ -62,6 +64,10 @@ class RommGameViewModel @Inject constructor(
     private val _events = Channel<RommErrorKind>(Channel.BUFFERED)
     /** A write failed (and was undone): show a toast. */
     val events: Flow<RommErrorKind> = _events.receiveAsFlow()
+
+    private val _queued = Channel<Unit>(Channel.BUFFERED)
+    /** A change was kept for later because there is no connection: show a toast. */
+    val queued: Flow<Unit> = _queued.receiveAsFlow()
 
     private var key: String? = null
     private var romId: Int? = null
@@ -135,6 +141,13 @@ class RommGameViewModel @Inject constructor(
             val target = _ui.value.props
             val changes = RommProps.changes(confirmed, target)
             if (changes.isEmpty()) return
+            if (!network.online.value) {
+                // No connection: keep the change for later instead of failing; the screen already shows it.
+                service.queueProps(id, changes, target)
+                confirmed = target
+                _queued.trySend(Unit)
+                return
+            }
             _ui.update { it.copy(saving = true) }
             try {
                 val saved = service.updateProps(id, changes, target)
@@ -144,8 +157,16 @@ class RommGameViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
+                val kind = rommErrorKind(e)
+                if (kind == RommErrorKind.UNREACHABLE) {
+                    service.queueProps(id, changes, target)
+                    confirmed = target
+                    _ui.update { it.copy(saving = false) }
+                    _queued.trySend(Unit)
+                    return
+                }
                 _ui.update { it.copy(props = confirmed, saving = false) }
-                _events.trySend(rommErrorKind(e))
+                _events.trySend(kind)
             }
         }
     }

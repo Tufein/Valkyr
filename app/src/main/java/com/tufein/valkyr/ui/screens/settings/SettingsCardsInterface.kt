@@ -1,10 +1,13 @@
 package com.tufein.valkyr.ui.screens.settings
 
+import android.text.format.Formatter
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tufein.valkyr.R
 import com.tufein.valkyr.ui.components.ActionPill
 import com.tufein.valkyr.ui.components.NavChevron
@@ -205,6 +208,39 @@ internal fun SettingsEnv.libraryCardRows(): List<SettingsRow> = listOf(
         VersionPreferenceRow(onOpen = { navController.navigate(NavRoutes.VersionPreference.route) })
     },
     SettingsRow(key = SettingKeys.RECENT_MENU) { RecentGamesMenuSettingRow() },
+    SettingsRow(key = SettingKeys.MANUALS_WITH_GAME) {
+        val vm: ManualSettingsViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+        val m by vm.ui.collectAsStateWithLifecycle()
+        SettingRow(
+            icon = R.drawable.ic_description,
+            title = stringResource(R.string.man60_setting_with_game),
+            hint = stringResource(R.string.man60_setting_with_game_hint),
+            onClick = { vm.setWithGame(!m.withGame) },
+            onAdjust = { vm.setWithGame(it > 0) }
+        ) { ThemedSwitch(m.withGame) { vm.setWithGame(it) } }
+    },
+    SettingsRow(key = SettingKeys.MANUALS_CAP) {
+        val vm: ManualSettingsViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+        val m by vm.ui.collectAsStateWithLifecycle()
+        SettingRow(
+            icon = R.drawable.ic_storage,
+            title = stringResource(R.string.man60_setting_cap),
+            hint = stringResource(R.string.man60_setting_cap_hint),
+            onClick = { vm.stepCap(1) },
+            onAdjust = { vm.stepCap(it) }
+        ) {
+            SettingsStepper(
+                if (m.capMb >= 1000) "${m.capMb / 1000} GB" else "${m.capMb} MB",
+                onDecrement = { vm.stepCap(-1) }, onIncrement = { vm.stepCap(1) }
+            )
+        }
+        if (m.usedBytes > 0) SettingRow(
+            icon = R.drawable.ic_trash,
+            title = stringResource(R.string.man60_setting_remove_all),
+            hint = stringResource(R.string.man60_setting_remove_all_hint, Formatter.formatShortFileSize(context, m.usedBytes)),
+            onClick = { vm.removeAll() }
+        ) { NavChevron() }
+    },
     SettingsRow(key = SettingKeys.PROFILES) {
         SettingRow(
             icon = R.drawable.ic_account,

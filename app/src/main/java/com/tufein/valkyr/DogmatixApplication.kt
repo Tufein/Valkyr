@@ -62,6 +62,14 @@ class DogmatixApplication : Application(), ImageLoaderFactory {
     @Inject
     lateinit var rommUploadService: RommUploadService
 
+    /** Injected so manuals can follow a finished download from the first one (6.0). */
+    @Inject
+    lateinit var manualService: com.tufein.valkyr.data.service.ManualService
+
+    /** Injected so changes made offline are sent as soon as the connection is back (6.0). */
+    @Inject
+    lateinit var offlineQueueService: com.tufein.valkyr.data.service.OfflineQueueService
+
     /** Injected so the pinned RomM certificate is active from the first request. */
     @Inject
     lateinit var rommTrustService: RommTrustService

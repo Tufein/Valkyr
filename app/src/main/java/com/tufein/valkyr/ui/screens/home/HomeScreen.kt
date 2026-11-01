@@ -21,6 +21,8 @@ import com.tufein.valkyr.ui.screens.cloud.saves.CloudSavesSection
 import com.tufein.valkyr.ui.screens.cloud.saves.ContinuePlayingShelf
 import com.tufein.valkyr.ui.screens.cloud.sections.AchievementsSection
 import com.tufein.valkyr.ui.screens.cloud.sections.RommGameSection
+import com.tufein.valkyr.ui.screens.offline.OfflineChip
+import com.tufein.valkyr.util.OfflineMode
 import com.tufein.valkyr.ui.components.ActionPill
 import com.tufein.valkyr.ui.components.EmptyState
 import com.tufein.valkyr.ui.components.Pill
@@ -961,6 +963,7 @@ fun HomeScreen(
                             .fillMaxSize()
                             .padding(start = 12.dp, end = 12.dp, top = 12.dp)
                     ) {
+                        OfflineChip(OfflineMode.Screen.HOME, Modifier.padding(bottom = 6.dp))
                         LibrarySearchPanel(
                             expanded = !searchCollapsed,
                             query = query,
@@ -1090,6 +1093,7 @@ fun HomeScreen(
             }
         } else {
             Column(modifier = Modifier.fillMaxSize()) {
+                OfflineChip(OfflineMode.Screen.HOME, Modifier.padding(start = 16.dp, top = 6.dp, end = 16.dp))
                 LibrarySearchPanel(
                     expanded = !searchCollapsed,
                     query = query,

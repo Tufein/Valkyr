@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="man60_title">Handleidingen</string>
+    <string name="man60_on_device">Op dit apparaat bewaard</string>
+    <string name="man60_read">%1$s lezen</string>
+    <string name="man60_read_images">Handleiding lezen (%1$d pagina’s)</string>
+    <string name="man60_delete">Handleidingen verwijderen</string>
+    <string name="man60_delete_title">Handleidingen van deze game verwijderen?</string>
+    <string name="man60_delete_body">De handleidingen die de app voor deze game bewaart worden gewist. RomM houdt zijn eigen kopie, dus je kunt hem opnieuw downloaden.</string>
+    <string name="man60_available">RomM heeft een handleiding voor deze game.</string>
+    <string name="man60_download">Handleiding downloaden</string>
+    <string name="man60_downloading">Bezig met downloaden…</string>
+    <string name="man60_result_saved">Handleiding op dit apparaat opgeslagen.</string>
+    <string name="man60_result_exists">Deze handleiding staat al op dit apparaat.</string>
+    <string name="man60_result_none">RomM heeft geen handleiding voor deze game.</string>
+    <string name="man60_result_too_big">De handleiding is groter dan de limiet voor handleidingen (Instellingen, Downloads).</string>
+    <string name="man60_result_offline">Geen verbinding. Probeer het opnieuw als je online bent.</string>
+    <string name="man60_result_failed">De handleiding kon niet worden gedownload.</string>
+    <string name="man60_hint_pages">◀ ▶ of L1 / R1: pagina · A: zoom · L2 / R2: uit- / inzoomen · ▲ ▼: verschuiven bij zoom · B: sluiten</string>
+    <string name="man60_hint_text">▲ ▼: scrollen · L1 / R1: pagina omhoog / omlaag · B: sluiten</string>
+    <string name="man60_unreadable">Deze handleiding kan niet worden geopend. Het bestand is mogelijk beschadigd of beveiligd.</string>
+    <string name="man60_setting_with_game">Handleiding meedownloaden met de game</string>
+    <string name="man60_setting_with_game_hint">Heeft RomM een handleiding voor een game die je ervan downloadt, dan wordt die in de app bewaard zodat je hem offline kunt lezen. Standaard uit.</string>
+    <string name="man60_setting_cap">Ruimte voor handleidingen</string>
+    <string name="man60_setting_cap_hint">Het maximum aan ruimte dat handleidingen in de app innemen. Is het vol, dan gaan de oudste handleidingen eerst weg.</string>
+    <string name="man60_setting_remove_all">Alle handleidingen verwijderen</string>
+    <string name="man60_setting_remove_all_hint">Handleidingen nemen %1$s in beslag. Je kunt ze opnieuw downloaden van RomM.</string>
+    <string name="man60_kw">handleiding, manual, pdf, boekje, lezer</string>
+    <string name="man60_queued">Geen verbinding: de wijziging is bewaard en wordt naar RomM gestuurd zodra je online bent.</string>
+    <string name="man60_offline_chip">Offline</string>
+    <string name="man60_offline_chip_waiting">Offline · %1$d wachten</string>
+    <string name="man60_offline_title">Geen verbinding</string>
+    <string name="man60_offline_works">Dit werkt nog</string>
+    <string name="man60_offline_play">De games op dit apparaat spelen</string>
+    <string name="man60_offline_library">Je bibliotheek en gamepagina’s bekijken</string>
+    <string name="man60_offline_collections">Collecties die op dit apparaat staan</string>
+    <string name="man60_offline_manuals">Gedownloade handleidingen lezen</string>
+    <string name="man60_offline_waits_title">Wacht op verbinding</string>
+    <string name="man60_offline_waits">Downloads, bronnen scannen, RomM en cloudsync. Wijzigingen aan je RomM-speelstatus worden bewaard en later verstuurd.</string>
+    <string name="man60_offline_pending">Wacht op verzending: %1$d</string>
+</resources>
