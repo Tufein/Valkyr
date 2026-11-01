@@ -66,7 +66,9 @@ fun CoverCard(
     /** 5.1: what A / a tap does ("Download", "Play"), shown next to the console tag; null shows nothing. */
     actionLabel: String? = null,
     /** 5.5: the player marked the game as completed: a check mark in the corner opposite the on-device one. */
-    completed: Boolean = false
+    completed: Boolean = false,
+    /** 6.0: how many versions of the game this card stands for ("Group versions"); 1 shows nothing. */
+    versions: Int = 1
 ) {
     val scheme = MaterialTheme.colorScheme
     val source = rememberFocusSource()
@@ -101,19 +103,20 @@ fun CoverCard(
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(horizontal = 6.dp)
         )
-        if (actionLabel == null) ConsoleTag(consoleId, Modifier.padding(horizontal = 6.dp))
+        if (actionLabel == null && versions <= 1) ConsoleTag(consoleId, Modifier.padding(horizontal = 6.dp))
         else Row(
             modifier = Modifier.padding(horizontal = 6.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             ConsoleTag(consoleId)
-            Text(
+            if (actionLabel != null) Text(
                 actionLabel,
                 style = MaterialTheme.typography.labelMedium,
                 color = scheme.onPrimary,
                 modifier = Modifier.background(scheme.primary, RoundedCornerShape(50)).padding(horizontal = 8.dp, vertical = 2.dp)
             )
+            if (versions > 1) Pill(androidx.compose.ui.res.pluralStringResource(R.plurals.var60_versions, versions, versions), tone = PillTone.Accent)
         }
     }
 }

@@ -120,7 +120,9 @@ fun RomRow(
     /** 5.5: the player marked this game as completed (a check mark in front of the name). */
     completed: Boolean = false,
     /** 5.5: the user's RetroAchievements status in this game; null shows nothing (also with RA off). */
-    raStatus: RaStatus? = null
+    raStatus: RaStatus? = null,
+    /** 6.0: how many versions of the game this row stands for ("Group versions"); 1 shows nothing. */
+    versions: Int = 1
 ) {
     // 8.0 TV mode: never the compact rows; rows (and the stacked covers) grow. The table's cover and
     // column widths stay, so the header in HomeScreen keeps lining up; the TV text scale does the rest.
@@ -135,6 +137,7 @@ fun RomRow(
     val nameColor = if (owned) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface
     val badges: @Composable () -> Unit = {
         Badges(owned, onRomm, favourite, downloading, isNew, achievements, achievementCount, downloadProgress, completed, raStatus)
+        if (versions > 1) Pill(androidx.compose.ui.res.pluralStringResource(R.plurals.var60_versions, versions, versions), tone = PillTone.Accent)
     }
 
     if (compact) {

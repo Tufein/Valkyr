@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="var60_versions">
+        <item quantity="one">%1$d versão</item>
+        <item quantity="other">%1$d versões</item>
+    </plurals>
+    <string name="var60_filter_group">Agrupar versões</string>
+    <string name="var60_group_off">Todos os ficheiros</string>
+    <string name="var60_group_on">Uma entrada por jogo</string>
+</resources>

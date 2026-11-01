@@ -185,7 +185,9 @@ fun HomeScreen(
      */
     onOpenGame: ((consoleId: String, fileName: String) -> Unit)? = null
 ) {
-    val results by viewModel.results.collectAsStateWithLifecycle()
+    val listing by viewModel.listing.collectAsStateWithLifecycle()
+    val results = listing.rows
+    val groupVersions by viewModel.groupVersions.collectAsStateWithLifecycle()
     val hasMoreResults by viewModel.hasMoreResults.collectAsStateWithLifecycle()
     val isLoadingMore by viewModel.isLoadingMore.collectAsStateWithLifecycle()
     val query by viewModel.searchQuery.collectAsStateWithLifecycle()
@@ -439,6 +441,16 @@ fun HomeScreen(
         )
     )) + listOf(
         FilterRowSpec(
+            label = stringResource(R.string.var60_filter_group),
+            options = listOf(
+                FilterOption(FAV_ALL, stringResource(R.string.var60_group_off)),
+                FilterOption(FAV_ONLY, stringResource(R.string.var60_group_on))
+            ),
+            selected = setOf(if (groupVersions) FAV_ONLY else FAV_ALL),
+            single = true,
+            onSelectionChange = { viewModel.setGroupVersions(FAV_ONLY in it) }
+        ),
+        FilterRowSpec(
             label = stringResource(R.string.filter_new),
             options = listOf(
                 FilterOption(FAV_ALL, stringResource(R.string.filter_all)),
@@ -631,7 +643,11 @@ fun HomeScreen(
             LibraryBrowse.PrimaryAction.DOWNLOAD -> download(item)
         }
     }
-    val onItemClick: (DownloadableFileWithTags) -> Unit = if (viewMode.isBrowse) onPrimary else onRowClick
+    // 6.0: a row that stands for several versions opens the game page (its Versions tab picks the one to get or play).
+    val onSingleClick: (DownloadableFileWithTags) -> Unit = if (viewMode.isBrowse) onPrimary else onRowClick
+    val onItemClick: (DownloadableFileWithTags) -> Unit = { item ->
+        if (listing.versionsOf(item) > 1) openGame(item) else onSingleClick(item)
+    }
     val shelvesPanel: @Composable (Modifier, (@Composable () -> Unit)?) -> Unit = { modifier, header ->
         if (showConsoles) ConsolesHome(
             onOpenGame = { c, f -> returnGame = c to f; onOpenGame?.invoke(c, f) },
@@ -1101,7 +1117,8 @@ fun HomeScreen(
                             illustrated = false,
                             emptyLibraryExtra = newHandheldHint,
                             viewMode = viewMode,
-                            primaryAction = primaryActionOf
+                            primaryAction = primaryActionOf,
+                            versionsOf = listing::versionsOf
                         )
                         }
                     }
@@ -1238,7 +1255,8 @@ fun HomeScreen(
                     illustrated = true,
                     emptyLibraryExtra = newHandheldHint,
                     viewMode = viewMode,
-                    primaryAction = primaryActionOf
+                    primaryAction = primaryActionOf,
+                    versionsOf = listing::versionsOf
                 )
                 }
             }

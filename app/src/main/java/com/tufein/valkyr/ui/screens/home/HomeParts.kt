@@ -252,7 +252,9 @@ internal fun ResultList(
     /** 5.1: the Library tab's view; the overview's rows (and the list at hand) stay as they were. */
     viewMode: LibraryBrowse.ViewMode = LibraryBrowse.ViewMode.OVERVIEW,
     /** 5.1: what a game's button says (Download / Play / Downloading) in the List and Covers views. */
-    primaryAction: (DownloadableFileWithTags) -> LibraryBrowse.PrimaryAction = { LibraryBrowse.PrimaryAction.DOWNLOAD }
+    primaryAction: (DownloadableFileWithTags) -> LibraryBrowse.PrimaryAction = { LibraryBrowse.PrimaryAction.DOWNLOAD },
+    /** 6.0: how many versions of a game a row stands for ("Group versions"); 1 = a single game. */
+    versionsOf: (DownloadableFileWithTags) -> Int = { 1 }
 ) {
     if (results.isEmpty()) {
         // The flags are read only here: while the list has rows, a new search or a library change
@@ -309,7 +311,8 @@ internal fun ResultList(
             firstRowFocus = firstRowFocus,
             returnGame = returnGame,
             returnFocus = returnFocus,
-            isCompleted = isCompleted
+            isCompleted = isCompleted,
+            versionsOf = versionsOf
         )
         return
     }
@@ -396,7 +399,8 @@ internal fun ResultList(
                 modifier = rowModifier,
                 contentShift = contentShift,
                 completed = isCompleted(item),
-                raStatus = raStatusOf(item)
+                raStatus = raStatusOf(item),
+                versions = versionsOf(item)
             ) else RomRow(
                 item = item,
                 consoleName = getConsoleName(item.file.consoleId),
@@ -416,7 +420,8 @@ internal fun ResultList(
                 downloadProgress = rowProgress,
                 modifier = rowModifier,
                 completed = isCompleted(item),
-                raStatus = raStatusOf(item)
+                raStatus = raStatusOf(item),
+                versions = versionsOf(item)
             )
         }
         if (hasMore) {

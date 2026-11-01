@@ -9,6 +9,10 @@ import com.tufein.valkyr.BuildConfig
 import com.tufein.valkyr.data.local.LibrarySettings
 import com.tufein.valkyr.data.local.LookSettings
 import com.tufein.valkyr.util.LibraryBrowse
+import com.tufein.valkyr.util.VariantGroups
+import com.tufein.valkyr.util.VersionPicker
+import com.tufein.valkyr.util.VersionPreference
+import kotlinx.coroutines.flow.drop
 import com.tufein.valkyr.data.local.dao.GameMetadataDao
 import com.tufein.valkyr.util.GameTitleCleaner
 import com.tufein.valkyr.util.LibraryDiscovery
@@ -556,6 +560,47 @@ class HomeViewModel @Inject constructor(
     private val _results = MutableStateFlow<List<DownloadableFileWithTags>>(emptyList())
     val results: StateFlow<List<DownloadableFileWithTags>> = _results
 
+    /** 6.0: the list as shown: [results], with the copies of one game folded into one row while "Group versions" is on. */
+    class Listing(val rows: List<DownloadableFileWithTags>, val versions: Map<Long, Int> = emptyMap()) {
+        /** How many versions the row stands for (1 = a single game). */
+        fun versionsOf(item: DownloadableFileWithTags): Int = versions[item.file.id] ?: 1
+    }
+
+    private val _listing = MutableStateFlow(Listing(emptyList()))
+    val listing: StateFlow<Listing> = _listing.asStateFlow()
+
+    val groupVersions: StateFlow<Boolean> = librarySettings.groupVersions
+        .stateIn(viewModelScope, SharingStarted.Eagerly, VariantGroups.DEFAULT_ON)
+
+    fun setGroupVersions(on: Boolean) {
+        viewModelScope.launch { librarySettings.setGroupVersions(on) }
+    }
+
+    /**
+     * Sets [rows] as the results and builds the list from them in the same step, so the screen never
+     * sees results without their list. Grouping reads the preference once for all rows (no query per game).
+     */
+    private suspend fun publish(rows: List<DownloadableFileWithTags>) {
+        _results.value = rows
+        _listing.value = withContext(Dispatchers.Default) { listingOf(rows, groupVersions.value) }
+    }
+
+    private suspend fun listingOf(rows: List<DownloadableFileWithTags>, group: Boolean): Listing {
+        if (!group) return Listing(rows)
+        val prefs = versionSettings.snapshot()
+        val pins = versionPreference.snapshot()
+        val entries = VariantGroups.group(
+            rows,
+            consoleId = { it.file.consoleId }, name = { it.file.name }, searchKey = { it.file.searchKey }, fileName = { it.file.fileName }
+        ) { members ->
+            val console = members.first().file.consoleId
+            val candidates = members.map { VersionPicker.Candidate(it.file.fileName, it.file.fileName, it.tags, it.file.fileSize) }
+            val best = VersionPreference.pick(candidates, prefs.of(console), pins.preferred(console, members.first().file.fileName))
+            members.firstOrNull { it.file.fileName == best?.id } ?: members.first()
+        }
+        return Listing(entries.map { it.item }, entries.filter { it.versions > 1 }.associate { it.item.file.id to it.versions })
+    }
+
     private val _consoles = MutableStateFlow<List<ConsoleEntity>>(emptyList())
     val consoles: StateFlow<List<ConsoleEntity>> = _consoles
 
@@ -611,6 +656,8 @@ class HomeViewModel @Inject constructor(
 
     init {
         rememberSearches()
+        // 6.0: the switch re-folds the rows already loaded (a search re-runs on its own when anything else changes).
+        viewModelScope.launch { groupVersions.drop(1).collect { publish(_results.value) } }
         // "Use RomM" off: a RomM source filter would list nothing, so it goes back to All.
         viewModelScope.launch { rommEnabled.collect { on -> if (!on && _source.value == SourceFilter.ROMM) _source.value = SourceFilter.ALL } }
         // 5.5: with an RA account the Beaten / Mastered badges need the user's award list: one paged fetch, throttled in the service.
@@ -650,7 +697,7 @@ class HomeViewModel @Inject constructor(
                 try {
                     val page = fetchFiltered(params, 0, params.limit)
                     currentOffset = page.nextOffset
-                    _results.value = page.rows
+                    publish(page.rows)
                     _hasMoreResults.value = !page.exhausted
                     // Before the flag drops: an empty list must already know whether the library is empty.
                     loadConsoles()
@@ -873,7 +920,7 @@ class HomeViewModel @Inject constructor(
 
         val page = fetchFiltered(currentParams(), currentOffset, limit)
         currentOffset = page.nextOffset
-        if (page.rows.isNotEmpty()) _results.value += page.rows
+        if (page.rows.isNotEmpty()) publish(_results.value + page.rows)
         _hasMoreResults.value = !page.exhausted
 
         _isLoadingMore.value = false

@@ -49,6 +49,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -307,7 +308,9 @@ internal fun LibraryListRow(
     /** 5.5: marked as completed by the player. */
     completed: Boolean = false,
     /** 5.5: the user's RetroAchievements status in the game (null = nothing to show). */
-    raStatus: com.tufein.valkyr.util.RaStatus? = null
+    raStatus: com.tufein.valkyr.util.RaStatus? = null,
+    /** 6.0: how many versions of the game this row stands for ("Group versions"); 1 shows nothing. */
+    versions: Int = 1
 ) {
     val scheme = MaterialTheme.colorScheme
     val source = rememberFocusSource()
@@ -342,7 +345,8 @@ internal fun LibraryListRow(
                 )
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     ConsoleTag(rom.consoleId)
-                    if (rom.fileSize > 0) Text(
+                    if (versions > 1) Pill(pluralStringResource(R.plurals.var60_versions, versions, versions), tone = PillTone.Accent)
+                    if (rom.fileSize > 0 && versions <= 1) Text(
                         formatBytes(rom.fileSize),
                         style = MaterialTheme.typography.bodySmall.tabular(),
                         color = scheme.onSurfaceVariant,
@@ -388,7 +392,9 @@ internal fun ResultGrid(
     firstRowFocus: FocusRequester? = null,
     returnGame: Pair<String, String>? = null,
     returnFocus: FocusRequester? = null,
-    isCompleted: (DownloadableFileWithTags) -> Boolean = { false }
+    isCompleted: (DownloadableFileWithTags) -> Boolean = { false },
+    /** 6.0: how many versions a card stands for ("Group versions"). */
+    versionsOf: (DownloadableFileWithTags) -> Int = { 1 }
 ) {
     val state = rememberLazyGridState()
     com.tufein.valkyr.ui.navigation.OnTabReselect(com.tufein.valkyr.ui.navigation.NavRoutes.Home.route) { state.scrollToItem(0) }
@@ -427,6 +433,7 @@ internal fun ResultGrid(
                     onLongClick = { onDetails(item) },
                     owned = action == PrimaryAction.PLAY,
                     completed = isCompleted(item),
+                    versions = versionsOf(item),
                     width = 128.dp,
                     coverHeight = 174.dp,
                     actionLabel = when (action) {
