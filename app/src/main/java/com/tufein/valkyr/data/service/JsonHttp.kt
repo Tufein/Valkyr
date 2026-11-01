@@ -99,6 +99,64 @@ object JsonHttp {
         }
     }
 
+    /**
+     * A binary GET streamed into [dest] (never held in memory), at most [maxBytes]; [dest] is removed on any
+     * failure. Redirects are followed by hand, at most [MAX_REDIRECTS], and each target must pass [accept]
+     * before it is requested (the key header goes only to addresses [accept] allows).
+     */
+    fun downloadToFile(
+        url: String, headers: Map<String, String> = emptyMap(), dest: java.io.File, maxBytes: Long,
+        readTimeoutMs: Int = 60_000, accept: (String) -> Boolean
+    ): Long {
+        try {
+            var current = url
+            repeat(MAX_REDIRECTS + 1) {
+                if (!accept(current)) throw IOException("The address is not allowed")
+                val connection = URL(current).openConnection() as HttpURLConnection
+                TlsTrust.apply(connection)
+                try {
+                    connection.instanceFollowRedirects = false
+                    connection.connectTimeout = 15_000
+                    connection.readTimeout = readTimeoutMs
+                    connection.setRequestProperty("User-Agent", userAgent)
+                    headers.forEach { (k, v) -> connection.setRequestProperty(k, v) }
+                    val code = connection.responseCode
+                    if (code in 300..399) {
+                        val location = connection.getHeaderField("Location") ?: throw HttpException(code, null)
+                        current = URL(URL(current), location).toString()
+                        return@repeat
+                    }
+                    if (code !in 200..299) throw HttpException(code, connection.errorStream?.bufferedReader()?.use { it.readText() })
+                    val length = connection.contentLengthLong
+                    if (length > maxBytes) throw IOException("File too large ($length bytes)")
+                    var total = 0L
+                    connection.inputStream.use { input ->
+                        dest.outputStream().use { out ->
+                            val buffer = ByteArray(64 * 1024)
+                            while (true) {
+                                val n = input.read(buffer)
+                                if (n < 0) break
+                                total += n
+                                if (total > maxBytes) throw IOException("File too large")
+                                out.write(buffer, 0, n)
+                            }
+                        }
+                    }
+                    if (length >= 0 && total != length) throw IOException("The download ended early")
+                    return total
+                } finally {
+                    connection.disconnect()
+                }
+            }
+            throw IOException("Too many redirects")
+        } catch (e: Throwable) {
+            dest.delete()
+            throw e
+        }
+    }
+
+    private const val MAX_REDIRECTS = 3
+
     /** Like [request] but throws [HttpException] on a non-2xx status. */
     fun requireOk(response: Response): Response =
         if (response.ok) response else throw HttpException(response.code, response.body)

@@ -141,13 +141,7 @@ class RommGameViewModel @Inject constructor(
             val target = _ui.value.props
             val changes = RommProps.changes(confirmed, target)
             if (changes.isEmpty()) return
-            if (!network.online.value) {
-                // No connection: keep the change for later instead of failing; the screen already shows it.
-                service.queueProps(id, changes, target)
-                confirmed = target
-                _queued.trySend(Unit)
-                return
-            }
+            // No "online" gate: a LAN-only RomM is never "validated". Try the write; queue only when it cannot be reached.
             _ui.update { it.copy(saving = true) }
             try {
                 val saved = service.updateProps(id, changes, target)

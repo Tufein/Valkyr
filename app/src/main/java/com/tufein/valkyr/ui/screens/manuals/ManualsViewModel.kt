@@ -8,6 +8,7 @@ import com.tufein.valkyr.data.service.ManualService
 import com.tufein.valkyr.data.service.RemoteManual
 import com.tufein.valkyr.util.Manuals
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,6 +37,7 @@ class ManualsViewModel @Inject constructor(
     val ui: StateFlow<ManualsUi> = _ui.asStateFlow()
 
     private var key: String? = null
+    private var changesJob: Job? = null
 
     fun load(consoleId: String, fileName: String, force: Boolean = false) {
         val k = "$consoleId|$fileName"
@@ -48,7 +50,8 @@ class ManualsViewModel @Inject constructor(
             val remote = if (docs.isEmpty()) service.remote(consoleId, fileName) else null
             _ui.update { it.copy(remote = remote) }
         }
-        viewModelScope.launch { service.changes.collect { if (key == k) _ui.update { u -> u.copy(docs = service.docs(consoleId, fileName)) } } }
+        changesJob?.cancel()
+        changesJob = viewModelScope.launch { service.changes.collect { if (key == k) _ui.update { u -> u.copy(docs = service.docs(consoleId, fileName)) } } }
     }
 
     fun download(consoleId: String, fileName: String) {

@@ -12,8 +12,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -40,11 +43,12 @@ class ManualService @Inject constructor(
     private val settings: ManualSettings,
     private val rommClient: RommClient,
     private val rommGames: RommGameService,
-    private val network: NetworkMonitor,
     downloads: DownloadService
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val lock = Mutex()
+    /** One manual download at a time: a run of finished downloads must not fetch many files at once. */
+    private val slot = Semaphore(1)
     private val root get() = File(context.filesDir, Manuals.ROOT)
 
     private val _changes = MutableStateFlow(0)
@@ -87,48 +91,53 @@ class ManualService @Inject constructor(
 
     /** Downloads the game's manual from RomM. [known] skips the lookup when the caller already has it. */
     suspend fun download(consoleId: String, fileName: String, known: RemoteManual? = null): ManualResult = withContext(Dispatchers.IO) {
-        if (!network.online.value) return@withContext ManualResult.OFFLINE
+        // No "online" gate: a LAN-only RomM has no validated internet. The request is tried and a network failure reports OFFLINE.
         val remote = known ?: remote(consoleId, fileName) ?: return@withContext ManualResult.NO_MANUAL
         val name = Manuals.fileNameFor(remote.url)
         val target = fileOf(consoleId, fileName, name)
         if (target.exists()) return@withContext ManualResult.EXISTS
         val cap = Manuals.capBytes(settings.capMb.first())
-        try {
-            val bytes = rommClient.downloadServerFile(remote.url, Manuals.maxFileBytes(cap))
-            lock.withLock {
-                if (target.exists()) return@withLock ManualResult.EXISTS
-                val existing = entries()
-                when (val fit = Manuals.fit(existing, bytes.size.toLong(), cap)) {
-                    Manuals.Fit.TooBig -> ManualResult.TOO_BIG
-                    is Manuals.Fit.Ok -> {
-                        fit.remove.forEach { File(root, it.path).delete() }
-                        target.parentFile?.mkdirs()
-                        val tmp = File(target.parentFile, target.name + ".part")
-                        tmp.writeBytes(bytes)
-                        if (!tmp.renameTo(target)) { tmp.delete(); ManualResult.FAILED } else {
-                            prune()
-                            _changes.value++
-                            ManualResult.SAVED
+        slot.withPermit {
+            // The file goes to disk while it arrives (never held in memory); the size cap applies to the stream.
+            val tmp = File(target.parentFile, target.name + ".part")
+            try {
+                target.parentFile?.mkdirs()
+                rommClient.downloadServerFileTo(remote.url, tmp, Manuals.maxFileBytes(cap))
+                lock.withLock {
+                    if (target.exists()) { tmp.delete(); return@withLock ManualResult.EXISTS }
+                    val existing = entries()
+                    when (val fit = Manuals.fit(existing, tmp.length(), cap)) {
+                        Manuals.Fit.TooBig -> { tmp.delete(); ManualResult.TOO_BIG }
+                        is Manuals.Fit.Ok -> {
+                            if (!tmp.renameTo(target)) { tmp.delete(); ManualResult.FAILED } else {
+                                // Older manuals go only after the new one is in place.
+                                fit.remove.forEach { File(root, it.path).delete() }
+                                prune()
+                                _changes.update { it + 1 }
+                                ManualResult.SAVED
+                            }
                         }
                     }
                 }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                tmp.delete()
+                throw e
+            } catch (e: Exception) {
+                tmp.delete()
+                Log.w(TAG, "Manual download failed: ${e.javaClass.simpleName}")
+                if (rommErrorKind(e) == RommErrorKind.UNREACHABLE) ManualResult.OFFLINE else ManualResult.FAILED
             }
-        } catch (e: kotlinx.coroutines.CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            Log.w(TAG, "Manual download failed: ${e.javaClass.simpleName}")
-            if (rommErrorKind(e) == RommErrorKind.UNREACHABLE) ManualResult.OFFLINE else ManualResult.FAILED
         }
     }
 
     /** Removes every manual of the game. */
     suspend fun delete(consoleId: String, fileName: String) = withContext(Dispatchers.IO) {
         lock.withLock { dirOf(consoleId, fileName).deleteRecursively(); prune() }
-        _changes.value++
+        _changes.update { it + 1 }
     }
 
     private fun entries(): List<Manuals.Entry> =
-        root.walkTopDown().filter { it.isFile }.map { Manuals.Entry(it.relativeTo(root).path, it.length(), it.lastModified()) }.toList()
+        root.walkTopDown().filter { it.isFile && !it.name.endsWith(".part") }.map { Manuals.Entry(it.relativeTo(root).path, it.length(), it.lastModified()) }.toList()
 
     /** Removes empty game and console folders. */
     private fun prune() {
@@ -143,6 +152,6 @@ class ManualService @Inject constructor(
 
     suspend fun deleteAll() = withContext(Dispatchers.IO) {
         lock.withLock { root.deleteRecursively() }
-        _changes.value++
+        _changes.update { it + 1 }
     }
 }

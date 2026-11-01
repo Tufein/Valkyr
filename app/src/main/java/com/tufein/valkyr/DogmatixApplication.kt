@@ -62,13 +62,13 @@ class DogmatixApplication : Application(), ImageLoaderFactory {
     @Inject
     lateinit var rommUploadService: RommUploadService
 
-    /** Injected so manuals can follow a finished download from the first one (6.0). */
+    /** Built in [startDeferred] (it pulls the RomM, download and database services); manuals can follow a finished download from the first one (6.0). */
     @Inject
-    lateinit var manualService: com.tufein.valkyr.data.service.ManualService
+    lateinit var manualService: dagger.Lazy<com.tufein.valkyr.data.service.ManualService>
 
-    /** Injected so changes made offline are sent as soon as the connection is back (6.0). */
+    /** Built in [startDeferred] on a background thread; changes made offline are sent as soon as the connection is back (6.0). */
     @Inject
-    lateinit var offlineQueueService: com.tufein.valkyr.data.service.OfflineQueueService
+    lateinit var offlineQueueService: dagger.Lazy<com.tufein.valkyr.data.service.OfflineQueueService>
 
     /** Injected so the pinned RomM certificate is active from the first request. */
     @Inject
@@ -220,10 +220,18 @@ class DogmatixApplication : Application(), ImageLoaderFactory {
                     smartStorageScheduler.get()
                     widgetUpdater.get()
                     autoBackupScheduler.get()
+                    manualService.get()
+                    // Building it starts the collectors and a first flush of what waits.
+                    offlineQueueService.get()
                 }.onFailure { Log.e("DogmatixApplication", "Deferred start failed: ${it.message}") }
             }
             PerfLog.mark("deferred_ready")
         }
+    }
+
+    /** The app came to the foreground: send the changes that wait for a connection (a no-op when none wait). */
+    fun flushOfflineQueue() {
+        applicationScope.launch { runCatching { offlineQueueService.get().flush() } }
     }
 
     private fun createNotificationChannel() {

@@ -80,20 +80,24 @@ class SyncthingFolderService @Inject constructor(
         if (!isConfigured()) return null
         _state.update { it.copy(running = true, error = null) }
         var result: FolderSyncResult? = null
-        val outcome = withDevice { sync, records, handled ->
-            val (r, conflicts) = sync.sync(records, handled)
-            result = r
-            _state.update { it.copy(last = r, conflicts = conflicts) }
-        }
-        when {
-            outcome == null -> _state.update { it.copy(running = false, error = "busy") }
-            else -> outcome.onFailure { e ->
-                if (e is CancellationException) throw e
-                Log.w(TAG, "Folder sync failed", e)
-                _state.update { it.copy(error = e.message ?: e.javaClass.simpleName) }
+        try {
+            val outcome = withDevice { sync, records, handled ->
+                val (r, conflicts) = sync.sync(records, handled)
+                result = r
+                _state.update { it.copy(last = r, conflicts = conflicts) }
             }
+            when {
+                outcome == null -> _state.update { it.copy(error = "busy") }
+                else -> outcome.onFailure { e ->
+                    if (e is CancellationException) throw e
+                    Log.w(TAG, "Folder sync failed", e)
+                    _state.update { it.copy(error = e.message ?: e.javaClass.simpleName) }
+                }
+            }
+        } finally {
+            // Also when the sync is cancelled: the state must not stay "running" for ever.
+            _state.update { it.copy(running = false) }
         }
-        _state.update { it.copy(running = false) }
         return result
     }
 
@@ -201,7 +205,7 @@ class SyncthingFolderService @Inject constructor(
                 r.baseHash?.let { addProperty("baseHash", it) }
             })
         }
-        val decided = JsonArray().apply { handled.take(2000).forEach { add(it) } }
+        val decided = JsonArray().apply { handled.toList().takeLast(2000).forEach { add(it) } }
         val bytes = JsonObject().apply { addProperty("version", 1); add("records", array); add("handled", decided) }.toString().toByteArray(Charsets.UTF_8)
         val tmp = File(storeFile.parentFile, storeFile.name + ".tmp")
         try {

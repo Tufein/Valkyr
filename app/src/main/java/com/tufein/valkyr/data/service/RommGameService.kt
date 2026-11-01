@@ -71,7 +71,8 @@ class RommGameService @Inject constructor(
      */
     suspend fun updateProps(romId: Int, changes: Map<String, Any?>, expected: RommUserProps): RommUserProps {
         if (changes.isEmpty()) return expected
-        val saved = rommClient.updateRomProps(romId, changes) ?: expected
+        // Under the queue lock, and older waiting values of these fields are dropped once it succeeded.
+        val saved = offlineQueue.writeThrough(romId, changes.keys) { rommClient.updateRomProps(romId, changes) } ?: expected
         cache.get(romId)?.let { (at, info) -> cache.put(romId, at to info.copy(props = saved)) }
         return saved
     }

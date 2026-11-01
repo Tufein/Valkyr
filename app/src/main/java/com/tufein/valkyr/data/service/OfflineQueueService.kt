@@ -42,6 +42,8 @@ class OfflineQueueService @Inject constructor(
     init {
         scope.launch { lock.withLock { _pending.value = read().size } }
         scope.launch { network.online.filter { it }.collect { flush() } }
+        // A LAN-only network is never "validated": any network that claims internet access retries too.
+        scope.launch { network.reachable.collect { flush() } }
     }
 
     private fun read(): List<OfflineMode.Pending> =
@@ -67,7 +69,19 @@ class OfflineQueueService @Inject constructor(
         }
     }
 
-    /** Sends what waits, in order. A network failure stops the run (kept for next time); any other refusal drops that entry. */
+    /**
+     * Runs [block] (an online write of [keys] for [romId]) under the queue lock and, when it succeeds, takes
+     * those fields out of the waiting list so an older queued value cannot overwrite the newer one later.
+     */
+    suspend fun <T> writeThrough(romId: Int, keys: Set<String>, block: suspend () -> T): T = lock.withLock {
+        val result = block()
+        val before = read()
+        val after = OfflineMode.discard(before, romId, keys)
+        if (after != before) write(after)
+        result
+    }
+
+    /** Sends what waits, in order. A run stops at the first failure that may pass (no network, 5xx, wrong token, certificate); only an answer that can never succeed drops that entry. */
     suspend fun flush() = lock.withLock {
         var list = read()
         if (list.isEmpty()) return@withLock
@@ -77,9 +91,9 @@ class OfflineQueueService @Inject constructor(
             } catch (e: kotlinx.coroutines.CancellationException) {
                 throw e
             } catch (e: Exception) {
-                val kind = rommErrorKind(e)
-                if (e is RommSwitchedOffException || kind == RommErrorKind.UNREACHABLE || kind == RommErrorKind.NOT_SET_UP) { Log.i(TAG, "Still waiting for a connection"); break }
-                Log.w(TAG, "Dropped a waiting change for ROM ${p.romId}: $kind")
+                val code = generateSequence<Throwable>(e) { it.cause }.take(6).firstNotNullOfOrNull { it as? JsonHttp.HttpException }?.code
+                if (e is RommSwitchedOffException || !OfflineMode.dropsEntry(code)) { Log.i(TAG, "Kept the waiting changes: ${rommErrorKind(e)}"); break }
+                Log.w(TAG, "Dropped a waiting change for ROM ${p.romId}: HTTP $code")
                 true
             }
             if (done) list = list - p
