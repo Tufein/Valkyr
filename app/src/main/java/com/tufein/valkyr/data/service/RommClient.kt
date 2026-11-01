@@ -468,13 +468,15 @@ class RommClient @Inject constructor(
     }
 
     /**
-     * The bytes of a file the configured RomM server itself serves (a game's manual), at most [maxBytes].
-     * Refuses any URL that is not on that server, so nothing is ever fetched from elsewhere.
+     * Streams a file the configured RomM server itself serves (a game's manual) into [dest], at most [maxBytes].
+     * Refuses any URL that is not on that server (and any redirect off it), so nothing is fetched from elsewhere.
      */
-    suspend fun downloadServerFile(url: String, maxBytes: Long): ByteArray = withContext(Dispatchers.IO) {
+    suspend fun downloadServerFileTo(url: String, dest: java.io.File, maxBytes: Long): Long = withContext(Dispatchers.IO) {
         val base = baseUrl()
-        if (!url.startsWith("$base/", ignoreCase = true)) throw RommException("Not a file of the RomM server")
-        JsonHttp.download(url, headers(), maxBytes, readTimeoutMs = 120_000)
+        // Same scheme, host and port, below the server's path, no `..`; also checked again for every redirect.
+        val onServer = { u: String -> com.tufein.valkyr.util.ServerUrlGuard.isOnServer(base, u) }
+        if (!onServer(url)) throw RommException("Not a file of the RomM server")
+        JsonHttp.downloadToFile(url, headers(), dest, maxBytes, readTimeoutMs = 120_000, accept = onServer)
     }
 
     private fun JsonObject.str(name: String): String = get(name)?.takeUnless { it.isJsonNull }?.asString.orEmpty()

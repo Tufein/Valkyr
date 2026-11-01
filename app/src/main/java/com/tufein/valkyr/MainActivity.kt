@@ -312,6 +312,7 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         saveSyncService.autoSync()
+        (application as? DogmatixApplication)?.flushOfflineQueue()
     }
 
     /** singleTask: a deep link while the app is running arrives here instead of a new instance. */

@@ -36,6 +36,27 @@ object OfflineMode {
 
     const val MAX_PENDING = 200
 
+    /**
+     * Takes the fields in [keys] of [romId] out of the waiting list: an online write of those fields just
+     * succeeded, so an older queued value must not overwrite it later. Entries left without fields go.
+     */
+    fun discard(list: List<Pending>, romId: Int, keys: Set<String>): List<Pending> =
+        list.mapNotNull { p ->
+            if (p.romId != romId) return@mapNotNull p
+            val left = p.changes.filterKeys { it !in keys }
+            if (left.isEmpty()) null else if (left.size == p.changes.size) p else p.copy(changes = left)
+        }
+
+    /**
+     * Whether a waiting change is thrown away after the server refused it with [httpCode]. Only answers
+     * that will never succeed on a retry: the item is gone (404) or the data is refused (other 4xx).
+     * A wrong token (401/403), a timeout or rate limit (408/429), a server error (5xx), a certificate
+     * problem or no network (no code) keep the change for the next run.
+     */
+    fun dropsEntry(httpCode: Int?): Boolean = httpCode != null && httpCode in 400..499 && httpCode !in KEEP_CODES
+
+    private val KEEP_CODES = setOf(401, 403, 407, 408, 421, 423, 425, 429)
+
     fun encode(list: List<Pending>): String {
         val arr = JsonArray()
         list.forEach { p ->

@@ -6,7 +6,11 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import com.tufein.valkyr.util.OfflineMode
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
@@ -15,6 +19,7 @@ import javax.inject.Singleton
 /**
  * Whether the device has a working internet connection (6.0), for the Offline chip and for actions
  * that wait for a connection. [DownloadGate] watches the same default network, but only for "unmetered".
+ * [online] (validated) only drives the chip: RomM calls and manual downloads are never gated on it.
  * Based on the platform's connectivity callbacks (public Android API); not verified on a handheld here.
  */
 @Singleton
@@ -24,12 +29,21 @@ class NetworkMonitor @Inject constructor(@param:ApplicationContext private val c
     /** True while the default network reaches the internet (assumed true until Android says otherwise). */
     val online: StateFlow<Boolean> = _online.asStateFlow()
 
+    private val _reachable = MutableSharedFlow<Unit>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    /**
+     * Fires whenever Android reports a default network that claims internet access, validated or not.
+     * A LAN-only RomM sits on a network that is never "validated", so waiting writes are retried on this
+     * too (and simply stay queued when the request fails).
+     */
+    val reachable: SharedFlow<Unit> = _reachable.asSharedFlow()
+
     init {
         val manager = context.getSystemService(ConnectivityManager::class.java)
         if (manager != null) {
             runCatching {
                 manager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
                     override fun onCapabilitiesChanged(network: Network, caps: NetworkCapabilities) {
+                        if (caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) _reachable.tryEmit(Unit)
                         _online.value = OfflineMode.isOnline(
                             caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET),
                             caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
