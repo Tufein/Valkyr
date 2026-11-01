@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -187,7 +188,11 @@ fun ShelvesContent(
     }
     val coverWidth = if (landscape) CoverCardWidth else 128.dp
     val coverHeight = if (landscape) CoverCardCoverHeight else 174.dp
+    val listState = rememberLazyListState()
+    // 6.0: tapping the Library tab again brings the shelves back to the top.
+    com.tufein.valkyr.ui.navigation.OnTabReselect(com.tufein.valkyr.ui.navigation.NavRoutes.Home.route) { listState.scrollToItem(0) }
     LazyColumn(
+        state = listState,
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(top = 4.dp, bottom = 24.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp)
@@ -325,7 +330,7 @@ private fun CoverShelf(
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun HeroCard(
+internal fun HeroCard(
     hero: ShelvesModel.Recent,
     landscape: Boolean,
     onPlay: () -> Unit,

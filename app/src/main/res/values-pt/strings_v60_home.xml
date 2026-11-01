@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home60_view_consoles">Consolas</string>
+    <string name="home60_consoles_title">Consolas</string>
+    <string name="home60_all_games">Todos os jogos</string>
+    <string name="home60_link_wishlist">Lista de desejos</string>
+    <string name="home60_link_for_you">Para ti</string>
+    <string name="home60_link_collections">Coleções</string>
+    <string name="home60_start_view">Vista inicial</string>
+    <string name="home60_start_view_hint">A vista com que o separador Biblioteca abre. Segue também a vista que escolheres lá.</string>
+    <plurals name="home60_games">
+        <item quantity="one">%d jogo</item>
+        <item quantity="many">%d jogos</item>
+        <item quantity="other">%d jogos</item>
+    </plurals>
+    <plurals name="home60_here">
+        <item quantity="one">%d aqui</item>
+        <item quantity="many">%d aqui</item>
+        <item quantity="other">%d aqui</item>
+    </plurals>
+</resources>

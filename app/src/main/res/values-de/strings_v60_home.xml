@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home60_view_consoles">Konsolen</string>
+    <string name="home60_consoles_title">Konsolen</string>
+    <string name="home60_all_games">Alle Spiele</string>
+    <string name="home60_link_wishlist">Wunschliste</string>
+    <string name="home60_link_for_you">Für dich</string>
+    <string name="home60_link_collections">Sammlungen</string>
+    <string name="home60_start_view">Startansicht</string>
+    <string name="home60_start_view_hint">Die Ansicht, in der der Tab Bibliothek startet. Folgt auch der Ansicht, die du dort wählst.</string>
+    <plurals name="home60_games">
+        <item quantity="one">%d Spiel</item>
+        <item quantity="other">%d Spiele</item>
+    </plurals>
+    <plurals name="home60_here">
+        <item quantity="one">%d hier</item>
+        <item quantity="other">%d hier</item>
+    </plurals>
+</resources>

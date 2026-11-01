@@ -9,6 +9,7 @@ import com.tufein.valkyr.R
 import com.tufein.valkyr.ui.components.ActionPill
 import com.tufein.valkyr.ui.components.NavChevron
 import com.tufein.valkyr.ui.navigation.NavRoutes
+import com.tufein.valkyr.ui.screens.home.labelRes
 import com.tufein.valkyr.ui.screens.search.SEARCH_ALL_ROUTE
 import com.tufein.valkyr.ui.screens.settings.covers.CoverSourcesRow
 import com.tufein.valkyr.util.SettingKeys
@@ -163,6 +164,24 @@ internal fun SettingsEnv.controlsCardRows(): List<SettingsRow> = listOf(
 
 /** The rows of the Library card (see [SettingsLayout.groups] for their order). */
 internal fun SettingsEnv.libraryCardRows(): List<SettingsRow> = listOf(
+    SettingsRow(key = SettingKeys.START_VIEW) {
+        // Only the views the Library tab offers with a game page to open (all four); a stepper walks through them.
+        val views = com.tufein.valkyr.util.LibraryBrowse.availableViews(true)
+        fun shift(by: Int) = extra.setStartView(context, views[(views.indexOf(look.startView).coerceAtLeast(0) + by + views.size) % views.size])
+        SettingRow(
+            icon = R.drawable.ic_dashboard,
+            title = stringResource(R.string.home60_start_view),
+            hint = stringResource(R.string.home60_start_view_hint),
+            onClick = { shift(1) },
+            onAdjust = { shift(it) }
+        ) {
+            SettingsStepper(
+                stringResource(look.startView.labelRes()),
+                onDecrement = { shift(-1) },
+                onIncrement = { shift(1) }
+            )
+        }
+    },
     SettingsRow(key = SettingKeys.LIST_COVERS) {
         SettingRow(
             icon = R.drawable.ic_image,

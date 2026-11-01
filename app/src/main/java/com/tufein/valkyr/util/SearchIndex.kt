@@ -42,6 +42,7 @@ object SettingKeys {
     const val GLOW = "glow"
     const val TV_MODE = "tv_mode"
     const val LIST_COVERS = "list_covers"
+    const val START_VIEW = "start_view"
     const val COMPACT = "compact"
     const val COVERS_RETRY = "covers_retry"
     const val DOWNLOAD_PRESETS = "download_presets"
@@ -167,6 +168,7 @@ object SearchIndex {
             setting(SettingKeys.LANGUAGE, R.string.settings_language, R.string.settings_language_hint, R.drawable.ic_language, R.string.find8_kw_language),
             setting(SettingKeys.TEXT_SIZE, R.string.settings_text_size, R.string.settings_text_size_hint, R.drawable.ic_text_size, R.string.find8_kw_text_size),
             setting(SettingKeys.COMPACT, R.string.disc6_compact_title, R.string.disc6_compact_hint, R.drawable.ic_list),
+            setting(SettingKeys.START_VIEW, R.string.home60_start_view, R.string.home60_start_view_hint, R.drawable.ic_dashboard),
             setting(SettingKeys.LIST_COVERS, R.string.settings_v5_list_covers, R.string.settings_v5_list_covers_hint, R.drawable.ic_image, R.string.find8_kw_covers),
             setting(SettingKeys.ANIMATIONS, R.string.settings_v5_animations, R.string.settings_v5_animations_hint, R.drawable.ic_animation, R.string.find8_kw_animations),
             setting(SettingKeys.GLOW, R.string.settings_v5_glow, R.string.settings43_glow_hint, R.drawable.ic_blur_on),

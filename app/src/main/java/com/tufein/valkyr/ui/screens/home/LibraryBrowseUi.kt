@@ -90,12 +90,14 @@ internal fun ViewMode.labelRes(): Int = when (this) {
     ViewMode.OVERVIEW -> R.string.lib52_view_overview
     ViewMode.LIST -> R.string.lib52_view_list
     ViewMode.COVERS -> R.string.lib52_view_covers
+    ViewMode.CONSOLES -> R.string.home60_view_consoles
 }
 
-private fun ViewMode.iconRes(): Int = when (this) {
+internal fun ViewMode.iconRes(): Int = when (this) {
     ViewMode.OVERVIEW -> R.drawable.ic_dashboard
     ViewMode.LIST -> R.drawable.ic_list
     ViewMode.COVERS -> R.drawable.ic_grid
+    ViewMode.CONSOLES -> R.drawable.ic_gamepad
 }
 
 /** The short label of a sort order, as the sort chip shows it. */

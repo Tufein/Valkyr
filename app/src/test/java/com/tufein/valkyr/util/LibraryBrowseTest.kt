@@ -34,7 +34,7 @@ class LibraryBrowseTest {
 
     @Test
     fun `the overview is only offered when the shelves can open a game page`() {
-        assertEquals(listOf(ViewMode.OVERVIEW, ViewMode.LIST, ViewMode.COVERS), LibraryBrowse.availableViews(true))
+        assertEquals(listOf(ViewMode.OVERVIEW, ViewMode.LIST, ViewMode.COVERS, ViewMode.CONSOLES), LibraryBrowse.availableViews(true))
         assertEquals(listOf(ViewMode.LIST, ViewMode.COVERS), LibraryBrowse.availableViews(false))
     }
 
@@ -45,10 +45,33 @@ class LibraryBrowseTest {
         assertTrue(shelves(ViewMode.OVERVIEW))
         assertFalse(shelves(ViewMode.LIST))
         assertFalse(shelves(ViewMode.COVERS))
+        assertFalse(shelves(ViewMode.CONSOLES))
         assertFalse(shelves(ViewMode.OVERVIEW, start = false))
         assertFalse(shelves(ViewMode.OVERVIEW, force = true))
         assertFalse(shelves(ViewMode.OVERVIEW, empty = true))
         assertFalse(shelves(ViewMode.OVERVIEW, has = false))
+    }
+
+    @Test
+    fun `console tiles show only in the consoles view, in the start state, with a library`() {
+        fun tiles(mode: ViewMode, start: Boolean = true, force: Boolean = false, empty: Boolean = false, has: Boolean = true) =
+            LibraryBrowse.showConsoles(mode, has, start, force, empty)
+        assertTrue(tiles(ViewMode.CONSOLES))
+        assertFalse(tiles(ViewMode.OVERVIEW))
+        assertFalse(tiles(ViewMode.LIST))
+        assertFalse(tiles(ViewMode.CONSOLES, start = false))
+        assertFalse(tiles(ViewMode.CONSOLES, force = true))
+        assertFalse(tiles(ViewMode.CONSOLES, empty = true))
+        assertFalse(tiles(ViewMode.CONSOLES, has = false))
+    }
+
+    @Test
+    fun `the consoles view is stored as consoles and is a start page, not a browse view`() {
+        assertEquals(ViewMode.CONSOLES, LibraryBrowse.parseView("consoles"))
+        assertFalse(ViewMode.CONSOLES.isBrowse)
+        assertTrue(ViewMode.CONSOLES.isStartPage && ViewMode.OVERVIEW.isStartPage)
+        assertFalse(ViewMode.LIST.isStartPage || ViewMode.COVERS.isStartPage)
+        assertTrue(SettingSchema.compatible(LibraryBrowse.VIEW_KEY, "consoles"))
     }
 
     @Test

@@ -70,7 +70,9 @@ data class LookPrefs(
     val animations: Boolean = true,
     val glow: Boolean = true,
     val listCovers: Boolean = true,
-    val compactLists: Boolean = false
+    val compactLists: Boolean = false,
+    /** 6.0: the view the Library tab opens in (the same value its view switch remembers). */
+    val startView: com.tufein.valkyr.util.LibraryBrowse.ViewMode = com.tufein.valkyr.util.LibraryBrowse.ViewMode.OVERVIEW
 )
 
 /** Look, backup and update settings. */
@@ -94,6 +96,7 @@ class ExtraSettingsViewModel @Inject constructor(
     private val diagnostics: DiagnosticsService,
     private val profiles: ProfileService,
     private val lookSettings: LookSettings,
+    private val librarySettings: com.tufein.valkyr.data.local.LibrarySettings,
     private val covers: CoverRepository,
     private val weeklyDigest: com.tufein.valkyr.data.local.WeeklyDigestSettings,
     private val frontendMetadata: com.tufein.valkyr.data.local.FrontendMetadataSettings,
@@ -115,13 +118,15 @@ class ExtraSettingsViewModel @Inject constructor(
     fun setDigest(context: Context, on: Boolean) = executeWithToast(context, TAG) { weeklyDigest.setEnabled(on) }
     fun setMetaAuto(context: Context, on: Boolean) = executeWithToast(context, TAG) { frontendMetadata.setAutoWrite(on) }
 
-    val look: StateFlow<LookPrefs> = combine(lookSettings.animations, lookSettings.glow, lookSettings.listCovers, lookSettings.compactLists) { animations, glow, listCovers, compact ->
-        LookPrefs(animations, glow, listCovers, compact)
+    val look: StateFlow<LookPrefs> = combine(lookSettings.animations, lookSettings.glow, lookSettings.listCovers, lookSettings.compactLists, librarySettings.view) { animations, glow, listCovers, compact, startView ->
+        LookPrefs(animations, glow, listCovers, compact, startView)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), LookPrefs())
 
     fun setAnimations(context: Context, on: Boolean) = executeWithToast(context, TAG) { lookSettings.setAnimations(on) }
     fun setGlow(context: Context, on: Boolean) = executeWithToast(context, TAG) { lookSettings.setGlow(on) }
     fun setCompactLists(context: Context, on: Boolean) = executeWithToast(context, TAG) { lookSettings.setCompactLists(on) }
+
+    fun setStartView(context: Context, mode: com.tufein.valkyr.util.LibraryBrowse.ViewMode) = executeWithToast(context, TAG) { librarySettings.setView(mode) }
 
     fun setListCovers(context: Context, on: Boolean) = executeWithToast(context, TAG) { lookSettings.setListCovers(on) }
 
