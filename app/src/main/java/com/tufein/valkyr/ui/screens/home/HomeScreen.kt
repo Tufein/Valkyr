@@ -279,7 +279,7 @@ fun HomeScreen(
     var listHasFocus by remember { mutableStateOf(false) }
     var showFilterSheet by remember { mutableStateOf(false) }
     // Landscape: the filter panel folds into a thin rail (chevron or R3) to give the list more room.
-    var filtersCollapsed by rememberSaveable { mutableStateOf(false) }
+    var filtersCollapsed by rememberSaveable { mutableStateOf(true) }
     var railHasFocus by remember { mutableStateOf(false) }
     // The list is laid out at its wide (rail) width while the panel is folded *and* while it
     // is sliding back in, so the panel covers it progressively; it narrows once the slide ends.
