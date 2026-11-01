@@ -23,9 +23,9 @@ Valkyr führt eine große, durchsuchbare Liste mit den Spielen aus den Quellen, 
 
 *Die Screenshots verwenden erfundene Spieltitel und leere Platzhalterdateien und zeigen die App auf Englisch.*
 
-**Neueste Version: [5.7.0](https://github.com/Tufein/Valkyr/releases/tag/v5.7.0)** (Android-Build 69).
+**Neueste Version: [6.0.0](https://github.com/Tufein/Valkyr/releases/tag/v6.0.0)** (Android-Build 70).
 
-Bis 3.9.0 hieß die App Dogmatix+. Valkyr 5.7.0 hat eine eigene App-ID und wird daher neben der alten App installiert: Nutze *Einstellungen → Sichern* in der alten App und *Sicherung wiederherstellen* in Valkyr und entferne danach die alte App.
+Bis 3.9.0 hieß die App Dogmatix+. Valkyr 6.0.0 hat eine eigene App-ID und wird daher neben der alten App installiert: Nutze *Einstellungen → Sichern* in der alten App und *Sicherung wiederherstellen* in Valkyr und entferne danach die alte App.
 
 ## Installation
 
@@ -59,6 +59,9 @@ Du brauchst **Android 10 oder neuer**. Die App ist nicht bei Google Play erhält
 - **Sammlungen und Ziele**: Favoriten, eigene Listen, regelbasierte Sammlungen (Konsole, Sprache, Genre, Jahr, gespielt), Sammlungsziele, Spielverlauf, ein Jahresrückblick und die besten Spiele je Konsole von RetroAchievements.
 - **Wunschliste**: Spiele vormerken, Bescheid bekommen, wenn eines auftaucht, automatisch herunterladen und die Liste teilen.
 - **Liste importieren**: Text einfügen oder Datei laden; gefundene Spiele werden geladen, der Rest landet auf der Wunschliste.
+
+- **Vier Ansichten**: Übersicht, Liste, Cover und Konsolen (eine Kachel je Konsole mit Zahlen), Schnellfilter (heruntergeladen, Favoriten, durchgespielt, RetroAchievements besiegt/gemeistert), eine kompakte Suchleiste und optional *Versionen gruppieren*.
+- **Handbücher**: Handbuch vom RomM-Server laden und in der App lesen (PDF, Bilder, Text), dazu ein *Offline*-Chip.
 
 ### Herunterladen
 - **Direkte Links, Torrents und Magnet-Links**, dazu optional **TorBox** und **Real-Debrid**.
@@ -102,6 +105,10 @@ Du brauchst **Android 10 oder neuer**. Die App ist nicht bei Google Play erhält
 - **Deine eigene Cloud (WebDAV)**: verschlüsselte Backups (Nextcloud, ownCloud, Synology und andere) und Geräte-Sync von Favoriten, Wunschliste und Sammlungen.
 - **RetroAchievements**: Fortschritt und Abzeichen je Spiel, dein Profil und welche Spiele Erfolge haben.
 
+- **RomM per kurzem Code koppeln**; von der RomM-Webseite gesendete Spiele landen in der Download-Warteschlange; *RomM verwenden* schaltet jeden RomM-Aufruf aus und an.
+- **Sicherere Spielstände**: Backup vor jedem Überschreiben, Konflikte entscheidest du selbst, Speicherplätze auf einer Karte und ein *Ordnermodus (Syncthing)*.
+- **DukeStation** ist ein bekannter PlayStation-Emulator, mit Fortsetzen ab Speicherplatz.
+
 ### Profile
 - **Profile** blenden Konsolen oder Spiele mit gewählten Tags aus (ein Kinderprofil), mit optionaler PIN. Favoriten, Emulatoren, Notizen und Als Nächstes gelten pro Profil.
 
@@ -110,6 +117,7 @@ Du brauchst **Android 10 oder neuer**. Die App ist nicht bei Google Play erhält
 - **Quer und hochkant**, eine Ansicht für den **zweiten Bildschirm** und ein **TV-Modus** mit größerer Schrift und Fernbedienungstasten.
 - **Helles, dunkles oder tiefschwarzes** Design, zwölf Akzentfarben und Material You, Cover, einstellbare Schriftgröße und abschaltbare Animationen.
 - **Sieben Sprachen**: Englisch, Niederländisch, Deutsch, Französisch, Spanisch, Italienisch und Portugiesisch.
+- **Zweitbildschirm-Hub** mit Weiterspielen, letzten Spielen, Konsolen-Chips, Warteschlange und Akku-/Hitze-Chips, dazu eine kurze Tour durch die App.
 - **Ein neues Handheld einrichten**: eine Checkliste von der frischen Installation bis zum startklaren Handheld (Einstellungen, Spieleordner, Emulatoren, fehlende Spiele, Spielstände, Launcher); jeder Schritt öffnet den Bildschirm, der ihn erledigt.
 - **Sichern und Wiederherstellen** von Einstellungen, Quellen, Favoriten, Sammlungen und Downloadliste in einer Datei.
 

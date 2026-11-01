@@ -23,9 +23,9 @@ Valkyr rassemble les jeux des sources que *vous* ajoutez dans une seule grande l
 
 *Les captures d’écran utilisent des titres de jeux inventés et des fichiers vides de substitution, et montrent l’application en anglais.*
 
-**Dernière version : [5.7.0](https://github.com/Tufein/Valkyr/releases/tag/v5.7.0)** (build Android 69).
+**Dernière version : [6.0.0](https://github.com/Tufein/Valkyr/releases/tag/v6.0.0)** (build Android 70).
 
-Jusqu’à la 3.9.0, l’application s’appelait Dogmatix+. Valkyr 5.7.0 a son propre identifiant d’application et s’installe donc à côté de l’ancienne : utilisez *Réglages → Sauvegarder* dans l’ancienne appli et *Restaurer une sauvegarde* dans Valkyr, puis supprimez l’ancienne.
+Jusqu’à la 3.9.0, l’application s’appelait Dogmatix+. Valkyr 6.0.0 a son propre identifiant d’application et s’installe donc à côté de l’ancienne : utilisez *Réglages → Sauvegarder* dans l’ancienne appli et *Restaurer une sauvegarde* dans Valkyr, puis supprimez l’ancienne.
 
 ## Installation
 
@@ -59,6 +59,9 @@ Il vous faut **Android 10 ou plus récent**. L’application n’est pas sur Goo
 - **Collections et objectifs** : favoris, listes personnelles, collections par règles (console, langue, genre, année, joué), objectifs de collection, historique de jeu, bilan annuel et meilleurs jeux par console selon RetroAchievements.
 - **Liste de souhaits** : notez les jeux voulus, soyez prévenu quand l’un apparaît, téléchargez-les automatiquement et partagez la liste.
 - **Importer une liste** : collez ou chargez un fichier texte ; les jeux trouvés sont téléchargés, les autres vont dans la liste de souhaits.
+
+- **Quatre vues** : Aperçu, Liste, Jaquettes et Consoles (une tuile par console avec les nombres), filtres rapides (téléchargé, favoris, terminé, RetroAchievements battu/maîtrisé), une barre de recherche compacte et, en option, *Regrouper les versions*.
+- **Manuels** : téléchargez le manuel depuis votre serveur RomM et lisez-le dans l’app (PDF, images, texte), avec une pastille *Hors ligne*.
 
 ### Télécharger
 - **Liens directs, torrents et liens magnet**, plus **TorBox** et **Real-Debrid** en option.
@@ -102,6 +105,10 @@ Il vous faut **Android 10 ou plus récent**. L’application n’est pas sur Goo
 - **Votre propre cloud (WebDAV)** : sauvegardes chiffrées (Nextcloud, ownCloud, Synology et autres) et synchro d’appareils pour favoris, liste de souhaits et collections.
 - **RetroAchievements** : progression et badges par jeu, votre profil et les jeux qui ont des succès.
 
+- **Associez RomM avec un code court** ; les jeux envoyés depuis la page web de RomM arrivent dans votre file de téléchargements ; *Utiliser RomM* coupe ou rétablit chaque appel à RomM.
+- **Sauvegardes plus sûres** : copie avant chaque écrasement, conflits que vous tranchez, emplacements sur une carte et un *mode dossier (Syncthing)*.
+- **DukeStation** est un émulateur PlayStation connu, avec reprise depuis un emplacement.
+
 ### Profils
 - **Les profils** masquent des consoles ou des jeux portant certaines étiquettes (un profil enfant), avec un code PIN facultatif. Favoris, émulateurs, notes et À suivre sont gardés par profil.
 
@@ -110,6 +117,7 @@ Il vous faut **Android 10 ou plus récent**. L’application n’est pas sur Goo
 - **Paysage et portrait**, une vue **second écran** et un **mode TV** avec texte plus grand et touches de télécommande.
 - **Thème clair, sombre ou noir pur**, douze couleurs d’accent et Material You, jaquettes, taille de texte réglable et animations désactivables.
 - **Sept langues** : anglais, néerlandais, allemand, français, espagnol, italien et portugais.
+- **Hub du second écran** avec reprise du jeu, jeux récents, puces de console, file de téléchargements et puces batterie/chaleur, et une courte visite guidée de l’app.
 - **Configurer une nouvelle console portable** : une liste d’étapes de l’installation neuve à la console prête (réglages, dossier des jeux, émulateurs, jeux manquants, sauvegardes, lanceur) ; chaque étape ouvre l’écran qui s’en charge.
 - **Sauvegarde et restauration** des réglages, sources, favoris, collections et liste de téléchargements dans un seul fichier.
 

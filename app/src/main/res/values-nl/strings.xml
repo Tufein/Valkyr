@@ -1312,7 +1312,7 @@
     <string name="downloads_eta_minutes">ongeveer %1$d min</string>
     <string name="whats_new_title">Nieuw in Valkyr %1$s</string>
     <string-array name="whats_new_items">
-        <item>Klap het zoekveld, de snelkeuzes en de consolechips in tot één compacte balk voor meer ruimte voor spellen. Je zoekterm en filters blijven behouden; tik op de balk of druk op Y om weer te zoeken.</item>
+        <item>6.0: een Consoles-weergave, gegroepeerde versies, handleidingenlezer, offline-chip, tweede-scherm-hub, Syncthing-mapmodus voor saves en een korte rondleiding.</item>
     </string-array>
 
     <!-- 4.0 -->

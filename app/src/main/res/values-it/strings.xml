@@ -1262,7 +1262,7 @@
     <string name="downloads_eta_minutes">circa %1$d min</string>
     <string name="whats_new_title">Novità di Valkyr %1$s</string>
     <string-array name="whats_new_items">
-        <item>Comprimi ricerca, filtri rapidi e console in una barra compatta per lasciare più spazio ai giochi. Ricerca e filtri vengono mantenuti; tocca la barra o premi Y per riaprire la ricerca.</item>
+        <item>6.0: vista Console, versioni raggruppate, lettore di manuali, chip offline, hub per il secondo schermo, modalità cartella Syncthing per i salvataggi e un breve tour.</item>
     </string-array>
 
     <!-- 4.0 -->

@@ -23,9 +23,9 @@ The app includes no games. **Sources → More romsets** offers optional free con
 
 *The screenshots use made-up game titles and empty placeholder files.*
 
-**Latest release: [5.7.0](https://github.com/Tufein/Valkyr/releases/tag/v5.7.0)** (Android build 69).
+**Latest release: [6.0.0](https://github.com/Tufein/Valkyr/releases/tag/v6.0.0)** (Android build 70).
 
-Until 3.9.0 the app was called Dogmatix+. Valkyr 5.7.0 has its own app id, so it installs next to the old app: use *Settings → Back up* in the old app and *Restore backup* in Valkyr, then remove the old app.
+Until 3.9.0 the app was called Dogmatix+. Valkyr 6.0.0 has its own app id, so it installs next to the old app: use *Settings → Back up* in the old app and *Restore backup* in Valkyr, then remove the old app.
 
 ## Install
 
@@ -59,6 +59,9 @@ You need **Android 10 or newer**. The app is not on Google Play.
 - **Collections and goals**: favourites, your own lists, rule-based collections (console, language, genre, year, played), collection goals, play history, a yearly recap and the best games per console from RetroAchievements.
 - **Wishlist**: note games you want, get told when one appears, download them automatically and share the list.
 - **Import a list**: paste or load a text file; found games download, the rest go to the wishlist.
+
+- **Four ways to browse**: Overview, List, Covers and Consoles (a tile per console with counts), quick filters (downloaded, favourites, completed, RetroAchievements beaten/mastered), a compact search bar, and optional *Group versions* that folds regional copies into one entry.
+- **Manuals**: download a game's manual from your RomM server and read it in the app (PDF, pictures, text), plus an *Offline* chip that shows what still works.
 
 ### Download
 - **Direct links, torrents and magnet links**, plus optional **TorBox** and **Real-Debrid**.
@@ -102,6 +105,10 @@ You need **Android 10 or newer**. The app is not on Google Play.
 - **Your own cloud (WebDAV)**: encrypted backups (Nextcloud, ownCloud, Synology and others) and device sync of favourites, wishlist and collections.
 - **RetroAchievements**: progress and badges per game, your profile, and which games have achievements.
 
+- **Pair RomM with a short code** and let games sent from the RomM web page land in your download queue; *Use RomM* switches every RomM call off and on.
+- **Safer saves**: a backup before every overwrite, conflicts you decide (this device, server or both), save slots on one card, and a *Folder mode (Syncthing)* that mirrors saves into a folder Syncthing syncs.
+- **DukeStation** is a known PlayStation emulator, with resume from a save slot.
+
 ### Profiles
 - **Profiles** hide consoles or games with chosen tags (a child's profile), with an optional PIN. Favourites, emulators, notes and Up next are kept per profile.
 
@@ -110,6 +117,7 @@ You need **Android 10 or newer**. The app is not on Google Play.
 - **Landscape and portrait**, a **second-screen** view, and a **TV mode** with larger text and remote keys.
 - **Light, dark or pure black** themes, twelve accent colours and Material You, covers, adjustable text size, animations that can be switched off.
 - **Seven languages**: English, Dutch, German, French, Spanish, Italian and Portuguese.
+- **Second-screen hub**: continue playing, recent games, console chips, the download queue and battery/heat chips on a second display, plus a short tour of the app.
 - **Set up a new handheld**: a checklist from a fresh install to a ready handheld (settings, games folder, emulators, missing games, saves, launcher); every step opens the screen that does it.
 - **Back up and restore** settings, sources, favourites, collections and the download list in one file.
 

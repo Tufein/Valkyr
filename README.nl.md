@@ -23,9 +23,9 @@ Valkyr houdt één grote, doorzoekbare lijst bij van de games uit de bronnen die
 
 *De screenshots gebruiken verzonnen gametitels en lege dummybestanden en tonen de app in het Engels.*
 
-**Laatste release: [5.7.0](https://github.com/Tufein/Valkyr/releases/tag/v5.7.0)** (Android build 69).
+**Laatste release: [6.0.0](https://github.com/Tufein/Valkyr/releases/tag/v6.0.0)** (Android build 70).
 
-Tot en met 3.9.0 heette de app Dogmatix+. Valkyr 5.7.0 heeft een eigen app-id en installeert dus naast de oude app: gebruik *Instellingen → Back-up maken* in de oude app en *Back-up terugzetten* in Valkyr, en verwijder daarna de oude app.
+Tot en met 3.9.0 heette de app Dogmatix+. Valkyr 6.0.0 heeft een eigen app-id en installeert dus naast de oude app: gebruik *Instellingen → Back-up maken* in de oude app en *Back-up terugzetten* in Valkyr, en verwijder daarna de oude app.
 
 ## Installeren
 
@@ -59,6 +59,9 @@ Je hebt **Android 10 of nieuwer** nodig. De app staat niet in Google Play.
 - **Collecties en doelen**: favorieten, eigen lijsten, collecties op basis van regels (console, taal, genre, jaar, gespeeld), collectiedoelen, speelgeschiedenis, een jaaroverzicht en de beste games per console van RetroAchievements.
 - **Verlanglijst**: noteer games die je wilt, krijg een melding als er een opduikt, download ze automatisch en deel de lijst.
 - **Lijst importeren**: plak of laad een tekstbestand; gevonden games worden gedownload, de rest gaat naar de verlanglijst.
+
+- **Vier manieren om te bladeren**: Overzicht, Lijst, Covers en Consoles (een tegel per console met aantallen), snelle filters (gedownload, favorieten, uitgespeeld, RetroAchievements verslagen/gemeesterd), een compacte zoekbalk en optioneel *Versies groeperen* dat regiokopieën tot één item samenvoegt.
+- **Handleidingen**: download de handleiding van een spel van je RomM-server en lees die in de app (PDF, afbeeldingen, tekst), plus een *Offline*-chip die toont wat nog werkt.
 
 ### Downloaden
 - **Directe links, torrents en magnetlinks**, plus optioneel **TorBox** en **Real-Debrid**.
@@ -102,6 +105,10 @@ Je hebt **Android 10 of nieuwer** nodig. De app staat niet in Google Play.
 - **Je eigen cloud (WebDAV)**: versleutelde back-ups (Nextcloud, ownCloud, Synology en andere) en toestelsynchronisatie van favorieten, verlanglijst en collecties.
 - **RetroAchievements**: voortgang en badges per game, je profiel, en welke games achievements hebben.
 
+- **Koppel RomM met een korte code** en laat spellen die je op de RomM-webpagina verstuurt in je downloadwachtrij landen; *RomM gebruiken* zet elke RomM-aanroep uit of aan.
+- **Veiligere saves**: een back-up vóór elke overschrijving, conflicten die je zelf beslist (dit apparaat, server of beide), save-slots op één kaart en een *Mapmodus (Syncthing)* die saves spiegelt naar een map die Syncthing synchroniseert.
+- **DukeStation** is een bekende PlayStation-emulator, met hervatten vanaf een save-slot.
+
 ### Profielen
 - **Profielen** verbergen consoles of games met gekozen tags (een kinderprofiel), met een optionele pincode. Favorieten, emulators, notities en Hierna spelen worden per profiel bewaard.
 
@@ -110,6 +117,7 @@ Je hebt **Android 10 of nieuwer** nodig. De app staat niet in Google Play.
 - **Liggend en staand**, een weergave voor het **tweede scherm** en een **tv-modus** met grotere tekst en afstandsbedieningstoetsen.
 - **Licht, donker of zuiver zwart** thema, twaalf accentkleuren en Material You, covers, instelbare tekstgrootte en animaties die uit kunnen.
 - **Zeven talen**: Engels, Nederlands, Duits, Frans, Spaans, Italiaans en Portugees.
+- **Tweede-scherm-hub**: verder spelen, recente spellen, console-chips, de downloadwachtrij en batterij-/hitte-chips op een tweede scherm, plus een korte rondleiding door de app.
 - **Een nieuwe handheld instellen**: een checklist van verse installatie tot klaar voor gebruik (instellingen, gamesmap, emulators, ontbrekende games, saves, launcher); elke stap opent het scherm dat het doet.
 - **Back-up en herstel** van instellingen, bronnen, favorieten, collecties en de downloadlijst in één bestand.
 
