@@ -97,13 +97,14 @@ fun RommGameSection(
     LaunchedEffect(consoleId, fileName) { viewModel.load(consoleId, fileName) }
     val ui by viewModel.ui.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val queuedText = stringResource(R.string.man60_queued)
     LaunchedEffect(viewModel) {
         viewModel.events.collect { kind ->
             ToastUtil.showError(context, context.getString(R.string.romm5_save_failed, context.getString(rommErrorText(kind))))
         }
     }
     LaunchedEffect(viewModel) {
-        viewModel.queued.collect { ToastUtil.showInfo(context, context.getString(R.string.man60_queued)) }
+        viewModel.queued.collect { ToastUtil.showInfo(context, queuedText) }
     }
     if (ui.phase == RommGamePhase.RESOLVING || ui.phase == RommGamePhase.ABSENT) return
 
