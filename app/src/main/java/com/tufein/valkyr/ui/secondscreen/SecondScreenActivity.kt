@@ -34,7 +34,7 @@ class SecondScreenActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         if (registeredDisplay == null) {
-            val id = display?.displayId ?: Display.DEFAULT_DISPLAY
+            val id = displayIdCompat()
             registeredDisplay = id
             DualScreen.HubDisplays.add(id)
         }
