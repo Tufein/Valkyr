@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home60_view_consoles">Consoles</string>
+    <string name="home60_consoles_title">Consoles</string>
+    <string name="home60_all_games">Alle spellen</string>
+    <string name="home60_link_wishlist">Verlanglijst</string>
+    <string name="home60_link_for_you">Voor jou</string>
+    <string name="home60_link_collections">Collecties</string>
+    <string name="home60_start_view">Startweergave</string>
+    <string name="home60_start_view_hint">De weergave waarmee het tabblad Bibliotheek opent. Volgt ook de weergave die je daar kiest.</string>
+    <plurals name="home60_games">
+        <item quantity="one">%d spel</item>
+        <item quantity="other">%d spellen</item>
+    </plurals>
+    <plurals name="home60_here">
+        <item quantity="one">%d op toestel</item>
+        <item quantity="other">%d op toestel</item>
+    </plurals>
+</resources>

@@ -103,7 +103,7 @@ object SettingsLayout {
     val everyday: Map<SettingsGroup, List<String>> = linkedMapOf(
         SettingsGroup.TOOLS to listOf(K.TOOLS, K.SEARCH_ALL),
         SettingsGroup.LOOK to listOf(K.THEME, K.ACCENT, K.LANGUAGE, K.TEXT_SIZE, K.GAMEPAD_LAYOUT, K.SWAP_BUTTONS),
-        SettingsGroup.LIBRARY to listOf(K.PROFILES, K.FAVORITE_LANGUAGES, K.VERSION_PREF, K.LIST_COVERS, K.COVERS_RETRY),
+        SettingsGroup.LIBRARY to listOf(K.PROFILES, K.FAVORITE_LANGUAGES, K.VERSION_PREF, K.START_VIEW, K.LIST_COVERS, K.COVERS_RETRY),
         SettingsGroup.SOURCES to listOf(
             K.AUTOSCAN, K.AUTOSCAN_EVERY, K.AUTOSCAN_WIFI, K.AUTOSCAN_CHARGING, K.AUTOSCAN_NIGHT, K.WISHLIST_AUTO, K.DIGEST
         ),

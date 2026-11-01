@@ -5,9 +5,9 @@ import com.tufein.valkyr.data.model.SortOption
 /**
  * 5.1 "Library handier": the pure parts of the Library tab's view switch and quick filters.
  *
- * The tab has three views of the same games. [ViewMode.OVERVIEW] is the shelves page that exists
+ * The tab has four views of the same games. [ViewMode.OVERVIEW] is the shelves page that exists
  * since 3.8 (and stays the default, so an update changes nothing by itself); [ViewMode.LIST] is a
- * compact row per game with one big action button; [ViewMode.COVERS] is a grid of covers. The last
+ * compact row per game with one big action button; [ViewMode.COVERS] is a grid of covers; 6.0 adds [ViewMode.CONSOLES], a start page of console tiles (see [ConsoleHome]). The last
  * view is remembered under [VIEW_KEY] and comes back on the next start.
  */
 object LibraryBrowse {
@@ -21,10 +21,14 @@ object LibraryBrowse {
     enum class ViewMode(val key: String) {
         OVERVIEW("overview"),
         LIST("list"),
-        COVERS("covers");
+        COVERS("covers"),
+        CONSOLES("consoles");
 
-        /** The views that show the games themselves (not the shelves): A / tap runs the game's main action. */
-        val isBrowse: Boolean get() = this != OVERVIEW
+        /** The views that show the games themselves (not a start page): A / tap runs the game's main action. */
+        val isBrowse: Boolean get() = this == LIST || this == COVERS
+
+        /** The views that are a start page (shelves, console tiles) while nothing narrows the library. */
+        val isStartPage: Boolean get() = this == OVERVIEW || this == CONSOLES
     }
 
     /** The view stored under [key]; anything unknown (or nothing stored yet) is the overview, i.e. today's look. */
@@ -37,6 +41,10 @@ object LibraryBrowse {
     /** Which of the three shows when nothing narrows the list: the shelves only in the overview. */
     fun showShelves(mode: ViewMode, hasShelves: Boolean, startState: Boolean, forceList: Boolean, libraryEmpty: Boolean): Boolean =
         hasShelves && startState && mode == ViewMode.OVERVIEW && !forceList && !libraryEmpty
+
+    /** Whether the console tiles show: the same conditions as the shelves, in the [ViewMode.CONSOLES] view. */
+    fun showConsoles(mode: ViewMode, hasShelves: Boolean, startState: Boolean, forceList: Boolean, libraryEmpty: Boolean): Boolean =
+        hasShelves && startState && mode == ViewMode.CONSOLES && !forceList && !libraryEmpty
 
     /** Whether the found games are drawn as a cover grid. */
     fun showGrid(mode: ViewMode): Boolean = mode == ViewMode.COVERS

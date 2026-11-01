@@ -303,6 +303,23 @@ fun HomeScreen(
     LaunchedEffect(focusedItem) { SecondScreenState.focus(focusedItem) }
     // With touch there is no cursor: the game whose details are open goes to the second screen.
     LaunchedEffect(detailsState?.item) { detailsState?.item?.let { SecondScreenState.focus(it) } }
+    // 6.0: when the search closes (B, the keyboard's Done, folding the panel) the cursor goes back to the game it
+    // was on before (the last row it visited, if that game is still listed), else to the start page / first row.
+    val restoreAfterSearch: () -> Unit = {
+        if (Gamepad.connected.value) scope.launch {
+            withFrameNanos { }
+            withFrameNanos { }
+            val last = focusedItem?.takeIf { row -> !shelvesNow.value && results.any { it.file.id == row.file.id } }
+            if (last != null) {
+                returnGame = last.file.consoleId to last.file.fileName
+                val back = returnFocus.requestFocusWhenReady(3)
+                returnGame = null
+                if (back) return@launch
+            }
+            val target = if (shelvesNow.value) shelvesFocus else listFocus
+            if (!target.requestFocusWhenReady(3)) searchToggleFocus.requestFocusWhenReady(2)
+        }
+    }
     val setSearchExpanded: (Boolean) -> Unit = { expanded ->
         if (!expanded) {
             keyboard?.hide()
@@ -310,11 +327,11 @@ fun HomeScreen(
             searchActive = false
         }
         searchCollapsed = !expanded
-        if (Gamepad.connected.value) scope.launch {
+        if (!expanded) restoreAfterSearch()
+        else if (Gamepad.connected.value) scope.launch {
             withFrameNanos { }
             withFrameNanos { }
-            val target = if (expanded) searchToggleFocus else if (shelvesNow.value) shelvesFocus else listFocus
-            if (!target.requestFocusWhenReady(3)) searchToggleFocus.requestFocusWhenReady(2)
+            searchToggleFocus.requestFocusWhenReady(3)
         }
     }
     // Folding hides whichever side holds the focus, so it is handed over explicitly
@@ -552,7 +569,9 @@ fun HomeScreen(
 
     // 3.8.0: shelves in the start state (see ShelvesModel.isStartState); an empty library keeps its own empty state.
     val startState = ShelvesModel.isStartState(query, activeFilterCount, sort == SortOption.NAME_ASC)
-    val showShelves = LibraryBrowse.showShelves(viewMode, onOpenGame != null, startState, forceList, libraryEmptyState.value)
+    // 6.0: [showShelves] means "a start page shows" (the shelves, or the Consoles tiles); [showConsoles] says which.
+    val showConsoles = LibraryBrowse.showConsoles(viewMode, onOpenGame != null, startState, forceList, libraryEmptyState.value)
+    val showShelves = showConsoles || LibraryBrowse.showShelves(viewMode, onOpenGame != null, startState, forceList, libraryEmptyState.value)
     SideEffect { shelvesNow.value = showShelves }
     // After a shelf leads to the list (a console's "See all", a chip in landscape) the cursor goes to
     // its first row once the new results are in (gamepad only).
@@ -581,7 +600,7 @@ fun HomeScreen(
     val onPickView: (LibraryBrowse.ViewMode) -> Unit = { mode ->
         viewModel.setViewMode(mode)
         forceList = false
-        if (mode == LibraryBrowse.ViewMode.OVERVIEW && !startState) viewModel.clearAllFilters()
+        if (mode.isStartPage && !startState) viewModel.clearAllFilters()
     }
     val quickRow: @Composable (Modifier, Int) -> Unit = { modifier, inset ->
         QuickFilterRow(
@@ -614,7 +633,23 @@ fun HomeScreen(
     }
     val onItemClick: (DownloadableFileWithTags) -> Unit = if (viewMode.isBrowse) onPrimary else onRowClick
     val shelvesPanel: @Composable (Modifier, (@Composable () -> Unit)?) -> Unit = { modifier, header ->
-        HomeShelves(
+        if (showConsoles) ConsolesHome(
+            onOpenGame = { c, f -> returnGame = c to f; onOpenGame?.invoke(c, f) },
+            onPlay = playFromShelf,
+            onOpenConsole = openConsoleList,
+            onShowAll = { forceList = true },
+            onOpenWishlist = { navController.navigate(NavRoutes.Wishlist.route) },
+            onOpenForYou = { navController.navigate(NavRoutes.UpNext.route) },
+            onOpenCollections = { navController.navigate(NavRoutes.Collections.route) },
+            modifier = modifier,
+            initialFocus = shelvesFocus,
+            focusOnShow = shelvesFocusPending && !searchActive,
+            onFocusTaken = { shelvesFocusPending = false },
+            landscape = isLandscape,
+            afterHero = { ContinuePlayingShelf(onOpenGame = openGame) },
+            returnGame = returnGame,
+            returnFocus = returnFocus
+        ) else HomeShelves(
             onOpenGame = { c, f -> returnGame = c to f; onOpenGame?.invoke(c, f) },
             onPlay = playFromShelf,
             onOpenConsole = openConsoleList,
@@ -806,7 +841,7 @@ fun HomeScreen(
         when {
             showFilterSheet -> showFilterSheet = false
             expandedFilter != null -> expandedFilter = null
-            searchActive -> { focusManager.clearFocus(); searchActive = false }
+            searchActive -> { focusManager.clearFocus(); searchActive = false; restoreAfterSearch() }
             // 3.9.0: B in the landscape filter panel goes back to the games first (a second B
             // then clears search and filters, as before), like closing the filter sheet upright.
             filtersHaveFocus -> runCatching { (if (shelvesNow.value) shelvesFocus else listFocus).requestFocus() }
@@ -974,7 +1009,7 @@ fun HomeScreen(
                                         onValueChange = viewModel::setSearch,
                                         active = searchActive,
                                         onActivate = activateSearch,
-                                        onDismiss = { searchActive = false; runCatching { (if (shelvesNow.value) shelvesFocus else listFocus).requestFocus() } },
+                                        onDismiss = { searchActive = false; restoreAfterSearch() },
                                         focusRequester = searchFocus,
                                         trailing = toggle,
                                         contentShift = contentShift,
@@ -1108,7 +1143,7 @@ fun HomeScreen(
                                 onValueChange = viewModel::setSearch,
                                 active = searchActive,
                                 onActivate = activateSearch,
-                                onDismiss = { searchActive = false; runCatching { (if (shelvesNow.value) shelvesFocus else listFocus).requestFocus() } },
+                                onDismiss = { searchActive = false; restoreAfterSearch() },
                                 focusRequester = searchFocus,
                                 trailing = toggle,
                                 height = SearchHeight,

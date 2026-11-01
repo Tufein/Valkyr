@@ -45,8 +45,13 @@ object ShelvesModel {
         val key: String get() = "console:$consoleId"
     }
 
-    /** Everything the shelves show. */
-    data class State(val hero: Recent?, val forYou: List<Game>, val shelves: List<Shelf>) {
+    /** Everything the shelves show. [tiles] only feed the 6.0 Consoles start page. */
+    data class State(
+        val hero: Recent?,
+        val forYou: List<Game>,
+        val shelves: List<Shelf>,
+        val tiles: List<com.tufein.valkyr.util.ConsoleHome.Tile> = emptyList()
+    ) {
         val isEmpty: Boolean get() = hero == null && forYou.isEmpty() && shelves.isEmpty()
 
         companion object {

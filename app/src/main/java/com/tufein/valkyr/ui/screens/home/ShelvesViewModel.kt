@@ -16,6 +16,7 @@ import com.tufein.valkyr.data.service.ProfileService
 import com.tufein.valkyr.data.service.UpNextService
 import com.tufein.valkyr.data.state.RescanStateHolder
 import com.tufein.valkyr.util.ConsoleFormatter
+import com.tufein.valkyr.util.ConsoleHome
 import com.tufein.valkyr.util.GameShortcuts
 import com.tufein.valkyr.util.HistoryEvent
 import com.tufein.valkyr.util.HistoryKind
@@ -147,7 +148,9 @@ class ShelvesViewModel @Inject constructor(
             val shelves = if (consoles.owned.isNotEmpty()) {
                 ShelvesModel.consoleShelves(consoles.owned, recent.associate { it.game.key to it.at }, ConsoleFormatter::getConsoleDisplayName)
             } else consoles.newest
-            ShelvesModel.State(hero, withoutHiddenTags(forYou, restrictions), shelves)
+            // The Consoles start page: totals from the per-rescan cache, "here" from the owned games just worked out.
+            val tiles = ConsoleHome.tiles(consoles.totals, consoles.owned.mapValues { it.value.size }, ConsoleFormatter::getConsoleDisplayName)
+            ShelvesModel.State(hero, withoutHiddenTags(forYou, restrictions), shelves, tiles)
         }.flowOn(Dispatchers.IO)
             .distinctUntilChanged()
             .stateIn(viewModelScope, SharingStarted.Lazily, null)
@@ -157,7 +160,9 @@ class ShelvesViewModel @Inject constructor(
     private class ConsoleGames(
         val keys: Set<String>,
         val owned: Map<String, List<ShelvesModel.Game>>,
-        val newest: List<ShelvesModel.Shelf>
+        val newest: List<ShelvesModel.Shelf>,
+        /** Games per console (the profile's hidden consoles left out), for the Consoles tiles. */
+        val totals: List<Pair<String, Int>> = emptyList()
     )
 
     private class Inputs(
@@ -182,14 +187,15 @@ class ShelvesViewModel @Inject constructor(
             val games = rows.filter { it.id in allowed }.map { ShelvesModel.Game(it.consoleId, it.fileName, it.name, owned = true) }
             if (games.isNotEmpty()) owned[console.id] = games
         }
-        if (owned.isNotEmpty()) return ConsoleGames(keys, owned, emptyList())
+        val totals = consoles.map { it.id to it.fileCount }
+        if (owned.isNotEmpty()) return ConsoleGames(keys, owned, emptyList(), totals)
         // Nothing on the device yet: the newest games of the biggest consoles (the query applies the profile itself).
         val counts = consoles.associate { it.id to it.fileCount }
         val newest = ShelvesModel.newestConsoles(counts, ConsoleFormatter::getConsoleDisplayName).mapNotNull { id ->
             val rows = repository.searchFilesWithTags(query = "", consoleIds = setOf(id), sort = SortOption.NEWEST, limit = ShelvesModel.SHELF_CAP)
             ShelvesModel.newestShelf(id, rows.map { ShelvesModel.Game(it.file.consoleId, it.file.fileName, it.file.name) }, counts[id] ?: 0)
         }
-        return ConsoleGames(keys, emptyMap(), newest)
+        return ConsoleGames(keys, emptyMap(), newest, totals)
     }
 
     private suspend fun recents(inputs: Inputs): List<ShelvesModel.Recent> {

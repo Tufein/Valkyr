@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home60_view_consoles">Console</string>
+    <string name="home60_consoles_title">Console</string>
+    <string name="home60_all_games">Tutti i giochi</string>
+    <string name="home60_link_wishlist">Lista dei desideri</string>
+    <string name="home60_link_for_you">Per te</string>
+    <string name="home60_link_collections">Collezioni</string>
+    <string name="home60_start_view">Vista iniziale</string>
+    <string name="home60_start_view_hint">La vista con cui si apre la scheda Libreria. Segue anche la vista che scegli lì.</string>
+    <plurals name="home60_games">
+        <item quantity="one">%d gioco</item>
+        <item quantity="many">%d giochi</item>
+        <item quantity="other">%d giochi</item>
+    </plurals>
+    <plurals name="home60_here">
+        <item quantity="one">%d qui</item>
+        <item quantity="many">%d qui</item>
+        <item quantity="other">%d qui</item>
+    </plurals>
+</resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home60_view_consoles">Consoles</string>
+    <string name="home60_consoles_title">Consoles</string>
+    <string name="home60_all_games">Tous les jeux</string>
+    <string name="home60_link_wishlist">Liste de souhaits</string>
+    <string name="home60_link_for_you">Pour vous</string>
+    <string name="home60_link_collections">Collections</string>
+    <string name="home60_start_view">Vue de départ</string>
+    <string name="home60_start_view_hint">La vue dans laquelle l’onglet Bibliothèque s’ouvre. Elle suit aussi la vue que vous y choisissez.</string>
+    <plurals name="home60_games">
+        <item quantity="one">%d jeu</item>
+        <item quantity="many">%d jeux</item>
+        <item quantity="other">%d jeux</item>
+    </plurals>
+    <plurals name="home60_here">
+        <item quantity="one">%d ici</item>
+        <item quantity="many">%d ici</item>
+        <item quantity="other">%d ici</item>
+    </plurals>
+</resources>
