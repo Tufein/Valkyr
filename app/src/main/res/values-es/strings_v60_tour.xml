@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tour60_title">Recorrido rápido</string>
+    <string name="tour60_skip">Omitir</string>
+    <string name="tour60_next">Siguiente</string>
+    <string name="tour60_back">Atrás</string>
+    <string name="tour60_done">Entendido</string>
+    <string name="tour60_progress">Tarjeta %1$d de %2$d</string>
+    <string name="tour60_library_title">Biblioteca: vistas y chips</string>
+    <string name="tour60_library_body">Cambia arriba en la Biblioteca entre resumen, lista y cuadrícula. Los chips bajo el buscador filtran por consola, género, descargado o no. La barra de búsqueda y filtros se puede plegar.</string>
+    <string name="tour60_game_title">Página del juego</string>
+    <string name="tour60_game_body">Abre un juego para ver su barra de acciones: descargar o jugar, favorito, lista de deseos y más. Todo lo del juego está debajo.</string>
+    <string name="tour60_romm_title">Usar RomM</string>
+    <string name="tour60_romm_body">En Nube puedes vincular tu servidor RomM. Código de emparejamiento: créalo en RomM, escríbelo en Valkyr y tu biblioteca, partidas e instalaciones se sincronizan.</string>
+    <string name="tour60_downloads_title">Descargas</string>
+    <string name="tour60_downloads_body">La pestaña Descargas muestra lo que está en curso, en cola o fallido. Puedes pausar la cola, reintentar lo fallido y ver dónde acaba cada archivo.</string>
+    <string name="tour60_settings_title">Ajustes y Herramientas</string>
+    <string name="tour60_settings_body">Ajustes y Herramientas están en Más. El recorrido sigue disponible en Más, Acerca de, cuando quieras verlo otra vez.</string>
+    <string name="tour60_about_action">Mostrar el recorrido otra vez</string>
+    <string name="tour60_about_hint">Recorrido rápido por las pantallas principales</string>
+</resources>

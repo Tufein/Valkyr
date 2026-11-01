@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tour60_title">Kurze Tour</string>
+    <string name="tour60_skip">Überspringen</string>
+    <string name="tour60_next">Weiter</string>
+    <string name="tour60_back">Zurück</string>
+    <string name="tour60_done">Verstanden</string>
+    <string name="tour60_progress">Karte %1$d von %2$d</string>
+    <string name="tour60_library_title">Bibliothek: Ansichten und Chips</string>
+    <string name="tour60_library_body">Wechsle oben in der Bibliothek zwischen Übersicht, Liste und Raster. Die Chips unter dem Suchfeld filtern nach Konsole, Genre, geladen oder nicht. Such- und Filterleiste lassen sich einklappen.</string>
+    <string name="tour60_game_title">Spielseite</string>
+    <string name="tour60_game_body">Öffne ein Spiel für die Aktionsleiste: Herunterladen oder Spielen, Favorit, Wunschliste und mehr. Alles zum Spiel steht darunter.</string>
+    <string name="tour60_romm_title">RomM nutzen</string>
+    <string name="tour60_romm_body">Unter Cloud verknüpfst du deinen RomM-Server. Kopplungscode: in RomM erstellen, in Valkyr eingeben, danach folgen Bibliothek, Spielstände und Installationen.</string>
+    <string name="tour60_downloads_title">Downloads</string>
+    <string name="tour60_downloads_body">Der Tab Downloads zeigt, was läuft, wartet oder fehlgeschlagen ist. Du kannst die Warteschlange pausieren, Fehlgeschlagenes wiederholen und sehen, wo jede Datei landet.</string>
+    <string name="tour60_settings_title">Einstellungen und Tools</string>
+    <string name="tour60_settings_body">Einstellungen und Tools findest du unter Mehr. Die Tour bleibt unter Mehr, Über, jederzeit abrufbar.</string>
+    <string name="tour60_about_action">Tour erneut zeigen</string>
+    <string name="tour60_about_hint">Kurze Tour durch die wichtigsten Bildschirme</string>
+</resources>

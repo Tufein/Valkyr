@@ -67,7 +67,9 @@ import com.tufein.valkyr.data.service.DownloadService
 import com.tufein.valkyr.data.service.GameMetadataService
 import com.tufein.valkyr.data.state.PendingLibraryFilters
 import com.tufein.valkyr.ui.components.LocalBoldFocus
+import com.tufein.valkyr.ui.components.TourDialog
 import com.tufein.valkyr.ui.components.WhatsNewDialog
+import com.tufein.valkyr.util.AppTour
 import com.tufein.valkyr.ui.screens.share.ShareTargetDialog
 import com.tufein.valkyr.ui.screens.sources.components.ScanReportDialog
 import com.tufein.valkyr.ui.screens.tools.BiosScreen
@@ -291,6 +293,12 @@ class MainActivity : AppCompatActivity() {
         val current = BuildConfig.VERSION_CODE
         if (onboardingDone == false) {
             LaunchedEffect(lastSeen) { if (lastSeen != current) appSettings.setLastSeenVersion(current) }
+            return
+        }
+        // 6.0: the tour comes first (once); the notes follow on a later start rather than stacking on it.
+        val tourSeen by appSettings.tourSeenVersion.collectAsStateWithLifecycle(initialValue = Int.MAX_VALUE)
+        if (AppTour.shouldShow(tourSeen, onboarded = true)) {
+            TourDialog { lifecycleScope.launch { appSettings.setTourSeenVersion(AppTour.VERSION) } }
             return
         }
         if (WhatsNew.shouldShow(lastSeen, current, onboarded = true)) {

@@ -89,7 +89,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -140,9 +139,10 @@ class HomeViewModel @Inject constructor(
 
     /** The view the tab was left in (overview until the user picks one); see [LibraryBrowse]. */
     val viewMode: StateFlow<LibraryBrowse.ViewMode> = librarySettings.view
-        // The saved view is read once up front (a tiny DataStore file) so the first frame is already the
-        // right one: starting on the overview would flash the shelves and hand the hero the gamepad focus.
-        .stateIn(viewModelScope, SharingStarted.Eagerly, runCatching { runBlocking { librarySettings.view.first() } }.getOrDefault(LibraryBrowse.ViewMode.OVERVIEW))
+        // The last view comes from a small SharedPreferences mirror so the first frame is already the right
+        // one (starting on the overview would flash the shelves and hand the hero the gamepad focus),
+        // without blocking the main thread on DataStore.
+        .stateIn(viewModelScope, SharingStarted.Eagerly, librarySettings.cachedView())
 
     fun setViewMode(mode: LibraryBrowse.ViewMode) {
         viewModelScope.launch { librarySettings.setView(mode) }

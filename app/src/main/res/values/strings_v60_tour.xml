@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tour60_title">Quick tour</string>
+    <string name="tour60_skip">Skip</string>
+    <string name="tour60_next">Next</string>
+    <string name="tour60_back">Back</string>
+    <string name="tour60_done">Got it</string>
+    <string name="tour60_progress">Card %1$d of %2$d</string>
+    <string name="tour60_library_title">Library: views and chips</string>
+    <string name="tour60_library_body">Switch between the overview, lists and grids at the top of the Library. The chips under the search box narrow it down by console, genre, downloaded or not. The search and filter bar can be folded away.</string>
+    <string name="tour60_game_title">Game page</string>
+    <string name="tour60_game_body">Open a game to see its action bar: download or play, favourite, add to the wishlist and more. Everything about the game sits below it.</string>
+    <string name="tour60_romm_title">Use RomM</string>
+    <string name="tour60_romm_body">Under Cloud you can link your RomM server. Pairing code: create one in RomM, type it in Valkyr and your library, saves and installs follow.</string>
+    <string name="tour60_downloads_title">Downloads</string>
+    <string name="tour60_downloads_body">The Downloads tab shows what is running, queued or failed. You can pause the queue, retry failed items and see where each file ends up.</string>
+    <string name="tour60_settings_title">Settings and Tools</string>
+    <string name="tour60_settings_body">Settings and Tools live under More. The tour stays available under More, About, whenever you want to see it again.</string>
+    <string name="tour60_about_action">Show the tour again</string>
+    <string name="tour60_about_hint">Quick tour of the main screens</string>
+</resources>
