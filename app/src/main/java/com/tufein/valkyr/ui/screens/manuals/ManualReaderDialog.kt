@@ -193,7 +193,7 @@ private fun TextReader(consoleId: String, fileName: String, doc: Manuals.Doc, vm
     val scope = rememberCoroutineScope()
     LaunchedEffect(doc) {
         val file = vm.fileOf(consoleId, fileName, doc.files.first())
-        val text = withContext(Dispatchers.IO) { runCatching { file.inputStream().use { it.readNBytes(2 * 1024 * 1024).toString(Charsets.UTF_8) } }.getOrDefault("") }
+        val text = withContext(Dispatchers.IO) { runCatching { file.inputStream().use { readUpTo(it, 2 * 1024 * 1024).toString(Charsets.UTF_8) } }.getOrDefault("") }
         blocks = if (Manuals.isMarkdown(file.name)) MarkdownLite.parse(text) else text.lines().map { MarkdownLite.Block(0, it) }
         list.scrollToItem(vm.lastPage(consoleId, fileName, doc).coerceAtMost((blocks!!.size - 1).coerceAtLeast(0)))
     }
@@ -227,4 +227,16 @@ private fun TextReader(consoleId: String, fileName: String, doc: Manuals.Doc, vm
             )
         }
     }
+}
+
+/** Reads at most [limit] bytes (InputStream.readNBytes needs API 33; the app supports 29). */
+private fun readUpTo(input: java.io.InputStream, limit: Int): ByteArray {
+    val out = java.io.ByteArrayOutputStream()
+    val buffer = ByteArray(8 * 1024)
+    while (out.size() < limit) {
+        val n = input.read(buffer, 0, minOf(buffer.size, limit - out.size()))
+        if (n < 0) break
+        out.write(buffer, 0, n)
+    }
+    return out.toByteArray()
 }
