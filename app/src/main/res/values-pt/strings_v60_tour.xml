@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tour60_title">Tour rápido</string>
+    <string name="tour60_skip">Saltar</string>
+    <string name="tour60_next">Seguinte</string>
+    <string name="tour60_back">Voltar</string>
+    <string name="tour60_done">Entendi</string>
+    <string name="tour60_progress">Cartão %1$d de %2$d</string>
+    <string name="tour60_library_title">Biblioteca: vistas e chips</string>
+    <string name="tour60_library_body">No topo da Biblioteca alterna entre resumo, lista e grelha. Os chips por baixo da pesquisa filtram por consola, género, transferido ou não. A barra de pesquisa e filtros pode ser recolhida.</string>
+    <string name="tour60_game_title">Página do jogo</string>
+    <string name="tour60_game_body">Abre um jogo para ver a barra de ações: transferir ou jogar, favorito, lista de desejos e mais. O resto do jogo fica por baixo.</string>
+    <string name="tour60_romm_title">Usar o RomM</string>
+    <string name="tour60_romm_body">Em Nuvem ligas o teu servidor RomM. Código de emparelhamento: cria-o no RomM, escreve-o no Valkyr e a biblioteca, os saves e as instalações seguem.</string>
+    <string name="tour60_downloads_title">Transferências</string>
+    <string name="tour60_downloads_body">O separador Transferências mostra o que está a decorrer, em fila ou falhado. Podes pausar a fila, repetir os falhados e ver onde fica cada ficheiro.</string>
+    <string name="tour60_settings_title">Definições e Ferramentas</string>
+    <string name="tour60_settings_body">Definições e Ferramentas estão em Mais. O tour fica disponível em Mais, Acerca, sempre que o quiseres rever.</string>
+    <string name="tour60_about_action">Mostrar o tour outra vez</string>
+    <string name="tour60_about_hint">Tour rápido pelos ecrãs principais</string>
+</resources>

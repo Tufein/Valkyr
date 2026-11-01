@@ -73,6 +73,7 @@ class AppSettings @Inject constructor(@param:ApplicationContext private val cont
         val AUTO_RETRY = booleanPreferencesKey("auto_retry_failed")
         val QUEUE_HELD = booleanPreferencesKey("queue_held")
         val LAST_SEEN_VERSION = intPreferencesKey("last_seen_version_code")
+        val TOUR_SEEN_VERSION = intPreferencesKey("tour_seen_version")
         val TEXT_SIZE = intPreferencesKey("text_size_percent")
         val RECENT_SEARCHES = stringPreferencesKey("recent_searches")
         val SAVE_SYNC_EMULATOR_FOLDERS = stringPreferencesKey("save_sync_emulator_folders")
@@ -143,6 +144,8 @@ class AppSettings @Inject constructor(@param:ApplicationContext private val cont
     val queueHeld: Flow<Boolean> = context.dataStore.data.map { it[Keys.QUEUE_HELD] ?: false }
     /** Version code whose "what's new" the user has seen; 0 = none yet (see [com.tufein.valkyr.util.WhatsNew]). */
     val lastSeenVersion: Flow<Int> = context.dataStore.data.map { it[Keys.LAST_SEEN_VERSION] ?: 0 }
+    /** Version of the first-run tour the user has seen or skipped; 0 = never (see [com.tufein.valkyr.util.AppTour]). */
+    val tourSeenVersion: Flow<Int> = context.dataStore.data.map { it[Keys.TOUR_SEEN_VERSION] ?: 0 }
     /** Text size in percent on top of Android's font size (see [TextSize]). */
     val textSizePercent: Flow<Int> = context.dataStore.data.map { it[Keys.TEXT_SIZE] ?: TextSize.DEFAULT }
     /** The last library searches, newest first (see [RecentSearches]). */
@@ -167,6 +170,7 @@ class AppSettings @Inject constructor(@param:ApplicationContext private val cont
     suspend fun setAutoRetryFailed(on: Boolean) = context.dataStore.edit { it[Keys.AUTO_RETRY] = on }
     suspend fun setQueueHeld(on: Boolean) = context.dataStore.edit { it[Keys.QUEUE_HELD] = on }
     suspend fun setLastSeenVersion(code: Int) = context.dataStore.edit { it[Keys.LAST_SEEN_VERSION] = code }
+    suspend fun setTourSeenVersion(version: Int) = context.dataStore.edit { it[Keys.TOUR_SEEN_VERSION] = version }
     suspend fun setTextSizePercent(percent: Int) = context.dataStore.edit { it[Keys.TEXT_SIZE] = percent }
     suspend fun addRecentSearch(query: String) = context.dataStore.edit {
         it[Keys.RECENT_SEARCHES] = RecentSearches.encode(RecentSearches.add(RecentSearches.decode(it[Keys.RECENT_SEARCHES] ?: ""), query))

@@ -16,7 +16,7 @@ object SettingSchema {
         """)
         keys("i", """
             auto_scan_hours concurrent_downloads dav_last_shared_added dav_last_shared_removed dav_last_sync_added
-            dav_last_sync_removed dav_sync_held_back download_night_end download_night_start last_seen_version_code
+            dav_last_sync_removed dav_sync_held_back download_night_end download_night_start last_seen_version_code tour_seen_version
             max_search_results metadata_timeout_s min_free_gb offline_collections_cap offline_collections_reserve_gb
             per_server_limit power_battery_percent save_sync_bg_interval_h smart_storage_recent_days text_size_percent
         """)
@@ -80,7 +80,7 @@ object SettingSchema {
     fun sanitizeNumber(name: String, value: Any): Any = when (val local = localName(name)) {
         "concurrent_downloads" -> (value as Int).coerceIn(1, 10)
         "metadata_timeout_s" -> (value as Int).coerceIn(TorrentConstants.MIN_METADATA_TIMEOUT_S, TorrentConstants.MAX_METADATA_TIMEOUT_S)
-        "max_search_results", "min_free_gb", "last_seen_version_code",
+        "max_search_results", "min_free_gb", "last_seen_version_code", "tour_seen_version",
         "dav_last_shared_added", "dav_last_shared_removed", "dav_last_sync_added", "dav_last_sync_removed", "dav_sync_held_back" -> (value as Int).coerceAtLeast(0)
         "save_sync_bg_interval_h" -> (value as Int).coerceIn(1, 24)
         SaveMerge.KEY_BACKUP_KEEP -> SaveBackups.clampKeep(value as Int)

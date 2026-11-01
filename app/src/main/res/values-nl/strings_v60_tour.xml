@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tour60_title">Korte rondleiding</string>
+    <string name="tour60_skip">Overslaan</string>
+    <string name="tour60_next">Volgende</string>
+    <string name="tour60_back">Terug</string>
+    <string name="tour60_done">Begrepen</string>
+    <string name="tour60_progress">Kaart %1$d van %2$d</string>
+    <string name="tour60_library_title">Bibliotheek: weergaven en chips</string>
+    <string name="tour60_library_body">Wissel bovenaan de bibliotheek tussen overzicht, lijst en raster. De chips onder het zoekvak filteren op console, genre, gedownload of niet. De zoek- en filterbalk kun je inklappen.</string>
+    <string name="tour60_game_title">Spelpagina</string>
+    <string name="tour60_game_body">Open een spel voor de actiebalk: downloaden of spelen, favoriet, op de verlanglijst en meer. Alles over het spel staat eronder.</string>
+    <string name="tour60_romm_title">RomM gebruiken</string>
+    <string name="tour60_romm_body">Onder Cloud koppel je je RomM-server. Koppelcode: maak er een in RomM, voer hem in Valkyr in en je bibliotheek, saves en installaties volgen.</string>
+    <string name="tour60_downloads_title">Downloads</string>
+    <string name="tour60_downloads_body">Het tabblad Downloads toont wat loopt, wacht of mislukt is. Je kunt de wachtrij pauzeren, mislukte items opnieuw proberen en zien waar elk bestand terechtkomt.</string>
+    <string name="tour60_settings_title">Instellingen en Tools</string>
+    <string name="tour60_settings_body">Instellingen en Tools vind je onder Meer. De rondleiding blijft beschikbaar onder Meer, Over, als je hem nog eens wilt zien.</string>
+    <string name="tour60_about_action">Rondleiding opnieuw tonen</string>
+    <string name="tour60_about_hint">Korte rondleiding door de belangrijkste schermen</string>
+</resources>

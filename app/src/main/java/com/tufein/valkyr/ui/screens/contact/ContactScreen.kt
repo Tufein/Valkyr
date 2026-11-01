@@ -35,6 +35,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.tufein.valkyr.BuildConfig
 import com.tufein.valkyr.R
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import com.tufein.valkyr.ui.components.ActionPill
+import com.tufein.valkyr.ui.components.TourDialog
 import com.tufein.valkyr.ui.components.IconTile
 import com.tufein.valkyr.ui.components.Panel
 import com.tufein.valkyr.ui.components.PanelTone
@@ -165,6 +171,15 @@ private fun AppCard(modifier: Modifier = Modifier) {
         Spacer(Modifier.height(8.dp))
         LinkRow(CreditLink(R.drawable.ic_github, stringResource(R.string.brand40_link_project), PROJECT_URL, PROJECT_URL.removePrefix("https://")))
         LinkRow(CreditLink(R.drawable.ic_bug, stringResource(R.string.brand40_link_issues), "$PROJECT_URL/issues", "GitHub Issues"))
+        // 6.0: the first-run tour, again on request.
+        var tourOpen by rememberSaveable { mutableStateOf(false) }
+        ActionPill(
+            label = stringResource(R.string.tour60_about_action),
+            onClick = { tourOpen = true },
+            icon = R.drawable.ic_info,
+            modifier = Modifier.padding(top = 4.dp)
+        )
+        if (tourOpen) TourDialog { tourOpen = false }
     }
 }
 
