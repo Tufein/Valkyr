@@ -1,9 +1,11 @@
 package com.tufein.valkyr.data.local
 
 import android.content.Context
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.tufein.valkyr.util.LibraryBrowse
+import com.tufein.valkyr.util.VariantGroups
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -23,4 +25,13 @@ class LibrarySettings @Inject constructor(@param:ApplicationContext private val 
         .distinctUntilChanged()
 
     suspend fun setView(mode: LibraryBrowse.ViewMode) = context.dataStore.edit { it[viewKey] = mode.key }
+
+    private val groupKey = booleanPreferencesKey(VariantGroups.GROUP_KEY)
+
+    /** 6.0: regional / revision copies of one game listed as one entry ("Group versions" in the Library filters). */
+    val groupVersions: Flow<Boolean> = context.dataStore.data
+        .map { it[groupKey] ?: VariantGroups.DEFAULT_ON }
+        .distinctUntilChanged()
+
+    suspend fun setGroupVersions(on: Boolean) = context.dataStore.edit { it[groupKey] = on }
 }
