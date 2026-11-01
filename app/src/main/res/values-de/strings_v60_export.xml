@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 6.0: Folder mode (Syncthing) and export notes -->
+    <string name="exp60_section">Ordnermodus (Syncthing)</string>
+    <string name="exp60_mode_title">Ordnermodus (Syncthing)</string>
+    <string name="exp60_mode_hint">Spiegelt Spielstände und States in einen Ordner, den Syncthing synchronisiert, statt mit RomM. Valkyr selbst baut keine Netzwerkverbindung auf; Syncthing überträgt den Ordner. Geänderte Spielstände werden zuerst gesichert, Konflikte warten auf deine Wahl, nichts wird gelöscht. Tipp: Trage .dogmatix-* in die .stignore des Ordners ein, damit die temporären Dateien von Valkyr nicht synchronisiert werden.</string>
+    <string name="exp60_dir_title">Syncthing-Ordner</string>
+    <string name="exp60_dir_hint">Wähle den Ordner, den Syncthing synchronisiert. Spielstände kommen nach saves/, States nach states/. Für dieses Gerät gelten die Ordner für Spielstände und States oben.</string>
+    <string name="exp60_needs_setup">Schalte zuerst den Ordnermodus ein und wähle den Ordner.</string>
+    <string name="exp60_running">Synchronisiere mit dem Ordner…</string>
+    <string name="exp60_busy">Es läuft bereits eine Spielstand-Synchronisierung. Versuche es gleich noch einmal.</string>
+    <string name="exp60_failed">Nicht synchronisiert: %1$s</string>
+    <string name="exp60_never">Noch nicht mit dem Ordner synchronisiert.</string>
+    <string name="exp60_sync_title">Mit dem Ordner synchronisieren</string>
+    <string name="exp60_sync_action">Synchronisieren</string>
+    <string name="exp60_summary">%1$d in den Ordner · %2$d auf dieses Gerät · %3$d unverändert</string>
+    <string name="exp60_conflict_device">%1$s wurde auf diesem Gerät und im Ordner geändert. Nichts wird ersetzt, bevor du wählst. Diese: die Datei auf diesem Gerät. Andere: die Datei im Ordner.</string>
+    <string name="exp60_conflict_copy">%1$s: Syncthing hat zwei Versionen behalten (Konfliktkopie von %2$s, %3$s). Diese: die Konfliktkopie von Syncthing. Andere: die Datei an ihrem Platz. Nichts wird gelöscht.</string>
+    <string name="exp60_keep_this">Diese behalten</string>
+    <string name="exp60_keep_other">Andere behalten</string>
+    <string name="exp60_keep_both">Beide behalten (Kopie)</string>
+    <string name="exp60_note_batocera">BIOS-Dateien gehören in den Ordner bios neben roms (die SHARE-Partition), nicht in roms. Führe nach dem Kopieren START > Game Settings > Update Gamelists aus. Valkyr schreibt keine Gamelists.</string>
+    <string name="exp60_note_knulli">BIOS-Dateien gehören nach /userdata/bios, neben den Ordner roms. Valkyr schreibt keine Gamelists.</string>
+    <string name="exp60_note_rocknix">Führe nach dem Kopieren START > Game Settings > Tools > Update Gamelists aus. Valkyr schreibt keine Gamelists. BIOS-Orte stehen auf den Systemseiten von rocknix.org.</string>
+    <string name="exp60_note_muos">BIOS-Dateien gehören nach MUOS/bios auf den Speicher mit dem Ordner MUOS. Valkyr schreibt keine Listen-, Namens- oder Artwork-Dateien; füge sie mit den eigenen Werkzeugen von muOS hinzu.</string>
+</resources>

@@ -400,6 +400,7 @@ fun SaveSyncScreen(viewModel: SaveSyncViewModel = hiltViewModel()) {
             }
         }
     }
+    val folderModeRows = folderModeRows()
     prune?.let { PruneDialog(it, onConfirm = { viewModel.confirmPrune(context) }, onDismiss = viewModel::closePrune) }
     val conflictRows: List<@Composable () -> Unit> = buildList {
         sync.conflicts.forEach { conflict -> add { ConflictRow(conflict, notSet, viewModel) } }
@@ -411,11 +412,12 @@ fun SaveSyncScreen(viewModel: SaveSyncViewModel = hiltViewModel()) {
             CardGrid.Section(header = true, items = autoRows.size),
             CardGrid.Section(header = true, items = syncRows.size),
             CardGrid.Section(header = true, items = conflictRows.size),
-            CardGrid.Section(header = true, items = safetyRows.size)
+            CardGrid.Section(header = true, items = safetyRows.size),
+            CardGrid.Section(header = true, items = folderModeRows.size)
         ),
         columns = 1
     )
-    val rowLists = listOf(folderRows, autoRows, syncRows, conflictRows, safetyRows)
+    val rowLists = listOf(folderRows, autoRows, syncRows, conflictRows, safetyRows, folderModeRows)
 
     val rowFocus = remember(cells.size) { List(cells.size) { FocusRequester() } }
     var focusedIndex by remember { mutableIntStateOf(-1) }
@@ -465,6 +467,7 @@ private fun SyncCardHeader(section: Int, conflicts: Int) {
         1 -> SettingsCardHeader(stringResource(R.string.save_sync_v5_section_auto), R.drawable.ic_schedule)
         2 -> SettingsCardHeader(stringResource(R.string.save_sync_v5_section_sync), R.drawable.ic_cloud_sync)
         4 -> SettingsCardHeader(stringResource(R.string.sv55_section_safety), R.drawable.ic_history)
+        5 -> SettingsCardHeader(stringResource(R.string.exp60_section), R.drawable.ic_sync)
         else -> Column {
             SettingsCardHeader(stringResource(R.string.save_sync_v5_section_conflicts), R.drawable.ic_warning) {
                 Pill(conflicts.toString(), tone = PillTone.Warning)

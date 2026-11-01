@@ -262,6 +262,16 @@ private fun LazyListScope.layoutItems(ui: GameTransferUi, viewModel: GameTransfe
     if (ui.layout != TargetFolderLayouts.Layout.LIBRARY) item(key = "layoutNote") {
         InfoCard(listOf(stringResource(R.string.layouts35_note)), icon = R.drawable.ic_info)
     }
+    exportNoteOf(ui.layout)?.let { note -> item(key = "exp60Note") { InfoCard(listOf(stringResource(note)), icon = R.drawable.ic_info) } }
+}
+
+/** 6.0: the BIOS folder and game list advice of systems whose documentation gives it (see [TargetFolderLayouts.biosFolder]). */
+private fun exportNoteOf(layout: TargetFolderLayouts.Layout): Int? = when (layout) {
+    TargetFolderLayouts.Layout.BATOCERA -> R.string.exp60_note_batocera
+    TargetFolderLayouts.Layout.KNULLI -> R.string.exp60_note_knulli
+    TargetFolderLayouts.Layout.ROCKNIX -> R.string.exp60_note_rocknix
+    TargetFolderLayouts.Layout.MUOS -> R.string.exp60_note_muos
+    else -> null
 }
 
 private fun layoutTitle(layout: TargetFolderLayouts.Layout): Int = when (layout) {

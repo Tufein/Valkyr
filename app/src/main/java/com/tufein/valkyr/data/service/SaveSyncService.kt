@@ -157,6 +157,19 @@ class SaveSyncService @Inject constructor(
             (settingsRepository.saveSyncSavesDir.first().isNotBlank() || settingsRepository.saveSyncStatesDir.first().isNotBlank() ||
                 appSettings.saveSyncEmulatorFolders.first().isNotEmpty())
 
+    /**
+     * 6.0 Folder mode: runs [block] with the device side of the sync (the same picked folders, the same
+     * safety copies) under this service's lock, so it never overlaps a RomM sync. Null when a sync runs.
+     * [block] gets the store and the folder the safety copies live in.
+     */
+    suspend fun <T> withDeviceStore(block: suspend (SaveStore, File) -> T): T? {
+        if (!lock.tryLock()) return null
+        try { return withContext(Dispatchers.IO) { block(SafSaveStore(), backupDir) } } finally { lock.unlock() }
+    }
+
+    /** Whether any device folder is picked (saves, states or an emulator's own). */
+    suspend fun hasAnyDeviceFolder(): Boolean = hasDeviceFolder(SaveKind.SAVE) || hasDeviceFolder(SaveKind.STATE)
+
     /** Sync now (Save sync screen); ignored while one runs. [confirmDeletions] lets held-back deletions through. */
     fun syncNow(confirmDeletions: Boolean = false) {
         scope.launch { sync(confirmDeletions) }

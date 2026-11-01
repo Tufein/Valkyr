@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 6.0: Folder mode (Syncthing) and export notes -->
+    <string name="exp60_section">Folder mode (Syncthing)</string>
+    <string name="exp60_mode_title">Folder mode (Syncthing)</string>
+    <string name="exp60_mode_hint">Mirror saves and states to a folder that Syncthing syncs, instead of RomM. Valkyr makes no network connection itself; Syncthing moves the folder. Changed saves are backed up first, conflicts wait for your choice and nothing is deleted. Tip: add .dogmatix-* to the folder\'s .stignore so Valkyr\'s temporary files are not synced.</string>
+    <string name="exp60_dir_title">Syncthing folder</string>
+    <string name="exp60_dir_hint">Pick the folder Syncthing syncs. Saves go in saves/, states in states/. The saves and states folders above are used for this device.</string>
+    <string name="exp60_needs_setup">Switch on folder mode and pick the folder first.</string>
+    <string name="exp60_running">Syncing with the folder…</string>
+    <string name="exp60_busy">Another save sync is running. Try again in a moment.</string>
+    <string name="exp60_failed">Not synced: %1$s</string>
+    <string name="exp60_never">Not synced with the folder yet.</string>
+    <string name="exp60_sync_title">Sync with the folder</string>
+    <string name="exp60_sync_action">Sync</string>
+    <string name="exp60_summary">%1$d to the folder · %2$d to this device · %3$d unchanged</string>
+    <string name="exp60_conflict_device">%1$s changed on this device and in the folder. Nothing is replaced until you choose. This one: the file on this device. Other: the file in the folder.</string>
+    <string name="exp60_conflict_copy">%1$s: Syncthing kept two versions (conflict copy of %2$s, %3$s). This one: Syncthing\'s conflict copy. Other: the file in place. Nothing is deleted.</string>
+    <string name="exp60_keep_this">Keep this one</string>
+    <string name="exp60_keep_other">Keep other</string>
+    <string name="exp60_keep_both">Keep both (copy)</string>
+    <string name="exp60_note_batocera">BIOS files belong in the bios folder next to roms (the SHARE partition), not inside roms. After copying, run START > Game Settings > Update Gamelists. Valkyr writes no game lists.</string>
+    <string name="exp60_note_knulli">BIOS files belong in /userdata/bios, next to the roms folder. Valkyr writes no game lists.</string>
+    <string name="exp60_note_rocknix">After copying, run START > Game Settings > Tools > Update Gamelists. Valkyr writes no game lists. BIOS locations are on the system pages of rocknix.org.</string>
+    <string name="exp60_note_muos">BIOS files belong in MUOS/bios on the storage that holds the MUOS folder. Valkyr writes no list, name or artwork files; add them with muOS\'s own tools.</string>
+</resources>

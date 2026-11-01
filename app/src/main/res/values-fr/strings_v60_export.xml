@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 6.0: Folder mode (Syncthing) and export notes -->
+    <string name="exp60_section">Mode dossier (Syncthing)</string>
+    <string name="exp60_mode_title">Mode dossier (Syncthing)</string>
+    <string name="exp60_mode_hint">Reflète les sauvegardes et états dans un dossier que Syncthing synchronise, à la place de RomM. Valkyr n’ouvre lui-même aucune connexion réseau ; Syncthing déplace le dossier. Les sauvegardes modifiées sont d’abord copiées, les conflits attendent ton choix et rien n’est supprimé. Astuce : ajoute .dogmatix-* au .stignore du dossier pour que les fichiers temporaires de Valkyr ne soient pas synchronisés.</string>
+    <string name="exp60_dir_title">Dossier Syncthing</string>
+    <string name="exp60_dir_hint">Choisis le dossier que Syncthing synchronise. Les sauvegardes vont dans saves/, les états dans states/. Sur cet appareil, les dossiers de sauvegardes et d’états ci-dessus sont utilisés.</string>
+    <string name="exp60_needs_setup">Active d’abord le mode dossier et choisis le dossier.</string>
+    <string name="exp60_running">Synchronisation avec le dossier…</string>
+    <string name="exp60_busy">Une synchronisation des sauvegardes est déjà en cours. Réessaie dans un instant.</string>
+    <string name="exp60_failed">Non synchronisé : %1$s</string>
+    <string name="exp60_never">Pas encore synchronisé avec le dossier.</string>
+    <string name="exp60_sync_title">Synchroniser avec le dossier</string>
+    <string name="exp60_sync_action">Synchroniser</string>
+    <string name="exp60_summary">%1$d vers le dossier · %2$d vers cet appareil · %3$d inchangés</string>
+    <string name="exp60_conflict_device">%1$s a changé sur cet appareil et dans le dossier. Rien n’est remplacé avant ton choix. Celle-ci : le fichier de cet appareil. L’autre : le fichier du dossier.</string>
+    <string name="exp60_conflict_copy">%1$s : Syncthing a gardé deux versions (copie de conflit de %2$s, %3$s). Celle-ci : la copie de conflit de Syncthing. L’autre : le fichier en place. Rien n’est supprimé.</string>
+    <string name="exp60_keep_this">Garder celle-ci</string>
+    <string name="exp60_keep_other">Garder l’autre</string>
+    <string name="exp60_keep_both">Garder les deux (copie)</string>
+    <string name="exp60_note_batocera">Les fichiers BIOS vont dans le dossier bios à côté de roms (la partition SHARE), pas dans roms. Après la copie, lance START > Game Settings > Update Gamelists. Valkyr n’écrit aucune liste de jeux.</string>
+    <string name="exp60_note_knulli">Les fichiers BIOS vont dans /userdata/bios, à côté du dossier roms. Valkyr n’écrit aucune liste de jeux.</string>
+    <string name="exp60_note_rocknix">Après la copie, lance START > Game Settings > Tools > Update Gamelists. Valkyr n’écrit aucune liste de jeux. Les emplacements des BIOS figurent sur les pages système de rocknix.org.</string>
+    <string name="exp60_note_muos">Les fichiers BIOS vont dans MUOS/bios, sur le stockage qui contient le dossier MUOS. Valkyr n’écrit aucun fichier de liste, de noms ou d’illustrations ; ajoute-les avec les outils propres à muOS.</string>
+</resources>

@@ -329,6 +329,26 @@ object TargetFolderLayouts {
         return if (pickedFolderName != null && pickedFolderName.equals(roms, ignoreCase = true)) "" else roms
     }
 
+    /**
+     * Where the system keeps BIOS files, relative to the card (not inside the roms folder), as its
+     * own documentation says (read 2026-11-01): Batocera "the `bios/` folder in the SHARE partition"
+     * (https://wiki.batocera.org/add_games_bios), Knulli `/userdata/bios`
+     * (https://knulli.org/play/add-games/game-storage/), muOS `MUOS/bios`
+     * (https://muos.dev/docs/infrastructure/storage). ROCKNIX's page only says games and BIOS files
+     * can go in the per-system folders and ES-DE / ArkOS / OnionOS were not checked: null, never guessed.
+     */
+    fun biosFolder(layout: Layout): String? = when (layout) {
+        Layout.BATOCERA, Layout.KNULLI -> "bios"
+        Layout.MUOS -> "MUOS/bios"
+        else -> null
+    }
+
+    /**
+     * Whether the system's documentation asks for "Update Gamelists" (START, Game Settings) after
+     * games are added: Batocera and ROCKNIX say so; Valkyr itself writes no game lists.
+     */
+    fun needsGamelistUpdate(layout: Layout): Boolean = layout == Layout.BATOCERA || layout == Layout.ROCKNIX
+
     /** One path segment a memory card and these systems accept as it is. */
     fun isSafeSegment(name: String): Boolean =
         name.isNotEmpty() && name.length <= 64 && '/' !in name && '\\' !in name && !name.startsWith(".") &&
