@@ -31,7 +31,8 @@ class RommGameService @Inject constructor(
     private val rommClient: RommClient,
     private val rommLibrary: RommLibraryService,
     private val fileDao: DownloadableFileDao,
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val offlineQueue: OfflineQueueService
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val cache = LruCache<Int, Pair<Long, RommGameInfo>>(48)
@@ -75,12 +76,21 @@ class RommGameService @Inject constructor(
         return saved
     }
 
+    /** Keeps [changes] until the connection is back (see [OfflineQueueService]); the cached details show them meanwhile. */
+    fun queueProps(romId: Int, changes: Map<String, Any?>, expected: RommUserProps) {
+        offlineQueue.enqueueRommProps(romId, changes)
+        cache.get(romId)?.let { (at, info) -> cache.put(romId, at to info.copy(props = expected)) }
+    }
+
     /** [updateProps] that outlives the screen (the dialog closed before a pending change went out). */
     fun updatePropsLater(romId: Int, changes: Map<String, Any?>, expected: RommUserProps) {
         if (changes.isEmpty()) return
         scope.launch {
             runCatching { updateProps(romId, changes, expected) }
-                .onFailure { Log.w(TAG, "Could not save the play status of ROM $romId: ${it.javaClass.simpleName}") }
+                .onFailure {
+                    Log.w(TAG, "Could not save the play status of ROM $romId: ${it.javaClass.simpleName}")
+                    if (rommErrorKind(it) == RommErrorKind.UNREACHABLE) offlineQueue.enqueueRommProps(romId, changes)
+                }
         }
     }
 }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="man60_title">Anleitungen</string>
+    <string name="man60_on_device">Auf diesem Gerät gespeichert</string>
+    <string name="man60_read">%1$s lesen</string>
+    <string name="man60_read_images">Anleitung lesen (%1$d Seiten)</string>
+    <string name="man60_delete">Anleitungen entfernen</string>
+    <string name="man60_delete_title">Anleitungen dieses Spiels entfernen?</string>
+    <string name="man60_delete_body">Die in der App gespeicherten Anleitungsdateien dieses Spiels werden gelöscht. RomM behält seine Kopie, du kannst sie erneut herunterladen.</string>
+    <string name="man60_available">RomM hat eine Anleitung für dieses Spiel.</string>
+    <string name="man60_download">Anleitung herunterladen</string>
+    <string name="man60_downloading">Wird heruntergeladen…</string>
+    <string name="man60_result_saved">Anleitung auf diesem Gerät gespeichert.</string>
+    <string name="man60_result_exists">Diese Anleitung ist schon auf diesem Gerät.</string>
+    <string name="man60_result_none">RomM hat keine Anleitung für dieses Spiel.</string>
+    <string name="man60_result_too_big">Die Anleitung ist größer als das Limit für Anleitungen (Einstellungen, Downloads).</string>
+    <string name="man60_result_offline">Keine Verbindung. Versuche es erneut, wenn du online bist.</string>
+    <string name="man60_result_failed">Die Anleitung konnte nicht heruntergeladen werden.</string>
+    <string name="man60_hint_pages">◀ ▶ oder L1 / R1: Seite · A: Zoom · L2 / R2: verkleinern / vergrößern · ▲ ▼: verschieben beim Zoomen · B: schließen</string>
+    <string name="man60_hint_text">▲ ▼: scrollen · L1 / R1: Seite hoch / runter · B: schließen</string>
+    <string name="man60_unreadable">Diese Anleitung lässt sich nicht öffnen. Die Datei ist möglicherweise beschädigt oder geschützt.</string>
+    <string name="man60_setting_with_game">Anleitung mit dem Spiel herunterladen</string>
+    <string name="man60_setting_with_game_hint">Hat RomM eine Anleitung für ein Spiel, das du von dort lädst, wird sie in der App gespeichert, damit du sie offline lesen kannst. Standardmäßig aus.</string>
+    <string name="man60_setting_cap">Speicher für Anleitungen</string>
+    <string name="man60_setting_cap_hint">Der maximale Platz, den Anleitungen in der App belegen. Ist er voll, werden zuerst die ältesten Anleitungen entfernt.</string>
+    <string name="man60_setting_remove_all">Alle Anleitungen entfernen</string>
+    <string name="man60_setting_remove_all_hint">Anleitungen belegen %1$s. Sie lassen sich erneut von RomM laden.</string>
+    <string name="man60_kw">anleitung, handbuch, manual, pdf, heft, leser</string>
+    <string name="man60_queued">Keine Verbindung: Die Änderung ist gespeichert und wird an RomM gesendet, sobald du online bist.</string>
+    <string name="man60_offline_chip">Offline</string>
+    <string name="man60_offline_chip_waiting">Offline · %1$d warten</string>
+    <string name="man60_offline_title">Keine Verbindung</string>
+    <string name="man60_offline_works">Das funktioniert weiterhin</string>
+    <string name="man60_offline_play">Die Spiele auf diesem Gerät spielen</string>
+    <string name="man60_offline_library">Bibliothek und Spieleseiten ansehen</string>
+    <string name="man60_offline_collections">Auf diesem Gerät gespeicherte Sammlungen</string>
+    <string name="man60_offline_manuals">Heruntergeladene Anleitungen lesen</string>
+    <string name="man60_offline_waits_title">Wartet auf eine Verbindung</string>
+    <string name="man60_offline_waits">Downloads, Quellen-Scans, RomM und Cloud-Sync. Änderungen an deinem RomM-Spielstatus werden gespeichert und später gesendet.</string>
+    <string name="man60_offline_pending">Warten auf das Senden: %1$d</string>
+</resources>

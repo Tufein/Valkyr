@@ -102,6 +102,9 @@ fun RommGameSection(
             ToastUtil.showError(context, context.getString(R.string.romm5_save_failed, context.getString(rommErrorText(kind))))
         }
     }
+    LaunchedEffect(viewModel) {
+        viewModel.queued.collect { ToastUtil.showInfo(context, context.getString(R.string.man60_queued)) }
+    }
     if (ui.phase == RommGamePhase.RESOLVING || ui.phase == RommGamePhase.ABSENT) return
 
     val scheme = MaterialTheme.colorScheme

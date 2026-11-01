@@ -86,6 +86,7 @@ import com.tufein.valkyr.ui.components.stripExtension
 import com.tufein.valkyr.ui.screens.cloud.saves.CloudSavesSection
 import com.tufein.valkyr.ui.screens.cloud.sections.AchievementsSection
 import com.tufein.valkyr.ui.screens.cloud.sections.RommGameSection
+import com.tufein.valkyr.ui.screens.manuals.ManualsSection
 import com.tufein.valkyr.ui.screens.download.DownloadWhenDialog
 import com.tufein.valkyr.ui.screens.home.DetailsState
 import com.tufein.valkyr.ui.screens.home.components.CollectionPickerDialog
@@ -654,6 +655,8 @@ private fun TabContent(
                         fileName = rom.fileName,
                         showSummary = state.details?.description.isNullOrBlank()
                     )
+                    // 6.0: manuals kept on the device, and the one RomM has (draws nothing without either).
+                    ManualsSection(rom.consoleId, rom.fileName)
                 }
                 Tab.VERSIONS -> Versions(state, ownedOf, downloadingOf, onDownload, viewModel, onOpenVersionPreference)
                 Tab.PROGRESS -> {

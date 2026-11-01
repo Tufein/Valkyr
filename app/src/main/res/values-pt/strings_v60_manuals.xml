@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="man60_title">Manuais</string>
+    <string name="man60_on_device">Guardados neste dispositivo</string>
+    <string name="man60_read">Ler %1$s</string>
+    <string name="man60_read_images">Ler manual (%1$d páginas)</string>
+    <string name="man60_delete">Remover manuais</string>
+    <string name="man60_delete_title">Remover os manuais deste jogo?</string>
+    <string name="man60_delete_body">Os ficheiros de manual que a app guarda para este jogo são apagados. O RomM mantém a sua cópia, por isso pode descarregá-lo de novo.</string>
+    <string name="man60_available">O RomM tem um manual para este jogo.</string>
+    <string name="man60_download">Descarregar manual</string>
+    <string name="man60_downloading">A descarregar…</string>
+    <string name="man60_result_saved">Manual guardado neste dispositivo.</string>
+    <string name="man60_result_exists">Este manual já está neste dispositivo.</string>
+    <string name="man60_result_none">O RomM não tem manual para este jogo.</string>
+    <string name="man60_result_too_big">O manual excede o limite de tamanho para manuais (Definições, Transferências).</string>
+    <string name="man60_result_offline">Sem ligação. Tente novamente quando estiver online.</string>
+    <string name="man60_result_failed">Não foi possível descarregar o manual.</string>
+    <string name="man60_hint_pages">◀ ▶ ou L1 / R1: página · A: zoom · L2 / R2: afastar / aproximar · ▲ ▼: mover com zoom · B: fechar</string>
+    <string name="man60_hint_text">▲ ▼: deslocar · L1 / R1: página acima / abaixo · B: fechar</string>
+    <string name="man60_unreadable">Não é possível abrir este manual. O ficheiro pode estar danificado ou protegido.</string>
+    <string name="man60_setting_with_game">Descarregar o manual com o jogo</string>
+    <string name="man60_setting_with_game_hint">Quando o RomM tem um manual de um jogo que descarrega a partir dele, este é guardado na app para o ler offline. Desativado por predefinição.</string>
+    <string name="man60_setting_cap">Espaço para manuais</string>
+    <string name="man60_setting_cap_hint">O máximo de espaço que os manuais podem ocupar na app. Quando está cheio, os mais antigos saem primeiro.</string>
+    <string name="man60_setting_remove_all">Remover todos os manuais</string>
+    <string name="man60_setting_remove_all_hint">Os manuais ocupam %1$s. Podem ser descarregados de novo a partir do RomM.</string>
+    <string name="man60_kw">manual, pdf, instruções, livro, leitor</string>
+    <string name="man60_queued">Sem ligação: a alteração fica guardada e será enviada ao RomM quando estiver online.</string>
+    <string name="man60_offline_chip">Offline</string>
+    <string name="man60_offline_chip_waiting">Offline · %1$d em espera</string>
+    <string name="man60_offline_title">Sem ligação</string>
+    <string name="man60_offline_works">O que ainda funciona</string>
+    <string name="man60_offline_play">Jogar os jogos deste dispositivo</string>
+    <string name="man60_offline_library">Ver a biblioteca e as páginas dos jogos</string>
+    <string name="man60_offline_collections">Coleções guardadas neste dispositivo</string>
+    <string name="man60_offline_manuals">Ler manuais descarregados</string>
+    <string name="man60_offline_waits_title">Espera por uma ligação</string>
+    <string name="man60_offline_waits">Transferências, análise de fontes, RomM e sincronização na cloud. As alterações ao seu estado de jogo no RomM são guardadas e enviadas mais tarde.</string>
+    <string name="man60_offline_pending">A aguardar envio: %1$d</string>
+</resources>

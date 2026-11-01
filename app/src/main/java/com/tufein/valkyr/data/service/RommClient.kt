@@ -467,6 +467,16 @@ class RommClient @Inject constructor(
         JsonHttp.download(baseUrl() + RommFirmwareMatcher.contentPath(firmware), headers(), maxBytes, readTimeoutMs = 120_000)
     }
 
+    /**
+     * The bytes of a file the configured RomM server itself serves (a game's manual), at most [maxBytes].
+     * Refuses any URL that is not on that server, so nothing is ever fetched from elsewhere.
+     */
+    suspend fun downloadServerFile(url: String, maxBytes: Long): ByteArray = withContext(Dispatchers.IO) {
+        val base = baseUrl()
+        if (!url.startsWith("$base/", ignoreCase = true)) throw RommException("Not a file of the RomM server")
+        JsonHttp.download(url, headers(), maxBytes, readTimeoutMs = 120_000)
+    }
+
     private fun JsonObject.str(name: String): String = get(name)?.takeUnless { it.isJsonNull }?.asString.orEmpty()
 
     companion object {
