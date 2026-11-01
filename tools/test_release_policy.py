@@ -25,6 +25,17 @@ class ReleasePolicyTest(unittest.TestCase):
             with self.subTest(tag=tag), self.assertRaises(ValueError):
                 validate(tag, 40, history(10))
 
+    def test_next_major_may_skip_the_rest_of_a_major(self):
+        validate("v3.0.0", 40, history(12))
+
+    def test_history_with_a_major_jump_is_valid(self):
+        releases = history(12)
+        releases.append(dict(tag_name="v3.0.0", draft=False, prerelease=False, published_at="2026-11-01T00:00:00Z",
+                             body='<!-- dogmatix-release: {"versionCode":40} -->'))
+        validate("v3.1.0", 41, releases)
+        with self.assertRaises(ValueError):
+            validate("v3.2.0", 41, releases)
+
     def test_android_build_number_cannot_go_backwards(self):
         with self.assertRaises(ValueError):
             validate("v2.2.0", 22, history(12))
