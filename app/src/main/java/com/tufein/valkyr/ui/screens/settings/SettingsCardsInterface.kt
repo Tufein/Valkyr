@@ -2,11 +2,14 @@ package com.tufein.valkyr.ui.screens.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.tufein.valkyr.R
 import com.tufein.valkyr.ui.components.ActionPill
+import com.tufein.valkyr.ui.secondscreen.SecondScreenLauncher
+import com.tufein.valkyr.util.ToastUtil
 import com.tufein.valkyr.ui.components.NavChevron
 import com.tufein.valkyr.ui.navigation.NavRoutes
 import com.tufein.valkyr.ui.screens.search.SEARCH_ALL_ROUTE
@@ -156,7 +159,17 @@ internal fun SettingsEnv.controlsCardRows(): List<SettingsRow> = listOf(
             hint = stringResource(R.string.settings_second_screen_hint),
             onClick = { extra.setSecondScreen(context, !appPrefs.secondScreen) },
             onAdjust = { extra.setSecondScreen(context, it > 0) }
-        ) { ThemedSwitch(appPrefs.secondScreen) { extra.setSecondScreen(context, it) } }
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                // Only where the system lists another display (a dual-screen handheld); a single screen sees no change.
+                if (remember(context) { SecondScreenLauncher.targetDisplayId(context) != null }) {
+                    ActionPill(stringResource(R.string.dual60_open_here), {
+                        if (!SecondScreenLauncher.launch(context)) ToastUtil.showInfo(context, context.getString(R.string.dual60_open_failed))
+                    })
+                }
+                ThemedSwitch(appPrefs.secondScreen) { extra.setSecondScreen(context, it) }
+            }
+        }
     },
     SettingsRow(key = SettingKeys.TV_MODE) { TvModeSettingRow() }
 )

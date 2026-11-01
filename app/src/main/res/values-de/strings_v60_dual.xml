@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dual60_activity_label">Valkyr Zweitbildschirm</string>
+    <string name="dual60_continue_title">Weiterspielen</string>
+    <string name="dual60_continue_via">Zuletzt gespeichert auf %1$s</string>
+    <string name="dual60_recent_title">Zuletzt gespielt</string>
+    <string name="dual60_filter_all">Alle</string>
+    <string name="dual60_queue_title">Downloads</string>
+    <string name="dual60_battery">Akku %1$d%%</string>
+    <string name="dual60_battery_unknown">Akku</string>
+    <string name="dual60_battery_charging">%1$s, lädt</string>
+    <string name="dual60_heat_ok">Kühl</string>
+    <string name="dual60_heat_warm">Warm</string>
+    <string name="dual60_heat_hot">Heiß</string>
+    <string name="dual60_heat_with_temp">%1$s, %2$d °C</string>
+    <string name="dual60_back">Zurück</string>
+    <string name="dual60_open_here">Auf Zweitbildschirm zeigen</string>
+    <string name="dual60_open_failed">Kein Zweitbildschirm gefunden oder vom System nicht erlaubt</string>
+</resources>

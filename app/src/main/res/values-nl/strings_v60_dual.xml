@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dual60_activity_label">Valkyr tweede scherm</string>
+    <string name="dual60_continue_title">Verder spelen</string>
+    <string name="dual60_continue_via">Laatst opgeslagen op %1$s</string>
+    <string name="dual60_recent_title">Onlangs gespeeld</string>
+    <string name="dual60_filter_all">Alles</string>
+    <string name="dual60_queue_title">Downloads</string>
+    <string name="dual60_battery">Batterij %1$d%%</string>
+    <string name="dual60_battery_unknown">Batterij</string>
+    <string name="dual60_battery_charging">%1$s, aan het laden</string>
+    <string name="dual60_heat_ok">Koel</string>
+    <string name="dual60_heat_warm">Warm</string>
+    <string name="dual60_heat_hot">Heet</string>
+    <string name="dual60_heat_with_temp">%1$s, %2$d °C</string>
+    <string name="dual60_back">Terug</string>
+    <string name="dual60_open_here">Toon op tweede scherm</string>
+    <string name="dual60_open_failed">Geen tweede scherm gevonden, of het systeem stond het niet toe</string>
+</resources>

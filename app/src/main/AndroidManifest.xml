@@ -164,6 +164,14 @@
             </intent-filter>
         </activity>
         <!-- "Add a shortcut" picker for launchers and frontends (Cocoon, …). -->
+        <!-- The second-screen hub, started on the other display of a dual-screen handheld (ui/secondscreen/SecondScreenActivity). -->
+        <activity
+            android:name=".ui.secondscreen.SecondScreenActivity"
+            android:exported="false"
+            android:label="@string/dual60_activity_label"
+            android:resizeableActivity="true"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboard|keyboardHidden|navigation|uiMode|density"
+            android:theme="@style/Theme.Dogmatix" />
         <activity
             android:name=".ui.shortcut.CreateShortcutActivity"
             android:exported="true"
