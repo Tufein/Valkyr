@@ -590,9 +590,9 @@ fun HomeScreen(
     // After a shelf leads to the list (a console's "See all", a chip in landscape) the cursor goes to
     // its first row once the new results are in (gamepad only).
     val focusListAfterChange: () -> Unit = {
-        val before = viewModel.results.value
+        val before = viewModel.listing.value
         if (Gamepad.connected.value) scope.launch {
-            withTimeoutOrNull(5_000) { viewModel.results.first { it !== before } }
+            withTimeoutOrNull(5_000) { viewModel.listing.first { it !== before } }
             withFrameNanos { }
             withFrameNanos { }
             runCatching { listFocus.requestFocus() }

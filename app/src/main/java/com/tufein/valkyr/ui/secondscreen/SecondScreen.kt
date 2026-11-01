@@ -175,13 +175,17 @@ class SecondScreenPresenter(
     private val displayManager = activity.getSystemService(DisplayManager::class.java)
     private var presentation: Presentation? = null
 
+    private val hubChanged: () -> Unit = { activity.runOnUiThread { update() } }
+
     fun start() {
         displayManager.registerDisplayListener(this, null)
+        DualScreen.HubDisplays.listen(hubChanged)
         update()
     }
 
     fun stop() {
         displayManager.unregisterDisplayListener(this)
+        DualScreen.HubDisplays.unlisten(hubChanged)
         presentation?.dismiss()
         presentation = null
     }
@@ -226,11 +230,16 @@ class SecondScreenPresenter(
  * other than the one [activityDisplayId] is on. Null on a single-screen device, so nothing changes
  * there. Per the DisplayManager documentation; not tried on a dual-screen handheld.
  */
-internal fun chooseDisplay(displayManager: DisplayManager, activityDisplayId: Int): Display? {
+internal fun chooseDisplay(
+    displayManager: DisplayManager,
+    activityDisplayId: Int,
+    hubDisplayIds: Set<Int> = DualScreen.HubDisplays.snapshot()
+): Display? {
     val presentation = displayManager.getDisplays(DisplayManager.DISPLAY_CATEGORY_PRESENTATION)
     val id = DualScreen.presentationTarget(
         presentation.map { DualScreen.DisplayInfo(it.displayId, it.isValid, true) },
-        activityDisplayId
+        activityDisplayId,
+        hubDisplayIds
     ) ?: return null
     return presentation.firstOrNull { it.displayId == id }
 }

@@ -25,8 +25,25 @@ object DualScreen {
      * the one the activity itself is on (an activity that was moved to the second screen has
      * nothing to present on). The lowest id wins so the choice does not change between calls.
      */
-    fun presentationTarget(displays: List<DisplayInfo>, activityDisplayId: Int): Int? =
-        displays.filter { it.valid && it.presentation && it.id != activityDisplayId }.minOfOrNull { it.id }
+    fun presentationTarget(displays: List<DisplayInfo>, activityDisplayId: Int, hubDisplayIds: Set<Int> = emptySet()): Int? =
+        displays.filter { it.valid && it.presentation && it.id != activityDisplayId && it.id !in hubDisplayIds }.minOfOrNull { it.id }
+
+    /**
+     * Displays the hub activity currently runs on (process-wide). The presenter of MainActivity skips
+     * them, so it does not put a Presentation on top of the hub. Set in onStart, cleared in onStop/onDestroy.
+     */
+    object HubDisplays {
+        private val ids = java.util.Collections.synchronizedMap(HashMap<Int, Int>())
+        private val listeners = java.util.concurrent.CopyOnWriteArrayList<() -> Unit>()
+        fun snapshot(): Set<Int> = synchronized(ids) { ids.keys.toSet() }
+        fun add(displayId: Int) { synchronized(ids) { ids[displayId] = (ids[displayId] ?: 0) + 1 }; listeners.forEach { it() } }
+        fun remove(displayId: Int) {
+            synchronized(ids) { val n = (ids[displayId] ?: 0) - 1; if (n > 0) ids[displayId] = n else ids.remove(displayId) }
+            listeners.forEach { it() }
+        }
+        fun listen(l: () -> Unit) { listeners.add(l) }
+        fun unlisten(l: () -> Unit) { listeners.remove(l) }
+    }
 
     /** The display "Open on the second screen" starts the hub activity on; same rule as [presentationTarget]. */
     fun launchTarget(displays: List<DisplayInfo>, activityDisplayId: Int): Int? =

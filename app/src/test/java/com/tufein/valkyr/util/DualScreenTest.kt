@@ -29,6 +29,16 @@ class DualScreenTest {
     }
 
     @Test
+    fun `a display the hub runs on is not a presentation target`() {
+        assertNull(DualScreen.presentationTarget(listOf(d(0, presentation = false), d(4)), 0, setOf(4)))
+        assertEquals(7, DualScreen.presentationTarget(listOf(d(4), d(7)), 0, setOf(4)))
+        DualScreen.HubDisplays.add(4)
+        assertEquals(setOf(4), DualScreen.HubDisplays.snapshot())
+        DualScreen.HubDisplays.remove(4)
+        assertEquals(emptySet<Int>(), DualScreen.HubDisplays.snapshot())
+    }
+
+    @Test
     fun `layout follows size and shape`() {
         assertEquals(Layout.WIDE, DualScreen.layout(900, 500))
         assertEquals(Layout.STACKED, DualScreen.layout(450, 392))

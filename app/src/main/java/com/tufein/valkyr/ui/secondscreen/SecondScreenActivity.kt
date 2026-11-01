@@ -29,6 +29,24 @@ import javax.inject.Inject
 class SecondScreenActivity : AppCompatActivity() {
     @Inject lateinit var metadataService: GameMetadataService
     @Inject lateinit var downloadService: DownloadService
+    private var registeredDisplay: Int? = null
+
+    override fun onStart() {
+        super.onStart()
+        if (registeredDisplay == null) {
+            val id = display?.displayId ?: Display.DEFAULT_DISPLAY
+            registeredDisplay = id
+            DualScreen.HubDisplays.add(id)
+        }
+    }
+
+    override fun onStop() { unregisterHub(); super.onStop() }
+    override fun onDestroy() { unregisterHub(); super.onDestroy() }
+
+    private fun unregisterHub() {
+        registeredDisplay?.let { DualScreen.HubDisplays.remove(it) }
+        registeredDisplay = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

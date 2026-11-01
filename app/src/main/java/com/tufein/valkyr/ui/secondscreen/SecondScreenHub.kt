@@ -213,7 +213,7 @@ private fun GamesBlock(
 ) {
     if (sections.chips) ConsoleChips(chips, console, onSelect)
     shown.firstOrNull()?.takeIf { sections.continueCard }?.let { ContinueCard(it, rommOn, onOpen) }
-    val rail = DualScreen.railItems(shown)
+    val rail = DualScreen.railItems(shown).distinctBy { it.row.file.consoleId + "|" + it.row.file.fileName }
     if (sections.rail && rail.isNotEmpty()) {
         Column(verticalArrangement = Arrangement.spacedBy(gap / 2)) {
             Text(stringResource(R.string.dual60_recent_title), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)

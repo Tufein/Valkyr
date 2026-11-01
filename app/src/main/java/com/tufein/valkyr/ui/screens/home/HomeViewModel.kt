@@ -92,6 +92,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import javax.inject.Inject
@@ -580,9 +581,17 @@ class HomeViewModel @Inject constructor(
      * Sets [rows] as the results and builds the list from them in the same step, so the screen never
      * sees results without their list. Grouping reads the preference once for all rows (no query per game).
      */
+    private val publishLock = kotlinx.coroutines.sync.Mutex()
+    private var publishSeq = 0L
+
     private suspend fun publish(rows: List<DownloadableFileWithTags>) {
-        _results.value = rows
-        _listing.value = withContext(Dispatchers.Default) { listingOf(rows, groupVersions.value) }
+        // Newest call wins: an older publish that finishes late can no longer overwrite a newer listing.
+        val seq = ++publishSeq
+        publishLock.withLock {
+            if (seq != publishSeq) return
+            _results.value = rows
+            _listing.value = withContext(Dispatchers.Default) { listingOf(rows, groupVersions.value) }
+        }
     }
 
     private suspend fun listingOf(rows: List<DownloadableFileWithTags>, group: Boolean): Listing {
