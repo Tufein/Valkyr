@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="info63_copy">Spelinfo kopiëren</string>
+    <string name="info63_copied">Spelinfo gekopieerd</string>
+    <string name="info63_label_console">Console</string>
+    <string name="info63_label_released">Uitgebracht</string>
+    <string name="info63_label_developer">Ontwikkelaar</string>
+    <string name="info63_label_genres">Genre</string>
+    <string name="info63_label_file">Bestand</string>
+    <string name="info63_label_tags">Tags</string>
+</resources>

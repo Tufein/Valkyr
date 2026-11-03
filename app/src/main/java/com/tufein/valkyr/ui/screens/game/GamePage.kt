@@ -54,6 +54,7 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -98,6 +99,8 @@ import com.tufein.valkyr.ui.secondscreen.SecondScreenState
 import com.tufein.valkyr.ui.theme.LocalReduceMotion
 import com.tufein.valkyr.ui.theme.tabular
 import com.tufein.valkyr.util.ConsoleFormatter
+import com.tufein.valkyr.util.GameInfoText
+import com.tufein.valkyr.util.GameShareText
 import com.tufein.valkyr.util.DownloadCondition
 import com.tufein.valkyr.util.FileParsingUtils
 import com.tufein.valkyr.util.GameHeaderModel
@@ -407,6 +410,32 @@ private fun GamePageContent(
     // 3.8: the round "more" button moves the focus to the first action of the More actions card.
     val moreFocus = remember { FocusRequester() }
     val pinToHomeScreen = rememberHomeScreenPin(rom, showMessage)
+    // 6.3: "Copy game info" puts the page's facts on the clipboard as plain lines (not tested on a device).
+    val clipboard = LocalClipboardManager.current
+    val infoLabels = GameInfoText.Labels(
+        console = stringResource(R.string.info63_label_console),
+        released = stringResource(R.string.info63_label_released),
+        developer = stringResource(R.string.info63_label_developer),
+        genres = stringResource(R.string.info63_label_genres),
+        file = stringResource(R.string.info63_label_file),
+        tags = stringResource(R.string.info63_label_tags)
+    )
+    val infoCopiedMessage = stringResource(R.string.info63_copied)
+    val copyGameInfo: () -> Unit = {
+        val details = state.details
+        val facts = GameInfoText.Facts(
+            title = rom.name,
+            console = ConsoleFormatter.getConsoleDisplayName(rom.consoleId),
+            released = details?.released.orEmpty(),
+            developer = details?.developer.orEmpty(),
+            genres = details?.genres.orEmpty(),
+            fileName = rom.fileName,
+            sizeText = if (rom.fileSize > 0L) android.text.format.Formatter.formatShortFileSize(context, rom.fileSize) else "",
+            tags = item.tags
+        )
+        clipboard.setText(androidx.compose.ui.text.AnnotatedString(GameInfoText.build(facts, infoLabels, GameShareText.deepLink(rom.consoleId, rom.name))))
+        showMessage(infoCopiedMessage)
+    }
     val header: @Composable () -> Unit = {
         GameHeader(
             state = state,
@@ -454,6 +483,7 @@ private fun GamePageContent(
             if (GameHeaderModel.Quick.SHARE in quick) {
                 ActionPill(stringResource(R.string.lead6_share), { scope.launch { GameShare.share(context, rom.consoleId, rom.fileName, rom.name) } }, modifier = PageTarget, icon = R.drawable.ic_share)
             }
+            ActionPill(stringResource(R.string.info63_copy), copyGameInfo, modifier = PageTarget, icon = R.drawable.ic_content_copy)
             GameHeaderModel.more(
                 owned = owned,
                 downloading = downloading,

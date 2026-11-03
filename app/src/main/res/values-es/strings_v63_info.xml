@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="info63_copy">Copiar info del juego</string>
+    <string name="info63_copied">Info del juego copiada</string>
+    <string name="info63_label_console">Consola</string>
+    <string name="info63_label_released">Lanzamiento</string>
+    <string name="info63_label_developer">Desarrollador</string>
+    <string name="info63_label_genres">Género</string>
+    <string name="info63_label_file">Archivo</string>
+    <string name="info63_label_tags">Etiquetas</string>
+</resources>
