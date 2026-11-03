@@ -8,6 +8,7 @@ import com.tufein.valkyr.data.local.AppSettings
 import com.tufein.valkyr.BuildConfig
 import com.tufein.valkyr.data.local.LibrarySettings
 import com.tufein.valkyr.data.local.LookSettings
+import com.tufein.valkyr.util.ConsoleSortMemory
 import com.tufein.valkyr.util.LibraryBrowse
 import com.tufein.valkyr.util.VariantGroups
 import com.tufein.valkyr.util.VersionPicker
@@ -558,6 +559,18 @@ class HomeViewModel @Inject constructor(
     private val _sort = MutableStateFlow(SortOption.NAME_ASC)
     val sort: StateFlow<SortOption> = _sort.asStateFlow()
 
+    /** 6.3: the sort order remembered per console (see [ConsoleSortMemory]); filled from settings right after the start. */
+    @Volatile private var consoleSorts: Map<String, SortOption> = emptyMap()
+
+    init {
+        viewModelScope.launch { librarySettings.consoleSorts.collect { consoleSorts = ConsoleSortMemory.parse(it) } }
+    }
+
+    /** With exactly one console filtered, show the order last chosen for it (nothing remembered leaves the order as it is). */
+    private fun applyRememberedSort() {
+        ConsoleSortMemory.sortFor(consoleSorts, _selectedConsoles.value)?.let { _sort.value = it }
+    }
+
     private val _results = MutableStateFlow<List<DownloadableFileWithTags>>(emptyList())
     val results: StateFlow<List<DownloadableFileWithTags>> = _results
 
@@ -759,6 +772,7 @@ class HomeViewModel @Inject constructor(
             currentConsoles.add(consoleId)
         }
         _selectedConsoles.value = currentConsoles
+        applyRememberedSort()
     }
 
     fun clearConsoleFilters() {
@@ -785,10 +799,16 @@ class HomeViewModel @Inject constructor(
 
     fun removeConsole(consoleId: String) {
         _selectedConsoles.value = _selectedConsoles.value - consoleId
+        applyRememberedSort()
     }
 
     fun setSort(option: SortOption) {
         _sort.value = option
+        val updated = ConsoleSortMemory.remember(consoleSorts, _selectedConsoles.value, option)
+        if (updated != consoleSorts) {
+            consoleSorts = updated
+            viewModelScope.launch { librarySettings.setConsoleSorts(ConsoleSortMemory.encode(updated)) }
+        }
     }
 
     /** Replace whichever of [categoryTags] are active with [selection] (a subset of them). */
@@ -798,6 +818,7 @@ class HomeViewModel @Inject constructor(
 
     fun setConsoleSelection(consoleIds: Set<String>) {
         _selectedConsoles.value = consoleIds
+        applyRememberedSort()
     }
 
     fun clearAllFilters() {

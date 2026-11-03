@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.tufein.valkyr.util.ConsoleSortMemory
 import com.tufein.valkyr.util.LibraryBrowse
 import com.tufein.valkyr.util.VariantGroups
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -53,6 +54,17 @@ class LibrarySettings @Inject constructor(@param:ApplicationContext private val 
         .distinctUntilChanged()
 
     suspend fun setGroupVersions(on: Boolean) = context.dataStore.edit { it[groupKey] = on }
+
+    private val consoleSortsKey = stringPreferencesKey(ConsoleSortMemory.KEY)
+
+    /** 6.3: the sort order remembered per console (see [ConsoleSortMemory]); empty until the user sorts a single console. */
+    val consoleSorts: Flow<String> = context.dataStore.data
+        .map { it[consoleSortsKey].orEmpty() }
+        .distinctUntilChanged()
+
+    suspend fun setConsoleSorts(encoded: String) = context.dataStore.edit {
+        if (encoded.isEmpty()) it.remove(consoleSortsKey) else it[consoleSortsKey] = encoded
+    }
 
     private companion object {
         const val MIRROR_FILE = "library_view_cache"
