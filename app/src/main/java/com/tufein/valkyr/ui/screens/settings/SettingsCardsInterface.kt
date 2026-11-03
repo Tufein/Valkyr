@@ -1,5 +1,6 @@
 package com.tufein.valkyr.ui.screens.settings
 
+import androidx.compose.ui.Modifier
 import android.text.format.Formatter
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -90,7 +91,7 @@ internal fun SettingsEnv.lookCardRows(): List<SettingsRow> = listOf(
             onAdjust = { cycleAccent(it) }
         ) {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
-                Text(stringResource(accentName(ui.accent)), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(stringResource(accentName(ui.accent)), modifier = Modifier.weight(1f, fill = false), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 AccentSwatch(ui.accent, if (isLandscape) 24.dp else 32.dp, onClick = { dialogs.showAccentDialog = true })
                 ActionPill(stringResource(R.string.settings_change), { dialogs.showAccentDialog = true }, icon = R.drawable.ic_edit)
             }
