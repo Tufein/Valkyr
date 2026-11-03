@@ -191,6 +191,7 @@ class MainActivity : AppCompatActivity() {
     @Inject lateinit var metadataService: GameMetadataService
     @Inject lateinit var lookSettings: LookSettings
     @Inject lateinit var tvModeSettings: TvModeSettings
+    @Inject lateinit var perfNotices: com.tufein.valkyr.data.service.PerfNoticeService
     private var secondScreen: SecondScreenPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -213,6 +214,24 @@ class MainActivity : AppCompatActivity() {
                         catch (_: Exception) { android.util.Log.w("StorageAvailability", "Storage check could not finish") }
                         kotlinx.coroutines.delay(15_000)
                     }
+                }
+            }
+        }
+        // 6.3: while visible, a short hint when the device is hot, short of memory or almost out of room (once per kind per 30 minutes).
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                while (true) {
+                    try {
+                        perfNotices.check().forEach { kind ->
+                            ToastUtil.showInfo(this@MainActivity, getString(when (kind) {
+                                com.tufein.valkyr.util.PerfNotices.Kind.HOT -> R.string.perf63_notice_hot
+                                com.tufein.valkyr.util.PerfNotices.Kind.LOW_MEMORY -> R.string.perf63_notice_memory
+                                com.tufein.valkyr.util.PerfNotices.Kind.LOW_STORAGE -> R.string.perf63_notice_storage
+                            }))
+                        }
+                    } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled }
+                    catch (_: Exception) { android.util.Log.w("PerfNotices", "Check could not finish") }
+                    kotlinx.coroutines.delay(60_000)
                 }
             }
         }

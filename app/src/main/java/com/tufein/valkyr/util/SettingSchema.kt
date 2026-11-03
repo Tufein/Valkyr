@@ -51,6 +51,7 @@ object SettingSchema {
         putAll(CoverApis.SETTING_TYPES)
         putAll(LibraryBrowse.SETTING_TYPES)
         putAll(ConsoleSortMemory.SETTING_TYPES)
+        putAll(PerfNotices.SETTING_TYPES)
         putAll(VariantGroups.SETTING_TYPES)
         putAll(SaveMerge.SETTING_TYPES)
         putAll(SyncthingFolderSettings.TYPES)

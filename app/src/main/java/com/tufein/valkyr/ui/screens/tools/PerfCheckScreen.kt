@@ -85,6 +85,8 @@ private const val SWEEPS = 4
 @Composable
 fun PerfCheckScreen(viewModel: PerfCheckViewModel = hiltViewModel()) {
     val ui by viewModel.ui.collectAsStateWithLifecycle()
+    val noticesOn by viewModel.noticesOn.collectAsStateWithLifecycle()
+    val noticeHistory by viewModel.noticeHistory.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val view = LocalView.current
     val scope = rememberCoroutineScope()
@@ -175,6 +177,26 @@ fun PerfCheckScreen(viewModel: PerfCheckViewModel = hiltViewModel()) {
                 onClick = { viewModel.setIncludeStorage(!ui.includeStorage) },
                 icon = R.drawable.ic_storage,
                 trailing = { Switch(checked = ui.includeStorage, onCheckedChange = null) }
+            )
+        }
+        // 6.3: the switch for the hints the app gives while open when the device struggles, and the ones shown so far.
+        item {
+            ToolRow(
+                stringResource(R.string.perf63_toggle), listOf(stringResource(R.string.perf63_toggle_hint)),
+                onClick = { viewModel.setNoticesOn(!noticesOn) },
+                icon = R.drawable.ic_warning,
+                trailing = { Switch(checked = noticesOn, onCheckedChange = null) }
+            )
+        }
+        item { SectionHeader(stringResource(R.string.perf63_history_title)) }
+        if (noticeHistory.isEmpty()) item { InfoCard(listOf(stringResource(R.string.perf63_history_empty))) }
+        else items(noticeHistory.size, key = { "notice$it" }) { index ->
+            val notice = noticeHistory[index]
+            ToolRow(
+                stringResource(noticeText(notice.kind)),
+                listOf(android.text.format.DateUtils.formatDateTime(context, notice.at, android.text.format.DateUtils.FORMAT_SHOW_DATE or android.text.format.DateUtils.FORMAT_SHOW_TIME or android.text.format.DateUtils.FORMAT_ABBREV_MONTH)),
+                onClick = {},
+                icon = R.drawable.ic_warning
             )
         }
         item {
@@ -314,6 +336,12 @@ private fun storageLine(preview: com.tufein.valkyr.data.service.PerfCheckService
     !PerfCheck.storageTestAllowed(preview.freeBytes) ->
         stringResource(R.string.measure47_storage_no_space, PerfCheck.formatSize(PerfCheck.TEST_FILE_BYTES + PerfCheck.TEST_FILE_HEADROOM_BYTES))
     else -> stringResource(R.string.measure47_storage_toggle_ready)
+}
+
+private fun noticeText(kind: com.tufein.valkyr.util.PerfNotices.Kind): Int = when (kind) {
+    com.tufein.valkyr.util.PerfNotices.Kind.HOT -> R.string.perf63_notice_hot
+    com.tufein.valkyr.util.PerfNotices.Kind.LOW_MEMORY -> R.string.perf63_notice_memory
+    com.tufein.valkyr.util.PerfNotices.Kind.LOW_STORAGE -> R.string.perf63_notice_storage
 }
 
 @Composable

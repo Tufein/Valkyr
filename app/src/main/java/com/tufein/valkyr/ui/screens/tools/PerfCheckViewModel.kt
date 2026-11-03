@@ -2,15 +2,20 @@ package com.tufein.valkyr.ui.screens.tools
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tufein.valkyr.data.local.PerfNoticeSettings
 import com.tufein.valkyr.data.service.PerfCheckService
+import com.tufein.valkyr.data.service.PerfNoticeService
+import com.tufein.valkyr.util.PerfNotices
 import com.tufein.valkyr.util.PerfCheck
 import com.tufein.valkyr.util.PerfCheck.Outcome
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -45,12 +50,23 @@ data class PerfCheckUi(
  */
 @HiltViewModel
 class PerfCheckViewModel @Inject constructor(
-    private val service: PerfCheckService
+    private val service: PerfCheckService,
+    private val noticeService: PerfNoticeService,
+    private val noticeSettings: PerfNoticeSettings
 ) : ViewModel() {
     private val _ui = MutableStateFlow(PerfCheckUi())
     val ui: StateFlow<PerfCheckUi> = _ui.asStateFlow()
 
     private var job: Job? = null
+
+    /** 6.3: the "Performance notices" switch and the notices shown since the app started (newest first). */
+    val noticesOn: StateFlow<Boolean> = noticeSettings.enabled
+        .stateIn(viewModelScope, SharingStarted.Eagerly, PerfNotices.DEFAULT_ON)
+    val noticeHistory: StateFlow<List<PerfNotices.Notice>> = noticeService.history
+
+    fun setNoticesOn(on: Boolean) {
+        viewModelScope.launch { noticeSettings.setEnabled(on) }
+    }
 
     init { refreshStorage() }
 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="perf63_toggle">Alertes de performance</string>
+    <string name="perf63_toggle_hint">Affiche une courte alerte pendant que l’appli est ouverte quand l’appareil chauffe, manque de mémoire ou n’a presque plus de place pour les jeux. Chaque alerte apparaît au plus une fois toutes les 30 minutes.</string>
+    <string name="perf63_history_title">Alertes récentes</string>
+    <string name="perf63_history_empty">Aucune alerte depuis le démarrage de l’appli.</string>
+    <string name="perf63_notice_hot">L’appareil chauffe. Mets les téléchargements en pause ou laisse-le souffler pour que tout reste fluide.</string>
+    <string name="perf63_notice_memory">L’appareil manque de mémoire. Ferme d’autres applis si Valkyr paraît lent.</string>
+    <string name="perf63_notice_storage">Presque plus de place pour les jeux (moins de 1 Go libre dans le dossier de téléchargement).</string>
+</resources>

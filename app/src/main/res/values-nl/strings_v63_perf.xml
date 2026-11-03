@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="perf63_toggle">Prestatiemeldingen</string>
+    <string name="perf63_toggle_hint">Toont een korte melding terwijl de app open is als het apparaat heet is, weinig geheugen heeft of bijna geen ruimte meer heeft voor spellen. Elke melding verschijnt hooguit eens per 30 minuten.</string>
+    <string name="perf63_history_title">Recente meldingen</string>
+    <string name="perf63_history_empty">Geen meldingen sinds de app is gestart.</string>
+    <string name="perf63_notice_hot">Het apparaat wordt heet. Pauzeer downloads of laat het even rusten, dan blijft alles soepel.</string>
+    <string name="perf63_notice_memory">Het apparaat heeft weinig geheugen over. Sluit andere apps als Valkyr traag aanvoelt.</string>
+    <string name="perf63_notice_storage">Bijna geen ruimte meer voor spellen (minder dan 1 GB vrij in de downloadmap).</string>
+</resources>

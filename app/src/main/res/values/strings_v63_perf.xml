@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="perf63_toggle">Performance notices</string>
+    <string name="perf63_toggle_hint">Shows a short hint while the app is open when the device is hot, short of memory or almost out of room for games. Each hint appears at most once every 30 minutes.</string>
+    <string name="perf63_history_title">Recent notices</string>
+    <string name="perf63_history_empty">No notices since the app started.</string>
+    <string name="perf63_notice_hot">The device is running hot. Pause downloads or give it a rest to keep things smooth.</string>
+    <string name="perf63_notice_memory">The device is low on memory. Close other apps if Valkyr feels slow.</string>
+    <string name="perf63_notice_storage">Almost no room left for games (under 1 GB free in the download folder).</string>
+</resources>

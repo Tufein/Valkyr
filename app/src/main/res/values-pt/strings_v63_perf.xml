@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="perf63_toggle">Avisos de desempenho</string>
+    <string name="perf63_toggle_hint">Mostra um aviso curto enquanto a app está aberta quando o aparelho está quente, com pouca memória ou quase sem espaço para jogos. Cada aviso aparece no máximo uma vez a cada 30 minutos.</string>
+    <string name="perf63_history_title">Avisos recentes</string>
+    <string name="perf63_history_empty">Nenhum aviso desde que a app foi iniciada.</string>
+    <string name="perf63_notice_hot">O aparelho está a aquecer. Pausa as transferências ou deixa-o descansar para tudo continuar fluido.</string>
+    <string name="perf63_notice_memory">O aparelho está com pouca memória. Fecha outras apps se o Valkyr parecer lento.</string>
+    <string name="perf63_notice_storage">Quase sem espaço para jogos (menos de 1 GB livre na pasta de transferências).</string>
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="perf63_toggle">Leistungshinweise</string>
+    <string name="perf63_toggle_hint">Zeigt einen kurzen Hinweis, solange die App geöffnet ist und das Gerät heiß ist, der Arbeitsspeicher knapp wird oder fast kein Platz mehr für Spiele da ist. Jeder Hinweis erscheint höchstens alle 30 Minuten.</string>
+    <string name="perf63_history_title">Letzte Hinweise</string>
+    <string name="perf63_history_empty">Seit dem Start der App gab es keine Hinweise.</string>
+    <string name="perf63_notice_hot">Das Gerät wird heiß. Pausiere Downloads oder gönne ihm eine Pause, damit alles flüssig bleibt.</string>
+    <string name="perf63_notice_memory">Dem Gerät geht der Arbeitsspeicher aus. Schließe andere Apps, wenn sich Valkyr träge anfühlt.</string>
+    <string name="perf63_notice_storage">Fast kein Platz mehr für Spiele (weniger als 1 GB frei im Download-Ordner).</string>
+</resources>
