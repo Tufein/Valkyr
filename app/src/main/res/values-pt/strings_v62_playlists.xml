@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playlists62_section_auto">Manter atualizadas</string>
+    <string name="playlists62_auto_title">Manter as listas do RetroArch atualizadas</string>
+    <string name="playlists62_auto_hint">Depois de uma nova análise da biblioteca ou de uma transferência concluída, os jogos novos são adicionados às listas que já existem. Nada é removido, nenhuma lista nova é criada e o ficheiro antigo vai primeiro para o lixo. Desativado por predefinição.</string>
+</resources>

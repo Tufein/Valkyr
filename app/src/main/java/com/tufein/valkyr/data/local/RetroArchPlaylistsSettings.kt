@@ -1,6 +1,7 @@
 package com.tufein.valkyr.data.local
 
 import android.content.Context
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
@@ -20,12 +21,16 @@ import javax.inject.Singleton
 class RetroArchPlaylistsSettings @Inject constructor(@param:ApplicationContext private val context: Context) {
 
     /** [excluded]: libretro system names ("Nintendo - Game Boy Advance") not to write. */
-    data class Values(val folder: String = "", val excluded: Set<String> = emptySet())
+    data class Values(val folder: String = "", val excluded: Set<String> = emptySet(), val auto: Boolean = false)
 
     private val folderKey = stringPreferencesKey(RetroArchPlaylists.FOLDER_KEY)
     private val excludedKey = stringSetPreferencesKey(RetroArchPlaylists.EXCLUDED_KEY)
+    private val autoKey = booleanPreferencesKey(RetroArchPlaylists.AUTO_KEY)
 
-    val values: Flow<Values> = context.dataStore.data.map { Values(it[folderKey].orEmpty(), it[excludedKey].orEmpty()) }
+    val values: Flow<Values> = context.dataStore.data.map { Values(it[folderKey].orEmpty(), it[excludedKey].orEmpty(), it[autoKey] ?: false) }
+
+    /** 6.2: after a rescan or a finished download, games that are new are added to playlists that exist. */
+    suspend fun setAuto(on: Boolean) = context.dataStore.edit { it[autoKey] = on }
 
     suspend fun setFolder(uri: String) = context.dataStore.edit { it[folderKey] = uri }
 

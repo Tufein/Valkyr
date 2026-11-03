@@ -102,6 +102,10 @@ class DogmatixApplication : Application(), ImageLoaderFactory {
     @Inject
     lateinit var offlineCollectionsService: dagger.Lazy<OfflineCollectionsService>
 
+    /** Injected so playlists are kept up to date after a rescan or a download (when switched on) from the start. */
+    @Inject
+    lateinit var retroArchPlaylistsAutoRefresh: dagger.Lazy<com.tufein.valkyr.data.service.RetroArchPlaylistsAutoRefresh>
+
     /** Injected so the weekly digest job follows its setting from the start. */
     @Inject
     lateinit var weeklyDigestScheduler: dagger.Lazy<WeeklyDigestScheduler>
@@ -216,6 +220,7 @@ class DogmatixApplication : Application(), ImageLoaderFactory {
                     wishlistRepository.get()
                     autoScanScheduler.get()
                     offlineCollectionsService.get()
+                    retroArchPlaylistsAutoRefresh.get()
                     weeklyDigestScheduler.get()
                     smartStorageScheduler.get()
                     widgetUpdater.get()

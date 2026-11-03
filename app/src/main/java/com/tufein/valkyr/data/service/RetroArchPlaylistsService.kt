@@ -34,6 +34,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -108,6 +110,8 @@ class RetroArchPlaylistsService @Inject constructor(
     private val _state = MutableStateFlow(PlaylistsRunState())
     val state: StateFlow<PlaylistsRunState> = _state.asStateFlow()
     private var job: Job? = null
+    /** Held while playlists are written, by a run or by the automatic refresh, so the two never overlap. */
+    private val writing = Mutex()
 
     /** The plan as things are now: reads the library and the picked folder, writes nothing. */
     suspend fun preview(): PlaylistsPreview = withContext(Dispatchers.IO) { prepare().preview }
@@ -232,7 +236,51 @@ class RetroArchPlaylistsService @Inject constructor(
 
     // ---- The run -------------------------------------------------------------------------------
 
-    private suspend fun run() {
+    /**
+     * 6.2, "Keep RetroArch playlists up to date": adds the new games to the playlists that are there
+     * already, with the same rules as a run (the old file goes to the trash first, a strict
+     * listing, a playlist that changed meanwhile is put back, nothing is removed). Never creates a
+     * playlist. Does nothing when the setting is off, a run is going, or the folder is not usable;
+     * every problem is ignored quietly (it is tried again after the next rescan or download).
+     * Returns the number of playlists changed.
+     */
+    suspend fun refreshExisting(): Int = withContext(Dispatchers.IO) {
+        if (!settings.values.first().auto || _state.value.running) return@withContext 0
+        if (!writing.tryLock()) return@withContext 0
+        try {
+            val prepared = prepare()
+            val root = prepared.root ?: return@withContext 0
+            val excluded = settings.values.first().excluded
+            val targets = RetroArchPlaylists.autoTargets(prepared.preview.plans, excluded)
+            val games = prepared.preview.systems.associateBy { it.system }
+            var changed = 0
+            for (plan in targets) {
+                currentCoroutineContext().ensureActive()
+                val system = games[plan.system] ?: continue
+                val outcome = withContext(NonCancellable) {
+                    try {
+                        writeOne(root, prepared.folder, system, createNew = false)
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Automatic refresh of ${plan.fileName} failed: ${e.message}")
+                        Outcome(failed = true)
+                    }
+                }
+                if (outcome.updated) changed++
+            }
+            changed
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.w(TAG, "Automatic refresh failed: ${e.javaClass.simpleName}")
+            0
+        } finally {
+            writing.unlock()
+        }
+    }
+
+    private suspend fun run() = writing.withLock { runLocked() }
+
+    private suspend fun runLocked() {
         try {
             val prepared = prepare()
             val preview = prepared.preview
@@ -297,10 +345,12 @@ class RetroArchPlaylistsService @Inject constructor(
      * file read and planned again. A playlist that is there goes to the trash first (that copy is
      * the way back) and must still be the one that was read; otherwise it is put back as it is.
      */
-    private suspend fun writeOne(root: DocumentFile, folder: String, system: RetroArchPlaylists.SystemGames): Outcome {
+    private suspend fun writeOne(root: DocumentFile, folder: String, system: RetroArchPlaylists.SystemGames, createNew: Boolean = true): Outcome {
         val dir = DiskScanner.rootOf(folder) ?: return Outcome(failed = true)
         val listing = DiskScanner.listOrNull(context, dir, strict = true) ?: return Outcome(failed = true)
         val existing = readExisting(match(listing, system.system))
+        // The automatic refresh only adds to a playlist that is there: one that vanished is not made anew.
+        if (existing.entry == null && !createNew) return Outcome()
         val plan = RetroArchPlaylists.plan(system, existing.read)
         if (plan.state == RetroArchPlaylists.State.LEFT_ALONE) return Outcome(leftAlone = true)
         if (!plan.writes) return Outcome()

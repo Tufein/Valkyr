@@ -96,6 +96,7 @@ class RetroArchPlaylistsViewModel @Inject constructor(
         val systems = ui.value.preview?.systems?.map { it.system } ?: return
         if (!service.state.value.running) viewModelScope.launch { settings.setAll(systems, on) }
     }
+    fun setAuto(on: Boolean) { viewModelScope.launch { settings.setAuto(on) } }
     fun refresh() { refresh.value++ }
 
     fun write() = service.start()

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playlists62_section_auto">Keep up to date</string>
+    <string name="playlists62_auto_title">Keep RetroArch playlists up to date</string>
+    <string name="playlists62_auto_hint">After a library rescan or a finished download, new games are added to the playlists that already exist. Nothing is removed, no new playlist is made, and the old file goes to the trash first. Off by default.</string>
+</resources>

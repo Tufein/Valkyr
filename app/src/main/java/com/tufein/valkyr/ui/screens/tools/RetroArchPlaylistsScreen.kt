@@ -179,6 +179,19 @@ fun RetroArchPlaylistsScreen(viewModel: RetroArchPlaylistsViewModel = hiltViewMo
                 item(key = "result") { ResultCard(run) }
             }
 
+            item(key = "h-auto") { SectionHeader(stringResource(R.string.playlists62_section_auto), icon = R.drawable.ic_retry) }
+            item(key = "auto") {
+                val on = ui.settings?.auto == true
+                ToolRow(
+                    title = stringResource(R.string.playlists62_auto_title),
+                    lines = listOf(stringResource(R.string.playlists62_auto_hint)),
+                    onClick = { viewModel.setAuto(!on) },
+                    modifier = track,
+                    icon = R.drawable.ic_playlist_add,
+                    trailing = { ThemedSwitch(on) { viewModel.setAuto(it) } }
+                )
+            }
+
             item(key = "h-after") { SectionHeader(stringResource(R.string.playlists35_section_after), icon = R.drawable.ic_info) }
             item(key = "after") {
                 InfoCard(

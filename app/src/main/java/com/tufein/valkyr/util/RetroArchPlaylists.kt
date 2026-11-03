@@ -61,8 +61,11 @@ object RetroArchPlaylists {
     const val FOLDER_KEY = "playlists35_folder"
     const val EXCLUDED_KEY = "playlists35_excluded"
 
+    /** 6.2: "Keep RetroArch playlists up to date" (default off). */
+    const val AUTO_KEY = "playlists62_auto"
+
     /** Their backup types, for [SettingSchema]. */
-    val SETTING_TYPES: Map<String, String> = mapOf(FOLDER_KEY to "s", EXCLUDED_KEY to "ss")
+    val SETTING_TYPES: Map<String, String> = mapOf(FOLDER_KEY to "s", EXCLUDED_KEY to "ss", AUTO_KEY to "b")
 
     private const val EXTERNAL_STORAGE = "com.android.externalstorage.documents"
 
@@ -453,6 +456,25 @@ object RetroArchPlaylists {
         }
         return base.copy(state = state, add = sorted, already = already, noPath = noPath, existingEntries = items.size)
     }
+
+    // ---- Keeping up to date (6.2) -------------------------------------------------------------
+
+    /**
+     * The playlists the automatic refresh may touch after a rescan or a finished download: only
+     * ones that exist already and have games to add ([State.ADD]), of systems that are switched
+     * on. It never creates a playlist, never changes one that is left alone and never removes an
+     * entry (a plan only adds). Null plans (no usable folder or listing) give nothing.
+     */
+    fun autoTargets(plans: List<Plan>?, excluded: Set<String>): List<Plan> =
+        plans.orEmpty().filter { it.state == State.ADD && it.system !in excluded }
+
+    /**
+     * Whether finished downloads call for a refresh: another download finished since the last look
+     * ([finishedBefore] to [finishedNow]) and none is still running, so a queue of many causes one
+     * refresh at its end rather than one per game.
+     */
+    fun refreshAfterDownloads(finishedBefore: Int, finishedNow: Int, anyActive: Boolean): Boolean =
+        finishedNow > finishedBefore && !anyActive
 
     // ---- Writing -------------------------------------------------------------------------------
 

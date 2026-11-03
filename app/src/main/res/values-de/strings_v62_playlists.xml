@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playlists62_section_auto">Aktuell halten</string>
+    <string name="playlists62_auto_title">RetroArch-Playlists aktuell halten</string>
+    <string name="playlists62_auto_hint">Nach einem Bibliotheks-Scan oder einem abgeschlossenen Download werden neue Spiele zu bereits vorhandenen Playlists hinzugefügt. Es wird nichts entfernt, keine neue Playlist angelegt, und die alte Datei kommt zuerst in den Papierkorb. Standardmäßig aus.</string>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playlists62_section_auto">Mantieni aggiornato</string>
+    <string name="playlists62_auto_title">Mantieni aggiornate le playlist RetroArch</string>
+    <string name="playlists62_auto_hint">Dopo una nuova scansione della libreria o un download completato, i giochi nuovi vengono aggiunti alle playlist già esistenti. Non viene rimosso nulla, non si crea nessuna playlist nuova e il vecchio file va prima nel cestino. Disattivato per impostazione predefinita.</string>
+</resources>

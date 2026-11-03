@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playlists62_section_auto">Garder à jour</string>
+    <string name="playlists62_auto_title">Garder les listes RetroArch à jour</string>
+    <string name="playlists62_auto_hint">Après une nouvelle analyse de la bibliothèque ou un téléchargement terminé, les nouveaux jeux sont ajoutés aux listes qui existent déjà. Rien n’est supprimé, aucune nouvelle liste n’est créée et l’ancien fichier va d’abord à la corbeille. Désactivé par défaut.</string>
+</resources>

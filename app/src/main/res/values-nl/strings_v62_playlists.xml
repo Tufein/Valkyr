@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playlists62_section_auto">Bijhouden</string>
+    <string name="playlists62_auto_title">RetroArch-afspeellijsten up-to-date houden</string>
+    <string name="playlists62_auto_hint">Na een bibliotheekscan of een afgeronde download worden nieuwe spellen toegevoegd aan de afspeellijsten die al bestaan. Er wordt niets verwijderd, er komt geen nieuwe lijst bij en het oude bestand gaat eerst naar de prullenbak. Standaard uit.</string>
+</resources>
