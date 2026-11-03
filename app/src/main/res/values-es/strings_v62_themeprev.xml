@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="themeprev62_open">Vistas previas</string>
+    <string name="themeprev62_title">Vistas previas del tema</string>
+    <string name="themeprev62_card_title">Juego de ejemplo</string>
+    <string name="themeprev62_button">Jugar</string>
+    <string name="themeprev62_chip">Instalado</string>
+    <string name="themeprev62_hint">Toca un aspecto para usarlo. Las muestras usan tu color de acento.</string>
+    <string name="themeprev62_hint_system">El tema sigue a tu dispositivo. Toca un aspecto para elegirlo tú; las muestras usan tu color de acento.</string>
+    <string name="themeprev62_hint_dynamic">Material You toma sus colores del fondo de pantalla; las muestras enseñan el naranja por defecto.</string>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="themeprev62_open">Aperçus</string>
+    <string name="themeprev62_title">Aperçus du thème</string>
+    <string name="themeprev62_card_title">Jeu d’exemple</string>
+    <string name="themeprev62_button">Jouer</string>
+    <string name="themeprev62_chip">Installé</string>
+    <string name="themeprev62_hint">Touche un style pour l’utiliser. Les aperçus utilisent ta couleur d’accent.</string>
+    <string name="themeprev62_hint_system">Le thème suit ton appareil. Touche un style pour choisir toi-même ; les aperçus utilisent ta couleur d’accent.</string>
+    <string name="themeprev62_hint_dynamic">Material You prend ses couleurs dans ton fond d’écran ; les aperçus montrent l’orange par défaut.</string>
+</resources>

@@ -209,8 +209,15 @@ fun SettingsScreen(
         backupBusyMessage = backupBusyMessage
     )
 
+    if (dialogs.showThemePreviews) {
+        ThemePreviewsDialog(
+            modeName = ui.themeMode.name, accent = ui.accent,
+            onPick = { look -> viewModel.onThemeModeChanged(context, ThemeMode.fromName(look.modeName)) },
+            onDismiss = { dialogs.showThemePreviews = false }
+        )
+    }
     if (dialogs.showAccentDialog) {
-        AccentDialog(selected = ui.accent, onPick = { viewModel.onAccentChanged(context, it); dialogs.showAccentDialog = false }, onDismiss = { dialogs.showAccentDialog = false })
+        AccentDialog(selected = ui.accent, themeModeName = ui.themeMode.name, onPick = { viewModel.onAccentChanged(context, it); dialogs.showAccentDialog = false }, onDismiss = { dialogs.showAccentDialog = false })
     }
 
     if (dialogs.showDownloadPresets) DownloadPresetsDialog(onDismiss = { dialogs.showDownloadPresets = false })

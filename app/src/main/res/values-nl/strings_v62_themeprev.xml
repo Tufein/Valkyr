@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="themeprev62_open">Voorbeelden</string>
+    <string name="themeprev62_title">Themavoorbeelden</string>
+    <string name="themeprev62_card_title">Voorbeeldspel</string>
+    <string name="themeprev62_button">Spelen</string>
+    <string name="themeprev62_chip">Geïnstalleerd</string>
+    <string name="themeprev62_hint">Tik op een uiterlijk om het te gebruiken. De voorbeelden gebruiken je accentkleur.</string>
+    <string name="themeprev62_hint_system">Het thema volgt je apparaat. Tik op een uiterlijk om zelf te kiezen; de voorbeelden gebruiken je accentkleur.</string>
+    <string name="themeprev62_hint_dynamic">Material You haalt zijn kleuren uit je achtergrond; de voorbeelden tonen de oranje standaardkleur.</string>
+</resources>

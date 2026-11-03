@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="themeprev62_open">Vorschau</string>
+    <string name="themeprev62_title">Design-Vorschau</string>
+    <string name="themeprev62_card_title">Beispielspiel</string>
+    <string name="themeprev62_button">Spielen</string>
+    <string name="themeprev62_chip">Installiert</string>
+    <string name="themeprev62_hint">Tippe auf ein Design, um es zu verwenden. Die Vorschauen nutzen deine Akzentfarbe.</string>
+    <string name="themeprev62_hint_system">Das Design folgt deinem Gerät. Tippe auf ein Design, um selbst zu wählen; die Vorschauen nutzen deine Akzentfarbe.</string>
+    <string name="themeprev62_hint_dynamic">Material You übernimmt seine Farben von deinem Hintergrundbild; die Vorschauen zeigen den orangefarbenen Standardakzent.</string>
+</resources>

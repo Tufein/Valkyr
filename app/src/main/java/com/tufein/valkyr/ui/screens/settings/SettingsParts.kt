@@ -111,6 +111,8 @@ import com.tufein.valkyr.ui.screens.sources.SourcesViewModel
 import com.tufein.valkyr.ui.screens.sources.components.ConfirmDialog
 import com.tufein.valkyr.ui.theme.AccentPresets
 import com.tufein.valkyr.ui.theme.LocalDogmatixTokens
+import com.tufein.valkyr.util.ThemePreview
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import com.tufein.valkyr.ui.theme.LocalReduceMotion
 import com.tufein.valkyr.ui.theme.Motion
 import com.tufein.valkyr.ui.theme.ThemeMode
@@ -406,11 +408,14 @@ internal fun AccentSwatch(color: Color, size: Dp, onClick: () -> Unit) {
 /** Every accent colour (plus Material You where the system has it), each with its name. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-internal fun AccentDialog(selected: Color, onPick: (Color) -> Unit, onDismiss: () -> Unit) {
+internal fun AccentDialog(selected: Color, themeModeName: String, onPick: (Color) -> Unit, onDismiss: () -> Unit) {
     val choices = AccentPresets.choices
     val firstFocus = rememberInitialFocus()
     // Focus starts on the colour in use, so ◀ ▶ moves from where the user is.
     val start = choices.indexOf(selected).coerceAtLeast(0)
+    // The sample above the swatches follows the colour under focus, so ◀ ▶ previews before anything is picked.
+    var shown by remember { mutableStateOf(selected) }
+    val look = ThemePreview.resolve(themeModeName, LocalDogmatixTokens.current.isDark)
     AlertDialog(
         modifier = Modifier.closeOnGamepadB(onDismiss),
         onDismissRequest = onDismiss,
@@ -422,6 +427,7 @@ internal fun AccentDialog(selected: Color, onPick: (Color) -> Unit, onDismiss: (
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
+                MiniThemeCard(look = look, accent = shown, active = false, modifier = Modifier.width(160.dp))
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -431,6 +437,7 @@ internal fun AccentDialog(selected: Color, onPick: (Color) -> Unit, onDismiss: (
                             color = color,
                             selected = color == selected,
                             onClick = { onPick(color) },
+                            onFocused = { shown = color },
                             modifier = if (i == start) Modifier.focusRequester(firstFocus) else Modifier
                         )
                     }
@@ -448,9 +455,10 @@ internal fun AccentDialog(selected: Color, onPick: (Color) -> Unit, onDismiss: (
 
 /** One choice of the accent dialog: a 48 dp swatch (a check on the one in use) and its name. */
 @Composable
-internal fun AccentChoice(color: Color, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+internal fun AccentChoice(color: Color, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier, onFocused: () -> Unit = {}) {
     val scheme = MaterialTheme.colorScheme
     val source = rememberFocusSource()
+    if (source.collectIsFocusedAsState().value) LaunchedEffect(color) { onFocused() }
     Column(
         modifier = modifier
             .width(68.dp)

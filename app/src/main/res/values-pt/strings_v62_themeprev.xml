@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="themeprev62_open">Pré-visualizações</string>
+    <string name="themeprev62_title">Pré-visualizações do tema</string>
+    <string name="themeprev62_card_title">Jogo de exemplo</string>
+    <string name="themeprev62_button">Jogar</string>
+    <string name="themeprev62_chip">Instalado</string>
+    <string name="themeprev62_hint">Toca num aspeto para o usar. As amostras usam a tua cor de destaque.</string>
+    <string name="themeprev62_hint_system">O tema segue o teu dispositivo. Toca num aspeto para escolheres tu; as amostras usam a tua cor de destaque.</string>
+    <string name="themeprev62_hint_dynamic">O Material You vai buscar as cores ao fundo de ecrã; as amostras mostram o laranja predefinido.</string>
+</resources>

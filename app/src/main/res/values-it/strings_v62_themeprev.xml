@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="themeprev62_open">Anteprime</string>
+    <string name="themeprev62_title">Anteprime del tema</string>
+    <string name="themeprev62_card_title">Gioco di esempio</string>
+    <string name="themeprev62_button">Gioca</string>
+    <string name="themeprev62_chip">Installato</string>
+    <string name="themeprev62_hint">Tocca un aspetto per usarlo. Le anteprime usano il tuo colore di accento.</string>
+    <string name="themeprev62_hint_system">Il tema segue il dispositivo. Tocca un aspetto per sceglierlo tu; le anteprime usano il tuo colore di accento.</string>
+    <string name="themeprev62_hint_dynamic">Material You prende i colori dallo sfondo; le anteprime mostrano l’arancione predefinito.</string>
+</resources>

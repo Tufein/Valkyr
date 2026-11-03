@@ -3,6 +3,8 @@ package com.tufein.valkyr.ui.screens.settings
 import android.text.format.Formatter
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -51,7 +53,10 @@ internal fun SettingsEnv.lookCardRows(): List<SettingsRow> = listOf(
             onClick = { cycleTheme(1) },
             onAdjust = { cycleTheme(it) }
         ) {
-            SettingsStepper(themeLabel, onDecrement = { cycleTheme(-1) }, onIncrement = { cycleTheme(1) })
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                SettingsStepper(themeLabel, onDecrement = { cycleTheme(-1) }, onIncrement = { cycleTheme(1) })
+                ActionPill(stringResource(R.string.themeprev62_open), { dialogs.showThemePreviews = true }, icon = R.drawable.ic_visibility)
+            }
         }
     },
     SettingsRow(key = SettingKeys.LANGUAGE) {
@@ -85,6 +90,7 @@ internal fun SettingsEnv.lookCardRows(): List<SettingsRow> = listOf(
             onAdjust = { cycleAccent(it) }
         ) {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text(stringResource(accentName(ui.accent)), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 AccentSwatch(ui.accent, if (isLandscape) 24.dp else 32.dp, onClick = { dialogs.showAccentDialog = true })
                 ActionPill(stringResource(R.string.settings_change), { dialogs.showAccentDialog = true }, icon = R.drawable.ic_edit)
             }

@@ -70,6 +70,7 @@ internal class SettingsLaunchers(
 internal class SettingsLocalState {
     var appLanguage by mutableStateOf(AppLanguage.current())
     var showAccentDialog by mutableStateOf(false)
+    var showThemePreviews by mutableStateOf(false)
     var showDownloadPresets by mutableStateOf(false)
     var showLanguagesDialog by mutableStateOf(false)
     var showCocoonHelp by mutableStateOf(false)

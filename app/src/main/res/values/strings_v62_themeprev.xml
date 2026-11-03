@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="themeprev62_open">Previews</string>
+    <string name="themeprev62_title">Theme previews</string>
+    <string name="themeprev62_card_title">Sample game</string>
+    <string name="themeprev62_button">Play</string>
+    <string name="themeprev62_chip">Installed</string>
+    <string name="themeprev62_hint">Tap a look to switch to it. The samples use your accent colour.</string>
+    <string name="themeprev62_hint_system">The theme follows your device. Tap a look to pick one yourself; the samples use your accent colour.</string>
+    <string name="themeprev62_hint_dynamic">Material You takes its colours from your wallpaper; the samples show the orange default.</string>
+</resources>
