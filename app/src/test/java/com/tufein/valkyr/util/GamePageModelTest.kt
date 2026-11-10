@@ -8,7 +8,6 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.net.URLDecoder
-import com.tufein.valkyr.data.model.DownloadStatus
 
 class GamePageModelTest {
 
@@ -77,14 +76,14 @@ class GamePageModelTest {
 
     @Test fun `queueOf maps every status`() {
         assertEquals(GamePageModel.Queue.NONE, GamePageModel.queueOf(null))
-        assertEquals(GamePageModel.Queue.ACTIVE, GamePageModel.queueOf(DownloadStatus.QUEUED))
-        assertEquals(GamePageModel.Queue.ACTIVE, GamePageModel.queueOf(DownloadStatus.DOWNLOADING))
-        assertEquals(GamePageModel.Queue.ACTIVE, GamePageModel.queueOf(DownloadStatus.COPYING))
-        assertEquals(GamePageModel.Queue.ACTIVE, GamePageModel.queueOf(DownloadStatus.UNZIPPING))
-        assertEquals(GamePageModel.Queue.PAUSED, GamePageModel.queueOf(DownloadStatus.PAUSED))
-        assertEquals(GamePageModel.Queue.FAILED, GamePageModel.queueOf(DownloadStatus.FAILED))
-        assertEquals(GamePageModel.Queue.NONE, GamePageModel.queueOf(DownloadStatus.STOPPED))
-        assertEquals(GamePageModel.Queue.NONE, GamePageModel.queueOf(DownloadStatus.COMPLETED))
+        assertEquals(GamePageModel.Queue.ACTIVE, GamePageModel.queueOf(com.tufein.valkyr.data.model.DownloadStatus.QUEUED))
+        assertEquals(GamePageModel.Queue.ACTIVE, GamePageModel.queueOf(com.tufein.valkyr.data.model.DownloadStatus.DOWNLOADING))
+        assertEquals(GamePageModel.Queue.ACTIVE, GamePageModel.queueOf(com.tufein.valkyr.data.model.DownloadStatus.COPYING))
+        assertEquals(GamePageModel.Queue.ACTIVE, GamePageModel.queueOf(com.tufein.valkyr.data.model.DownloadStatus.UNZIPPING))
+        assertEquals(GamePageModel.Queue.PAUSED, GamePageModel.queueOf(com.tufein.valkyr.data.model.DownloadStatus.PAUSED))
+        assertEquals(GamePageModel.Queue.FAILED, GamePageModel.queueOf(com.tufein.valkyr.data.model.DownloadStatus.FAILED))
+        assertEquals(GamePageModel.Queue.NONE, GamePageModel.queueOf(com.tufein.valkyr.data.model.DownloadStatus.STOPPED))
+        assertEquals(GamePageModel.Queue.NONE, GamePageModel.queueOf(com.tufein.valkyr.data.model.DownloadStatus.COMPLETED))
     }
 
     @Test fun `a new game offers download when but no remove`() {
