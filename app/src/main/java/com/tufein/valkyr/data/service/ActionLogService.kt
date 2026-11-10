@@ -25,6 +25,7 @@ import java.io.File
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.tufein.valkyr.data.local.AppSettings
 
 private const val TAG = "ActionLog"
 
@@ -41,7 +42,7 @@ private const val TAG = "ActionLog"
 @Singleton
 class ActionLogService @Inject constructor(
     @param:ApplicationContext context: Context,
-    private val settings: com.tufein.valkyr.data.local.AppSettings? = null
+    private val settings: AppSettings? = null
 ) {
     private sealed interface Op {
         class Append(val entry: ActionEntry, val profileId: String?) : Op

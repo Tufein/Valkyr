@@ -47,6 +47,8 @@ import com.tufein.valkyr.util.ItemWait
 import com.tufein.valkyr.util.WaitInfo
 import java.text.DateFormat
 import java.util.Date
+import java.time.Instant
+import java.time.ZoneId
 
 /** The options of the dialog; null = "right away" (no condition). */
 private val OPTIONS: List<Pair<ConditionKind?, Int>> = listOf(
@@ -196,8 +198,8 @@ private fun OptionRow(icon: Int, label: String, selected: Boolean, modifier: Mod
 
 /** A moment as the device formats it: just the time today, date and time otherwise. */
 internal fun formatMoment(at: Long, now: Long = System.currentTimeMillis()): String {
-    val zone = java.time.ZoneId.systemDefault()
-    val sameDay = java.time.Instant.ofEpochMilli(at).atZone(zone).toLocalDate() == java.time.Instant.ofEpochMilli(now).atZone(zone).toLocalDate()
+    val zone = ZoneId.systemDefault()
+    val sameDay = Instant.ofEpochMilli(at).atZone(zone).toLocalDate() == Instant.ofEpochMilli(now).atZone(zone).toLocalDate()
     return if (sameDay) DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(at))
     else DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(Date(at))
 }

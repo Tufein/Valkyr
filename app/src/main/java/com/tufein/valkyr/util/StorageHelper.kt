@@ -15,6 +15,7 @@ import java.io.OutputStream
 import java.util.UUID
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import kotlinx.coroutines.CancellationException
 
 object StorageHelper {
     private const val TAG = "StorageHelper"
@@ -277,7 +278,7 @@ object StorageHelper {
                 }.getOrDefault(false)
                 if (restored && runCatching { backup.delete() }.getOrDefault(false)) runCatching { receipt?.delete() }
             } else if (published != null && runCatching { hash(context, published) == expectedSha256 }.getOrDefault(false)) runCatching { published.delete() }
-            if (e is kotlinx.coroutines.CancellationException) throw e
+            if (e is CancellationException) throw e
             throw StorageException("Could not publish finished file; recovery copies are preserved", e)
         }
     }

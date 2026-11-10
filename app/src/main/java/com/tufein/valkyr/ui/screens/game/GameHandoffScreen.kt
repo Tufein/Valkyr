@@ -86,6 +86,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.compose.foundation.layout.Row
+import com.tufein.valkyr.ui.navigation.NavRoutes
+import com.tufein.valkyr.util.GamePageModel
 
 /** `game_handoff/<console>/<file>?mode=send|receive&code=…`: "Continue on another handheld" for one game. */
 object GameHandoffRoute {
@@ -250,7 +253,7 @@ fun GameHandoffScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         // Title and game name wrap rather than cut off (long translations, long game names).
-        androidx.compose.foundation.layout.Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             IconTile(R.drawable.ic_devices, size = 38.dp)
             Column(Modifier.weight(1f)) {
                 Text(stringResource(if (receiving) R.string.handoff31_title_receive else R.string.handoff31_title_send), style = MaterialTheme.typography.headlineSmall)
@@ -275,9 +278,9 @@ fun GameHandoffScreen(
                 else Line(ui.source?.let { stringResource(R.string.handoff31_needs_source, it) } ?: stringResource(R.string.handoff31_needs_any_source))
                 Line(stringResource(R.string.handoff31_needs_package))
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    if (ui.inLibrary) ActionPill(stringResource(R.string.handoff31_open_game), { onNavigate(com.tufein.valkyr.util.GamePageModel.route(consoleId, fileName)) }, icon = R.drawable.ic_controller)
+                    if (ui.inLibrary) ActionPill(stringResource(R.string.handoff31_open_game), { onNavigate(GamePageModel.route(consoleId, fileName)) }, icon = R.drawable.ic_controller)
                     else ActionPill(stringResource(R.string.handoff31_missing_search), { onSearchLibrary(consoleId, fileName) }, icon = R.drawable.ic_search)
-                    ActionPill(stringResource(R.string.package_transfer_title), { onNavigate(com.tufein.valkyr.ui.navigation.NavRoutes.PackageTransfer.route) }, icon = R.drawable.ic_stacks)
+                    ActionPill(stringResource(R.string.package_transfer_title), { onNavigate(NavRoutes.PackageTransfer.route) }, icon = R.drawable.ic_stacks)
                 }
             }
         }
@@ -343,7 +346,7 @@ fun GameHandoffScreen(
                 Line(stringResource(R.string.handoff31_needs_file, fileName, console))
                 Line(ui.source?.let { stringResource(R.string.handoff31_needs_source, it) } ?: stringResource(R.string.handoff31_needs_any_source))
                 Line(stringResource(R.string.handoff31_needs_package))
-                ActionPill(stringResource(R.string.package_transfer_title), { onNavigate(com.tufein.valkyr.ui.navigation.NavRoutes.PackageTransfer.route) }, icon = R.drawable.ic_stacks)
+                ActionPill(stringResource(R.string.package_transfer_title), { onNavigate(NavRoutes.PackageTransfer.route) }, icon = R.drawable.ic_stacks)
             }
         }
     }

@@ -2,6 +2,7 @@ package com.tufein.valkyr.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.Index
+import androidx.room.ColumnInfo
 
 /**
  * A game the user starred. Keyed by console + file name (not by `downloadable_files.id`)
@@ -12,7 +13,7 @@ data class FavouriteEntity(
     val consoleId: String,
     val fileName: String,
     val addedAt: Long = System.currentTimeMillis(),
-    @androidx.room.ColumnInfo(defaultValue = "''") val profileId: String = ""
+    @ColumnInfo(defaultValue = "''") val profileId: String = ""
 ) {
     val key: String get() = key(consoleId, fileName)
 

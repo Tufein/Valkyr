@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlinx.coroutines.CancellationException
 
 /** 5.6.0: what the "Pair with code" dialog says after an attempt. */
 enum class CodeProblem { NOT_COMPLETE, NO_SERVER, UNKNOWN_CODE, TOO_MANY, OWNER_DISABLED, OFFLINE }
@@ -62,7 +63,7 @@ class RommPairingViewModel @Inject constructor(
         viewModelScope.launch {
             val result = try {
                 if (client.configuredBaseUrl().isEmpty()) null else client.exchangePairCode(code)
-            } catch (e: kotlinx.coroutines.CancellationException) {
+            } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 RommPairing.Exchange.Failed(0)

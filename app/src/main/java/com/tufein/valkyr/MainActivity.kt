@@ -177,21 +177,53 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import android.util.Log
+import android.view.ViewTreeObserver
+import com.tufein.valkyr.data.service.PerfNoticeService
+import com.tufein.valkyr.data.service.RommRemoteInstallService
+import com.tufein.valkyr.data.service.SmartCollectionsService
+import com.tufein.valkyr.data.service.StorageAvailabilityService
+import com.tufein.valkyr.ui.screens.game.GameHandoffRoute
+import com.tufein.valkyr.ui.screens.game.GameHandoffScreen
+import com.tufein.valkyr.ui.screens.game.PendingHandoff
+import com.tufein.valkyr.ui.screens.next.UpNextScreen
+import com.tufein.valkyr.ui.screens.settings.SettingsJump
+import com.tufein.valkyr.ui.screens.settings.VersionPreferenceScreen
+import com.tufein.valkyr.ui.screens.settings.covers.CoverSourcesScreen
+import com.tufein.valkyr.ui.screens.tools.ActionHistoryScreen
+import com.tufein.valkyr.ui.screens.tools.FrontendCoversScreen
+import com.tufein.valkyr.ui.screens.tools.GameReadinessScreen
+import com.tufein.valkyr.ui.screens.tools.GameTransferScreen
+import com.tufein.valkyr.ui.screens.tools.LibraryRepairScreen
+import com.tufein.valkyr.ui.screens.tools.NewHandheldScreen
+import com.tufein.valkyr.ui.screens.tools.PackageTransferScreen
+import com.tufein.valkyr.ui.screens.tools.PerfCheckScreen
+import com.tufein.valkyr.ui.screens.tools.ReadinessRoute
+import com.tufein.valkyr.ui.screens.tools.RecoveryScreen
+import com.tufein.valkyr.ui.screens.tools.ReportProblemScreen
+import com.tufein.valkyr.ui.screens.tools.RetroArchPlaylistsScreen
+import com.tufein.valkyr.ui.shortcut.PendingGameShortcut
+import com.tufein.valkyr.util.EmulatorSaveLayouts
+import com.tufein.valkyr.util.HandoffLink
+import com.tufein.valkyr.util.PerfNotices
+import com.tufein.valkyr.util.SettingKeys
+import com.tufein.valkyr.util.StorageAvailability
+import kotlinx.coroutines.CancellationException
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    @Inject lateinit var smartCollections: com.tufein.valkyr.data.service.SmartCollectionsService
+    @Inject lateinit var smartCollections: SmartCollectionsService
     @Inject lateinit var pendingFilters: PendingLibraryFilters
     @Inject lateinit var saveSyncService: SaveSyncService
     @Inject lateinit var appSettings: AppSettings
     @Inject lateinit var downloadService: DownloadService
-    @Inject lateinit var rommRemoteInstall: com.tufein.valkyr.data.service.RommRemoteInstallService
-    @Inject lateinit var storageAvailability: com.tufein.valkyr.data.service.StorageAvailabilityService
+    @Inject lateinit var rommRemoteInstall: RommRemoteInstallService
+    @Inject lateinit var storageAvailability: StorageAvailabilityService
     @Inject lateinit var metadataService: GameMetadataService
     @Inject lateinit var lookSettings: LookSettings
     @Inject lateinit var tvModeSettings: TvModeSettings
-    @Inject lateinit var perfNotices: com.tufein.valkyr.data.service.PerfNoticeService
+    @Inject lateinit var perfNotices: PerfNoticeService
     private var secondScreen: SecondScreenPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -208,10 +240,10 @@ class MainActivity : AppCompatActivity() {
                     while (true) {
                         try {
                             storageAvailability.recheck().filter {
-                                it.location.downloadRoot && !com.tufein.valkyr.util.StorageAvailability.writable(it.status)
+                                it.location.downloadRoot && !StorageAvailability.writable(it.status)
                             }.forEach { downloadService.holdStorageUnavailable(it.location.uri) }
-                        } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled }
-                        catch (_: Exception) { android.util.Log.w("StorageAvailability", "Storage check could not finish") }
+                        } catch (cancelled: CancellationException) { throw cancelled }
+                        catch (_: Exception) { Log.w("StorageAvailability", "Storage check could not finish") }
                         kotlinx.coroutines.delay(15_000)
                     }
                 }
@@ -224,13 +256,13 @@ class MainActivity : AppCompatActivity() {
                     try {
                         perfNotices.check().forEach { kind ->
                             ToastUtil.showInfo(this@MainActivity, getString(when (kind) {
-                                com.tufein.valkyr.util.PerfNotices.Kind.HOT -> R.string.perf63_notice_hot
-                                com.tufein.valkyr.util.PerfNotices.Kind.LOW_MEMORY -> R.string.perf63_notice_memory
-                                com.tufein.valkyr.util.PerfNotices.Kind.LOW_STORAGE -> R.string.perf63_notice_storage
+                                PerfNotices.Kind.HOT -> R.string.perf63_notice_hot
+                                PerfNotices.Kind.LOW_MEMORY -> R.string.perf63_notice_memory
+                                PerfNotices.Kind.LOW_STORAGE -> R.string.perf63_notice_storage
                             }))
                         }
-                    } catch (cancelled: kotlinx.coroutines.CancellationException) { throw cancelled }
-                    catch (_: Exception) { android.util.Log.w("PerfNotices", "Check could not finish") }
+                    } catch (cancelled: CancellationException) { throw cancelled }
+                    catch (_: Exception) { Log.w("PerfNotices", "Check could not finish") }
                     kotlinx.coroutines.delay(60_000)
                 }
             }
@@ -256,7 +288,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         // First draw: note the time and let the application build its settings-driven services.
-        window.decorView.viewTreeObserver.addOnPreDrawListener(object : android.view.ViewTreeObserver.OnPreDrawListener {
+        window.decorView.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
             override fun onPreDraw(): Boolean {
                 window.decorView.viewTreeObserver.removeOnPreDrawListener(this)
                 PerfLog.mark("first_frame")
@@ -365,8 +397,8 @@ class MainActivity : AppCompatActivity() {
         }
         if (DeepLinkParser.isAppScheme(data.scheme)) {
             // valkyr://handoff?…: a game handed over from another handheld.
-            com.tufein.valkyr.util.HandoffLink.parse(intent.dataString)?.let {
-                com.tufein.valkyr.ui.screens.game.PendingHandoff.submit(it)
+            HandoffLink.parse(intent.dataString)?.let {
+                PendingHandoff.submit(it)
                 return
             }
             DeepLinkParser.parse(intent.dataString)?.let(pendingFilters::submit)
@@ -533,15 +565,15 @@ private fun DogmatixApp(pendingFilters: PendingLibraryFilters) {
         NavRoutes.allRoutes.firstOrNull { it.route == route }?.let { navController.switchTo(it) }
     }
     // A hand-off link from another handheld: that game's "Continue here".
-    val handoff by com.tufein.valkyr.ui.screens.game.PendingHandoff.request.collectAsStateWithLifecycle()
+    val handoff by PendingHandoff.request.collectAsStateWithLifecycle()
     LaunchedEffect(handoff) {
-        val request = com.tufein.valkyr.ui.screens.game.PendingHandoff.consume() ?: return@LaunchedEffect
-        navController.navigate(com.tufein.valkyr.ui.screens.game.GameHandoffRoute.of(request.consoleId, request.fileName, receive = true, code = request.code))
+        val request = PendingHandoff.consume() ?: return@LaunchedEffect
+        navController.navigate(GameHandoffRoute.of(request.consoleId, request.fileName, receive = true, code = request.code))
     }
     // 3.5: a game shortcut that could not start its game by itself: that game's page (unless it is already open).
-    val gameShortcut by com.tufein.valkyr.ui.shortcut.PendingGameShortcut.request.collectAsStateWithLifecycle()
+    val gameShortcut by PendingGameShortcut.request.collectAsStateWithLifecycle()
     LaunchedEffect(gameShortcut) {
-        val request = com.tufein.valkyr.ui.shortcut.PendingGameShortcut.consumeOpen() ?: return@LaunchedEffect
+        val request = PendingGameShortcut.consumeOpen() ?: return@LaunchedEffect
         val top = navController.currentBackStackEntry
         val shown = top?.destination?.route == NavRoutes.Game.route &&
             top.arguments?.getString(GamePageModel.ARG_CONSOLE) == request.consoleId && top.arguments?.getString(GamePageModel.ARG_FILE) == request.fileName
@@ -702,12 +734,12 @@ private fun DogmatixApp(pendingFilters: PendingLibraryFilters) {
                             onBack = { navController.popBackStack() },
                             onOpenGame = { c, f -> navController.navigate(GamePageModel.route(c, f)) },
                             onOpenVersionPreference = { navController.navigate(NavRoutes.VersionPreference.route) },
-                            onReadiness = { c, f -> navController.navigate(com.tufein.valkyr.ui.screens.tools.ReadinessRoute.of(c, f)) },
-                            onHandoff = { c, f -> navController.navigate(com.tufein.valkyr.ui.screens.game.GameHandoffRoute.of(c, f)) }
+                            onReadiness = { c, f -> navController.navigate(ReadinessRoute.of(c, f)) },
+                            onHandoff = { c, f -> navController.navigate(GameHandoffRoute.of(c, f)) }
                         )
                     }
                     composable(
-                        com.tufein.valkyr.ui.screens.game.GameHandoffRoute.route,
+                        GameHandoffRoute.route,
                         arguments = listOf(
                             navArgument("consoleId") { type = NavType.StringType },
                             navArgument("fileName") { type = NavType.StringType },
@@ -715,25 +747,25 @@ private fun DogmatixApp(pendingFilters: PendingLibraryFilters) {
                             navArgument("code") { type = NavType.StringType; nullable = true; defaultValue = null }
                         )
                     ) { entry ->
-                        com.tufein.valkyr.ui.screens.game.GameHandoffScreen(
+                        GameHandoffScreen(
                             consoleId = entry.arguments?.getString("consoleId").orEmpty(),
                             fileName = entry.arguments?.getString("fileName").orEmpty(),
-                            receive = entry.arguments?.getString("mode") == com.tufein.valkyr.ui.screens.game.GameHandoffRoute.RECEIVE,
+                            receive = entry.arguments?.getString("mode") == GameHandoffRoute.RECEIVE,
                             code = entry.arguments?.getString("code"),
                             onNavigate = { navController.navigate(it) },
                             onSearchLibrary = { c, f ->
-                                pendingFilters.submit(LibraryFilterRequest(consoles = setOf(c), query = com.tufein.valkyr.util.EmulatorSaveLayouts.cleanTitle(f).ifBlank { f.substringBeforeLast('.') }))
+                                pendingFilters.submit(LibraryFilterRequest(consoles = setOf(c), query = EmulatorSaveLayouts.cleanTitle(f).ifBlank { f.substringBeforeLast('.') }))
                             }
                         )
                     }
-                    composable(com.tufein.valkyr.ui.screens.tools.ReadinessRoute.route,
+                    composable(ReadinessRoute.route,
                         arguments = listOf(navArgument("consoleId") { type = NavType.StringType }, navArgument("fileName") { type = NavType.StringType })) { entry ->
-                        com.tufein.valkyr.ui.screens.tools.GameReadinessScreen(
+                        GameReadinessScreen(
                             entry.arguments?.getString("consoleId").orEmpty(), entry.arguments?.getString("fileName").orEmpty(),
                             onNavigate = { navController.navigate(it) })
                     }
-                    composable(NavRoutes.VersionPreference.route) { com.tufein.valkyr.ui.screens.settings.VersionPreferenceScreen() }
-                    composable(NavRoutes.CoverSources.route) { com.tufein.valkyr.ui.screens.settings.covers.CoverSourcesScreen() }
+                    composable(NavRoutes.VersionPreference.route) { VersionPreferenceScreen() }
+                    composable(NavRoutes.CoverSources.route) { CoverSourcesScreen() }
                     composable(NavRoutes.Downloads.route) { DownloadScreen(navController) }
                     composable(NavRoutes.Sources.route) { SourcesScreen() }
                     composable(NavRoutes.Settings.route) { SettingsScreen(navController) }
@@ -742,23 +774,23 @@ private fun DogmatixApp(pendingFilters: PendingLibraryFilters) {
                     composable(NavRoutes.SaveSync.route) { SaveSyncScreen() }
                     composable(NavRoutes.Overview.route) { LibraryOverviewScreen() }
                     composable(NavRoutes.Duplicates.route) { DuplicatesScreen() }
-                    composable(NavRoutes.Recovery.route) { com.tufein.valkyr.ui.screens.tools.RecoveryScreen(onNavigate = { navController.navigate(it) }) }
-                    composable(NavRoutes.PackageTransfer.route) { com.tufein.valkyr.ui.screens.tools.PackageTransferScreen(onNavigate = { navController.navigate(it) }) }
-                    composable(NavRoutes.GameTransfer.route) { com.tufein.valkyr.ui.screens.tools.GameTransferScreen() }
+                    composable(NavRoutes.Recovery.route) { RecoveryScreen(onNavigate = { navController.navigate(it) }) }
+                    composable(NavRoutes.PackageTransfer.route) { PackageTransferScreen(onNavigate = { navController.navigate(it) }) }
+                    composable(NavRoutes.GameTransfer.route) { GameTransferScreen() }
                     composable(NavRoutes.ActionHistory.route) {
-                        com.tufein.valkyr.ui.screens.tools.ActionHistoryScreen(
+                        ActionHistoryScreen(
                             onOpenGame = { c, f -> navController.navigate(GamePageModel.route(c, f)) },
                             onNavigate = { navController.navigate(it) })
                     }
                     composable(NavRoutes.UpNext.route) {
-                        com.tufein.valkyr.ui.screens.next.UpNextScreen(onOpenGame = { c, f -> navController.navigate(GamePageModel.route(c, f)) })
+                        UpNextScreen(onOpenGame = { c, f -> navController.navigate(GamePageModel.route(c, f)) })
                     }
-                    composable(NavRoutes.LibraryRepair.route) { com.tufein.valkyr.ui.screens.tools.LibraryRepairScreen(onNavigate = { navController.navigate(it) }) }
-                    composable(NavRoutes.ReportProblem.route) { com.tufein.valkyr.ui.screens.tools.ReportProblemScreen() }
-                    composable(NavRoutes.PerfCheck.route) { com.tufein.valkyr.ui.screens.tools.PerfCheckScreen() }
-                    composable(NavRoutes.FrontendCovers.route) { com.tufein.valkyr.ui.screens.tools.FrontendCoversScreen() }
-                    composable(NavRoutes.RetroArchPlaylists.route) { com.tufein.valkyr.ui.screens.tools.RetroArchPlaylistsScreen() }
-                    composable(NavRoutes.NewHandheld.route) { com.tufein.valkyr.ui.screens.tools.NewHandheldScreen(navController) }
+                    composable(NavRoutes.LibraryRepair.route) { LibraryRepairScreen(onNavigate = { navController.navigate(it) }) }
+                    composable(NavRoutes.ReportProblem.route) { ReportProblemScreen() }
+                    composable(NavRoutes.PerfCheck.route) { PerfCheckScreen() }
+                    composable(NavRoutes.FrontendCovers.route) { FrontendCoversScreen() }
+                    composable(NavRoutes.RetroArchPlaylists.route) { RetroArchPlaylistsScreen() }
+                    composable(NavRoutes.NewHandheld.route) { NewHandheldScreen(navController) }
                     composable(NavRoutes.Tools.route) { ToolsHubScreen(navController) }
                     composable(NavRoutes.Sets.route) { SetsScreen() }
                     composable(NavRoutes.Storage.route) { StorageScreen() }
@@ -793,7 +825,7 @@ private fun DogmatixApp(pendingFilters: PendingLibraryFilters) {
                     }
                     composable(NavRoutes.FrontendMetadata.route) {
                         FrontendMetadataScreen(onOpenSettings = {
-                            com.tufein.valkyr.ui.screens.settings.SettingsJump.request(com.tufein.valkyr.util.SettingKeys.ESDE)
+                            SettingsJump.request(SettingKeys.ESDE)
                             navController.navigate(NavRoutes.Settings.route)
                         })
                     }

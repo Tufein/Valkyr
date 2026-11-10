@@ -26,6 +26,7 @@ import kotlinx.coroutines.sync.withLock
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.CancellationException
 
 private const val TAG = "RommLibraryService"
 /** The server's game list is read again when older than this (and whenever the RomM settings change). */
@@ -132,7 +133,7 @@ class RommLibraryService @Inject constructor(
                         keys += key
                         games[key] = RommGameRef(rom.id, platformId, rom.coverPath)
                     }
-                } catch (e: kotlinx.coroutines.CancellationException) {
+                } catch (e: CancellationException) {
                     throw e
                 } catch (e: Exception) {
                     failures++

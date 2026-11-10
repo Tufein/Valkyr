@@ -5,6 +5,11 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.time.ZoneOffset
+import com.tufein.valkyr.data.service.DownloadService
+import com.tufein.valkyr.data.service.RommClient
+import com.tufein.valkyr.ui.MainActivity
+import java.io.IOException
+import kotlinx.coroutines.DispatchedTask
 
 class ProblemReportTest {
     private val utc = ZoneOffset.UTC
@@ -33,11 +38,11 @@ class ProblemReportTest {
             Mon Oct 12 10:00:00 CEST 2026 on thread main
             java.lang.IllegalStateException: Cannot open /storage/emulated/0/ROMs/secret.zip for sander@example.com
             	at android.os.Handler.dispatchMessage(Handler.java:106)
-            	at com.tufein.valkyr.data.service.DownloadService.start(DownloadService.kt:120)
-            	at com.tufein.valkyr.ui.MainActivity.onCreate(MainActivity.kt:88)
-            Caused by: java.io.IOException: token=abc123 https://romm.home.lan/api
-            	at com.tufein.valkyr.data.service.RommClient${'$'}get${'$'}2.invokeSuspend(Unknown Source:12)
-            	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:108)
+            	at DownloadService.start(DownloadService.kt:120)
+            	at MainActivity.onCreate(MainActivity.kt:88)
+            Caused by: IOException: token=abc123 https://romm.home.lan/api
+            	at RommClient${'$'}get${'$'}2.invokeSuspend(Unknown Source:12)
+            	at DispatchedTask.run(DispatchedTask.kt:108)
             	... 12 more
         """.trimIndent(),
         crashAt = 1_759_990_000_000L

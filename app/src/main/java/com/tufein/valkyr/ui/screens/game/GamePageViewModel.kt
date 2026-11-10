@@ -50,6 +50,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
+import com.tufein.valkyr.data.service.DatService
+import com.tufein.valkyr.data.service.GameLaunchService
+import com.tufein.valkyr.data.service.ProfileService
+import com.tufein.valkyr.data.service.RemovalFile
+import com.tufein.valkyr.data.service.VersionPreferenceService
 
 /** Where the page stands: finding the library row, showing it, or the row is gone (re-indexed away). */
 enum class GamePagePhase { LOADING, READY, MISSING }
@@ -71,10 +76,10 @@ class GamePageViewModel @Inject constructor(
     private val sourceTrack: SourceTrackService,
     rommLibrary: RommLibraryService,
     retroAchievements: RetroAchievementsService,
-    val gameLauncher: com.tufein.valkyr.data.service.GameLaunchService,
-    private val versionPreference: com.tufein.valkyr.data.service.VersionPreferenceService,
-    datService: com.tufein.valkyr.data.service.DatService,
-    private val profiles: com.tufein.valkyr.data.service.ProfileService,
+    val gameLauncher: GameLaunchService,
+    private val versionPreference: VersionPreferenceService,
+    datService: DatService,
+    private val profiles: ProfileService,
     private val versionSettings: VersionPreferenceSettings
 ) : ViewModel() {
 
@@ -249,7 +254,7 @@ class GamePageViewModel @Inject constructor(
 
     suspend fun removalPlan(item: DownloadableFileWithTags) = libraryIndex.removalPlan(item.file)
     /** [consoleId] and [fileName] (the library row's) let the action history offer Download again. */
-    suspend fun remove(plan: List<com.tufein.valkyr.data.service.RemovalFile>, title: String, consoleId: String? = null, fileName: String? = null) =
+    suspend fun remove(plan: List<RemovalFile>, title: String, consoleId: String? = null, fileName: String? = null) =
         libraryIndex.deletePlan(plan, title, consoleId, fileName)
     suspend fun setPreferred(item: DownloadableFileWithTags, pinned: Boolean) {
         versionPreference.set(item.file.consoleId, item.file.fileName, if (pinned) item.file.fileName else null)

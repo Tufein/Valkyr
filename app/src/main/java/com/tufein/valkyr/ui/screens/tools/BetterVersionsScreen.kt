@@ -51,6 +51,7 @@ import com.tufein.valkyr.ui.components.formatBytes
 import com.tufein.valkyr.ui.components.rememberInitialFocus
 import com.tufein.valkyr.util.BetterVersions
 import com.tufein.valkyr.util.ConsoleFormatter
+import androidx.compose.material3.MaterialTheme
 
 /**
  * Better versions (7.0): games on the device for which a source lists a clearly better file (a
@@ -288,7 +289,7 @@ private fun removalList(rows: List<BetterRow>): String {
 @Composable
 private fun ReplaceDialog(message: String, enabled: Boolean, onConfirm: () -> Unit, onDismiss: () -> Unit) {
     val cancelFocus = rememberInitialFocus()
-    val scheme = androidx.compose.material3.MaterialTheme.colorScheme
+    val scheme = MaterialTheme.colorScheme
     AlertDialog(
         modifier = Modifier.closeOnGamepadB(onDismiss),
         onDismissRequest = onDismiss,

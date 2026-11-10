@@ -97,6 +97,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.Flow
 
 private const val TAG = "DownloadService"
 /** Upper bound for an uncached torrent to be fetched by the debrid service before we give up. */
@@ -1030,5 +1031,5 @@ class DownloadService @Inject constructor(
     fun hasActiveDownloads(): Boolean = downloadProgressTracker.hasActiveDownloads()
 
     /** [hasActiveDownloads] as a flow, for the foreground service. */
-    val anyActive: kotlinx.coroutines.flow.Flow<Boolean> = downloadProgressTracker.downloads.map { downloadProgressTracker.hasActiveDownloads() }
+    val anyActive: Flow<Boolean> = downloadProgressTracker.downloads.map { downloadProgressTracker.hasActiveDownloads() }
 }

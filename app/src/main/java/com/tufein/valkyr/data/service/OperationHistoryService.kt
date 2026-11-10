@@ -11,6 +11,7 @@ import java.io.File
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
+import java.io.IOException
 
 data class OperationFile(@field:com.google.gson.annotations.SerializedName(value = "source", alternate = ["a"]) val source: String, @field:com.google.gson.annotations.SerializedName(value = "target", alternate = ["b"]) val target: String, @field:com.google.gson.annotations.SerializedName(value = "name", alternate = ["c"]) val name: String, @field:com.google.gson.annotations.SerializedName(value = "bytes", alternate = ["d"]) val bytes: Long, @field:com.google.gson.annotations.SerializedName(value = "hash", alternate = ["e"]) val hash: String, @field:com.google.gson.annotations.SerializedName(value = "parent", alternate = ["f"]) val parent: String = "", @field:com.google.gson.annotations.SerializedName(value = "removed", alternate = ["g"]) val removed: Boolean = false, @field:com.google.gson.annotations.SerializedName(value = "relativePath") val relativePath: String? = null)
 data class OperationDirectory(@field:com.google.gson.annotations.SerializedName(value = "parent") val parent: String, @field:com.google.gson.annotations.SerializedName(value = "name") val name: String)
@@ -28,13 +29,13 @@ class OperationHistoryService @Inject constructor(@param:ApplicationContext cont
     private val gson = Gson()
     private var readFailure: Exception? = null
     val unreadable: Boolean get() = readFailure != null
-    private val _entries = MutableStateFlow(runCatching { read() }.getOrElse { readFailure = it as? Exception ?: java.io.IOException("Journal unavailable"); emptyList() })
+    private val _entries = MutableStateFlow(runCatching { read() }.getOrElse { readFailure = it as? Exception ?: IOException("Journal unavailable"); emptyList() })
     val entries = _entries.asStateFlow()
     private fun read(): List<LibraryOperation> = if (!disk.baseFile.exists()) emptyList() else
         gson.fromJson(disk.openRead().use { it.reader().readText() }, object : TypeToken<List<LibraryOperation>>() {}.type) ?: emptyList()
 
     @Synchronized fun put(entry: LibraryOperation) {
-        if (readFailure != null) throw java.io.IOException("Recovery journal cannot be read", readFailure)
+        if (readFailure != null) throw IOException("Recovery journal cannot be read", readFailure)
         val stored = if (entry.phase == "done" && entry.files.isNotEmpty()) entry.copy(totalFiles = maxOf(entry.totalFiles, entry.files.size), files = entry.files.take(100).map { it.copy(source = "", target = "", hash = "", parent = "") }) else entry
         val next = (_entries.value.filterNot { it.id == stored.id } + stored).sortedByDescending { it.time }
         fun recovery(item: LibraryOperation) = item.kind in setOf("trash", "library_move", "smart_move") && item.phase != "done"

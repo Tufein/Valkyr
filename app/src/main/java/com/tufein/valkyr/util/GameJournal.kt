@@ -9,6 +9,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.net.URI
 import java.util.UUID
+import java.security.MessageDigest
 
 data class JournalKey(val profileId: String, val consoleId: String, val fileName: String)
 enum class JournalAttachmentKind { SCREENSHOT, MANUAL }
@@ -109,7 +110,7 @@ object GameJournal {
                         existing.kind == r.kind && existing.name == r.name && existing.mime == r.mime -> null
                         else -> {
                             // A backup from an edited attachment must not hide its older description.
-                            val fingerprint = java.security.MessageDigest.getInstance("SHA-256")
+                            val fingerprint = MessageDigest.getInstance("SHA-256")
                                 .digest("${r.id}|${r.kind}|${r.name}|${r.mime}".toByteArray(Charsets.UTF_8))
                                 .joinToString("") { "%02x".format(it) }
                             r.copy(id = "recovered-$fingerprint").takeUnless { recovered -> local.attachments.any { it.id == recovered.id } }

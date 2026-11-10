@@ -34,6 +34,17 @@ import kotlinx.coroutines.withTimeoutOrNull
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
+import android.net.Uri
+import android.provider.DocumentsContract
+import com.tufein.valkyr.data.local.AppSettings
+import com.tufein.valkyr.data.local.VersionPreferenceSettings
+import com.tufein.valkyr.util.ActionReason
+import com.tufein.valkyr.util.GameTitleCleaner
+import com.tufein.valkyr.util.OfflineCollections
+import com.tufein.valkyr.util.SpaceMath
+import com.tufein.valkyr.util.StorageHelper
+import com.tufein.valkyr.util.StorageInsights
+import com.tufein.valkyr.util.VersionCompare
 
 private const val TAG = "BetterVersions"
 
@@ -46,7 +57,7 @@ data class BetterSuggestion(
     val upgrade: BetterVersions.Upgrade
 ) {
     /** The game's title as it reads without tags. */
-    val title: String get() = com.tufein.valkyr.util.GameTitleCleaner.clean(owned.baseName + ".x").ifBlank { owned.baseName }
+    val title: String get() = GameTitleCleaner.clean(owned.baseName + ".x").ifBlank { owned.baseName }
 
     /** The candidate's name as a person reads it (URL escapes undone). */
     val candidateName: String get() = FileParsingUtils.decodeUrlEncodedFileName(candidate.fileName)
@@ -84,9 +95,9 @@ class BetterVersionsService @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val settings: BetterVersionsSettings,
     private val versionPreference: VersionPreferenceService,
-    private val preferences: com.tufein.valkyr.data.local.VersionPreferenceSettings,
+    private val preferences: VersionPreferenceSettings,
     private val profiles: ProfileService,
-    private val appSettings: com.tufein.valkyr.data.local.AppSettings
+    private val appSettings: AppSettings
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -155,9 +166,9 @@ class BetterVersionsService @Inject constructor(
             }
             for (m in matches) {
                 val candidate = rowById.getValue(m.offer.id)
-                val ranking = com.tufein.valkyr.util.VersionCompare.rank(listOf(
-                    com.tufein.valkyr.util.VersionCompare.Version("old", m.owned.name),
-                    com.tufein.valkyr.util.VersionCompare.Version("new", FileParsingUtils.decodeUrlEncodedFileName(candidate.fileName), fileDao.tagsOf(candidate.id), candidate.fileSize)
+                val ranking = VersionCompare.rank(listOf(
+                    VersionCompare.Version("old", m.owned.name),
+                    VersionCompare.Version("new", FileParsingUtils.decodeUrlEncodedFileName(candidate.fileName), fileDao.tagsOf(candidate.id), candidate.fileSize)
                 ), pref.of(consoleId))
                 if (ranking.firstOrNull()?.version?.id != "new") continue
                 out += BetterSuggestion(m.owned.id + "::" + m.offer.id, consoleId, byId.getValue(m.owned.id), rowById.getValue(m.offer.id), m.upgrade)
@@ -220,14 +231,14 @@ class BetterVersionsService @Inject constructor(
         val reserves = appSettings.minFreeGb.first().toLong() * 1024 * 1024 * 1024
         fun folder(console: String) = folders[console]?.takeIf { it.isNotBlank() } ?: root
         fun volume(uri: String): String = runCatching {
-            val parsed = android.net.Uri.parse(uri)
-            parsed.authority + ":" + android.provider.DocumentsContract.getTreeDocumentId(parsed).substringBefore(':')
+            val parsed = Uri.parse(uri)
+            parsed.authority + ":" + DocumentsContract.getTreeDocumentId(parsed).substringBefore(':')
         }.getOrDefault(uri)
         val queue = downloadService.getDownloads().filter { it.status in setOf(DownloadStatus.QUEUED, DownloadStatus.DOWNLOADING, DownloadStatus.COPYING, DownloadStatus.UNZIPPING, DownloadStatus.PAUSED) }
-            .groupBy { volume(folder(downloadService.entityFor(it.fileName)?.consoleId.orEmpty())) }.mapValues { (_, rows) -> com.tufein.valkyr.util.SpaceMath.sum(rows.map { item ->
-                com.tufein.valkyr.util.SpaceMath.add(
+            .groupBy { volume(folder(downloadService.entityFor(it.fileName)?.consoleId.orEmpty())) }.mapValues { (_, rows) -> SpaceMath.sum(rows.map { item ->
+                SpaceMath.add(
                     (item.fileSize - item.downloadedBytes).coerceAtLeast(0),
-                    if (com.tufein.valkyr.util.StorageInsights.isExtractable(item.fileName.substringAfterLast('.'))) item.fileSize else 0L)
+                    if (StorageInsights.isExtractable(item.fileName.substringAfterLast('.'))) item.fileSize else 0L)
             }) }
         var unknownVolumes = 0
         var short = 0L
@@ -235,18 +246,18 @@ class BetterVersionsService @Inject constructor(
         val missingFolder = items.any { folder(it.consoleId).isBlank() }
         for ((_, group) in items.groupBy { volume(folder(it.consoleId)) }) {
             val uri = folder(group.first().consoleId)
-            val required = com.tufein.valkyr.util.SpaceMath.sum(group.map { s -> com.tufein.valkyr.util.OfflineCollections.need(
-                com.tufein.valkyr.util.OfflineCollections.Offer(s.candidate.fileSize,
-                    com.tufein.valkyr.util.StorageInsights.isExtractable(s.candidate.fileExtension))) .let { need ->
-                    com.tufein.valkyr.util.SpaceMath.add(need, if (replacing) s.owned.size else 0L)
+            val required = SpaceMath.sum(group.map { s -> OfflineCollections.need(
+                OfflineCollections.Offer(s.candidate.fileSize,
+                    StorageInsights.isExtractable(s.candidate.fileExtension))) .let { need ->
+                    SpaceMath.add(need, if (replacing) s.owned.size else 0L)
                 } })
-            needed = com.tufein.valkyr.util.SpaceMath.add(needed, required)
-            val free = com.tufein.valkyr.util.StorageHelper.getFreeBytes(context, uri)
+            needed = SpaceMath.add(needed, required)
+            val free = StorageHelper.getFreeBytes(context, uri)
             if (free == null) unknownVolumes++
             else {
-                val reserve = com.tufein.valkyr.util.SpaceMath.add(reserves, queue[volume(uri)] ?: 0)
-                val available = com.tufein.valkyr.util.SpaceMath.available(free, reserve, com.tufein.valkyr.util.OfflineCollections.SPACE_MARGIN).coerceAtLeast(0)
-                short = com.tufein.valkyr.util.SpaceMath.add(short, (required - available).coerceAtLeast(0))
+                val reserve = SpaceMath.add(reserves, queue[volume(uri)] ?: 0)
+                val available = SpaceMath.available(free, reserve, OfflineCollections.SPACE_MARGIN).coerceAtLeast(0)
+                short = SpaceMath.add(short, (required - available).coerceAtLeast(0))
             }
         }
         UpgradePreview(needed, short, items.count { it.candidate.fileSize <= 0 }, unknownVolumes, missingFolder || !allowed(items))
@@ -265,7 +276,7 @@ class BetterVersionsService @Inject constructor(
             ReplaceState.KEPT
         }
         val state = if (outcome == ReplaceState.REMOVED) {
-            val removed = runCatching { scanService.delete(s.owned, com.tufein.valkyr.util.ActionReason.BETTER_VERSION) }.getOrDefault(0)
+            val removed = runCatching { scanService.delete(s.owned, ActionReason.BETTER_VERSION) }.getOrDefault(0)
             if (removed > 0) ReplaceState.REMOVED else ReplaceState.FAILED
         } else outcome
         setState(s.id, state)

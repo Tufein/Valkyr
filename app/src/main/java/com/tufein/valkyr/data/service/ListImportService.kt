@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.tufein.valkyr.data.local.VersionPreferenceSettings
+import com.tufein.valkyr.util.VersionPreference
 
 /** What a list of wanted games comes to in the library. */
 data class ListMatch(
@@ -38,7 +40,7 @@ class ListImportService @Inject constructor(
     private val downloadService: DownloadService,
     private val wishlist: WishlistRepository,
     private val versionPreference: VersionPreferenceService,
-    private val versionSettings: com.tufein.valkyr.data.local.VersionPreferenceSettings
+    private val versionSettings: VersionPreferenceSettings
 ) {
     suspend fun match(titles: List<String>, consoleId: String?, onProgress: (Int) -> Unit = {}): ListMatch = withContext(Dispatchers.IO) {
         val versionPrefs = versionSettings.snapshot()
@@ -56,7 +58,7 @@ class ListImportService @Inject constructor(
                 files.isEmpty() -> missing += title
                 files.any { libraryIndex.isOwned(it) || downloadService.isActive(it.fileName) } -> have += title
                 else -> files.groupBy { it.consoleId }.values.forEach { perConsole ->
-                    val best = com.tufein.valkyr.util.VersionPreference.pick(
+                    val best = VersionPreference.pick(
                         perConsole.map { VersionPicker.Candidate(it.fileName, it.fileName, fileDao.tagsOf(it.id), it.fileSize) },
                         versionPrefs.of(perConsole.first().consoleId), preferences.preferred(perConsole.first().consoleId, perConsole.first().fileName)
                     )

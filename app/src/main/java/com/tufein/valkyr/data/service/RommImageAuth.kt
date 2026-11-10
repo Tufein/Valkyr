@@ -11,6 +11,7 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
 import javax.inject.Singleton
+import java.io.IOException
 
 /**
  * Signs image requests to the RomM server (covers, screenshots, avatars) with the configured
@@ -41,7 +42,7 @@ class RommImageAuth @Inject constructor(settingsRepository: SettingsRepository) 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         // "Use RomM" off: no image request reaches the server (cached covers still draw from Coil's own cache).
-        if (!enabled && savedBase.isNotEmpty() && sameServer(savedBase, request.url)) throw java.io.IOException("RomM is switched off")
+        if (!enabled && savedBase.isNotEmpty() && sameServer(savedBase, request.url)) throw IOException("RomM is switched off")
         val b = base
         val h = header
         val signed = if (h.isNotEmpty() && b.isNotEmpty() && request.header("Authorization") == null &&

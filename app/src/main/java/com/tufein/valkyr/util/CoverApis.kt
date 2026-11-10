@@ -2,6 +2,9 @@ package com.tufein.valkyr.util
 
 import com.tufein.valkyr.util.CoverSources.Source
 import java.net.URI
+import java.net.URLEncoder
+import java.time.Instant
+import java.time.ZoneOffset
 
 /**
  * What the three 4.4.0 cover sources share (TheGamesDB, SteamGridDB, IGDB): where their keys are
@@ -191,12 +194,12 @@ object CoverApis {
     }.getOrNull()
 
     /** Percent-encoding for a path segment (spaces as %20, not +). */
-    fun pathSegment(value: String): String = java.net.URLEncoder.encode(value, "UTF-8").replace("+", "%20")
+    fun pathSegment(value: String): String = URLEncoder.encode(value, "UTF-8").replace("+", "%20")
 
     /** The first day of the next month (UTC), when a monthly allowance starts again. */
     fun nextMonthStart(now: Long): Long {
-        val d = java.time.Instant.ofEpochMilli(now).atZone(java.time.ZoneOffset.UTC).toLocalDate()
-        return d.withDayOfMonth(1).plusMonths(1).atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli()
+        val d = Instant.ofEpochMilli(now).atZone(ZoneOffset.UTC).toLocalDate()
+        return d.withDayOfMonth(1).plusMonths(1).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
     }
 }
 

@@ -22,6 +22,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.tufein.valkyr.data.local.VersionPreferenceSettings
+import com.tufein.valkyr.data.service.VersionPreferenceService
+import com.tufein.valkyr.util.ActionReason
 
 data class DuplicatesUiState(
     val scanning: Boolean = true,
@@ -40,8 +43,8 @@ data class DuplicatesUiState(
 class DuplicatesViewModel @Inject constructor(
     private val scanService: LibraryScanService,
     private val settingsRepository: SettingsRepository,
-    private val versionSettings: com.tufein.valkyr.data.local.VersionPreferenceSettings,
-    private val versionPreference: com.tufein.valkyr.data.service.VersionPreferenceService
+    private val versionSettings: VersionPreferenceSettings,
+    private val versionPreference: VersionPreferenceService
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DuplicatesUiState())
@@ -91,7 +94,7 @@ class DuplicatesViewModel @Inject constructor(
         _uiState.update { state -> state.without(entry) }
         viewModelScope.launch {
             val removed = try {
-                scanService.delete(entry, com.tufein.valkyr.util.ActionReason.DUPLICATE)
+                scanService.delete(entry, ActionReason.DUPLICATE)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -135,7 +138,7 @@ class DuplicatesViewModel @Inject constructor(
         viewModelScope.launch {
             var removed = 0
             targets.forEach { entry ->
-                try { if (scanService.delete(entry, com.tufein.valkyr.util.ActionReason.DUPLICATE) > 0) removed++ } catch (e: CancellationException) { throw e } catch (_: Exception) { }
+                try { if (scanService.delete(entry, ActionReason.DUPLICATE) > 0) removed++ } catch (e: CancellationException) { throw e } catch (_: Exception) { }
             }
             ToastUtil.showSuccess(app, app.resources.getQuantityString(R.plurals.duplicates_suggest_done, removed, removed))
             rescan()

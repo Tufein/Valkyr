@@ -1,6 +1,7 @@
 package com.tufein.valkyr.ui.screens.home
 
 import com.tufein.valkyr.util.UpNext
+import com.tufein.valkyr.util.ConsoleHome
 
 /**
  * What the 3.8.0 Home shelves show while nothing narrows the library: the game to continue (the
@@ -50,7 +51,7 @@ object ShelvesModel {
         val hero: Recent?,
         val forYou: List<Game>,
         val shelves: List<Shelf>,
-        val tiles: List<com.tufein.valkyr.util.ConsoleHome.Tile> = emptyList()
+        val tiles: List<ConsoleHome.Tile> = emptyList()
     ) {
         val isEmpty: Boolean get() = hero == null && forYou.isEmpty() && shelves.isEmpty()
 

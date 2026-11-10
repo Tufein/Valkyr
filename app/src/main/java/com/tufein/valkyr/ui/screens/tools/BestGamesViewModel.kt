@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tufein.valkyr.R
+import com.tufein.valkyr.data.local.VersionPreferenceSettings
 import com.tufein.valkyr.data.local.dao.DownloadableFileDao
 import com.tufein.valkyr.data.local.entity.DownloadableFileEntity
 import com.tufein.valkyr.data.repository.ConsoleRepository
@@ -13,9 +14,11 @@ import com.tufein.valkyr.data.service.BestGamesService
 import com.tufein.valkyr.data.service.DownloadService
 import com.tufein.valkyr.data.service.LibraryIndexService
 import com.tufein.valkyr.data.service.RetroAchievementsService
+import com.tufein.valkyr.data.service.VersionPreferenceService
 import com.tufein.valkyr.data.state.LibraryFilterRequest
 import com.tufein.valkyr.data.state.PendingLibraryFilters
 import com.tufein.valkyr.data.state.RescanStateHolder
+import com.tufein.valkyr.ui.components.formatBytes
 import com.tufein.valkyr.util.BestGame
 import com.tufein.valkyr.util.BestGames
 import com.tufein.valkyr.util.BulkCandidate
@@ -35,6 +38,9 @@ import com.tufein.valkyr.util.SearchNormalizer
 import com.tufein.valkyr.util.StorageHelper
 import com.tufein.valkyr.util.ToastUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.io.IOException
+import java.util.concurrent.ConcurrentHashMap
+import javax.inject.Inject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -52,8 +58,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.IOException
-import javax.inject.Inject
 
 /** A library console RetroAchievements has games for: [raName] is RA's name of the system. */
 data class BestConsole(val id: String, val name: String, val raId: Int, val raName: String)
@@ -120,8 +124,8 @@ class BestGamesViewModel @Inject constructor(
     private val pendingFilters: PendingLibraryFilters,
     private val settingsRepository: SettingsRepository,
     private val rescan: RescanStateHolder,
-    private val versionSettings: com.tufein.valkyr.data.local.VersionPreferenceSettings,
-    private val versionPreference: com.tufein.valkyr.data.service.VersionPreferenceService
+    private val versionSettings: VersionPreferenceSettings,
+    private val versionPreference: VersionPreferenceService
 ) : ViewModel() {
 
     private data class Loaded(val consoleId: String, val games: List<BestGame>, val players: Map<Int, Int>, val stale: Boolean)
@@ -344,24 +348,24 @@ class BestGamesViewModel @Inject constructor(
         }
     }
 
-    /** What the sources hold for the open list, by id of the library row, kept for [startDownload]. */
-    private var plannedRows: Map<Long, DownloadableFileEntity> = emptyMap()
+    /** What the sources hold for the open list, by id of the library row, kept for [startDownload] (shared by quick successive plans). */
+    private val plannedRows = ConcurrentHashMap<Long, DownloadableFileEntity>()
 
     /**
      * The download of the games found in a source and not on the device: one version of each (the best
      * for the user's languages), skipping what already downloads. Shown to the user before anything starts.
      */
-    suspend fun planDownload(): BulkPlan {
+    suspend fun planDownload(onlyGame: Int? = null): BulkPlan {
         val preferences = versionSettings.snapshot()
         val fixed = versionPreference.snapshot()
         val free = libraryIndex.freeBytes.value
         val m = matched.value ?: return BulkPlanner.plan(emptyList(), true, { preferences.of(it) }, free)
         val gameOfFile = HashMap<String, Int>()
-        for (gm in BestGames.downloadable(m.matches)) for (i in gm.sourceIndices) gameOfFile[m.rawNames[i]] = gm.ranked.game.id
+        for (gm in BestGames.downloadable(m.matches)) if (onlyGame == null || gm.ranked.game.id == onlyGame) for (i in gm.sourceIndices) gameOfFile[m.rawNames[i]] = gm.ranked.game.id
         return withContext(Dispatchers.IO) {
             val rows = gameOfFile.keys.chunked(800).flatMap { fileDao.filesByFileNames(it) }.filter { it.consoleId == m.consoleId }
             val tags = rows.chunked(800).flatMap { fileDao.tagsOfFiles(it.map { r -> r.id }) }.groupBy({ it.fileId }, { it.tag })
-            plannedRows = rows.associateBy { it.id }
+            plannedRows.putAll(rows.associateBy { it.id })
             val candidates = rows.mapNotNull { row ->
                 val game = gameOfFile[row.fileName] ?: return@mapNotNull null
                 // The RA game stands in for the cleaned title: versions of one game are picked among.
@@ -383,6 +387,25 @@ class BestGamesViewModel @Inject constructor(
         }
         withContext(Dispatchers.Default) { downloadService.startDownloads(rows) }
         return rows.size
+    }
+
+    /**
+     * Queues the best version of one game found in a source and leaves the user on the list (the row
+     * shows "downloading" by itself); a download that cannot start says why in a toast.
+     */
+    fun downloadOne(row: BestRow, context: Context) {
+        val app = context.applicationContext
+        viewModelScope.launch {
+            val plan = planDownload(onlyGame = row.gameId)
+            when {
+                plan.chosen.isEmpty() -> ToastUtil.showInfo(app, app.getString(R.string.top7_download_none))
+                !plan.fits -> ToastUtil.showError(app, app.getString(R.string.bulk_no_room_short, formatBytes(plan.shortBytes)))
+                else -> {
+                    val queued = startDownload(plan, app)
+                    if (queued > 0) ToastUtil.showSuccess(app, app.resources.getQuantityString(R.plurals.top7_queued, queued, queued))
+                }
+            }
+        }
     }
 
     private fun kindOf(e: Throwable): RaErrorKind = when (e) {

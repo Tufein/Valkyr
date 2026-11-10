@@ -45,6 +45,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.tufein.valkyr.util.DeviceSyncEngine
 
 /**
  * 6.0 shared family wishlist: several people, each with their own app, keep one wish list in
@@ -138,7 +139,7 @@ class SharedWishlistService @Inject constructor(
             val me = myName()
             val engine = SharedWishlistEngine(
                 session.store, session.serverUrl, session.rootUrl, settings.sharedList.first(), local(me),
-                account = com.tufein.valkyr.util.DeviceSyncEngine.accountKey(settings.user.first())
+                account = DeviceSyncEngine.accountKey(settings.user.first())
             )
             when (val outcome = engine.sync(me, allowMassRemoval)) {
                 is SharedWishlistEngine.Outcome.Synced -> {

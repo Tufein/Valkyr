@@ -92,6 +92,20 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
+import androidx.compose.material3.Checkbox
+import com.tufein.valkyr.data.local.AppSettings
+import com.tufein.valkyr.data.service.LibraryIndexService
+import com.tufein.valkyr.data.service.OperationDirectory
+import com.tufein.valkyr.data.service.RemovalFile
+import com.tufein.valkyr.data.service.StorageAvailabilityService
+import com.tufein.valkyr.data.service.StorageMoveGate
+import com.tufein.valkyr.data.service.TrashService
+import com.tufein.valkyr.data.service.VerifiedDocumentCopy
+import com.tufein.valkyr.util.BoundedStreams
+import com.tufein.valkyr.util.Profiles
+import com.tufein.valkyr.util.StorageAccessStatus
+import com.tufein.valkyr.util.StorageAvailability
+import kotlinx.coroutines.CancellationException
 
 /** A starting point of the file explorer: one of the folders the app was given access to. */
 data class ExplorerRoot(val label: String, val dir: DiskDir)
@@ -108,7 +122,7 @@ data class ExplorerState(
     val sizing: Boolean = false,
     val problems: List<SetProblem>? = null,
     val recoveries: List<StorageHelper.Recovery> = emptyList(),
-    val storageStatus: com.tufein.valkyr.util.StorageAccessStatus? = null,
+    val storageStatus: StorageAccessStatus? = null,
     /** A file or folder picked up with "Move": it goes into the folder that is open when "Move here" is pressed. */
     val moving: Pair<DiskEntry, DiskDir>? = null,
     /** Something slow is running (moving, extracting); its description. */
@@ -132,11 +146,11 @@ class FileExplorerViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val settings: SettingsRepository,
     private val extractor: ArchiveExtractorService,
-    private val verifiedCopy: com.tufein.valkyr.data.service.VerifiedDocumentCopy,
-    private val trash: com.tufein.valkyr.data.service.TrashService,
-    private val library: com.tufein.valkyr.data.service.LibraryIndexService,
-    private val moveGate: com.tufein.valkyr.data.service.StorageMoveGate,
-    private val appSettings: com.tufein.valkyr.data.local.AppSettings
+    private val verifiedCopy: VerifiedDocumentCopy,
+    private val trash: TrashService,
+    private val library: LibraryIndexService,
+    private val moveGate: StorageMoveGate,
+    private val appSettings: AppSettings
 ) : ViewModel() {
     private val _state = MutableStateFlow(ExplorerState())
     val state: StateFlow<ExplorerState> = _state.asStateFlow()
@@ -144,7 +158,7 @@ class FileExplorerViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             kotlinx.coroutines.flow.combine(appSettings.activeProfile, appSettings.profiles) { id, json ->
-                id to com.tufein.valkyr.util.Profiles.restrictionsOf(com.tufein.valkyr.util.Profiles.fromJson(json), id)
+                id to Profiles.restrictionsOf(Profiles.fromJson(json), id)
             }.collect { (profile, restrictions) ->
             _state.value = ExplorerState()
             val roots = buildList {
@@ -160,7 +174,7 @@ class FileExplorerViewModel @Inject constructor(
                     ?.let { add(ExplorerRoot(context.getString(R.string.save_sync_states_folder), it)) }
                 settings.esdeDirectory.first().takeIf { !restrictions.active && it.isNotBlank() }?.let { DiskScanner.rootOf(it) }
                     ?.let { add(ExplorerRoot(context.getString(R.string.files_root_esde), it)) }
-            }.distinctBy { com.tufein.valkyr.data.service.StorageAvailabilityService.key(DiskScanner.uriOf(it.dir).toString()) }
+            }.distinctBy { StorageAvailabilityService.key(DiskScanner.uriOf(it.dir).toString()) }
             if (appSettings.activeProfile.first() == profile) _state.update { it.copy(roots = roots) }
             }
         }
@@ -188,12 +202,12 @@ class FileExplorerViewModel @Inject constructor(
 
     private fun open(path: List<Pair<String, DiskDir>>) {
         val root = path.first().second
-        if (_state.value.roots.none { com.tufein.valkyr.data.service.StorageAvailabilityService.key(DiskScanner.uriOf(it.dir).toString()) == com.tufein.valkyr.data.service.StorageAvailabilityService.key(DiskScanner.uriOf(root).toString()) }) return
+        if (_state.value.roots.none { StorageAvailabilityService.key(DiskScanner.uriOf(it.dir).toString()) == StorageAvailabilityService.key(DiskScanner.uriOf(root).toString()) }) return
         _state.update { it.copy(path = path, entries = if (it.path == path) it.entries else emptyList(), loading = true, folderSize = null, problems = null, recoveries = emptyList(), storageStatus = null) }
         viewModelScope.launch {
-            val status = withContext(Dispatchers.IO) { com.tufein.valkyr.data.service.StorageAvailabilityService.probe(context, DiskScanner.uriOf(path.last().second).toString()) }
+            val status = withContext(Dispatchers.IO) { StorageAvailabilityService.probe(context, DiskScanner.uriOf(path.last().second).toString()) }
             val entries = withContext(Dispatchers.IO) {
-                if (com.tufein.valkyr.util.StorageAvailability.readable(status)) DiskScanner.listOrNull(context, path.last().second, true)?.filterNot { it.name.startsWith(".dogmatix-") || it.name.endsWith(".tmp") && it.name.startsWith(".") }
+                if (StorageAvailability.readable(status)) DiskScanner.listOrNull(context, path.last().second, true)?.filterNot { it.name.startsWith(".dogmatix-") || it.name.endsWith(".tmp") && it.name.startsWith(".") }
                 else null
             }
             val recoveries = withContext(Dispatchers.IO) {
@@ -201,7 +215,7 @@ class FileExplorerViewModel @Inject constructor(
                     ?.let { runCatching { StorageHelper.pendingRecoveries(context, it) }.getOrDefault(emptyList()) }.orEmpty()
             }
             if (_state.value.path == path) _state.update { it.copy(entries = entries ?: it.entries, loading = false, recoveries = recoveries,
-                storageStatus = if (entries == null && com.tufein.valkyr.util.StorageAvailability.readable(status)) com.tufein.valkyr.util.StorageAccessStatus.UNAVAILABLE else status) }
+                storageStatus = if (entries == null && StorageAvailability.readable(status)) StorageAccessStatus.UNAVAILABLE else status) }
         }
     }
 
@@ -233,7 +247,7 @@ class FileExplorerViewModel @Inject constructor(
         viewModelScope.launch {
             val problems = withContext(Dispatchers.IO) {
                 SetChecker.check(files) { f ->
-                    runCatching { context.contentResolver.openInputStream(Uri.parse(f.uri))?.use { com.tufein.valkyr.util.BoundedStreams.read(it, SetChecker.MAX_SHEET_BYTES.toInt()) }?.toString(Charsets.UTF_8) }.getOrNull()
+                    runCatching { context.contentResolver.openInputStream(Uri.parse(f.uri))?.use { BoundedStreams.read(it, SetChecker.MAX_SHEET_BYTES.toInt()) }?.toString(Charsets.UTF_8) }.getOrNull()
                 }
             }
             _state.update { it.copy(problems = problems) }
@@ -283,7 +297,7 @@ class FileExplorerViewModel @Inject constructor(
                 val resolver = app.contentResolver
                 val target = DiskScanner.uriOf(to)
                 runCatching {
-                    val parent = com.tufein.valkyr.util.StorageHelper.getDocumentFile(app, target.toString()) ?: error("Destination unavailable")
+                    val parent = StorageHelper.getDocumentFile(app, target.toString()) ?: error("Destination unavailable")
                     check(parent.findFile(entry.name) == null) { "Destination already exists" }
                     if (entry.isDirectory) {
                         // A provider-native move preserves directory structure without a recursive copy/delete fallback.
@@ -345,7 +359,7 @@ class FileExplorerViewModel @Inject constructor(
                 val files = extractor.extractArchive(app, entry.uri, DiskScanner.uriOf(dir), failOnError = true)
                 if (files.isNotEmpty()) ToastUtil.showSuccess(app, app.getString(R.string.files_extracted, files.size))
                 else ToastUtil.showError(app, app.getString(R.string.files_extract_failed, entry.name))
-            } catch (e: kotlinx.coroutines.CancellationException) { throw e }
+            } catch (e: CancellationException) { throw e }
             catch (e: Exception) {
                 val safety = generateSequence<Throwable>(e) { it.cause }.take(16).filterIsInstance<ArchiveSafetyException>().firstOrNull()
                 val message = when (safety?.reason) {
@@ -372,13 +386,13 @@ class FileExplorerViewModel @Inject constructor(
                     appSettings.withActiveProfile("") { moveGate.lock.withLock {
                         check(appSettings.activeProfile.first().isBlank()) { "Unowned receipt unavailable in this profile" }
                         check(_state.value.path.lastOrNull()?.second == dir && recovery in _state.value.recoveries)
-                        check(com.tufein.valkyr.util.StorageAvailability.writable(com.tufein.valkyr.data.service.StorageAvailabilityService.probe(context, DiskScanner.uriOf(dir).toString())))
+                        check(StorageAvailability.writable(StorageAvailabilityService.probe(context, DiskScanner.uriOf(dir).toString())))
                         val folder = StorageHelper.getDocumentFile(context, DiskScanner.uriOf(dir).toString()) ?: error("Folder unavailable")
                         StorageHelper.restoreRecovery(context, folder, recovery)
                     } }
                 }
                 ToastUtil.showSuccess(context, context.getString(R.string.recovery27_done, recovery.fileName))
-            } catch (e: kotlinx.coroutines.CancellationException) { throw e }
+            } catch (e: CancellationException) { throw e }
             catch (_: Exception) { ToastUtil.showError(context, context.getString(R.string.recovery27_failed)) }
             finally { _state.update { it.copy(busy = null) }; library.requestRefresh(); refresh() }
         }
@@ -395,23 +409,23 @@ class FileExplorerViewModel @Inject constructor(
                     if (permanent) moveGate.lock.withLock { check(DiskScanner.delete(app, entry.uri)) }
                     else {
                         val root = DiskScanner.uriOf(parent).toString()
-                        val files = ArrayList<com.tufein.valkyr.data.service.RemovalFile>()
-                        val dirs = ArrayList<com.tufein.valkyr.data.service.OperationDirectory>()
+                        val files = ArrayList<RemovalFile>()
+                        val dirs = ArrayList<OperationDirectory>()
                         fun gather(current: DiskEntry, at: DiskDir, path: String, depth: Int) {
                             check(depth <= 20 && files.size <= 10000) { "Folder too large" }
                             if (current.isDirectory) {
                                 check(current.name != ".dogmatix-trash") { "Recovery directory" }
-                                dirs += com.tufein.valkyr.data.service.OperationDirectory(root, path)
+                                dirs += OperationDirectory(root, path)
                                 val sub = DiskScanner.dirOf(at, current)
                                 (DiskScanner.listOrNull(app, sub, true) ?: error("Folder unavailable")).forEach { gather(it, sub, "$path/${it.name}", depth + 1) }
-                            } else files += com.tufein.valkyr.data.service.RemovalFile(current.uri.toString(), root, current.name, current.size, path, path)
+                            } else files += RemovalFile(current.uri.toString(), root, current.name, current.size, path, path)
                         }
                         gather(entry, parent, entry.name, 0)
                         trash.move(files, entry.name, directories = dirs)
                     }
                 }
                 ToastUtil.showSuccess(app, app.getString(if (permanent) R.string.duplicates_deleted else if (entry.isDirectory) R.string.files25_folder_stored else R.string.files25_stored, entry.name))
-            } catch (e: kotlinx.coroutines.CancellationException) { throw e }
+            } catch (e: CancellationException) { throw e }
             catch (_: Exception) { ToastUtil.showError(app, app.getString(R.string.duplicates_delete_failed, entry.name)) }
             finally { _state.update { it.copy(busy = null) }; library.requestRefresh(); refresh() }
         }
@@ -466,7 +480,7 @@ fun FileExplorerScreen(viewModel: FileExplorerViewModel = hiltViewModel(), onNav
             text = { Column {
                 Text(stringResource(if (permanently) R.string.files25_permanent_hint else R.string.files25_trash_hint))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    androidx.compose.material3.Checkbox(permanently, { permanently = it })
+                    Checkbox(permanently, { permanently = it })
                     Text(stringResource(R.string.files25_permanent))
                 }
             } },
@@ -496,8 +510,8 @@ fun FileExplorerScreen(viewModel: FileExplorerViewModel = hiltViewModel(), onNav
                         icon = R.drawable.ic_folder, chevron = true)
                 }
             } else {
-                if (ui.storageStatus != null && !com.tufein.valkyr.util.StorageAvailability.writable(ui.storageStatus!!)) item(key = "storage-status") {
-                    ToolRow(stringResource(if (ui.storageStatus == com.tufein.valkyr.util.StorageAccessStatus.READ_ONLY) R.string.road28_storage_read_only else R.string.road28_storage_unavailable),
+                if (ui.storageStatus != null && !StorageAvailability.writable(ui.storageStatus!!)) item(key = "storage-status") {
+                    ToolRow(stringResource(if (ui.storageStatus == StorageAccessStatus.READ_ONLY) R.string.road28_storage_read_only else R.string.road28_storage_unavailable),
                         listOf(stringResource(R.string.road28_storage_cached)), { viewModel.refresh() }, icon = R.drawable.ic_folder_open) {
                         ToolAction(stringResource(R.string.road28_storage_check)) { viewModel.refresh() }
                     }

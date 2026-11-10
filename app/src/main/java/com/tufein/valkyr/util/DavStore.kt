@@ -1,5 +1,7 @@
 package com.tufein.valkyr.util
 
+import java.io.InputStream
+
 /** A file read from a WebDAV server, with its ETag when the server gave a strong one. */
 class DavFile(val bytes: ByteArray, val etag: String?)
 
@@ -45,11 +47,11 @@ interface DavStore {
      * bytes and is called again when a request has to be repeated (a redirect). With [ifNoneMatch]
      * the write only happens when there is no file yet.
      */
-    fun putStream(url: String, size: Long, open: () -> java.io.InputStream, ifNoneMatch: Boolean = false): Unit =
+    fun putStream(url: String, size: Long, open: () -> InputStream, ifNoneMatch: Boolean = false): Unit =
         throw UnsupportedOperationException("Streaming upload not supported")
 
     /** Reads the file at [url] through [read] without holding it in memory; null when there is none. */
-    fun <T> getStream(url: String, read: (java.io.InputStream) -> T): T? =
+    fun <T> getStream(url: String, read: (InputStream) -> T): T? =
         throw UnsupportedOperationException("Streaming download not supported")
 
     /**

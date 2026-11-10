@@ -244,7 +244,7 @@ internal fun DownloadService.launchJob(file: DownloadableFileEntity, source: Com
                 }
                 else -> Unit
             }
-        } catch (e: kotlinx.coroutines.CancellationException) {
+        } catch (e: CancellationException) {
             synchronized(startLock) {
                 if (downloadJobs[file.fileName] === owner) {
                     downloadProgressTracker.updateDownloadStatus(file.fileName, if (file.fileName in pausingFiles) DownloadStatus.PAUSED else DownloadStatus.STOPPED)

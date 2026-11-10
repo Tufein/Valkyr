@@ -34,6 +34,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import java.io.File
+import android.graphics.Path
+import com.tufein.valkyr.util.ToastUtil
 
 @EntryPoint
 @InstallIn(SingletonComponent::class)
@@ -140,7 +142,7 @@ object GameShare {
     }
 
     private suspend fun toastFailure(app: Context, res: Int) = withContext(Dispatchers.Main) {
-        runCatching { com.tufein.valkyr.util.ToastUtil.showError(app, app.getString(res)) }
+        runCatching { ToastUtil.showError(app, app.getString(res)) }
     }
 
     /** The cover as a bitmap (software, so it can be drawn on a canvas), or null when none loads. */
@@ -175,7 +177,7 @@ object GameShare {
         paint.color = Color.argb(90, 0, 0, 0)
         canvas.drawRoundRect(RectF(rect.left, rect.top + 18f, rect.right, rect.bottom + 18f), radius, radius, paint)
         val save = canvas.save()
-        val clip = android.graphics.Path().apply { addRoundRect(rect, radius, radius, android.graphics.Path.Direction.CW) }
+        val clip = Path().apply { addRoundRect(rect, radius, radius, Path.Direction.CW) }
         canvas.clipPath(clip)
         if (cover != null) {
             val src = GameShareText.centerCrop(cover.width, cover.height, box)

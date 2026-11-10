@@ -77,7 +77,8 @@ import kotlinx.coroutines.launch
  * (one throttled call per game, kept for a week); the screen says which of the two it is showing.
  * "Download the ones I can get" queues one version of each game found in a source (after a size
  * check), "Put the missing ones on the wishlist" wishes the rest for this console, and a row opens
- * the game in the library (or wishes it when it is missing).
+ * the game in the library when it is on the device, downloads it when a source has it (the list stays
+ * open) and wishes it when it is missing.
  *
  * @param onOpenRetroAchievements opens the RetroAchievements screen (`NavRoutes.RetroAchievements`),
  *   offered when no RA name and web API key are set.
@@ -154,9 +155,10 @@ private fun ConsoleList(consoles: List<BestConsole>, onOpen: (String) -> Unit) {
 }
 
 /** What a row does when it is pressed. */
-private enum class RowAction { OPEN, WISH, NONE }
+private enum class RowAction { OPEN, DOWNLOAD, WISH, NONE }
 
 private fun BestRow.action(): RowAction = when {
+    state == OwnState.IN_SOURCE -> if (downloading) RowAction.NONE else RowAction.DOWNLOAD
     libraryQuery != null -> RowAction.OPEN
     state == OwnState.MISSING && !wished -> RowAction.WISH
     else -> RowAction.NONE
@@ -173,7 +175,7 @@ private fun BestList(detail: BestDetail, viewModel: BestGamesViewModel, onOpenLi
     LaunchedEffect(detail.console.id, detail.rows.isNotEmpty()) {
         if (detail.rows.isNotEmpty()) { firstFocus.requestFocusWhenReady() }
     }
-    // A opens the game in the library, or wishes it when it is missing; the legend says which.
+    // A opens the game in the library, downloads it from a source or wishes it when it is missing; the legend says which.
     var focusedGame by remember { mutableStateOf<Int?>(null) }
     val focused = detail.rows.firstOrNull { it.gameId == focusedGame }
     PublishLegend(
@@ -181,6 +183,7 @@ private fun BestList(detail: BestDetail, viewModel: BestGamesViewModel, onOpenLi
             listOfNotNull(
                 when (row.action()) {
                     RowAction.OPEN -> LegendEntry("A", stringResource(R.string.pad_open))
+                    RowAction.DOWNLOAD -> LegendEntry("A", stringResource(R.string.top7_download_one))
                     RowAction.WISH -> LegendEntry("A", stringResource(R.string.top7_wish_one))
                     RowAction.NONE -> null
                 },
@@ -303,6 +306,7 @@ private fun BestList(detail: BestDetail, viewModel: BestGamesViewModel, onOpenLi
                             onClick = {
                                 when (row.action()) {
                                     RowAction.OPEN -> { viewModel.openInLibrary(row); onOpenLibrary() }
+                                    RowAction.DOWNLOAD -> viewModel.downloadOne(row, context)
                                     RowAction.WISH -> viewModel.wish(context, row)
                                     RowAction.NONE -> Unit
                                 }
@@ -358,6 +362,12 @@ private fun BestGameRow(row: BestRow, consoleId: String, modifier: Modifier, onC
                 action == RowAction.OPEN -> Icon(
                     painterResource(R.drawable.ic_library),
                     contentDescription = stringResource(R.string.top7_open_library),
+                    tint = scheme.onSurfaceVariant,
+                    modifier = Modifier.size(22.dp)
+                )
+                action == RowAction.DOWNLOAD -> Icon(
+                    painterResource(R.drawable.ic_download),
+                    contentDescription = stringResource(R.string.top7_download_one),
                     tint = scheme.onSurfaceVariant,
                     modifier = Modifier.size(22.dp)
                 )

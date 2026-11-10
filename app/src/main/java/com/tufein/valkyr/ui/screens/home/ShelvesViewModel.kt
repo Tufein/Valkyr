@@ -43,6 +43,8 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
 import javax.inject.Inject
+import com.tufein.valkyr.util.ActionEntry
+import kotlinx.coroutines.flow.Flow
 
 private const val TAG = "HomeShelves"
 
@@ -122,7 +124,7 @@ class ShelvesViewModel @Inject constructor(
 
     /** The console shelves: what is on the device per console (or, with nothing on it, the newest games). */
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    private val consoleGames: kotlinx.coroutines.flow.Flow<ConsoleGames> =
+    private val consoleGames: Flow<ConsoleGames> =
         combine(library.ownedKeys, profiles.restrictions, rescans.lastRescanTime) { keys, restrictions, _ -> keys to restrictions }
             // The index adds keys in bursts while it looks at the device.
             .debounce(600)
@@ -130,7 +132,7 @@ class ShelvesViewModel @Inject constructor(
 
     /** The hero's candidates: started in Dogmatix+, played in ES-DE, downloaded. */
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    private val recents: kotlinx.coroutines.flow.Flow<List<ShelvesModel.Recent>> =
+    private val recents: Flow<List<ShelvesModel.Recent>> =
         combine(actionLog.entries, profiles.activeId, profiles.restrictions, library.ownedKeys, esdePlays) { entries, profile, restrictions, keys, plays ->
             Inputs(entries.orEmpty(), profile, restrictions, keys, plays)
         }.debounce(400)
@@ -166,7 +168,7 @@ class ShelvesViewModel @Inject constructor(
     )
 
     private class Inputs(
-        val entries: List<com.tufein.valkyr.util.ActionEntry>,
+        val entries: List<ActionEntry>,
         val profile: String,
         val restrictions: LibraryRestrictions,
         val keys: Set<String>,

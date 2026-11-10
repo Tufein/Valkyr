@@ -23,6 +23,7 @@ import com.tufein.valkyr.ui.screens.search.SEARCH_ALL_ROUTE
 import com.tufein.valkyr.ui.screens.settings.covers.CoverSourcesRow
 import com.tufein.valkyr.util.SettingKeys
 import com.tufein.valkyr.util.SettingsLayout
+import com.tufein.valkyr.util.LibraryBrowse
 
 /** The rows of the Tools card (see [SettingsLayout.groups] for their order). */
 internal fun SettingsEnv.toolsCardRows(): List<SettingsRow> = listOf(
@@ -189,7 +190,7 @@ internal fun SettingsEnv.controlsCardRows(): List<SettingsRow> = listOf(
 internal fun SettingsEnv.libraryCardRows(): List<SettingsRow> = listOf(
     SettingsRow(key = SettingKeys.START_VIEW) {
         // Only the views the Library tab offers with a game page to open (all four); a stepper walks through them.
-        val views = com.tufein.valkyr.util.LibraryBrowse.availableViews(true)
+        val views = LibraryBrowse.availableViews(true)
         fun shift(by: Int) = extra.setStartView(context, views[(views.indexOf(look.startView).coerceAtLeast(0) + by + views.size) % views.size])
         SettingRow(
             icon = R.drawable.ic_dashboard,

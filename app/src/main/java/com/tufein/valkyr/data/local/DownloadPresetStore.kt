@@ -17,6 +17,8 @@ import kotlinx.coroutines.flow.map
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
+import androidx.datastore.preferences.core.MutablePreferences
+import com.tufein.valkyr.util.Constants
 
 data class DownloadPresetSnapshot(val presets: List<DownloadPreset>, val current: DownloadPresetOptions)
 
@@ -76,7 +78,7 @@ class DownloadPresetStore internal constructor(private val dataStore: DataStore<
         }
     }
 
-    private fun saveInto(preferences: androidx.datastore.preferences.core.MutablePreferences, preset: DownloadPreset) {
+    private fun saveInto(preferences: MutablePreferences, preset: DownloadPreset) {
         val saved = DownloadPresets.decode(preferences[Keys.PRESETS])
         require(preset.builtIn || saved.any { it.id == preset.id } || saved.count { !it.builtIn } < DownloadPresets.MAX_CUSTOM)
         preferences[Keys.PRESETS] = DownloadPresets.encode(saved.filterNot { it.id == preset.id } + preset)
@@ -86,7 +88,7 @@ class DownloadPresetStore internal constructor(private val dataStore: DataStore<
 
     private fun current(preferences: Preferences) = DownloadPresetOptions(
         limitSpeed = preferences[SettingsKeys.LIMIT_SPEED] ?: Float.POSITIVE_INFINITY,
-        concurrentDownloads = preferences[SettingsKeys.CONCURRENT_DOWNLOADS] ?: com.tufein.valkyr.util.Constants.DEFAULT_CONCURRENT_DOWNLOADS,
+        concurrentDownloads = preferences[SettingsKeys.CONCURRENT_DOWNLOADS] ?: Constants.DEFAULT_CONCURRENT_DOWNLOADS,
         perServerLimit = preferences[Keys.PER_SERVER] ?: 0,
         wifiOnly = preferences[SettingsKeys.DOWNLOAD_WIFI_ONLY] ?: false,
         chargingOnly = preferences[SettingsKeys.DOWNLOAD_CHARGING_ONLY] ?: false,

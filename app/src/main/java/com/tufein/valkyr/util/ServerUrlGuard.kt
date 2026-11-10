@@ -1,6 +1,7 @@
 package com.tufein.valkyr.util
 
 import java.net.URI
+import java.net.URLDecoder
 
 /** Decides whether a URL is a file of the configured RomM server (6.0). Pure. */
 object ServerUrlGuard {
@@ -31,5 +32,5 @@ object ServerUrlGuard {
     private fun portOf(u: URI): Int = if (u.port != -1) u.port else if (u.scheme.equals("https", true)) 443 else 80
 
     private fun decode(segment: String): String =
-        runCatching { java.net.URLDecoder.decode(segment.replace("+", "%2B"), "UTF-8") }.getOrDefault(segment)
+        runCatching { URLDecoder.decode(segment.replace("+", "%2B"), "UTF-8") }.getOrDefault(segment)
 }

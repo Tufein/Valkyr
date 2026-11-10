@@ -6,6 +6,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.time.Instant
 
 class DownloadConditionsTest {
     private val berlin = ZoneId.of("Europe/Berlin")
@@ -94,7 +95,7 @@ class DownloadConditionsTest {
         val next = DownloadConditions.nextOccurrence(2 * 60 + 30, now, berlin)
         assertTrue(next > now)
         assertTrue(next - now < 3 * 3_600_000L)
-        assertEquals(3, ZonedDateTime.ofInstant(java.time.Instant.ofEpochMilli(next), berlin).hour)
+        assertEquals(3, ZonedDateTime.ofInstant(Instant.ofEpochMilli(next), berlin).hour)
     }
 
     @Test

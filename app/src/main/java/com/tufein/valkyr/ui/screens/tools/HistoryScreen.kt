@@ -54,6 +54,7 @@ import java.time.format.FormatStyle
 import java.time.format.TextStyle
 import java.time.ZoneId
 import java.util.Locale
+import java.time.Instant
 
 /**
  * Play history: a timeline of what happened to the library (finished downloads, games played in
@@ -201,7 +202,7 @@ private fun HistoryRow(event: HistoryEvent, timeFormat: DateTimeFormatter, zone:
         HistoryKind.SAVED -> event.via?.takeIf { it.isNotBlank() }?.let { stringResource(R.string.coll6_kind_saved_via, it) }
             ?: stringResource(R.string.coll6_kind_saved)
     }
-    val time = remember(event.at, timeFormat, zone) { timeFormat.format(java.time.Instant.ofEpochMilli(event.at).atZone(zone)) }
+    val time = remember(event.at, timeFormat, zone) { timeFormat.format(Instant.ofEpochMilli(event.at).atZone(zone)) }
     ToolRow(
         title = event.title,
         lines = emptyList(),

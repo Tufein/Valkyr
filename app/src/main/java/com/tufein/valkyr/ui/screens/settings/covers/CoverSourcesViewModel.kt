@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlinx.coroutines.CancellationException
 
 /** What the Cover sources screen shows of the ScreenScraper login (passwords only as "set" / "not set" in rows). */
 data class ScreenScraperLogin(
@@ -116,7 +117,7 @@ class CoverSourcesViewModel @Inject constructor(
                     CoverSources.Source.IGDB -> igdb.testKey()
                     else -> CoverApis.KeyTest.Missing
                 }
-            } catch (e: kotlinx.coroutines.CancellationException) {
+            } catch (e: CancellationException) {
                 _testingKey.value = null
                 throw e
             } catch (e: Exception) {

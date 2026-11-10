@@ -50,6 +50,7 @@ import java.io.File
 import java.net.URLEncoder
 import javax.inject.Inject
 import javax.inject.Singleton
+import android.text.format.Formatter
 
 private const val TAG = "SmartStorageService"
 private const val NOTIFICATION_ID = 8412
@@ -603,7 +604,7 @@ class SmartStorageService @Inject constructor(
     private fun notifyDone(moved: Int, failed: Int, bytes: Long) {
         if (!canNotify()) return
         if (moved == 0 && failed == 0) { cancelNotification(); return }
-        val text = if (failed == 0) context.resources.getQuantityString(R.plurals.store8_notify_done, moved, moved, android.text.format.Formatter.formatShortFileSize(context, bytes))
+        val text = if (failed == 0) context.resources.getQuantityString(R.plurals.store8_notify_done, moved, moved, Formatter.formatShortFileSize(context, bytes))
             else context.resources.getQuantityString(R.plurals.store8_notify_failed, failed, failed)
         val notification = NotificationCompat.Builder(context, DogmatixApplication.SYNC_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_drive_file_move)

@@ -3,6 +3,7 @@ package com.tufein.valkyr.util
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.Instant
 
 /** What happened to a game. */
 enum class HistoryKind { DOWNLOADED, PLAYED, SAVED }
@@ -69,7 +70,7 @@ object PlayHistory {
         else -> DayLabel.Date(date)
     }
 
-    fun dayOf(at: Long, zone: ZoneId): LocalDate = java.time.Instant.ofEpochMilli(at).atZone(zone).toLocalDate()
+    fun dayOf(at: Long, zone: ZoneId): LocalDate = Instant.ofEpochMilli(at).atZone(zone).toLocalDate()
 
     /** [events] (newest first) in consecutive day groups. */
     fun groupByDay(events: List<HistoryEvent>, now: Long, zone: ZoneId): List<DayGroup> {

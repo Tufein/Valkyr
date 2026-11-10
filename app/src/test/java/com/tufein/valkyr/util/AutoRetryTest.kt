@@ -8,6 +8,8 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import com.tufein.valkyr.data.service.RommException
+import com.tufein.valkyr.data.service.RommSwitchedOffException
 
 class AutoRetryTest {
     @Test fun `waits grow and stop after the third retry`() {
@@ -23,10 +25,10 @@ class AutoRetryTest {
     }
 
     @Test fun `RomM switched off is never retried or blamed on the source`() {
-        val off = com.tufein.valkyr.data.service.RommSwitchedOffException()
+        val off = RommSwitchedOffException()
         assertFalse(AutoRetry.isTemporary(off))
         assertFalse(SourceFailures.isSourceSide(off))
-        assertTrue(AutoRetry.isTemporary(com.tufein.valkyr.data.service.RommException("RomM server URL not set")))
+        assertTrue(AutoRetry.isTemporary(RommException("RomM server URL not set")))
     }
 
     @Test fun `dropped connections are temporary`() {

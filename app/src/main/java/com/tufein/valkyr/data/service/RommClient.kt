@@ -23,6 +23,9 @@ import java.io.IOException
 import java.net.URLEncoder
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.tufein.valkyr.util.ServerUrlGuard
+import java.io.File
+import java.util.concurrent.ConcurrentHashMap
 
 open class RommException(message: String) : IOException(message)
 
@@ -401,7 +404,7 @@ class RommClient @Inject constructor(
     @Volatile var serverVersion: String? = null
         set(value) { if (field != value) { field = value; learned.clear() } }
 
-    private val learned = java.util.concurrent.ConcurrentHashMap<String, Boolean>()
+    private val learned = ConcurrentHashMap<String, Boolean>()
 
     private suspend fun memoKey(what: String): String = configuredBaseUrl() + "|" + (serverVersion ?: "?") + "|" + what
 
@@ -471,10 +474,10 @@ class RommClient @Inject constructor(
      * Streams a file the configured RomM server itself serves (a game's manual) into [dest], at most [maxBytes].
      * Refuses any URL that is not on that server (and any redirect off it), so nothing is fetched from elsewhere.
      */
-    suspend fun downloadServerFileTo(url: String, dest: java.io.File, maxBytes: Long): Long = withContext(Dispatchers.IO) {
+    suspend fun downloadServerFileTo(url: String, dest: File, maxBytes: Long): Long = withContext(Dispatchers.IO) {
         val base = baseUrl()
         // Same scheme, host and port, below the server's path, no `..`; also checked again for every redirect.
-        val onServer = { u: String -> com.tufein.valkyr.util.ServerUrlGuard.isOnServer(base, u) }
+        val onServer = { u: String -> ServerUrlGuard.isOnServer(base, u) }
         if (!onServer(url)) throw RommException("Not a file of the RomM server")
         JsonHttp.downloadToFile(url, headers(), dest, maxBytes, readTimeoutMs = 120_000, accept = onServer)
     }

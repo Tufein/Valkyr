@@ -19,6 +19,7 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.tufein.valkyr.util.BoundedStreams
 
 /** The result of looking through the collection for broken sets and games that lack a playlist. */
 data class SetsReport(
@@ -48,7 +49,7 @@ class LibraryToolsService @Inject constructor(
     }
 
     private fun readSheet(file: DiskFile): String? = runCatching {
-        context.contentResolver.openInputStream(file.uri.toUri())?.use { com.tufein.valkyr.util.BoundedStreams.read(it, SetChecker.MAX_SHEET_BYTES.toInt()) }?.toString(Charsets.UTF_8)
+        context.contentResolver.openInputStream(file.uri.toUri())?.use { BoundedStreams.read(it, SetChecker.MAX_SHEET_BYTES.toInt()) }?.toString(Charsets.UTF_8)
     }.getOrNull()
 
     /** Writes the playlist next to the discs; false when the folder refuses. */

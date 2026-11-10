@@ -67,6 +67,9 @@ import com.tufein.valkyr.util.CoverSources
 import com.tufein.valkyr.util.CoverSources.Source
 import com.tufein.valkyr.util.ScreenScraper
 import com.tufein.valkyr.util.ScreenScraperQuota
+import java.time.Instant
+import java.time.YearMonth
+import java.time.ZoneOffset
 
 /** Where a developer id is asked for, opened from the explanation row. */
 private const val SCREENSCRAPER_SITE = "https://www.screenscraper.fr/"
@@ -446,8 +449,8 @@ internal fun keyedState(source: Source, keys: CoverApis.Keys, stats: CoverSource
         CoverSourceStats.Problem.OFFLINE -> stringResource(R.string.covers43_state_offline)
         CoverSourceStats.Problem.QUOTA, null -> {
             val left = stats.allowance
-            val sameMonth = java.time.YearMonth.from(java.time.Instant.ofEpochMilli(stats.allowanceAt).atZone(java.time.ZoneOffset.UTC)) ==
-                java.time.YearMonth.from(java.time.Instant.ofEpochMilli(now).atZone(java.time.ZoneOffset.UTC))
+            val sameMonth = YearMonth.from(Instant.ofEpochMilli(stats.allowanceAt).atZone(ZoneOffset.UTC)) ==
+                YearMonth.from(Instant.ofEpochMilli(now).atZone(ZoneOffset.UTC))
             if (source == Source.THEGAMESDB && left != null && sameMonth) stringResource(R.string.covers44_state_ready_month, left)
             else stringResource(R.string.covers43_state_ready)
         }

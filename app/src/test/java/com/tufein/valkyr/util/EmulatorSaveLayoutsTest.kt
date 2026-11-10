@@ -12,6 +12,7 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
+import java.io.IOException
 
 class EmulatorSaveLayoutsTest {
     private val ps1 = setOf("psx")
@@ -233,6 +234,6 @@ class EmulatorSaveLayoutsTest {
             ZipOutputStream(out).use { zip -> zip.putNextEntry(ZipEntry("../escape.bin")); zip.write(1); zip.closeEntry() }
         }.toByteArray()
         try { SavePack.unpack(evil, 1000); fail("traversal accepted") } catch (_: ArchiveSafetyException) { }
-        try { SavePack.unpack(ordinary, 10); fail("size limit ignored") } catch (_: java.io.IOException) { }
+        try { SavePack.unpack(ordinary, 10); fail("size limit ignored") } catch (_: IOException) { }
     }
 }

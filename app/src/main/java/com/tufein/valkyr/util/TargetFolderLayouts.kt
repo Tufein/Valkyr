@@ -1,6 +1,7 @@
 package com.tufein.valkyr.util
 
 import java.util.Locale
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Folder names for other systems (3.5.0): when games are copied to a memory card or USB folder
@@ -274,7 +275,7 @@ object TargetFolderLayouts {
     private val normalizedKeys: Map<System, List<String>> by lazy { System.entries.associateWith { system -> system.keys.map(::normalize) } }
     private val normalizedOthers: List<String> by lazy { otherMachines.map(::normalize) }
     /** Console ids are few and asked for again and again (every game, every redraw of the setup list). */
-    private val systemCache = java.util.concurrent.ConcurrentHashMap<String, java.util.Optional<System>>()
+    private val systemCache = ConcurrentHashMap<String, java.util.Optional<System>>()
 
     /** The system of a library console id or folder name, or null when the table does not know it. */
     fun systemOf(consoleId: String): System? {

@@ -27,6 +27,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.tufein.valkyr.util.RaAwards
 
 /** Backs the completed pill, the header badges and the RA status badge of the game page and the details card. */
 @HiltViewModel
@@ -48,7 +49,7 @@ class CompletedViewModel @Inject constructor(
      * The status of RA game [gameId]: from the batch award list, else from a progress this session
      * already fetched for the game (no call is made here).
      */
-    fun raStatus(gameId: Int, awards: com.tufein.valkyr.util.RaAwards): RaStatus? =
+    fun raStatus(gameId: Int, awards: RaAwards): RaStatus? =
         awards.statusOf(gameId) ?: retroAchievements.cachedProgress(gameId)?.let { RaStatuses.statusOf(it.award, it.earned) }
 }
 

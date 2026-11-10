@@ -40,6 +40,7 @@ import com.tufein.valkyr.ui.theme.DogmatixDark
 import com.tufein.valkyr.ui.theme.DogmatixLight
 import com.tufein.valkyr.ui.theme.OnAccent
 import com.tufein.valkyr.util.ThemePreview
+import androidx.compose.ui.Alignment
 
 /** The label of a look: the same words as the theme row. */
 private fun lookLabel(look: ThemePreview.Look): Int = when (look) {
@@ -99,7 +100,7 @@ internal fun MiniThemeCard(
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Text(stringResource(R.string.themeprev62_card_title), style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold, color = c.text)
-            Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(tint).padding(horizontal = 10.dp, vertical = 4.dp)
                 ) { Text(stringResource(R.string.themeprev62_button), style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = OnAccent) }

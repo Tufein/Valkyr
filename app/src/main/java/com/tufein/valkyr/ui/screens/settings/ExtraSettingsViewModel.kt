@@ -25,6 +25,13 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.tufein.valkyr.data.local.FrontendMetadataSettings
+import com.tufein.valkyr.data.local.LibrarySettings
+import com.tufein.valkyr.data.local.PowerRuleSettings
+import com.tufein.valkyr.data.local.SourcePickSettings
+import com.tufein.valkyr.data.local.WeeklyDigestSettings
+import com.tufein.valkyr.util.LibraryBrowse
+import com.tufein.valkyr.util.PowerSettings
 
 /** When downloads may run, and whether the speed limit is lifted at night. */
 data class ScheduleSettings(
@@ -72,7 +79,7 @@ data class LookPrefs(
     val listCovers: Boolean = true,
     val compactLists: Boolean = false,
     /** 6.0: the view the Library tab opens in (the same value its view switch remembers). */
-    val startView: com.tufein.valkyr.util.LibraryBrowse.ViewMode = com.tufein.valkyr.util.LibraryBrowse.ViewMode.OVERVIEW
+    val startView: LibraryBrowse.ViewMode = LibraryBrowse.ViewMode.OVERVIEW
 )
 
 /** Look, backup and update settings. */
@@ -96,16 +103,16 @@ class ExtraSettingsViewModel @Inject constructor(
     private val diagnostics: DiagnosticsService,
     private val profiles: ProfileService,
     private val lookSettings: LookSettings,
-    private val librarySettings: com.tufein.valkyr.data.local.LibrarySettings,
+    private val librarySettings: LibrarySettings,
     private val covers: CoverRepository,
-    private val weeklyDigest: com.tufein.valkyr.data.local.WeeklyDigestSettings,
-    private val frontendMetadata: com.tufein.valkyr.data.local.FrontendMetadataSettings,
-    private val powerRules: com.tufein.valkyr.data.local.PowerRuleSettings,
-    private val sourcePick: com.tufein.valkyr.data.local.SourcePickSettings
+    private val weeklyDigest: WeeklyDigestSettings,
+    private val frontendMetadata: FrontendMetadataSettings,
+    private val powerRules: PowerRuleSettings,
+    private val sourcePick: SourcePickSettings
 ) : ViewModel() {
 
     /** 7.5: battery and heat rules for downloads, and picking the best source. */
-    val power: StateFlow<com.tufein.valkyr.util.PowerSettings?> = powerRules.settings.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+    val power: StateFlow<PowerSettings?> = powerRules.settings.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
     val pickBest: StateFlow<Boolean> = sourcePick.pickBest.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), true)
     fun setLowBattery(context: Context, on: Boolean) = executeWithToast(context, TAG) { powerRules.setLowBatteryOn(on) }
     fun shiftBatteryPercent(context: Context, delta: Int) = executeWithToast(context, TAG) { powerRules.shiftBatteryPercent(delta) }
@@ -126,7 +133,7 @@ class ExtraSettingsViewModel @Inject constructor(
     fun setGlow(context: Context, on: Boolean) = executeWithToast(context, TAG) { lookSettings.setGlow(on) }
     fun setCompactLists(context: Context, on: Boolean) = executeWithToast(context, TAG) { lookSettings.setCompactLists(on) }
 
-    fun setStartView(context: Context, mode: com.tufein.valkyr.util.LibraryBrowse.ViewMode) = executeWithToast(context, TAG) { librarySettings.setView(mode) }
+    fun setStartView(context: Context, mode: LibraryBrowse.ViewMode) = executeWithToast(context, TAG) { librarySettings.setView(mode) }
 
     fun setListCovers(context: Context, on: Boolean) = executeWithToast(context, TAG) { lookSettings.setListCovers(on) }
 

@@ -1,6 +1,7 @@
 package com.tufein.valkyr.util
 
 import java.util.Locale
+import java.net.URLDecoder
 
 /**
  * Game manuals kept on the device (6.0): where they live, what kind of file they are, how they are
@@ -74,7 +75,7 @@ object Manuals {
      */
     fun fileNameFor(url: String, fallbackExt: String = "pdf"): String {
         val last = url.substringBefore('?').substringBefore('#').trimEnd('/').substringAfterLast('/')
-        val decoded = runCatching { java.net.URLDecoder.decode(last.replace("+", "%2B"), "UTF-8") }.getOrDefault(last)
+        val decoded = runCatching { URLDecoder.decode(last.replace("+", "%2B"), "UTF-8") }.getOrDefault(last)
         val safe = safeSegment(decoded, "manual")
         return if (kindOf(safe) == Kind.OTHER) "${safe.substringBeforeLast('.', safe)}.$fallbackExt" else safe
     }

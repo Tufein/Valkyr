@@ -47,6 +47,8 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.tufein.valkyr.util.ActionKind
+import com.tufein.valkyr.util.ActionTopic
 
 /**
  * Device sync: favourites, wishlist and collections kept in step between handhelds through
@@ -173,7 +175,7 @@ class DeviceSyncService @Inject constructor(
             if (!(quietTransient && CloudErrors.isTransient(e))) {
                 settings.recordSyncError(now, CloudErrors.encode(e))
                 connection.noteFailure(e)
-                actionLog.cloudFailed(com.tufein.valkyr.util.ActionKind.SYNC_FAILED, com.tufein.valkyr.util.ActionTopic.DEVICE_SYNC, e)
+                actionLog.cloudFailed(ActionKind.SYNC_FAILED, ActionTopic.DEVICE_SYNC, e)
             }
             Result.Failed(e)
         } finally {

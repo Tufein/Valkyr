@@ -29,6 +29,7 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
+import java.util.concurrent.ConcurrentHashMap
 
 private const val JOB_ID = 4231
 /** The WebDAV cloud job: encrypted backup and device sync, on an unmetered network while charging. */
@@ -133,7 +134,7 @@ interface AutoBackupEntryPoint {
 class AutoBackupJobService : JobService() {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     /** One job per scheduled job id: the local and the cloud backup can run at the same time. */
-    private val running = java.util.concurrent.ConcurrentHashMap<Int, Job>()
+    private val running = ConcurrentHashMap<Int, Job>()
 
     override fun onStartJob(params: JobParameters): Boolean {
         val backup = EntryPointAccessors.fromApplication(applicationContext, AutoBackupEntryPoint::class.java).autoBackup()

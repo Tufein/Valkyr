@@ -97,6 +97,12 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import javax.inject.Inject
+import com.tufein.valkyr.data.local.VersionPreferenceSettings
+import com.tufein.valkyr.data.service.RemovalFile
+import com.tufein.valkyr.data.service.SourceTrackService
+import com.tufein.valkyr.data.service.VersionPreferenceService
+import com.tufein.valkyr.util.DownloadCondition
+import kotlinx.coroutines.sync.Mutex
 
 /** How long a deep link waits for consoles / tag catalogue before applying what it has. */
 private const val RESOLVE_TIMEOUT_MS = 5_000L
@@ -117,14 +123,14 @@ class HomeViewModel @Inject constructor(
     private val collectionsRepository: CollectionsRepository,
     private val appSettings: AppSettings,
     private val profiles: ProfileService,
-    private val versionPreference: com.tufein.valkyr.data.service.VersionPreferenceService,
-    private val versionSettings: com.tufein.valkyr.data.local.VersionPreferenceSettings,
+    private val versionPreference: VersionPreferenceService,
+    private val versionSettings: VersionPreferenceSettings,
     private val retroAchievements: RetroAchievementsService,
     private val libraryTools: LibraryToolsService,
     private val metadataDao: GameMetadataDao,
     lookSettings: LookSettings,
     private val librarySettings: LibrarySettings,
-    private val sourceTrack: com.tufein.valkyr.data.service.SourceTrackService,
+    private val sourceTrack: SourceTrackService,
     private val detailsLoader: GameDetailsLoader,
     private val completed: CompletedService
 ) : ViewModel() {
@@ -396,7 +402,7 @@ class HomeViewModel @Inject constructor(
 
     /** Starts the download of a library row found by the Switch section (an update or a DLC). */
     /** 6.0: queues [file] with a condition (Wi-Fi, charging, tonight, at a time); null = right away. */
-    fun downloadWhen(file: DownloadableFileEntity, condition: com.tufein.valkyr.util.DownloadCondition?) {
+    fun downloadWhen(file: DownloadableFileEntity, condition: DownloadCondition?) {
         viewModelScope.launch(Dispatchers.Default) { downloadService.startDownload(sourceTrack.pickBest(file, sameNameOnly = true), condition) }
     }
 
@@ -525,7 +531,7 @@ class HomeViewModel @Inject constructor(
     suspend fun removalPlan(fileWithTags: DownloadableFileWithTags) = libraryIndex.removalPlan(fileWithTags.file)
 
     /** [consoleId] and [fileName] (the library row's) let the action history offer Download again. */
-    suspend fun removePlan(plan: List<com.tufein.valkyr.data.service.RemovalFile>, title: String, consoleId: String? = null, fileName: String? = null) =
+    suspend fun removePlan(plan: List<RemovalFile>, title: String, consoleId: String? = null, fileName: String? = null) =
         libraryIndex.deletePlan(plan, title, consoleId, fileName)
 
     suspend fun deleteOwned(fileWithTags: DownloadableFileWithTags): Boolean =
@@ -594,7 +600,7 @@ class HomeViewModel @Inject constructor(
      * Sets [rows] as the results and builds the list from them in the same step, so the screen never
      * sees results without their list. Grouping reads the preference once for all rows (no query per game).
      */
-    private val publishLock = kotlinx.coroutines.sync.Mutex()
+    private val publishLock = Mutex()
     private var publishSeq = 0L
 
     private suspend fun publish(rows: List<DownloadableFileWithTags>) {

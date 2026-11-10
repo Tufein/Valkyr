@@ -61,6 +61,9 @@ import com.tufein.valkyr.ui.theme.tabular
 import com.tufein.valkyr.util.CloudActivity
 import com.tufein.valkyr.util.CloudStatus
 import com.tufein.valkyr.util.ProgressText
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Color
+import java.text.NumberFormat
 
 /**
  * Settings → Cloud (5.0): every cloud feature on one page — the RomM server, save sync, achievements,
@@ -196,7 +199,7 @@ private fun Pitch(text: String) {
 }
 
 @Composable
-private fun FactLine(text: String, color: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onSurfaceVariant) {
+private fun FactLine(text: String, color: Color = MaterialTheme.colorScheme.onSurfaceVariant) {
     Text(text, style = MaterialTheme.typography.bodySmall.tabular(), color = color)
 }
 
@@ -206,7 +209,7 @@ private fun FactLine(text: String, color: androidx.compose.ui.graphics.Color = M
 fun RommCard(
     info: RommServerInfo,
     modifier: Modifier,
-    firstFocus: androidx.compose.ui.focus.FocusRequester,
+    firstFocus: FocusRequester,
     onRefresh: () -> Unit,
     onOpen: () -> Unit
 ) {
@@ -447,4 +450,4 @@ fun DeviceSyncCard(dav: DavStatus, modifier: Modifier, onSync: () -> Unit, onOpe
 private fun relativeTime(millis: Long): String =
     DateUtils.getRelativeTimeSpanString(millis, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString()
 
-private fun formatCount(n: Int): String = java.text.NumberFormat.getIntegerInstance().format(n)
+private fun formatCount(n: Int): String = NumberFormat.getIntegerInstance().format(n)

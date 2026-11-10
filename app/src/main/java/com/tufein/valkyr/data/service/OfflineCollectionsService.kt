@@ -53,6 +53,13 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import android.net.Uri
+import android.provider.DocumentsContract
+import com.tufein.valkyr.util.ActionReason
+import com.tufein.valkyr.util.BiosCatalog
+import com.tufein.valkyr.util.LibraryRestrictions
+import com.tufein.valkyr.util.SpaceMath
+import com.tufein.valkyr.util.StorageHelper
 
 private const val TAG = "OfflineCollections"
 private const val NOTIFICATION_ID = 4231
@@ -126,7 +133,7 @@ class OfflineCollectionsService @Inject constructor(
 
     val keptIds: Flow<Set<Long>> = settings.collectionIds
     val activeProfile: StateFlow<String> = profiles.activeId
-    val readinessRestrictions: StateFlow<com.tufein.valkyr.util.LibraryRestrictions> = profiles.restrictions
+    val readinessRestrictions: StateFlow<LibraryRestrictions> = profiles.restrictions
     val cap: Flow<Int> = settings.cap
     val wifiOnly: Flow<Boolean> = settings.wifiOnly
     val lastRun: Flow<OfflineCollections.RunInfo?> = settings.lastRun
@@ -205,7 +212,7 @@ class OfflineCollectionsService @Inject constructor(
             val key = Game(member.consoleId, member.fileName)
             key in rows || key !in known && profile.hiddenTags.isEmpty() && profile.allows(member.consoleId, emptyList())
         }
-        val bios = if (com.tufein.valkyr.util.BiosCatalog.systemsFor(visible.take(MAX_READY_GAMES).map { it.consoleId }).isEmpty()) null
+        val bios = if (BiosCatalog.systemsFor(visible.take(MAX_READY_GAMES).map { it.consoleId }).isEmpty()) null
             else readiness.biosReport()
         val reports = ArrayList<OfflineReadyGame>()
         fun snapshot() = OfflineReadyCollection(collectionId, collection.name, System.currentTimeMillis(),
@@ -342,24 +349,24 @@ class OfflineCollectionsService @Inject constructor(
         val folders = settingsRepository.consoleDownloadDirectories.first()
         fun folder(console: String) = folders[console]?.takeIf { it.isNotBlank() } ?: root
         fun volume(uri: String): String = runCatching {
-            val parsed = android.net.Uri.parse(uri)
-            parsed.authority + ":" + android.provider.DocumentsContract.getTreeDocumentId(parsed).substringBefore(':')
+            val parsed = Uri.parse(uri)
+            parsed.authority + ":" + DocumentsContract.getTreeDocumentId(parsed).substringBefore(':')
         }.getOrDefault(uri)
         val offers = entities.mapValues { (_, e) ->
             OfflineCollections.Offer(e.fileSize, StorageInsights.isExtractable(e.fileExtension.ifEmpty { e.fileName.substringAfterLast('.', "") }), volume(folder(e.consoleId)))
         }
         val freeByVolume = entities.values.groupBy { volume(folder(it.consoleId)) }.mapValues { (_, group) ->
-            com.tufein.valkyr.util.StorageHelper.getFreeBytes(context, folder(group.first().consoleId))
+            StorageHelper.getFreeBytes(context, folder(group.first().consoleId))
         }
 
         val activeQueue = downloadService.getDownloads().filter { it.status in setOf(DownloadStatus.DOWNLOADING, DownloadStatus.QUEUED, DownloadStatus.COPYING, DownloadStatus.UNZIPPING, DownloadStatus.PAUSED) }
         val queueByVolume = activeQueue.groupBy { volume(folder(downloadService.entityFor(it.fileName)?.consoleId.orEmpty())) }
-            .mapValues { (_, rows) -> com.tufein.valkyr.util.SpaceMath.sum(rows.map { item ->
+            .mapValues { (_, rows) -> SpaceMath.sum(rows.map { item ->
                 val remaining = (item.fileSize - item.downloadedBytes).coerceAtLeast(0)
-                com.tufein.valkyr.util.SpaceMath.add(remaining, if (StorageInsights.isExtractable(item.fileName.substringAfterLast('.'))) item.fileSize else 0)
+                SpaceMath.add(remaining, if (StorageInsights.isExtractable(item.fileName.substringAfterLast('.'))) item.fileSize else 0)
             }) }
         val reserve = maxOf(appSettings.minFreeGb.first().toLong(), settings.reserveGb.first().toLong()) * GB
-        val reserveByVolume = freeByVolume.keys.associateWith { com.tufein.valkyr.util.SpaceMath.add(reserve, queueByVolume[it] ?: 0) }
+        val reserveByVolume = freeByVolume.keys.associateWith { SpaceMath.add(reserve, queueByVolume[it] ?: 0) }
         val quotas = settings.quotas.first().mapValues { it.value.toLong() * GB }
         val disk = if (quotas.isEmpty() || noFolder) emptyList() else DuplicateFinder.entries(scanService.scan().files)
         val occupied = kept.associate { c -> c.id to c.games.distinct().sumOf { game ->
@@ -404,7 +411,7 @@ class OfflineCollectionsService @Inject constructor(
                 if (item.entries.isEmpty()) { done += item.game.game; continue }
                 var deleted = 0
                 for (entry in item.entries) {
-                    deleted += try { scanService.delete(entry, com.tufein.valkyr.util.ActionReason.OFFLINE_COLLECTION) } catch (e: CancellationException) { throw e } catch (e: Exception) { 0 }
+                    deleted += try { scanService.delete(entry, ActionReason.OFFLINE_COLLECTION) } catch (e: CancellationException) { throw e } catch (e: Exception) { 0 }
                 }
                 if (deleted > 0) { removed++; done += item.game.game }
             }

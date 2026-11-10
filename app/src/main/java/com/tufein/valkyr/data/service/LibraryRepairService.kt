@@ -36,6 +36,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.tufein.valkyr.util.RepairKind
 
 /** Where a check is; [done] / [total] count folders or sheets (total 0 = not known yet). */
 data class RepairProgress(val phase: Phase, val done: Int = 0, val total: Int = 0) {
@@ -132,7 +133,7 @@ class LibraryRepairService @Inject constructor(
         // A provider that reports no size looks like 0 bytes: "empty" only counts when the file really has no content.
         val confirmed = result.findings.filter { f ->
             currentCoroutineContext().ensureActive()
-            f.kind != com.tufein.valkyr.util.RepairKind.EMPTY_FILE || f.files.all { isReallyEmpty(it.uri) }
+            f.kind != RepairKind.EMPTY_FILE || f.files.all { isReallyEmpty(it.uri) }
         }
         val findings = LibraryRepair.visible(confirmed, restrictions, if (restrictions.active) hiddenByTag(confirmed, library, restrictions) else emptySet())
             .map { finding -> finding.copy(fixes = finding.fixes.filter { fix -> fix.download == null || allowedRow(fix.download, restrictions) }) }
@@ -157,7 +158,7 @@ class LibraryRepairService @Inject constructor(
             if (!unchanged(fix.trash)) return@withContext RepairOutcome.STALE
             when (fix.kind) {
                 RepairFixKind.TRASH -> {
-                    if (finding.kind == com.tufein.valkyr.util.RepairKind.LEFTOVER_PART && fix.trash.any { it.name in ownedNow() }) return@withContext RepairOutcome.STALE
+                    if (finding.kind == RepairKind.LEFTOVER_PART && fix.trash.any { it.name in ownedNow() }) return@withContext RepairOutcome.STALE
                     moveToTrash(finding, fix.trash)
                 }
                 RepairFixKind.CREATE_PLAYLIST -> {

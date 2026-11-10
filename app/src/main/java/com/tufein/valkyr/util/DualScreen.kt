@@ -1,5 +1,7 @@
 package com.tufein.valkyr.util
 
+import java.util.concurrent.CopyOnWriteArrayList
+
 /**
  * The decisions behind the second-screen hub (dual-screen handhelds such as the AYN Thor or the
  * Retroid Flip): which display to use, which layout fits it, which console chips and sections to
@@ -34,7 +36,7 @@ object DualScreen {
      */
     object HubDisplays {
         private val ids = java.util.Collections.synchronizedMap(HashMap<Int, Int>())
-        private val listeners = java.util.concurrent.CopyOnWriteArrayList<() -> Unit>()
+        private val listeners = CopyOnWriteArrayList<() -> Unit>()
         fun snapshot(): Set<Int> = synchronized(ids) { ids.keys.toSet() }
         fun add(displayId: Int) { synchronized(ids) { ids[displayId] = (ids[displayId] ?: 0) + 1 }; listeners.forEach { it() } }
         fun remove(displayId: Int) {

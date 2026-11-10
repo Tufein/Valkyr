@@ -27,6 +27,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import com.tufein.valkyr.data.service.ProfileService
+import com.tufein.valkyr.data.service.UpgradePreview
 
 /** Where the download of a suggested file stands. */
 enum class BetterRowState { READY, DOWNLOADING, DOWNLOADED, FAILED }
@@ -61,7 +63,7 @@ class BetterVersionsViewModel @Inject constructor(
     private val service: BetterVersionsService,
     private val settings: BetterVersionsSettings,
     downloadService: DownloadService,
-    profiles: com.tufein.valkyr.data.service.ProfileService
+    profiles: ProfileService
 ) : ViewModel() {
 
     private data class Base(
@@ -94,7 +96,7 @@ class BetterVersionsViewModel @Inject constructor(
 
     private var scanJob: Job? = null
 
-    val preview = MutableStateFlow<com.tufein.valkyr.data.service.UpgradePreview?>(null)
+    val preview = MutableStateFlow<UpgradePreview?>(null)
     private var previewJob: Job? = null
     fun preview(ids: List<String>, replacing: Boolean) {
         previewJob?.cancel()
@@ -102,7 +104,7 @@ class BetterVersionsViewModel @Inject constructor(
         previewJob = viewModelScope.launch {
             try { preview.value = service.preview(startable(ids), replacing) }
             catch (e: CancellationException) { throw e }
-            catch (_: Exception) { preview.value = com.tufein.valkyr.data.service.UpgradePreview(0, 0, 0, 0, true) }
+            catch (_: Exception) { preview.value = UpgradePreview(0, 0, 0, 0, true) }
         }
     }
     init {

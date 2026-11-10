@@ -10,6 +10,7 @@ import org.junit.rules.TemporaryFolder
 import java.io.File
 import java.time.LocalDate
 import java.time.ZoneId
+import java.io.IOException
 
 class ActionHistoryTest {
     @get:Rule val tmp = TemporaryFolder()
@@ -110,7 +111,7 @@ class ActionHistoryTest {
         val pending = File(tmp.root, "log.jsonl.tmp").apply { mkdirs() }
         File(pending, "blocked").writeText("keep")
         var refused = false
-        try { store.rewrite(emptyList()) } catch (_: java.io.IOException) { refused = true }
+        try { store.rewrite(emptyList()) } catch (_: IOException) { refused = true }
         assertTrue(refused)
         assertEquals(original, file.readText())
     }

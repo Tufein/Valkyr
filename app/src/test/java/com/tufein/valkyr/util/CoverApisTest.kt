@@ -7,6 +7,8 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.time.LocalDate
+import java.time.ZoneOffset
 
 /** The shared part of the TheGamesDB / SteamGridDB / IGDB cover sources (written from their public documentation). */
 class CoverApisTest {
@@ -168,10 +170,10 @@ class CoverApisTest {
     }
 
     @Test fun `a monthly allowance starts again on the first of the next month`() {
-        val mid = java.time.LocalDate.of(2026, 10, 21).atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli()
-        assertEquals(java.time.LocalDate.of(2026, 11, 1).atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli(), CoverApis.nextMonthStart(mid))
-        val dec = java.time.LocalDate.of(2026, 12, 31).atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli()
-        assertEquals(java.time.LocalDate.of(2027, 1, 1).atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli(), CoverApis.nextMonthStart(dec))
+        val mid = LocalDate.of(2026, 10, 21).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+        assertEquals(LocalDate.of(2026, 11, 1).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli(), CoverApis.nextMonthStart(mid))
+        val dec = LocalDate.of(2026, 12, 31).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+        assertEquals(LocalDate.of(2027, 1, 1).atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli(), CoverApis.nextMonthStart(dec))
     }
 
     @Test fun `titles match only when they are the same game`() {

@@ -38,6 +38,10 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.tufein.valkyr.data.local.VersionPreferenceSettings
+import com.tufein.valkyr.data.service.VersionPreferenceService
+import com.tufein.valkyr.util.VersionPreference
+import com.tufein.valkyr.util.WishlistShare
 
 /** A wishlist entry, how many library rows match it right now, and whether the game is already had. */
 data class WishlistStatus(
@@ -57,12 +61,12 @@ class WishlistRepository @Inject constructor(
     private val fileDao: DownloadableFileDao,
     rescanStateHolder: RescanStateHolder,
     private val appSettings: AppSettings,
-    private val versionPreference: com.tufein.valkyr.data.service.VersionPreferenceService,
+    private val versionPreference: VersionPreferenceService,
     private val downloadService: DownloadService,
     private val libraryIndex: dagger.Lazy<LibraryIndexService>,
     private val rommLibrary: dagger.Lazy<RommLibraryService>,
     private val alertSettings: WishlistAlertSettings,
-    private val versionSettings: com.tufein.valkyr.data.local.VersionPreferenceSettings
+    private val versionSettings: VersionPreferenceSettings
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -126,11 +130,11 @@ class WishlistRepository @Inject constructor(
     suspend fun remove(id: Long) = dao.delete(id)
 
     /** The wishlist as a file's text (see [WishlistShare]). */
-    suspend fun exportText(): String = com.tufein.valkyr.util.WishlistShare.export(dao.getAll())
+    suspend fun exportText(): String = WishlistShare.export(dao.getAll())
 
     /** Adds the wishes in [text] that are not on the list yet; null when it is not a wishlist file. */
     suspend fun importText(text: String): Int? {
-        val wishes = com.tufein.valkyr.util.WishlistShare.parse(text) ?: return null
+        val wishes = WishlistShare.parse(text) ?: return null
         return wishes.count { add(it.title, it.consoleId) }
     }
 
@@ -175,7 +179,7 @@ class WishlistRepository @Inject constructor(
                 .filter { GameTitleCleaner.containsAllWords(item.title, it.fileName) }
                 .groupBy { it.consoleId }.mapNotNull { (_, files) ->
                 if (files.any { index.isOwned(it) || downloadService.isActive(it.fileName) }) return@mapNotNull null
-                val best = com.tufein.valkyr.util.VersionPreference.pick(
+                val best = VersionPreference.pick(
                     files.map { VersionPicker.Candidate(it.fileName, it.fileName, fileDao.tagsOf(it.id), it.fileSize) },
                     versionPrefs.of(files.first().consoleId), preferences.preferred(files.first().consoleId, files.first().fileName)
                 ) ?: return@mapNotNull null

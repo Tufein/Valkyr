@@ -105,6 +105,7 @@ import com.tufein.valkyr.util.SaveConflict
 import com.tufein.valkyr.util.SaveConflictInfo
 import com.tufein.valkyr.util.SaveKind
 import com.tufein.valkyr.util.SaveSyncResult
+import com.tufein.valkyr.util.DolphinBundleKind
 
 /**
  * Settings → Save sync: which emulator folders hold the saves and the save states, "Sync now",
@@ -155,7 +156,7 @@ fun SaveSyncScreen(viewModel: SaveSyncViewModel = hiltViewModel()) {
         }
     }
     // Dolphin's GCI folders and Wii saves: the game their bundles are kept with on RomM is chosen here.
-    var bundleFor by remember { mutableStateOf<Pair<String, com.tufein.valkyr.util.DolphinBundleKind>?>(null) }
+    var bundleFor by remember { mutableStateOf<Pair<String, DolphinBundleKind>?>(null) }
     bundleFor?.let { (label, kind) ->
         emulatorFolders.firstOrNull { it.label == label }?.let { folder ->
             DolphinBundleDialog(

@@ -135,7 +135,7 @@ class ArchiveExtractorService @Inject constructor() {
         if (!parent.mkdirs() && !parent.isDirectory) throw StorageException("Could not create extraction cache")
         return try {
             Files.createTempDirectory(parent.toPath(), "archive-").toFile()
-        } catch (e: java.io.IOException) {
+        } catch (e: IOException) {
             throw StorageException("Could not create extraction cache", e)
         }
     }

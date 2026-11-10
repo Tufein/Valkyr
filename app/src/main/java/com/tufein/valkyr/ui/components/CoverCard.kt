@@ -33,6 +33,7 @@ import com.tufein.valkyr.ui.theme.LocalDogmatixTokens
 import com.tufein.valkyr.ui.theme.accentInk
 import com.tufein.valkyr.ui.theme.consoleColor
 import com.tufein.valkyr.util.ConsoleFormatter
+import androidx.compose.ui.text.style.TextAlign
 
 /** Width of a [CoverCard] on the Home shelves (3.8.0). */
 val CoverCardWidth: Dp = 140.dp
@@ -160,9 +161,9 @@ fun SeeAllCoverCard(
         ) {
             Icon(painterResource(R.drawable.ic_arrow_forward), contentDescription = null, tint = scheme.onPrimaryContainer, modifier = Modifier.size(24.dp))
         }
-        Text(label, style = MaterialTheme.typography.titleSmall, color = scheme.onSurface, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+        Text(label, style = MaterialTheme.typography.titleSmall, color = scheme.onSurface, textAlign = TextAlign.Center)
         detail?.let {
-            Text(it, style = MaterialTheme.typography.labelMedium, color = accentInk(), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+            Text(it, style = MaterialTheme.typography.labelMedium, color = accentInk(), textAlign = TextAlign.Center)
         }
     }
 }

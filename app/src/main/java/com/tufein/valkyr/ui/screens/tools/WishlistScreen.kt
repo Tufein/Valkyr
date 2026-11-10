@@ -78,6 +78,10 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlinx.coroutines.withContext
+import com.tufein.valkyr.data.service.GameShare
+import com.tufein.valkyr.data.service.SharedWishlistService
+import com.tufein.valkyr.util.DeviceSyncMerge
+import kotlinx.coroutines.flow.SharingStarted
 
 data class WishlistUiState(val loading: Boolean = true, val items: List<WishlistStatus> = emptyList(), val consoles: List<ConsoleEntity> = emptyList())
 
@@ -86,13 +90,13 @@ class WishlistViewModel @Inject constructor(
     private val wishlist: WishlistRepository,
     consoleRepository: ConsoleRepository,
     private val pendingFilters: PendingLibraryFilters,
-    sharedWishlist: com.tufein.valkyr.data.service.SharedWishlistService
+    sharedWishlist: SharedWishlistService
 ) : ViewModel() {
     /** Who added / who found each wish on the shared family list (empty when it is off). */
     val authors: StateFlow<Map<String, String>> = sharedWishlist.authors
-        .stateIn(viewModelScope, kotlinx.coroutines.flow.SharingStarted.WhileSubscribed(5_000), emptyMap())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
     val doneBy: StateFlow<Map<String, String>> = sharedWishlist.doneBy
-        .stateIn(viewModelScope, kotlinx.coroutines.flow.SharingStarted.WhileSubscribed(5_000), emptyMap())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyMap())
 
     private val consolesFlow = consoleRepository.getAllConsoles()
     private val _ui = MutableStateFlow(WishlistUiState())
@@ -226,7 +230,7 @@ fun WishlistScreen(navController: NavController, viewModel: WishlistViewModel = 
                 ) {
                     ToolAction(stringResource(R.string.wishlist_import)) { importLauncher.launch(arrayOf("application/json", "text/plain", "application/octet-stream")) }
                     if (ui.items.isNotEmpty()) ToolAction(stringResource(R.string.share6_chooser_wishlist)) {
-                        shareScope.launch { com.tufein.valkyr.data.service.GameShare.shareWishlist(context) }
+                        shareScope.launch { GameShare.shareWishlist(context) }
                     }
                     if (ui.items.isNotEmpty()) ToolAction(stringResource(R.string.wishlist_export)) { exportLauncher.launch("valkyr-wishlist.json") }
                 }
@@ -270,7 +274,7 @@ fun WishlistScreen(navController: NavController, viewModel: WishlistViewModel = 
                     WishlistMatch.State.IN_ROMM -> R.drawable.ic_server
                     else -> R.drawable.ic_sparkle
                 }
-                val wishKey = com.tufein.valkyr.util.DeviceSyncMerge.wishKey(status.item.title, consoleId)
+                val wishKey = DeviceSyncMerge.wishKey(status.item.title, consoleId)
                 val byLine = doneBy[wishKey]?.takeIf { it.isNotBlank() }?.let { stringResource(R.string.sync6_wish_found_by, it) }
                     ?: authors[wishKey]?.takeIf { it.isNotBlank() }?.let { stringResource(R.string.sync6_wish_added_by, it) }
                 ToolRow(

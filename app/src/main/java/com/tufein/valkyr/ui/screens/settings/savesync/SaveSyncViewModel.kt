@@ -22,6 +22,13 @@ import com.tufein.valkyr.util.EmulatorSaveFolders
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.tufein.valkyr.util.DolphinBundleKind
+import com.tufein.valkyr.util.SaveFolderLayout
+import com.tufein.valkyr.util.SaveSyncPlanner
+import com.tufein.valkyr.util.ToastUtil
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
 
 data class SaveSyncUiState(
     val rommUrl: String = "",
@@ -66,19 +73,19 @@ class SaveSyncViewModel @Inject constructor(
     }
 
     /** RomM games found for a folder's shared memory cards (the picker's list); null while nothing was searched. */
-    private val _gameResults = kotlinx.coroutines.flow.MutableStateFlow<List<com.tufein.valkyr.util.SaveSyncPlanner.RomCandidate>?>(null)
-    val gameResults: StateFlow<List<com.tufein.valkyr.util.SaveSyncPlanner.RomCandidate>?> = _gameResults
-    private val _searching = kotlinx.coroutines.flow.MutableStateFlow(false)
+    private val _gameResults = MutableStateFlow<List<SaveSyncPlanner.RomCandidate>?>(null)
+    val gameResults: StateFlow<List<SaveSyncPlanner.RomCandidate>?> = _gameResults
+    private val _searching = MutableStateFlow(false)
     val searching: StateFlow<Boolean> = _searching
-    private var searchJob: kotlinx.coroutines.Job? = null
+    private var searchJob: Job? = null
 
     fun searchGames(context: Context, term: String) {
         searchJob?.cancel()
         _searching.value = true
         searchJob = viewModelScope.launch {
             try { _gameResults.value = service.searchGames(term) }
-            catch (e: kotlinx.coroutines.CancellationException) { throw e }
-            catch (e: Exception) { _gameResults.value = emptyList(); com.tufein.valkyr.util.ToastUtil.showError(context, e.message ?: e.javaClass.simpleName) }
+            catch (e: CancellationException) { throw e }
+            catch (e: Exception) { _gameResults.value = emptyList(); ToastUtil.showError(context, e.message ?: e.javaClass.simpleName) }
             finally { _searching.value = false }
         }
     }
@@ -86,7 +93,7 @@ class SaveSyncViewModel @Inject constructor(
     fun clearGameResults() { searchJob?.cancel(); _searching.value = false; _gameResults.value = null }
 
     /** Syncs [label]'s shared memory cards with RomM game [rom] from now on; null stops syncing them (nothing is deleted). */
-    fun setSharedCards(context: Context, label: String, rom: com.tufein.valkyr.util.SaveSyncPlanner.RomCandidate?) = executeWithToast(context, TAG) {
+    fun setSharedCards(context: Context, label: String, rom: SaveSyncPlanner.RomCandidate?) = executeWithToast(context, TAG) {
         appSettings.setSaveSyncEmulatorFolders(appSettings.saveSyncEmulatorFolders.first().map { folder ->
             if (folder.label != label || !folder.layout.holdsSharedCards) folder
             else folder.copy(sharedCardsRomId = rom?.id, sharedCardsRomName = rom?.let { it.name.ifBlank { it.fsName } }.orEmpty())
@@ -97,13 +104,13 @@ class SaveSyncViewModel @Inject constructor(
      * Syncs [label]'s Dolphin GCI folders ([DolphinBundleKind.GCI]) or Wii saves ([DolphinBundleKind.WII])
      * as bundles kept with RomM game [rom] from now on; null stops syncing them (nothing is deleted).
      */
-    fun setDolphinBundles(context: Context, label: String, kind: com.tufein.valkyr.util.DolphinBundleKind, rom: com.tufein.valkyr.util.SaveSyncPlanner.RomCandidate?) = executeWithToast(context, TAG) {
+    fun setDolphinBundles(context: Context, label: String, kind: DolphinBundleKind, rom: SaveSyncPlanner.RomCandidate?) = executeWithToast(context, TAG) {
         val id = rom?.id
         val name = rom?.let { it.name.ifBlank { it.fsName } }.orEmpty()
         appSettings.setSaveSyncEmulatorFolders(appSettings.saveSyncEmulatorFolders.first().map { folder ->
             when {
-                folder.label != label || folder.layout != com.tufein.valkyr.util.SaveFolderLayout.GC_MEMCARDS -> folder
-                kind == com.tufein.valkyr.util.DolphinBundleKind.GCI -> folder.copy(gciRomId = id, gciRomName = name)
+                folder.label != label || folder.layout != SaveFolderLayout.GC_MEMCARDS -> folder
+                kind == DolphinBundleKind.GCI -> folder.copy(gciRomId = id, gciRomName = name)
                 else -> folder.copy(wiiRomId = id, wiiRomName = name, wiiChannels = folder.wiiChannels && id != null, wiiWare = folder.wiiWare && id != null)
             }
         })
@@ -165,9 +172,9 @@ class SaveSyncViewModel @Inject constructor(
 
     // ---- Prune now / undo -----------------------------------------------------------------------
 
-    private val _prune = kotlinx.coroutines.flow.MutableStateFlow<PruneUi?>(null)
+    private val _prune = MutableStateFlow<PruneUi?>(null)
     val prune: StateFlow<PruneUi?> = _prune
-    private val _pruned = kotlinx.coroutines.flow.MutableStateFlow(0)
+    private val _pruned = MutableStateFlow(0)
     /** Copies waiting in the recovery folder from the last prune (what "Bring back" returns). */
     val pruned: StateFlow<Int> = _pruned
 
@@ -184,7 +191,7 @@ class SaveSyncViewModel @Inject constructor(
             _prune.value = try {
                 val keep = appSettings.saveSyncBackupKeep.first()
                 PruneUi.Preview(service.previewPrune(appSettings.activeProfile.first()), keep)
-            } catch (e: kotlinx.coroutines.CancellationException) { throw e }
+            } catch (e: CancellationException) { throw e }
             catch (e: Exception) { PruneUi.Failed(e.message ?: e.javaClass.simpleName) }
         }
     }
@@ -198,11 +205,11 @@ class SaveSyncViewModel @Inject constructor(
         viewModelScope.launch {
             val moved = runCatching { service.pruneNow(preview.copies) }
             moved.onSuccess { n ->
-                if (n == null) com.tufein.valkyr.util.ToastUtil.showInfo(context, context.getString(R.string.csave_busy))
-                else com.tufein.valkyr.util.ToastUtil.showSuccess(context, context.getString(R.string.sv55_prune_done, n))
+                if (n == null) ToastUtil.showInfo(context, context.getString(R.string.csave_busy))
+                else ToastUtil.showSuccess(context, context.getString(R.string.sv55_prune_done, n))
             }.onFailure { e ->
-                if (e is kotlinx.coroutines.CancellationException) throw e
-                com.tufein.valkyr.util.ToastUtil.showError(context, context.getString(R.string.sv55_prune_failed, e.message ?: e.javaClass.simpleName))
+                if (e is CancellationException) throw e
+                ToastUtil.showError(context, context.getString(R.string.sv55_prune_failed, e.message ?: e.javaClass.simpleName))
             }
             refreshPruned()
         }
@@ -212,11 +219,11 @@ class SaveSyncViewModel @Inject constructor(
     fun undoPrune(context: Context) {
         viewModelScope.launch {
             runCatching { service.undoPrune() }.onSuccess { n ->
-                if (n == null) com.tufein.valkyr.util.ToastUtil.showInfo(context, context.getString(R.string.csave_busy))
-                else com.tufein.valkyr.util.ToastUtil.showSuccess(context, context.getString(R.string.sv55_prune_undone, n))
+                if (n == null) ToastUtil.showInfo(context, context.getString(R.string.csave_busy))
+                else ToastUtil.showSuccess(context, context.getString(R.string.sv55_prune_undone, n))
             }.onFailure { e ->
-                if (e is kotlinx.coroutines.CancellationException) throw e
-                com.tufein.valkyr.util.ToastUtil.showError(context, context.getString(R.string.sv55_prune_failed, e.message ?: e.javaClass.simpleName))
+                if (e is CancellationException) throw e
+                ToastUtil.showError(context, context.getString(R.string.sv55_prune_failed, e.message ?: e.javaClass.simpleName))
             }
             refreshPruned()
         }

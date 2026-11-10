@@ -129,6 +129,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
+import android.os.Build
+import android.view.WindowManager
 
 /**
  * What the second screen shows: the game under the cursor in the library (set by Home) and the
@@ -639,9 +641,9 @@ private fun rowStatus(d: DownloadItemModel, held: Boolean): String = when (d.sta
 
 /** The id of the display this context is shown on (Context.getDisplay needs API 30; the app supports 29). */
 internal fun android.content.Context.displayIdCompat(): Int =
-    if (android.os.Build.VERSION.SDK_INT >= 30) display?.displayId ?: Display.DEFAULT_DISPLAY
+    if (Build.VERSION.SDK_INT >= 30) display?.displayId ?: Display.DEFAULT_DISPLAY
     else {
         @Suppress("DEPRECATION")
-        (getSystemService(android.content.Context.WINDOW_SERVICE) as? android.view.WindowManager)?.defaultDisplay?.displayId
+        (getSystemService(android.content.Context.WINDOW_SERVICE) as? WindowManager)?.defaultDisplay?.displayId
             ?: Display.DEFAULT_DISPLAY
     }

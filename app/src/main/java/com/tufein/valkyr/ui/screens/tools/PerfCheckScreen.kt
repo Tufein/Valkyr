@@ -67,6 +67,9 @@ import com.tufein.valkyr.util.ToastUtil
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import android.text.format.DateUtils
+import com.tufein.valkyr.data.service.PerfCheckService
+import com.tufein.valkyr.util.PerfNotices
 
 /** Rows of the synthetic list that scrolls during the frame sample. */
 private const val TEST_ROWS = 300
@@ -194,7 +197,7 @@ fun PerfCheckScreen(viewModel: PerfCheckViewModel = hiltViewModel()) {
             val notice = noticeHistory[index]
             ToolRow(
                 stringResource(noticeText(notice.kind)),
-                listOf(android.text.format.DateUtils.formatDateTime(context, notice.at, android.text.format.DateUtils.FORMAT_SHOW_DATE or android.text.format.DateUtils.FORMAT_SHOW_TIME or android.text.format.DateUtils.FORMAT_ABBREV_MONTH)),
+                listOf(DateUtils.formatDateTime(context, notice.at, DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_SHOW_TIME or DateUtils.FORMAT_ABBREV_MONTH)),
                 onClick = {},
                 icon = R.drawable.ic_warning
             )
@@ -329,7 +332,7 @@ private fun TestList(state: LazyListState) {
 }
 
 @Composable
-private fun storageLine(preview: com.tufein.valkyr.data.service.PerfCheckService.StoragePreview?): String = when {
+private fun storageLine(preview: PerfCheckService.StoragePreview?): String = when {
     preview == null -> stringResource(R.string.measure47_storage_toggle_ready)
     !preview.folderSet -> stringResource(R.string.measure47_storage_no_folder)
     !preview.usable -> stringResource(R.string.measure47_storage_unusable)
@@ -338,10 +341,10 @@ private fun storageLine(preview: com.tufein.valkyr.data.service.PerfCheckService
     else -> stringResource(R.string.measure47_storage_toggle_ready)
 }
 
-private fun noticeText(kind: com.tufein.valkyr.util.PerfNotices.Kind): Int = when (kind) {
-    com.tufein.valkyr.util.PerfNotices.Kind.HOT -> R.string.perf63_notice_hot
-    com.tufein.valkyr.util.PerfNotices.Kind.LOW_MEMORY -> R.string.perf63_notice_memory
-    com.tufein.valkyr.util.PerfNotices.Kind.LOW_STORAGE -> R.string.perf63_notice_storage
+private fun noticeText(kind: PerfNotices.Kind): Int = when (kind) {
+    PerfNotices.Kind.HOT -> R.string.perf63_notice_hot
+    PerfNotices.Kind.LOW_MEMORY -> R.string.perf63_notice_memory
+    PerfNotices.Kind.LOW_STORAGE -> R.string.perf63_notice_storage
 }
 
 @Composable

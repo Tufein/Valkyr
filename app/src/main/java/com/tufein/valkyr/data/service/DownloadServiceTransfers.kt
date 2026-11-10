@@ -97,6 +97,8 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.withContext
+import java.io.IOException
+import java.net.SocketTimeoutException
 
 private const val TAG = "DownloadService"
 
@@ -196,7 +198,7 @@ internal suspend fun DownloadService.moveTorrentFile(file: DownloadableFileEntit
             } catch (e: DownloadVerificationException) {
                 _verification.update { it + (file.fileName to VerifyState.MISMATCH) }
                 throw e
-            } catch (e: java.io.IOException) {
+            } catch (e: IOException) {
                 throw StorageException("Could not copy downloaded torrent to storage", e)
             } finally {
                 if (downloadFileManager.isStagingFile(documentFile)) downloadFileManager.deleteFile(documentFile)
@@ -282,7 +284,7 @@ internal suspend fun DownloadService.performDebridDownloadInner(file: Downloadab
         var pollErrors = 0
         while (!done(torrent)) {
             torrent.failure?.let { throw Exception(it) }
-            if (System.currentTimeMillis() - started > DEBRID_MAX_WAIT_MS) throw java.net.SocketTimeoutException("Debrid fetch timed out")
+            if (System.currentTimeMillis() - started > DEBRID_MAX_WAIT_MS) throw SocketTimeoutException("Debrid fetch timed out")
             downloadProgressTracker.updateDownloadProgress(file.fileName, torrent.progress, 0f, (torrent.progress * file.fileSize).toLong())
             val elapsed = System.currentTimeMillis() - started
             delay(when { cached || elapsed < 30_000L -> 3_000L; elapsed < 5 * 60_000L -> 10_000L; else -> 30_000L })
@@ -352,7 +354,7 @@ internal suspend fun DownloadService.performHttpDownload(
             if (attempt > 0) delay(2000L * attempt)
             performHttpDownloadAttempt(file, urlProvider?.invoke() ?: file.downloadUrl, resumable, trustRecord)
             return
-        } catch (e: kotlinx.coroutines.CancellationException) {
+        } catch (e: CancellationException) {
             throw e
         } catch (e: LowStorageException) {
             throw e
@@ -369,7 +371,7 @@ internal suspend fun DownloadService.performHttpDownload(
             Log.i(TAG, "Trying ${file.fileName} from a reserve address")
             performHttpDownloadAttempt(file, url, resumable = false)
             return
-        } catch (e: kotlinx.coroutines.CancellationException) {
+        } catch (e: CancellationException) {
             throw e
         } catch (e: LowStorageException) {
             throw e
@@ -448,7 +450,7 @@ internal suspend fun DownloadService.performHttpDownloadAttempt(file: Downloadab
                         transferHash.update(buffer, 0, count)
                     }
                 } ?: throw StorageException("Could not read saved partial download")
-            } catch (e: java.io.IOException) {
+            } catch (e: IOException) {
                 throw StorageException("Could not read saved partial download", e)
             }
         }
@@ -482,7 +484,7 @@ internal suspend fun DownloadService.performHttpDownloadAttempt(file: Downloadab
         // SAF providers can finalize a write only on close. Extraction/checksums must see a
         // finished file, and a canceled transfer must never run the completion steps.
         currentCoroutineContext().ensureActive()
-        try { outputStream.close() } catch (e: java.io.IOException) { throw StorageException("Could not finish ${file.fileName}: ${e.message}", e) }
+        try { outputStream.close() } catch (e: IOException) { throw StorageException("Could not finish ${file.fileName}: ${e.message}", e) }
         outputStream = null
         currentCoroutineContext().ensureActive()
         requireSourceChecksum(file, documentFile)
@@ -492,7 +494,7 @@ internal suspend fun DownloadService.performHttpDownloadAttempt(file: Downloadab
         partials.remove(file.fileName)
         handlePostDownload(file, documentFile, downloadDirUri, subPath)
 
-    } catch (e: kotlinx.coroutines.CancellationException) {
+    } catch (e: CancellationException) {
         if (!keepPartial) documentFile?.takeIf(downloadFileManager::isStagingFile)?.let { downloadFileManager.deleteFile(it) }
         updateStatus(file.fileName, DownloadStatus.STOPPED)
         throw e
@@ -514,8 +516,8 @@ internal suspend fun DownloadService.performHttpDownloadAttempt(file: Downloadab
         parkable.remove(file.fileName)
         // Close independently: one provider error must not leak the other descriptor or
         // replace the CancellationException which makes a pause land on PAUSED.
-        try { inputStream?.close() } catch (e: java.io.IOException) { Log.w(TAG, "Could not close input for ${file.fileName}: ${e.message}") }
-        try { outputStream?.close() } catch (e: java.io.IOException) { Log.w(TAG, "Could not close output for ${file.fileName}: ${e.message}") }
+        try { inputStream?.close() } catch (e: IOException) { Log.w(TAG, "Could not close input for ${file.fileName}: ${e.message}") }
+        try { outputStream?.close() } catch (e: IOException) { Log.w(TAG, "Could not close output for ${file.fileName}: ${e.message}") }
         try { activeConnection?.disconnect() } catch (e: Exception) { Log.w(TAG, "Could not disconnect ${file.fileName}: ${e.message}") }
     }
 }
@@ -527,7 +529,7 @@ internal suspend fun DownloadService.requireSourceChecksum(file: DownloadableFil
     val actual = try {
         context.contentResolver.openInputStream(documentFile.uri)?.use { Checksums.hexOf(it, expected.algo) { coroutine.ensureActive() } }
             ?: throw StorageException("Could not verify downloaded file")
-    } catch (e: java.io.IOException) { throw StorageException("Could not read downloaded file for verification", e) }
+    } catch (e: IOException) { throw StorageException("Could not read downloaded file for verification", e) }
     if (!Checksums.matches(expected, actual)) throw DownloadVerificationException()
 }
 

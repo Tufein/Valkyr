@@ -17,6 +17,7 @@ import kotlinx.coroutines.sync.withLock
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.CancellationException
 
 private const val TAG = "OfflineQueue"
 
@@ -88,7 +89,7 @@ class OfflineQueueService @Inject constructor(
         for (p in list.toList()) {
             val done = try {
                 rommClient.updateRomProps(p.romId, p.changes); true
-            } catch (e: kotlinx.coroutines.CancellationException) {
+            } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 val code = generateSequence<Throwable>(e) { it.cause }.take(6).firstNotNullOfOrNull { it as? JsonHttp.HttpException }?.code

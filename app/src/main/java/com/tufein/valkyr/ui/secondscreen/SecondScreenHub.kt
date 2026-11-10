@@ -67,6 +67,7 @@ import com.tufein.valkyr.util.PowerRules
 import com.tufein.valkyr.util.SecondScreenControls
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import androidx.compose.ui.platform.LocalContext
 
 /**
  * The second-screen hub for dual-screen handhelds, drawn away from the library (in the library
@@ -353,7 +354,7 @@ private fun QueueBlock(queue: SecondScreenQueue, files: DownloadableFileDao, ser
  */
 @Composable
 private fun rememberDeviceState(): DualScreen.DeviceState? {
-    val context = androidx.compose.ui.platform.LocalContext.current.applicationContext
+    val context = LocalContext.current.applicationContext
     var state by remember { mutableStateOf<DualScreen.DeviceState?>(null) }
     DisposableEffect(context) {
         val power = context.getSystemService(PowerManager::class.java)

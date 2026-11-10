@@ -65,6 +65,8 @@ import kotlinx.coroutines.launch
 import java.time.YearMonth
 import java.util.Locale
 import javax.inject.Inject
+import com.tufein.valkyr.data.service.CompletedService
+import kotlinx.coroutines.flow.SharingStarted
 
 data class StatsUiState(
     val loading: Boolean = true,
@@ -87,12 +89,12 @@ class StatsViewModel @Inject constructor(
     private val collectionDao: CollectionDao,
     private val esdePlays: EsdePlayService,
     private val consoleRepository: ConsoleRepository,
-    completedGames: com.tufein.valkyr.data.service.CompletedService
+    completedGames: CompletedService
 ) : ViewModel() {
     /** 5.5: games the active profile marked as completed. */
     val completedCount: StateFlow<Int> = completedGames.keys
         .map { it.size }
-        .stateIn(viewModelScope, kotlinx.coroutines.flow.SharingStarted.WhileSubscribed(5000), 0)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
 
     private val _ui = MutableStateFlow(StatsUiState())
     val ui: StateFlow<StatsUiState> = _ui.asStateFlow()

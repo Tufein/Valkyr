@@ -63,6 +63,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.tufein.valkyr.data.local.dao.DownloadableFileDao
+import com.tufein.valkyr.data.service.SmartCollectionsService
+import com.tufein.valkyr.util.SmartCollectionRule
+import kotlinx.coroutines.CancellationException
 
 @HiltViewModel
 class CollectionsViewModel @Inject constructor(
@@ -72,8 +76,8 @@ class CollectionsViewModel @Inject constructor(
     private val shortcuts: FrontendShortcutService,
     private val rommCollections: RommCollectionsService,
     settings: SettingsRepository,
-    private val smart: com.tufein.valkyr.data.service.SmartCollectionsService,
-    files: com.tufein.valkyr.data.local.dao.DownloadableFileDao
+    private val smart: SmartCollectionsService,
+    files: DownloadableFileDao
 ) : ViewModel() {
     val views: StateFlow<List<LibraryView>> = appSettings.libraryViews
         .map { LibraryViews.fromJson(it) }
@@ -119,7 +123,7 @@ class CollectionsViewModel @Inject constructor(
     val ruleFailed = smart.failed
     val consoles = files.observeLibraryChanges().map { files.indexedSources().map { it.consoleId }.distinct().sorted() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-    fun saveRule(context: Context, id: Long?, name: String, rule: com.tufein.valkyr.util.SmartCollectionRule?) {
+    fun saveRule(context: Context, id: Long?, name: String, rule: SmartCollectionRule?) {
         viewModelScope.launch {
             try {
                 if (id == null && collections.value.orEmpty().any { it.name.equals(name.trim(), true) }) {
@@ -129,7 +133,7 @@ class CollectionsViewModel @Inject constructor(
                 val target = id ?: repository.create(name) ?: return@launch
                 smart.save(target, rule)
                 smart.refresh()
-            } catch (e: kotlinx.coroutines.CancellationException) { throw e }
+            } catch (e: CancellationException) { throw e }
             catch (_: Exception) { ToastUtil.showError(context, context.getString(R.string.smart25_failed)) }
         }
     }

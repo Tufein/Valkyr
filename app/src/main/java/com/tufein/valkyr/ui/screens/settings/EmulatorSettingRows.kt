@@ -46,6 +46,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.tufein.valkyr.data.local.dao.DownloadableFileDao
+import com.tufein.valkyr.data.service.LibraryIndexService
+import com.tufein.valkyr.ui.screens.tools.ReadinessRoute
+import com.tufein.valkyr.util.LibraryKeys
 
 /** One console of the setting: the emulators installed for it and what Play remembers ([GameLaunchKeys]). */
 data class ConsoleEmulator(
@@ -61,8 +65,8 @@ data class ConsoleEmulator(
 class EmulatorSettingsViewModel @Inject constructor(
     private val consoles: ConsoleRepository,
     private val launcher: GameLaunchService,
-    private val files: com.tufein.valkyr.data.local.dao.DownloadableFileDao,
-    private val library: com.tufein.valkyr.data.service.LibraryIndexService
+    private val files: DownloadableFileDao,
+    private val library: LibraryIndexService
 ) : ViewModel() {
 
     private val _rows = MutableStateFlow<List<ConsoleEmulator>?>(null)
@@ -87,8 +91,8 @@ class EmulatorSettingsViewModel @Inject constructor(
     fun wizard(consoleId: String, onReady: (String) -> Unit) {
         viewModelScope.launch {
             val rows = files.fileRefsOf(consoleId)
-            val file = rows.firstOrNull { com.tufein.valkyr.util.LibraryKeys.isOwned(it.consoleId, it.fileName, library.ownedKeys.value) } ?: rows.firstOrNull()
-            if (file != null) onReady(com.tufein.valkyr.ui.screens.tools.ReadinessRoute.of(consoleId, file.fileName))
+            val file = rows.firstOrNull { LibraryKeys.isOwned(it.consoleId, it.fileName, library.ownedKeys.value) } ?: rows.firstOrNull()
+            if (file != null) onReady(ReadinessRoute.of(consoleId, file.fileName))
         }
     }
 

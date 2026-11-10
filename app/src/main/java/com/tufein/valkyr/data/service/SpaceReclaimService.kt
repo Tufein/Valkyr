@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.tufein.valkyr.util.ActionReason
 
 private const val TAG = "SpaceReclaim"
 
@@ -125,7 +126,7 @@ class SpaceReclaimService @Inject constructor(
             val blocked = if (readable) newlyProtected.mapTo(HashSet()) { it.id } else candidates.mapTo(HashSet()) { it.id }
             val targets = candidates.filter { c -> c.id !in blocked && c.entry.files.isNotEmpty() && c.entry.files.all { it.fileId in allowed } }
             val targetIds = targets.mapTo(HashSet()) { it.id }
-            val counts = scanService.deleteAll(targets.map { it.entry }, com.tufein.valkyr.util.ActionReason.FREE_SPACE)
+            val counts = scanService.deleteAll(targets.map { it.entry }, ActionReason.FREE_SPACE)
             val removed = ArrayList<SpaceCandidate>()
             val partial = ArrayList<SpaceCandidate>()
             val failed = ArrayList<SpaceCandidate>()

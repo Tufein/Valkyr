@@ -67,6 +67,8 @@ import com.tufein.valkyr.ui.screens.cloud.saves.relativeTime
 import com.tufein.valkyr.ui.theme.LocalDogmatixTokens
 import com.tufein.valkyr.ui.theme.consoleColor
 import com.tufein.valkyr.util.ConsoleFormatter
+import com.tufein.valkyr.ui.navigation.NavRoutes
+import com.tufein.valkyr.ui.navigation.OnTabReselect
 
 /** Space at the sides of the shelves; the cards' focus halo and scale fit in it. */
 private val ShelfGutter = 16.dp
@@ -190,7 +192,7 @@ fun ShelvesContent(
     val coverHeight = if (landscape) CoverCardCoverHeight else 174.dp
     val listState = rememberLazyListState()
     // 6.0: tapping the Library tab again brings the shelves back to the top.
-    com.tufein.valkyr.ui.navigation.OnTabReselect(com.tufein.valkyr.ui.navigation.NavRoutes.Home.route) { listState.scrollToItem(0) }
+    OnTabReselect(NavRoutes.Home.route) { listState.scrollToItem(0) }
     LazyColumn(
         state = listState,
         modifier = modifier.fillMaxSize(),

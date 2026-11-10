@@ -169,6 +169,12 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
+import com.tufein.valkyr.data.service.GameShare
+import com.tufein.valkyr.data.service.RemovalFile
+import com.tufein.valkyr.ui.screens.next.UpNextShelf
+import com.tufein.valkyr.ui.screens.tools.NEW_HANDHELD_ROUTE
+import com.tufein.valkyr.ui.screens.tools.NewHandheldHint
+import com.tufein.valkyr.ui.shortcut.PendingGameShortcut
 
 private const val FAV_ALL = "all"
 /** 3.8.0: the search box and the filter button next to it (a comfortable touch target). */
@@ -517,8 +523,8 @@ fun HomeScreen(
     }
     // 3.5.0: on a fresh install (nothing indexed, no source at all) the empty library points to the checklist.
     val newHandheldHint: @Composable () -> Unit = {
-        com.tufein.valkyr.ui.screens.tools.NewHandheldHint(
-            onOpen = { navController.navigate(com.tufein.valkyr.ui.screens.tools.NEW_HANDHELD_ROUTE) { launchSingleTop = true } }
+        NewHandheldHint(
+            onOpen = { navController.navigate(NEW_HANDHELD_ROUTE) { launchSingleTop = true } }
         )
     }
     val discoverBlock: @Composable () -> Unit = {
@@ -607,7 +613,7 @@ fun HomeScreen(
     val playFromShelf: (String, String) -> Unit = { consoleId, fileName ->
         returnGame = consoleId to fileName
         onOpenGame?.invoke(consoleId, fileName)
-        com.tufein.valkyr.ui.shortcut.PendingGameShortcut.submit(consoleId, fileName, play = true)
+        PendingGameShortcut.submit(consoleId, fileName, play = true)
     }
     // 5.1: the Overview / List / Covers switch. The pick is stored; Overview is the shelves again, which
     // are the library with nothing narrowing it, so search and filters are cleared.
@@ -707,7 +713,7 @@ fun HomeScreen(
 
 
     ownedDialogItem?.let { item ->
-        var removal by remember(item) { mutableStateOf<List<com.tufein.valkyr.data.service.RemovalFile>?>(null) }
+        var removal by remember(item) { mutableStateOf<List<RemovalFile>?>(null) }
         LaunchedEffect(item) { removal = runCatching { viewModel.removalPlan(item) }.getOrNull() }
         AlertDialog(
             modifier = Modifier.closeOnGamepadB { ownedDialogItem = null },
@@ -791,7 +797,7 @@ fun HomeScreen(
             onOpenPage = onOpenGame?.let { open -> { viewModel.closeDetails(); open(state.item.file.consoleId, state.item.file.fileName) } },
             onShare = {
                 val file = state.item.file
-                scope.launch { com.tufein.valkyr.data.service.GameShare.share(context, file.consoleId, file.fileName, file.name) }
+                scope.launch { GameShare.share(context, file.consoleId, file.fileName, file.name) }
             },
             onDownloadWhen = { condition ->
                 viewModel.closeDetails()
@@ -1068,7 +1074,7 @@ fun HomeScreen(
                             onOpenGame = openGame,
                             modifier = Modifier.padding(top = 8.dp)
                         )
-                        if (!searchCollapsed && query.isEmpty() && activeFilterCount == 0 && onOpenGame != null && !viewMode.isBrowse) com.tufein.valkyr.ui.screens.next.UpNextShelf(
+                        if (!searchCollapsed && query.isEmpty() && activeFilterCount == 0 && onOpenGame != null && !viewMode.isBrowse) UpNextShelf(
                             onOpenGame = onOpenGame,
                             onOpenAll = { navController.navigate(NavRoutes.UpNext.route) },
                             modifier = Modifier.padding(top = 8.dp)
@@ -1184,7 +1190,7 @@ fun HomeScreen(
                             onOpenGame = openGame,
                             modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 6.dp)
                         )
-                        if (!showShelves && query.isEmpty() && activeFilterCount == 0 && onOpenGame != null && !viewMode.isBrowse) com.tufein.valkyr.ui.screens.next.UpNextShelf(
+                        if (!showShelves && query.isEmpty() && activeFilterCount == 0 && onOpenGame != null && !viewMode.isBrowse) UpNextShelf(
                             onOpenGame = onOpenGame,
                             onOpenAll = { navController.navigate(NavRoutes.UpNext.route) },
                             modifier = Modifier.padding(start = 10.dp, end = 10.dp, top = 6.dp)

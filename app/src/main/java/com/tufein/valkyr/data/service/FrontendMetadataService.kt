@@ -31,6 +31,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.tufein.valkyr.data.model.GameDetails
 
 private const val TAG = "FrontendMetadata"
 
@@ -461,7 +462,7 @@ class FrontendMetadataService @Inject constructor(
         return Gathered(meta, deferred, nothingToAsk = false)
     }
 
-    private fun fromDetails(d: com.tufein.valkyr.data.model.GameDetails) = GameMeta(
+    private fun fromDetails(d: GameDetails) = GameMeta(
         name = d.title, description = d.description, genre = d.genres.joinToString(", "), released = d.released, developer = d.developer
     )
 

@@ -109,6 +109,10 @@ import com.tufein.valkyr.util.TagClassifier
 import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.util.Date
+import com.tufein.valkyr.ui.screens.download.DownloadWhenDialog
+import com.tufein.valkyr.ui.screens.game.CompletedPill
+import com.tufein.valkyr.ui.screens.game.GameJournalSection
+import com.tufein.valkyr.util.DownloadCondition
 
 /**
  * Card with the online metadata of one library entry. Opens with X, closes with B or X;
@@ -157,7 +161,7 @@ fun GameDetailsDialog(
     /** 6.0: shares a card of this game (GameShare). */
     onShare: (() -> Unit)? = null,
     /** 6.0: queues this game with a condition (null = right away): Wi-Fi, charging, tonight, at a time. */
-    onDownloadWhen: ((com.tufein.valkyr.util.DownloadCondition?) -> Unit)? = null,
+    onDownloadWhen: ((DownloadCondition?) -> Unit)? = null,
     /** 8.0: opens the full-screen game page instead (null hides the action). */
     onOpenPage: (() -> Unit)? = null
 ) {
@@ -170,7 +174,7 @@ fun GameDetailsDialog(
     val downloadFocus = remember { FocusRequester() }
     var showWhen by remember { mutableStateOf(false) }
     if (showWhen && onDownloadWhen != null) {
-        com.tufein.valkyr.ui.screens.download.DownloadWhenDialog(
+        DownloadWhenDialog(
             onDismiss = { showWhen = false },
             onConfirm = { condition -> showWhen = false; onDownloadWhen(condition) }
         )
@@ -180,7 +184,7 @@ fun GameDetailsDialog(
     LaunchedEffect(rom.id) { scroll.scrollTo(0) }
     val similarSection: @Composable ColumnScope.() -> Unit = {
         if (onOpenSimilar != null) SimilarSection(similar, onOpenSimilar)
-        com.tufein.valkyr.ui.screens.game.GameJournalSection(rom.consoleId, rom.fileName)
+        GameJournalSection(rom.consoleId, rom.fileName)
     }
 
     val (frontUrl, backdropUrl) = rememberGameArt(state)
@@ -285,7 +289,7 @@ fun GameDetailsDialog(
                     icon = R.drawable.ic_star,
                     tone = if (favourite) ActionTone.Accent else ActionTone.Neutral
                 )
-                com.tufein.valkyr.ui.screens.game.CompletedPill(state.item.file.consoleId, state.item.file.fileName)
+                CompletedPill(state.item.file.consoleId, state.item.file.fileName)
                 if (onShare != null) {
                     ActionPill(stringResource(R.string.lead6_share), onShare, icon = R.drawable.ic_share)
                 }

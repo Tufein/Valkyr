@@ -12,12 +12,13 @@ import com.tufein.valkyr.data.local.queries.LibraryQueryBuilder
 import com.tufein.valkyr.data.local.entity.DownloadableFileEntity
 import com.tufein.valkyr.data.local.entity.FileTagEntity
 import com.tufein.valkyr.util.SearchNormalizer
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DownloadableFileDao {
 
     @Query("SELECT COUNT(*) FROM downloadable_files")
-    fun observeLibraryChanges(): kotlinx.coroutines.flow.Flow<Int>
+    fun observeLibraryChanges(): Flow<Int>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFiles(files: List<DownloadableFileEntity>)

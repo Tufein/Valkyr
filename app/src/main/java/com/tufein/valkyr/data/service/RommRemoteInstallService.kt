@@ -25,6 +25,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import java.net.URLEncoder
 
 private const val TAG = "RommRemoteInstall"
 
@@ -240,7 +241,7 @@ class RommRemoteInstallService @Inject constructor(
 
     /** True when the server took the report, or no longer has the request (it ended or was cancelled in RomM). */
     private fun sendReport(base: String, pairing: RommDeviceSettings.Pairing, requestId: String, report: RommRemoteInstall.Report): Boolean {
-        val url = "$base/api/devices/${pairing.deviceId}/installs/" + java.net.URLEncoder.encode(requestId, "UTF-8")
+        val url = "$base/api/devices/${pairing.deviceId}/installs/" + URLEncoder.encode(requestId, "UTF-8")
         val r = runCatching {
             JsonHttp.request("PUT", url, bearer(pairing.token), body = RommRemoteInstall.reportBody(report.kind, report.reason).toByteArray(Charsets.UTF_8), contentType = JsonHttp.JSON, followRedirects = false)
         }.getOrNull() ?: return false

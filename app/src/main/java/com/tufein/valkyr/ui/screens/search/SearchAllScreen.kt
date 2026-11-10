@@ -74,6 +74,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
+import androidx.compose.ui.Alignment
 
 /** Route of the "search everything" screen (8.0). */
 const val SEARCH_ALL_ROUTE = "search_all"
@@ -303,7 +304,7 @@ private fun Examples(onPick: (String) -> Unit, first: Modifier) {
         .map { stringResource(it) }
     FlowRow(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp, androidx.compose.ui.Alignment.CenterHorizontally),
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         words.forEachIndexed { i, word ->

@@ -43,6 +43,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.tufein.valkyr.util.FreshNames
+import com.tufein.valkyr.util.SheetParser
+import java.io.ByteArrayOutputStream
 
 /**
  * Knows what is already on disk: the file names under the download folders (including nested archive folders)
@@ -74,7 +77,7 @@ class LibraryIndexService @Inject constructor(
     private val _freeBytes = MutableStateFlow<Long?>(null)
     val freeBytes: StateFlow<Long?> = _freeBytes.asStateFlow()
 
-    private val finishedNames = com.tufein.valkyr.util.FreshNames()
+    private val finishedNames = FreshNames()
 
     init {
         scope.launch {
@@ -192,12 +195,12 @@ class LibraryIndexService @Inject constructor(
         val name = FileParsingUtils.storageFileName(file.fileName)
         val scopes = LibraryKeys.scopesFor(file.consoleId)
         val result = ArrayList<RemovalFile>()
-        fun addFiles(dir: DiskDir, entries: List<com.tufein.valkyr.util.DiskEntry>, path: String) {
-            fun references(entry: com.tufein.valkyr.util.DiskEntry): List<String> {
+        fun addFiles(dir: DiskDir, entries: List<DiskEntry>, path: String) {
+            fun references(entry: DiskEntry): List<String> {
                 val ext = entry.name.substringAfterLast('.').lowercase()
                 if (ext !in setOf("cue", "m3u", "gdi")) return emptyList()
                 val text = context.contentResolver.openInputStream(entry.uri)?.use { input ->
-                    val out = java.io.ByteArrayOutputStream()
+                    val out = ByteArrayOutputStream()
                     val buffer = ByteArray(8192)
                     while (out.size() <= 1024 * 1024) {
                         val count = input.read(buffer)
@@ -209,13 +212,13 @@ class LibraryIndexService @Inject constructor(
                     bytes.toString(Charsets.UTF_8)
                 } ?: error("Descriptor unavailable")
                 return when (ext) {
-                    "cue" -> com.tufein.valkyr.util.SheetParser.cueFiles(text)
-                    "gdi" -> com.tufein.valkyr.util.SheetParser.gdiFiles(text)
-                    else -> com.tufein.valkyr.util.SheetParser.m3uFiles(text)
+                    "cue" -> SheetParser.cueFiles(text)
+                    "gdi" -> SheetParser.gdiFiles(text)
+                    else -> SheetParser.m3uFiles(text)
                 }
             }
             val files = entries.filter { !it.isDirectory }.associateBy { it.name }
-            val selected = com.tufein.valkyr.util.GameArtifacts.plan(files.keys.toList(), name, protectShared) { references(files.getValue(it)) }
+            val selected = GameArtifacts.plan(files.keys.toList(), name, protectShared) { references(files.getValue(it)) }
             selected.map { files.getValue(it) }.forEach { entry -> result += RemovalFile(entry.uri.toString(), DiskScanner.uriOf(dir).toString(), entry.name, entry.size, "$path${entry.name}") }
         }
         fun walk(dir: DiskDir, path: String, depth: Int) {
@@ -289,7 +292,7 @@ class LibraryIndexService @Inject constructor(
             val selected = GameArtifacts.playPaths(files.keys.toList(), requested) { path ->
                 val entry = files.getValue(path).entry
                 val text = context.contentResolver.openInputStream(entry.uri)?.use { input ->
-                    val output = java.io.ByteArrayOutputStream()
+                    val output = ByteArrayOutputStream()
                     val buffer = ByteArray(8192)
                     while (output.size() <= MAX_DESCRIPTOR_BYTES) {
                         checkActive()
@@ -301,9 +304,9 @@ class LibraryIndexService @Inject constructor(
                     output.toByteArray().toString(Charsets.UTF_8)
                 } ?: error("Descriptor unavailable")
                 when (entry.name.substringAfterLast('.').lowercase()) {
-                    "cue" -> com.tufein.valkyr.util.SheetParser.cueFiles(text)
-                    "gdi" -> com.tufein.valkyr.util.SheetParser.gdiFiles(text)
-                    else -> com.tufein.valkyr.util.SheetParser.m3uFiles(text)
+                    "cue" -> SheetParser.cueFiles(text)
+                    "gdi" -> SheetParser.gdiFiles(text)
+                    else -> SheetParser.m3uFiles(text)
                 }
             }
             selected.forEach { path ->

@@ -60,6 +60,9 @@ import com.tufein.valkyr.util.ReaderState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.compose.foundation.layout.PaddingValues
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
 
 /**
  * Full-screen reader for a downloaded manual (6.0). PDFs and picture sequences show one page at a time, drawn
@@ -215,7 +218,7 @@ private fun TextReader(consoleId: String, fileName: String, doc: Manuals.Doc, vm
                 else -> false
             }
         },
-        contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 20.dp, vertical = 8.dp)
+        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp)
     ) {
         itemsIndexed(shown) { _, b ->
             Text(
@@ -230,8 +233,8 @@ private fun TextReader(consoleId: String, fileName: String, doc: Manuals.Doc, vm
 }
 
 /** Reads at most [limit] bytes (InputStream.readNBytes needs API 33; the app supports 29). */
-private fun readUpTo(input: java.io.InputStream, limit: Int): ByteArray {
-    val out = java.io.ByteArrayOutputStream()
+private fun readUpTo(input: InputStream, limit: Int): ByteArray {
+    val out = ByteArrayOutputStream()
     val buffer = ByteArray(8 * 1024)
     while (out.size() < limit) {
         val n = input.read(buffer, 0, minOf(buffer.size, limit - out.size()))

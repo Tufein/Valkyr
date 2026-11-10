@@ -110,6 +110,18 @@ import com.tufein.valkyr.util.ToastUtil
 import com.tufein.valkyr.util.VersionPreferences
 import java.util.Locale
 import kotlinx.coroutines.launch
+import android.text.format.Formatter
+import androidx.compose.ui.text.AnnotatedString
+import com.tufein.valkyr.data.service.GameHandler
+import com.tufein.valkyr.data.service.GameLaunch
+import com.tufein.valkyr.data.service.LaunchOutcome
+import com.tufein.valkyr.data.service.RemovalFile
+import com.tufein.valkyr.ui.screens.next.UpNextPill
+import com.tufein.valkyr.ui.shortcut.PendingGameShortcut
+import com.tufein.valkyr.util.EmulatorCatalog
+import com.tufein.valkyr.util.GameLaunchKeys
+import com.tufein.valkyr.util.VersionCompare
+import kotlinx.coroutines.CancellationException
 
 /**
  * 8.0: the full-screen page of one library game, the main way to look at a game (the library's
@@ -236,9 +248,9 @@ private fun GamePageContent(
 
     var showWhen by remember { mutableStateOf(false) }
     var showCollections by remember { mutableStateOf(false) }
-    var removalPlan by remember { mutableStateOf<List<com.tufein.valkyr.data.service.RemovalFile>?>(null) }
-    var launchChoices by remember { mutableStateOf<List<com.tufein.valkyr.data.service.GameLaunch>?>(null) }
-    var emulatorChoices by remember { mutableStateOf<List<com.tufein.valkyr.data.service.GameLaunch>?>(null) }
+    var removalPlan by remember { mutableStateOf<List<RemovalFile>?>(null) }
+    var launchChoices by remember { mutableStateOf<List<GameLaunch>?>(null) }
+    var emulatorChoices by remember { mutableStateOf<List<GameLaunch>?>(null) }
     val emulatorChoice by viewModel.emulatorChoice.collectAsStateWithLifecycle()
     var rememberEmulator by rememberSaveable { mutableStateOf(true) }
     var rememberForGame by rememberSaveable { mutableStateOf(false) }
@@ -253,7 +265,7 @@ private fun GamePageContent(
         if (!preparing) scope.launch {
             preparing = true
             try { removalPlan = viewModel.removalPlan(item) }
-            catch (e: kotlinx.coroutines.CancellationException) { throw e }
+            catch (e: CancellationException) { throw e }
             catch (_: Exception) { showMessage(planError) }
             finally { preparing = false }
         }
@@ -261,15 +273,15 @@ private fun GamePageContent(
     val needsExtractMessage = stringResource(R.string.play24_needs_extract, "%s")
     val launchFailedMessage = stringResource(R.string.play24_launch_failed, "%s")
     // Starts [handler]; false when it did not start (the reason is shown).
-    val start: (com.tufein.valkyr.data.service.GameLaunch, com.tufein.valkyr.data.service.GameHandler, Boolean, Boolean) -> Boolean = { game, handler, remember, automatic ->
+    val start: (GameLaunch, GameHandler, Boolean, Boolean) -> Boolean = { game, handler, remember, automatic ->
         when (viewModel.gameLauncher.launch(context, rom.consoleId, game, handler, remember && !rememberForGame, automatic, rom.fileName)) {
-            com.tufein.valkyr.data.service.LaunchOutcome.STARTED -> {
+            LaunchOutcome.STARTED -> {
                 if (remember && rememberForGame) viewModel.gameLauncher.setGamePreferred(rom.consoleId, rom.fileName,
-                    if (automatic) com.tufein.valkyr.util.GameLaunchKeys.AUTOMATIC else handler.key)
+                    if (automatic) GameLaunchKeys.AUTOMATIC else handler.key)
                 true
             }
-            com.tufein.valkyr.data.service.LaunchOutcome.NEEDS_EXTRACT -> { showMessage(needsExtractMessage.format(handler.label)); false }
-            com.tufein.valkyr.data.service.LaunchOutcome.FAILED -> { showMessage(launchFailedMessage.format(handler.label)); false }
+            LaunchOutcome.NEEDS_EXTRACT -> { showMessage(needsExtractMessage.format(handler.label)); false }
+            LaunchOutcome.FAILED -> { showMessage(launchFailedMessage.format(handler.label)); false }
         }
     }
     val play: () -> Unit = {
@@ -289,25 +301,25 @@ private fun GamePageContent(
                         viewModel.gameLauncher.preferred(rom.consoleId)?.let { preferred -> choices.none { viewModel.gameLauncher.resolve(it, preferred) != null } } == true
                     launchChoices = choices
                 }
-            } catch (e: kotlinx.coroutines.CancellationException) { throw e }
+            } catch (e: CancellationException) { throw e }
             catch (_: Exception) { showMessage(planError) }
             finally { preparing = false }
         }
     }
     // 3.5: a home-screen shortcut that could not start the game by itself opened this page: Play
     // runs once the game shows as on the device (the chooser, or why it cannot start).
-    val shortcutPlay by com.tufein.valkyr.ui.shortcut.PendingGameShortcut.play.collectAsStateWithLifecycle()
+    val shortcutPlay by PendingGameShortcut.play.collectAsStateWithLifecycle()
     LaunchedEffect(shortcutPlay, owned, downloading, ownedKeys.isEmpty()) {
         if (shortcutPlay == null) return@LaunchedEffect
         if (owned && !downloading) {
-            if (com.tufein.valkyr.ui.shortcut.PendingGameShortcut.consumePlay(rom.consoleId, rom.fileName)) play()
+            if (PendingGameShortcut.consumePlay(rom.consoleId, rom.fileName)) play()
             return@LaunchedEffect
         }
         // Not playable here (not on the device, or downloading) once the index knows the device:
         // drop the request, so a later visit of this page never starts the game unasked.
         if (ownedKeys.isNotEmpty() || downloading) {
             kotlinx.coroutines.delay(1_500)
-            com.tufein.valkyr.ui.shortcut.PendingGameShortcut.consumePlay(rom.consoleId, rom.fileName)
+            PendingGameShortcut.consumePlay(rom.consoleId, rom.fileName)
         }
     }
     if (showWhen) {
@@ -334,7 +346,7 @@ private fun GamePageContent(
                     try {
                         val ok = viewModel.remove(plan, rom.name, rom.consoleId, rom.fileName)
                         showMessage((if (ok) deletedMessage else deleteFailedMessage).format(rom.name))
-                    } catch (e: kotlinx.coroutines.CancellationException) { throw e }
+                    } catch (e: CancellationException) { throw e }
                     catch (_: Exception) { showMessage(planError) }
                 }
             }) },
@@ -342,7 +354,7 @@ private fun GamePageContent(
     }
     launchChoices?.let { choices ->
         val cancelFocus = rememberInitialFocus()
-        val pick: (com.tufein.valkyr.data.service.GameLaunch, com.tufein.valkyr.data.service.GameHandler, Boolean) -> Unit = { choice, handler, automatic ->
+        val pick: (GameLaunch, GameHandler, Boolean) -> Unit = { choice, handler, automatic ->
             try { if (start(choice, handler, rememberEmulator, automatic)) launchChoices = null }
             catch (_: Exception) { showMessage(missingEmulator) }
         }
@@ -353,7 +365,7 @@ private fun GamePageContent(
                 RememberCheckRow(stringResource(R.string.play26_remember_choice), rememberEmulator) { rememberEmulator = it }
                 if (rememberEmulator) RememberCheckRow(stringResource(R.string.play26_remember_game), rememberForGame) { rememberForGame = it }
                 if (rememberEmulator && !rememberForGame) Text(stringResource(R.string.play_remember), style = MaterialTheme.typography.bodySmall)
-                ResumeSlotRow(resumeSlot, com.tufein.valkyr.util.EmulatorCatalog.maxResumeSlot(choices.flatMap { c -> c.handlers.map { it.emulatorId } }), changeResumeSlot)
+                ResumeSlotRow(resumeSlot, EmulatorCatalog.maxResumeSlot(choices.flatMap { c -> c.handlers.map { it.emulatorId } }), changeResumeSlot)
                 // Automatic: the best app offered (a known emulator first), now and, when remembered, every time.
                 val best = choices.firstOrNull { it.handlers.isNotEmpty() }
                 best?.let { game -> ActionPill(stringResource(R.string.play24_automatic, game.handlers.first().label), { pick(game, game.handlers.first(), true) }, icon = R.drawable.ic_controller) }
@@ -430,10 +442,10 @@ private fun GamePageContent(
             developer = details?.developer.orEmpty(),
             genres = details?.genres.orEmpty(),
             fileName = rom.fileName,
-            sizeText = if (rom.fileSize > 0L) android.text.format.Formatter.formatShortFileSize(context, rom.fileSize) else "",
+            sizeText = if (rom.fileSize > 0L) Formatter.formatShortFileSize(context, rom.fileSize) else "",
             tags = item.tags
         )
-        clipboard.setText(androidx.compose.ui.text.AnnotatedString(GameInfoText.build(facts, infoLabels, GameShareText.deepLink(rom.consoleId, rom.name))))
+        clipboard.setText(AnnotatedString(GameInfoText.build(facts, infoLabels, GameShareText.deepLink(rom.consoleId, rom.name))))
         showMessage(infoCopiedMessage)
     }
     val header: @Composable () -> Unit = {
@@ -495,7 +507,7 @@ private fun GamePageContent(
             ).forEach { action ->
                 when (action) {
                     // Always first, so the "more" button always has something to focus.
-                    GameHeaderModel.More.UP_NEXT -> com.tufein.valkyr.ui.screens.next.UpNextPill(rom.consoleId, rom.fileName, modifier = PageTarget.focusRequester(moreFocus))
+                    GameHeaderModel.More.UP_NEXT -> UpNextPill(rom.consoleId, rom.fileName, modifier = PageTarget.focusRequester(moreFocus))
                     GameHeaderModel.More.COMPLETED -> CompletedPill(rom.consoleId, rom.fileName, modifier = PageTarget)
                     GameHeaderModel.More.READINESS -> onReadiness?.let { open ->
                         ActionPill(stringResource(R.string.ready25_title), { open(rom.consoleId, rom.fileName) }, modifier = PageTarget, icon = R.drawable.ic_controller)
@@ -508,7 +520,7 @@ private fun GamePageContent(
                         if (!preparing) scope.launch {
                             preparing = true
                             try { emulatorChoices = viewModel.gameLauncher.choices(rom) }
-                            catch (e: kotlinx.coroutines.CancellationException) { throw e }
+                            catch (e: CancellationException) { throw e }
                             catch (_: Exception) { showMessage(planError) }
                             finally { preparing = false }
                         }
@@ -731,7 +743,7 @@ private fun Versions(
     val r = ranking ?: return
     // Up to two versions for the side-by-side, by ranking id; the oldest pick goes first.
     var picked by remember(r.ranked.map { it.version.name }) { mutableStateOf(emptyList<String>()) }
-    var preferTarget by remember { mutableStateOf<com.tufein.valkyr.util.VersionCompare.Ranked?>(null) }
+    var preferTarget by remember { mutableStateOf<VersionCompare.Ranked?>(null) }
     val pair = picked.mapNotNull { id -> r.ranked.firstOrNull { it.version.id == id } }
     if (pair.size == 2) CompareTable(pair[0], pair[1], r.preference, onClear = { picked = emptyList() })
     else if (r.rows.size > 1) Text(stringResource(R.string.compare24_compare_hint), style = MaterialTheme.typography.labelSmall, color = scheme.onSurfaceVariant)

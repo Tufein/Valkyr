@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
 
 /** How a way back ended. [PARTIAL]: some of the files are back, the rest is still in the trash. */
 enum class UndoResult { DONE, PARTIAL, FAILED }
@@ -32,7 +33,7 @@ class ActionUndoService @Inject constructor(
     private val profiles: ProfileService
 ) {
     /** Changes when games appear on or leave the device: Download again is checked again then. */
-    val ownership: kotlinx.coroutines.flow.Flow<Set<String>> get() = libraryIndex.ownedKeys
+    val ownership: Flow<Set<String>> get() = libraryIndex.ownedKeys
 
     /** Whether [action] of [entry] works right now (the files are still in the trash, the game is still in the library). */
     suspend fun available(entry: ActionEntry, action: UndoAction): Boolean = withContext(Dispatchers.IO) {

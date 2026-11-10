@@ -3,6 +3,13 @@ package com.tufein.valkyr.ui.navigation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.tufein.valkyr.R
+import com.tufein.valkyr.ui.screens.tools.ACTION_HISTORY_ROUTE
+import com.tufein.valkyr.ui.screens.tools.FRONTEND_COVERS_ROUTE
+import com.tufein.valkyr.ui.screens.tools.GAME_TRANSFER_ROUTE
+import com.tufein.valkyr.ui.screens.tools.LIBRARY_REPAIR_ROUTE
+import com.tufein.valkyr.ui.screens.tools.NEW_HANDHELD_ROUTE
+import com.tufein.valkyr.ui.screens.tools.RETROARCH_PLAYLISTS_ROUTE
+import com.tufein.valkyr.util.GamePageModel
 
 sealed class NavRoutes(val route: String, val labelRes: Int, val icon: Int) {
     /** 3.8.0: the first tab reads "Games" (the library with its shelves). */
@@ -57,27 +64,27 @@ sealed class NavRoutes(val route: String, val labelRes: Int, val icon: Int) {
     object FreeSpace : NavRoutes("freespace", R.string.space7_title, R.drawable.ic_free_space)
 
     /** 8.0: the full-screen page of one library game; build the path with GamePageModel.route(consoleId, fileName). Not in [allRoutes]. */
-    object Game : NavRoutes(com.tufein.valkyr.util.GamePageModel.ROUTE, R.string.page8_title, R.drawable.ic_controller)
+    object Game : NavRoutes(GamePageModel.ROUTE, R.string.page8_title, R.drawable.ic_controller)
 
     /** 8.0: one search for settings, tools, screens and games. */
     object Recovery : NavRoutes("recovery", R.string.recovery_title, R.drawable.ic_history)
     object PackageTransfer : NavRoutes("package_transfer", R.string.package_transfer_title, R.drawable.ic_stacks)
     object VersionPreference : NavRoutes("version_preference", R.string.compare24_title, R.drawable.ic_compare)
-    object ActionHistory : NavRoutes(com.tufein.valkyr.ui.screens.tools.ACTION_HISTORY_ROUTE, R.string.hist24_title, R.drawable.ic_manage_history)
+    object ActionHistory : NavRoutes(ACTION_HISTORY_ROUTE, R.string.hist24_title, R.drawable.ic_manage_history)
 
     object UpNext : NavRoutes("up_next", R.string.next30_title, R.drawable.ic_playlist_play)
-    object LibraryRepair : NavRoutes(com.tufein.valkyr.ui.screens.tools.LIBRARY_REPAIR_ROUTE, R.string.repair30_title, R.drawable.ic_build)
+    object LibraryRepair : NavRoutes(LIBRARY_REPAIR_ROUTE, R.string.repair30_title, R.drawable.ic_build)
     object ReportProblem : NavRoutes("report_problem", R.string.report30_title, R.drawable.ic_bug)
     /** 4.7.0: the on-device performance self-test (database, covers, storage, frame times) with a shareable report. */
     object PerfCheck : NavRoutes("perf_check", R.string.measure47_title, R.drawable.ic_speed)
     /** 3.1.0: whole games to a folder, RomM or the NAS, with a preview and a check of every file. */
-    object GameTransfer : NavRoutes(com.tufein.valkyr.ui.screens.tools.GAME_TRANSFER_ROUTE, R.string.transfer31_title, R.drawable.ic_file_export)
+    object GameTransfer : NavRoutes(GAME_TRANSFER_ROUTE, R.string.transfer31_title, R.drawable.ic_file_export)
     /** 3.1.0: cover images for iiSU and Daijishō in a media folder the user picks. */
-    object FrontendCovers : NavRoutes(com.tufein.valkyr.ui.screens.tools.FRONTEND_COVERS_ROUTE, R.string.covers32_title, R.drawable.ic_image)
+    object FrontendCovers : NavRoutes(FRONTEND_COVERS_ROUTE, R.string.covers32_title, R.drawable.ic_image)
     /** 3.5.0: RetroArch playlists of the games on the device, in RetroArch's playlists folder. */
-    object RetroArchPlaylists : NavRoutes(com.tufein.valkyr.ui.screens.tools.RETROARCH_PLAYLISTS_ROUTE, R.string.playlists35_title, R.drawable.ic_playlist_add)
+    object RetroArchPlaylists : NavRoutes(RETROARCH_PLAYLISTS_ROUTE, R.string.playlists35_title, R.drawable.ic_playlist_add)
     /** 3.5.0: the checklist that takes a fresh install to a ready handheld, step by step. */
-    object NewHandheld : NavRoutes(com.tufein.valkyr.ui.screens.tools.NEW_HANDHELD_ROUTE, R.string.wizard35_title, R.drawable.ic_devices)
+    object NewHandheld : NavRoutes(NEW_HANDHELD_ROUTE, R.string.wizard35_title, R.drawable.ic_devices)
 
     object SearchAll : NavRoutes("search_all", R.string.find8_title, R.drawable.ic_search)
     /** 4.3.0: the cover sources, their order and the ScreenScraper login (Settings → Cover sources). */

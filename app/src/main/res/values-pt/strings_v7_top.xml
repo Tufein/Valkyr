@@ -38,6 +38,8 @@
     <string name="top7_downloading">A transferir</string>
     <string name="top7_wished">Na sua lista de desejos</string>
     <string name="top7_open_library">Abrir na biblioteca</string>
+    <string name="top7_download_one">Transferir este jogo</string>
+    <string name="top7_download_none">Nada para transferir para este jogo</string>
     <string name="top7_wish_one">Adicionar à lista de desejos</string>
     <string name="top7_wish_none">Nada de novo para a lista de desejos</string>
     <string name="top7_confirm_title">Transferir jogos de %1$s?</string>

@@ -81,6 +81,7 @@ import com.tufein.valkyr.ui.components.closeOnGamepadB
 import com.tufein.valkyr.ui.screens.offline.OfflineChip
 import com.tufein.valkyr.ui.components.rememberInitialFocus
 import com.tufein.valkyr.ui.components.ContentEntry
+import com.tufein.valkyr.util.OfflineMode
 
 @Composable
 fun DownloadScreen(
@@ -310,7 +311,7 @@ fun DownloadScreen(
             ) {
                 if (!selectionMode) {
                     item(key = "offline-chip") {
-                        OfflineChip(com.tufein.valkyr.util.OfflineMode.Screen.DOWNLOADS)
+                        OfflineChip(OfflineMode.Screen.DOWNLOADS)
                     }
                     item(key = "queue-header") {
                         if (queueView.filtered) {

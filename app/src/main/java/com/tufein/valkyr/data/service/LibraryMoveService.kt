@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import androidx.documentfile.provider.DocumentFile
 
 private const val TAG = "LibraryMoveService"
 
@@ -159,7 +160,7 @@ class LibraryMoveService @Inject constructor(
             var failed = 0
             val cleaned = operation.files.map { receipt ->
                 if (receipt.removed) receipt else {
-                    val original = androidx.documentfile.provider.DocumentFile.fromSingleUri(context, Uri.parse(receipt.source))
+                    val original = DocumentFile.fromSingleUri(context, Uri.parse(receipt.source))
                     val absent = original?.exists() == false
                     val removed = absent || (copier.mayRemove(Uri.parse(receipt.source), Uri.parse(receipt.target), receipt.hash) && DiskScanner.delete(context, Uri.parse(receipt.source)))
                     if (!removed) failed++

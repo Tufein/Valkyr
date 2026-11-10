@@ -73,6 +73,9 @@ import java.io.IOException
 import java.time.ZoneId
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.tufein.valkyr.util.ArchivePlan
+import com.tufein.valkyr.util.RommMarks
+import java.io.ByteArrayOutputStream
 
 private const val TAG = "SaveSyncService"
 
@@ -535,7 +538,7 @@ class SaveSyncService @Inject constructor(
             val contents = inside.map { part ->
                 currentCoroutineContext().ensureActive()
                 val bytes = context.contentResolver.openInputStream(part.uri)?.use { input ->
-                    val out = java.io.ByteArrayOutputStream()
+                    val out = ByteArrayOutputStream()
                     val buffer = ByteArray(64 * 1024)
                     while (true) {
                         val count = input.read(buffer)
@@ -780,7 +783,7 @@ class SaveSyncService @Inject constructor(
     private data class PackFile(val path: String, val uri: Uri, val size: Long, val modified: Long)
 
     private object ArchivePlanKey {
-        fun of(path: String): String = com.tufein.valkyr.util.ArchivePlan.portableKey(com.tufein.valkyr.util.ArchivePlan.safeRelativePath(path))
+        fun of(path: String): String = ArchivePlan.portableKey(ArchivePlan.safeRelativePath(path))
     }
 
     /** Where below the picked folder of [folder] its cards / save folders are ("memcards", "GC", "PSP/SAVEDATA" or ""). */
@@ -1000,7 +1003,7 @@ class SaveSyncService @Inject constructor(
         rommClient.configuredBaseUrl(), settingsRepository.rommToken.first(),
         settingsRepository.saveSyncSavesDir.first(), settingsRepository.saveSyncStatesDir.first(),
         settingsRepository.rommPlatformMap.first().entries.sortedBy { it.key }.joinToString("") { "${it.key.length}:${it.key}:${it.value}" },
-        com.tufein.valkyr.util.EmulatorSaveFolders.toJson(appSettings.saveSyncEmulatorFolders.first())
+        EmulatorSaveFolders.toJson(appSettings.saveSyncEmulatorFolders.first())
     ).joinToString("") { "${it.length}:$it" }.toByteArray(Charsets.UTF_8))
 
     private suspend fun guardGame(key: JournalKey, configuration: String? = null) = appSettings.withActiveProfile(key.profileId) {
@@ -1125,7 +1128,7 @@ class SaveSyncService @Inject constructor(
             ?: error("Map this console to RomM before transferring saves")
         val detail = JsonHttp.requireOk(JsonHttp.request("GET", "${endpoint.base}/api/roms/$romId", endpoint.auth, readTimeoutMs = 60_000))
         val identity = CloudSaves.romFileAndPlatform(detail.json) ?: error("Server game identity could not be verified")
-        check(identity.second == platform && com.tufein.valkyr.util.RommMarks.key(key.consoleId, identity.first) == com.tufein.valkyr.util.RommMarks.key(key.consoleId, key.fileName)) {
+        check(identity.second == platform && RommMarks.key(key.consoleId, identity.first) == RommMarks.key(key.consoleId, key.fileName)) {
             "Server game changed; refresh the RomM library before transferring"
         }
         val store = SafSaveStore(SaveHandoff.MAX_SAVE_BYTES)

@@ -53,6 +53,7 @@ import com.tufein.valkyr.util.CollectionBasis
 import com.tufein.valkyr.util.ConsoleFormatter
 import com.tufein.valkyr.util.ConsoleProgress
 import java.text.NumberFormat
+import androidx.compose.ui.unit.Dp
 
 /**
  * Collection goals: "Do I have the whole set?" A ring for the whole collection, a ring per console
@@ -101,7 +102,7 @@ private fun basisLong(basis: CollectionBasis): String = stringResource(
 
 /** The ring of a console or the whole collection: percent inside, a tinted check once complete. */
 @Composable
-private fun CompletionRing(owned: Int, total: Int, size: androidx.compose.ui.unit.Dp, stroke: androidx.compose.ui.unit.Dp, bigText: Boolean = false) {
+private fun CompletionRing(owned: Int, total: Int, size: Dp, stroke: Dp, bigText: Boolean = false) {
     val scheme = MaterialTheme.colorScheme
     val complete = total > 0 && owned >= total
     val color = if (complete) scheme.tertiary else scheme.primary

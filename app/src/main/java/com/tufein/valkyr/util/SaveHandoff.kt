@@ -1,6 +1,7 @@
 package com.tufein.valkyr.util
 
 import java.security.MessageDigest
+import java.io.IOException
 
 enum class SaveHandoffDirection { UPLOAD, DOWNLOAD, IDENTICAL, CONFLICT, BLOCKED }
 data class SaveHandoffFile(
@@ -35,7 +36,7 @@ object SaveHandoff {
         (fileName.substringAfterLast('.', "").lowercase() in ordinaryExtensions || EmulatorSaveLayouts.isPackName(fileName)) &&
             // A shared memory card holds every game's saves; it is never handed over with one game.
             !EmulatorSaveLayouts.isSharedCard(fileName)
-    class SaveTooLargeException : java.io.IOException("Device handoff supports in-game saves up to 16 MiB. Use ordinary save synchronization for larger files.")
+    class SaveTooLargeException : IOException("Device handoff supports in-game saves up to 16 MiB. Use ordinary save synchronization for larger files.")
     fun requireBoundedSave(bytes: Long) { if (bytes > MAX_SAVE_BYTES) throw SaveTooLargeException() }
     fun sha256(bytes: ByteArray): String = MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { "%02x".format(it) }
 

@@ -39,6 +39,7 @@ import com.tufein.valkyr.ui.screens.settings.SettingRow
 import com.tufein.valkyr.ui.screens.settings.ThemedSwitch
 import com.tufein.valkyr.util.RommPairing
 import com.tufein.valkyr.util.ToastUtil
+import com.tufein.valkyr.util.RommRemoteInstall
 
 /** Settings → RomM, "Pair with code": next to the token row; the manual token stays as it was. */
 @Composable
@@ -183,7 +184,7 @@ fun DevicePairingDialog(viewModel: RommPairingViewModel) {
                         Text(stringResource(R.string.romm55_remote_dialog_steps), style = MaterialTheme.typography.bodyMedium)
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
-                            com.tufein.valkyr.util.RommRemoteInstall.displayUserCode(current.userCode),
+                            RommRemoteInstall.displayUserCode(current.userCode),
                             style = MaterialTheme.typography.headlineMedium.copy(fontFamily = FontFamily.Monospace),
                             color = MaterialTheme.colorScheme.primary
                         )

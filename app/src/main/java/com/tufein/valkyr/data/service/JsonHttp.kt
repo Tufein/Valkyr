@@ -9,6 +9,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
 import java.util.concurrent.TimeUnit
+import java.io.File
+import java.util.concurrent.ScheduledThreadPoolExecutor
 
 /**
  * Minimal JSON-over-HTTP helper on `HttpURLConnection` (the app has no OkHttp), shared by the
@@ -68,7 +70,7 @@ object JsonHttp {
         }
     }
 
-    private val WATCHDOG = java.util.concurrent.ScheduledThreadPoolExecutor(1) { r -> Thread(r, "http-deadline").apply { isDaemon = true } }
+    private val WATCHDOG = ScheduledThreadPoolExecutor(1) { r -> Thread(r, "http-deadline").apply { isDaemon = true } }
         .apply { removeOnCancelPolicy = true }
 
     /**
@@ -105,7 +107,7 @@ object JsonHttp {
      * before it is requested (the key header goes only to addresses [accept] allows).
      */
     fun downloadToFile(
-        url: String, headers: Map<String, String> = emptyMap(), dest: java.io.File, maxBytes: Long,
+        url: String, headers: Map<String, String> = emptyMap(), dest: File, maxBytes: Long,
         readTimeoutMs: Int = 60_000, accept: (String) -> Boolean
     ): Long {
         try {

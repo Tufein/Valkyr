@@ -24,6 +24,8 @@ import kotlinx.coroutines.withContext
 import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.tufein.valkyr.util.ActionKind
+import com.tufein.valkyr.util.ActionTopic
 
 /** The outcome of a call to the cloud: the value, or what went wrong (`CloudMessages.of(context, error)` is its text). */
 sealed class CloudResult<out T> {
@@ -106,7 +108,7 @@ class CloudBackupService @Inject constructor(
             settings.recordBackup(System.currentTimeMillis(), uploaded.name, uploaded.bytes)
             Log.i(TAG, "Backup sent: ${uploaded.bytes} bytes, ${uploaded.deleted.size} old removed")
             history.event("cloud_backup", "")
-            actionLog.record(com.tufein.valkyr.util.ActionKind.BACKED_UP, topic = com.tufein.valkyr.util.ActionTopic.CLOUD_BACKUP, bytes = uploaded.bytes)
+            actionLog.record(ActionKind.BACKED_UP, topic = ActionTopic.CLOUD_BACKUP, bytes = uploaded.bytes)
             CloudResult.Ok(uploaded)
         } catch (e: CancellationException) {
             throw e
@@ -116,7 +118,7 @@ class CloudBackupService @Inject constructor(
             if (!(quietTransient && CloudErrors.isTransient(e))) {
                 settings.recordBackupError(startedAt, CloudErrors.encode(e))
                 connection.noteFailure(e)
-                actionLog.cloudFailed(com.tufein.valkyr.util.ActionKind.BACKUP_FAILED, com.tufein.valkyr.util.ActionTopic.CLOUD_BACKUP, e)
+                actionLog.cloudFailed(ActionKind.BACKUP_FAILED, ActionTopic.CLOUD_BACKUP, e)
             }
             CloudResult.Failed(e)
         } finally {
@@ -181,7 +183,7 @@ class CloudBackupService @Inject constructor(
                 runCatching { settings.restoreSnapshot(cloud) }
             }
             runCatching { deviceSync.resetBase() }
-            actionLog.record(com.tufein.valkyr.util.ActionKind.BACKUP_RESTORED, topic = com.tufein.valkyr.util.ActionTopic.CLOUD_BACKUP)
+            actionLog.record(ActionKind.BACKUP_RESTORED, topic = ActionTopic.CLOUD_BACKUP)
             CloudResult.Ok(summary)
         } catch (e: Exception) {
             Log.w(TAG, "Restore failed: ${e.javaClass.simpleName}")

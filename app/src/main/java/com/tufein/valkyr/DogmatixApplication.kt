@@ -38,6 +38,12 @@ import java.util.concurrent.atomic.AtomicBoolean
 import net.sf.sevenzipjbinding.SevenZip
 import java.io.File
 import javax.inject.Inject
+import com.tufein.valkyr.data.service.DownloadActionRecorder
+import com.tufein.valkyr.data.service.ManualService
+import com.tufein.valkyr.data.service.OfflineQueueService
+import com.tufein.valkyr.data.service.RetroArchPlaylistsAutoRefresh
+import com.tufein.valkyr.data.service.RommRemoteInstallScheduler
+import com.tufein.valkyr.data.service.SmartStorageScheduler
 
 @HiltAndroidApp
 class DogmatixApplication : Application(), ImageLoaderFactory {
@@ -64,11 +70,11 @@ class DogmatixApplication : Application(), ImageLoaderFactory {
 
     /** Built in [startDeferred] (it pulls the RomM, download and database services); manuals can follow a finished download from the first one (6.0). */
     @Inject
-    lateinit var manualService: dagger.Lazy<com.tufein.valkyr.data.service.ManualService>
+    lateinit var manualService: dagger.Lazy<ManualService>
 
     /** Built in [startDeferred] on a background thread; changes made offline are sent as soon as the connection is back (6.0). */
     @Inject
-    lateinit var offlineQueueService: dagger.Lazy<com.tufein.valkyr.data.service.OfflineQueueService>
+    lateinit var offlineQueueService: dagger.Lazy<OfflineQueueService>
 
     /** Injected so the pinned RomM certificate is active from the first request. */
     @Inject
@@ -88,7 +94,7 @@ class DogmatixApplication : Application(), ImageLoaderFactory {
 
     /** Injected so the background poll for installs pushed from RomM follows its settings from the start. */
     @Inject
-    lateinit var rommRemoteInstallScheduler: dagger.Lazy<com.tufein.valkyr.data.service.RommRemoteInstallScheduler>
+    lateinit var rommRemoteInstallScheduler: dagger.Lazy<RommRemoteInstallScheduler>
 
     /** Injected so finished scans are checked against the wishlist from the start. */
     @Inject
@@ -104,7 +110,7 @@ class DogmatixApplication : Application(), ImageLoaderFactory {
 
     /** Injected so playlists are kept up to date after a rescan or a download (when switched on) from the start. */
     @Inject
-    lateinit var retroArchPlaylistsAutoRefresh: dagger.Lazy<com.tufein.valkyr.data.service.RetroArchPlaylistsAutoRefresh>
+    lateinit var retroArchPlaylistsAutoRefresh: dagger.Lazy<RetroArchPlaylistsAutoRefresh>
 
     /** Injected so the weekly digest job follows its setting from the start. */
     @Inject
@@ -112,7 +118,7 @@ class DogmatixApplication : Application(), ImageLoaderFactory {
 
     /** Injected so the smart storage job follows its setting from the start. */
     @Inject
-    lateinit var smartStorageScheduler: dagger.Lazy<com.tufein.valkyr.data.service.SmartStorageScheduler>
+    lateinit var smartStorageScheduler: dagger.Lazy<SmartStorageScheduler>
 
     /** Injected so the speed limit (and its night exception) applies from the first download. */
     @Inject
@@ -128,7 +134,7 @@ class DogmatixApplication : Application(), ImageLoaderFactory {
 
     /** Injected so finished and failed downloads reach the action history from the first one. */
     @Inject
-    lateinit var downloadActionRecorder: com.tufein.valkyr.data.service.DownloadActionRecorder
+    lateinit var downloadActionRecorder: DownloadActionRecorder
 
     /** Injected so the weekly automatic backup follows its settings from the start. */
     @Inject

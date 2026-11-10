@@ -75,6 +75,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlinx.coroutines.Job
 
 @HiltViewModel
 class HealthViewModel @Inject constructor(private val service: HealthService) : ViewModel() {
@@ -82,8 +83,8 @@ class HealthViewModel @Inject constructor(private val service: HealthService) : 
     /** The checks that have answered so far; a check that is missing is still running. */
     val results: StateFlow<Map<HealthCheck, HealthResult>> = _results.asStateFlow()
 
-    private var job: kotlinx.coroutines.Job? = null
-    private val rechecks = HashMap<HealthCheck, kotlinx.coroutines.Job>()
+    private var job: Job? = null
+    private val rechecks = HashMap<HealthCheck, Job>()
 
     init { runAll() }
 

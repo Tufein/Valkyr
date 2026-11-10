@@ -1,6 +1,8 @@
 package com.tufein.valkyr.util
 
 import java.util.concurrent.atomic.AtomicLong
+import android.os.StrictMode
+import android.os.SystemClock
 
 /**
  * 4.5.0: measure points for startup and slow calls, kept in memory only (no file or log I/O on the
@@ -13,13 +15,13 @@ object PerfLog {
 
     /** Marks [name] as reached now, in ms since this process was forked (API 24+; minSdk is 29). */
     fun mark(name: String) {
-        phases.mark(name, android.os.SystemClock.elapsedRealtime() - android.os.Process.getStartElapsedRealtime())
+        phases.mark(name, SystemClock.elapsedRealtime() - android.os.Process.getStartElapsedRealtime())
     }
 
     /** Debug builds only (the caller checks): StrictMode logs main-thread disk/network use and leaks to Logcat, never crashes. */
     fun enableStrictMode() {
-        android.os.StrictMode.setThreadPolicy(android.os.StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build())
-        android.os.StrictMode.setVmPolicy(android.os.StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build())
+        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build())
+        StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build())
     }
 
     /** Calls slower than [SLOW_MS] (database queries, lookups), newest [CAPACITY] kept. */

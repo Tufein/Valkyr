@@ -14,6 +14,7 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import java.net.HttpURLConnection
 
 /** A cover source the chain can ask ([CoverRepository]): ScreenScraper and the three 4.4.0 sources. */
 interface CoverLookupSource {
@@ -86,7 +87,7 @@ class CoverApiGate(
     ): Reply {
         require(CoverApis.sendsKeyTo(source, url)) { "Not an address of ${source.key}" }
         return permits.withPermit {
-            val connection = java.util.concurrent.atomic.AtomicReference<java.net.HttpURLConnection?>()
+            val connection = java.util.concurrent.atomic.AtomicReference<HttpURLConnection?>()
             coroutineScope {
                 // Cancelling the caller closes the connection, so a hung read does not outlive it.
                 val watcher = launch { try { awaitCancellation() } finally { connection.get()?.disconnect() } }
@@ -102,7 +103,7 @@ class CoverApiGate(
     private suspend fun requestOnce(
         method: String, url: String, fingerprint: Int, headers: Map<String, String>, body: ByteArray?, contentType: String?,
         classify: (Int) -> CoverApis.Status, reacts: (CoverApis.Status) -> Boolean,
-        connection: java.util.concurrent.atomic.AtomicReference<java.net.HttpURLConnection?>
+        connection: java.util.concurrent.atomic.AtomicReference<HttpURLConnection?>
     ): Reply {
         return run {
             withContext(Dispatchers.IO) {

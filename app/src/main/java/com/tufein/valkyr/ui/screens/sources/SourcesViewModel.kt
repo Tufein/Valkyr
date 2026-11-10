@@ -42,6 +42,9 @@ import kotlinx.coroutines.coroutineScope
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 import kotlinx.coroutines.withContext
+import com.tufein.valkyr.data.service.SourceScanService
+import com.tufein.valkyr.data.service.SourceTrackService
+import com.tufein.valkyr.util.SourceRecord
 
 @HiltViewModel
 class SourcesViewModel @Inject constructor(
@@ -54,12 +57,12 @@ class SourcesViewModel @Inject constructor(
     private val libraryIndexService: LibraryIndexService,
     private val rommClient: RommClient,
     private val scanResults: SourceScanResults,
-    private val scanService: com.tufein.valkyr.data.service.SourceScanService,
-    sourceTrack: com.tufein.valkyr.data.service.SourceTrackService
+    private val scanService: SourceScanService,
+    sourceTrack: SourceTrackService
 ) : ViewModel() {
 
     /** 7.5: download track record per source address (speed, share that worked). */
-    val sourceTrack: StateFlow<Map<String, com.tufein.valkyr.util.SourceRecord>> = sourceTrack.records
+    val sourceTrack: StateFlow<Map<String, SourceRecord>> = sourceTrack.records
 
     /** The last scan's outcome per source (`consoleId|url`), shown under each URL. */
     val sourceResults: StateFlow<Map<String, SourceScanResult>> = scanResults.results

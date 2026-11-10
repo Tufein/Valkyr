@@ -161,6 +161,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
+import com.tufein.valkyr.ui.navigation.OnTabReselect
+import com.tufein.valkyr.util.RaStatus
 
 @Composable
 internal fun resultsLabel(count: Int, hasMore: Boolean): String =
@@ -217,7 +219,7 @@ internal fun ResultList(
     hasAchievements: (DownloadableFileWithTags) -> Boolean = { false },
     /** 5.5: the player's completed flag, and the user's RA status (null = none / RA off) of a game. */
     isCompleted: (DownloadableFileWithTags) -> Boolean = { false },
-    raStatusOf: (DownloadableFileWithTags) -> com.tufein.valkyr.util.RaStatus? = { null },
+    raStatusOf: (DownloadableFileWithTags) -> RaStatus? = { null },
     /** What the user searched for, offered for the wishlist when nothing is found. */
     query: String = "",
     onAddWish: (() -> Unit)? = null,
@@ -319,7 +321,7 @@ internal fun ResultList(
     val actionRows = LibraryBrowse.showActionRows(viewMode)
     val listState = rememberLazyListState()
     // 5.2: tapping the Library tab again brings the list back to the top.
-    com.tufein.valkyr.ui.navigation.OnTabReselect(NavRoutes.Home.route) { listState.scrollToItem(0) }
+    OnTabReselect(NavRoutes.Home.route) { listState.scrollToItem(0) }
     val focusIndex = listState.firstVisibleItemIndex
     // ◀ ▶ jump through a long list by first letter: scroll there, then focus that row.
     val jumpScope = rememberCoroutineScope()

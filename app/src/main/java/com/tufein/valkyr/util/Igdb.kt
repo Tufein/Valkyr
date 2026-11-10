@@ -3,6 +3,7 @@ package com.tufein.valkyr.util
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import java.net.URLEncoder
 
 /**
  * IGDB (api.igdb.com v4) as a cover source (4.4.0): the Twitch token request, the game search
@@ -22,7 +23,7 @@ object Igdb {
     /** Form body of the client-credentials token request (the secret stays out of the address). */
     fun tokenBody(clientId: String, clientSecret: String): ByteArray =
         listOf("client_id" to clientId, "client_secret" to clientSecret, "grant_type" to "client_credentials")
-            .joinToString("&") { (k, v) -> java.net.URLEncoder.encode(k, "UTF-8") + "=" + java.net.URLEncoder.encode(v, "UTF-8") }
+            .joinToString("&") { (k, v) -> URLEncoder.encode(k, "UTF-8") + "=" + URLEncoder.encode(v, "UTF-8") }
             .toByteArray(Charsets.UTF_8)
 
     /** Twitch's answer: the token and how long it lives. */

@@ -20,6 +20,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.tufein.valkyr.data.local.VersionPreferenceSettings
+import com.tufein.valkyr.data.service.ProfileService
+import com.tufein.valkyr.data.service.VersionPreferenceService
+import com.tufein.valkyr.util.VersionPreference
 
 /**
  * 8.0: fills a [DetailsState] step by step (versions, collections, RetroAchievements, Switch
@@ -35,9 +39,9 @@ class GameDetailsLoader @Inject constructor(
     private val metadataService: GameMetadataService,
     private val libraryIndex: LibraryIndexService,
     private val metadataDao: GameMetadataDao,
-    private val versionPreference: com.tufein.valkyr.data.service.VersionPreferenceService,
-    private val versionSettings: com.tufein.valkyr.data.local.VersionPreferenceSettings,
-    private val profiles: com.tufein.valkyr.data.service.ProfileService
+    private val versionPreference: VersionPreferenceService,
+    private val versionSettings: VersionPreferenceSettings,
+    private val profiles: ProfileService
 ) {
     /**
      * Runs every step for [item]. [index] is the cached genre / year index ("More like this");
@@ -51,7 +55,7 @@ class GameDetailsLoader @Inject constructor(
         // Which version of this game suits the user best (region, language, no demos).
         val restrictions = profiles.current()
         val versions = runCatching { repository.versionsOf(item.file) }.getOrDefault(emptyList()).filter { restrictions.allows(it.file.consoleId, it.tags) }
-        val bestId = if (versions.size > 1) com.tufein.valkyr.util.VersionPreference.pick(
+        val bestId = if (versions.size > 1) VersionPreference.pick(
             versions.map { VersionPicker.Candidate(it.file.fileName, it.file.fileName, it.tags, it.file.fileSize) },
             versionSettings.effective(item.file.consoleId), versionPreference.preferred(item.file.consoleId, item.file.fileName)
         )?.id else null

@@ -9,25 +9,38 @@ import com.tufein.valkyr.data.service.VerifiedDocumentCopy
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import com.tufein.valkyr.data.local.AppSettings
+import com.tufein.valkyr.data.local.SmartStorageSettings
+import com.tufein.valkyr.data.local.dao.DownloadableFileDao
+import com.tufein.valkyr.data.repository.DownloadRepository
+import com.tufein.valkyr.data.service.DownloadFileManager
+import com.tufein.valkyr.data.service.DownloadService
+import com.tufein.valkyr.data.service.GamePackageService
+import com.tufein.valkyr.data.service.LibraryMoveService
+import com.tufein.valkyr.data.service.OperationHistoryService
+import com.tufein.valkyr.data.service.RecoveryHubService
+import com.tufein.valkyr.data.service.SaveSyncService
+import com.tufein.valkyr.data.service.StorageAvailabilityService
+import com.tufein.valkyr.data.service.StorageDownloadHolds
 
 /** Actual explorer dependencies for UI recovery regression tests, absent from release builds. */
 @EntryPoint
 @InstallIn(SingletonComponent::class)
 interface ExplorerRecoveryEntryPoint {
     fun recovery28ServiceFactory(): StorageRecoveryServiceFactory
-    fun recovery28AppSettings(): com.tufein.valkyr.data.local.AppSettings
-    fun recovery28Hub(): com.tufein.valkyr.data.service.RecoveryHubService
-    fun recovery28Availability(): com.tufein.valkyr.data.service.StorageAvailabilityService
-    fun recovery28Downloads(): com.tufein.valkyr.data.service.DownloadService
-    fun recovery28DownloadHolds(): com.tufein.valkyr.data.service.StorageDownloadHolds
-    fun recovery28DownloadRepository(): com.tufein.valkyr.data.repository.DownloadRepository
-    fun recovery28Files(): com.tufein.valkyr.data.local.dao.DownloadableFileDao
-    fun recovery28FileManager(): com.tufein.valkyr.data.service.DownloadFileManager
-    fun recovery28Packages(): com.tufein.valkyr.data.service.GamePackageService
-    fun recovery28History(): com.tufein.valkyr.data.service.OperationHistoryService
-    fun recovery28Mover(): com.tufein.valkyr.data.service.LibraryMoveService
-    fun recovery28SmartSettings(): com.tufein.valkyr.data.local.SmartStorageSettings
-    fun recovery28SaveSync(): com.tufein.valkyr.data.service.SaveSyncService
+    fun recovery28AppSettings(): AppSettings
+    fun recovery28Hub(): RecoveryHubService
+    fun recovery28Availability(): StorageAvailabilityService
+    fun recovery28Downloads(): DownloadService
+    fun recovery28DownloadHolds(): StorageDownloadHolds
+    fun recovery28DownloadRepository(): DownloadRepository
+    fun recovery28Files(): DownloadableFileDao
+    fun recovery28FileManager(): DownloadFileManager
+    fun recovery28Packages(): GamePackageService
+    fun recovery28History(): OperationHistoryService
+    fun recovery28Mover(): LibraryMoveService
+    fun recovery28SmartSettings(): SmartStorageSettings
+    fun recovery28SaveSync(): SaveSyncService
     fun explorer27SettingsRepository(): SettingsRepository
     fun explorer27Extractor(): ArchiveExtractorService
     fun explorer27VerifiedCopy(): VerifiedDocumentCopy

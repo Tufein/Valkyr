@@ -38,6 +38,8 @@
     <string name="top7_downloading">Downloading</string>
     <string name="top7_wished">On your wishlist</string>
     <string name="top7_open_library">Open in the library</string>
+    <string name="top7_download_one">Download this game</string>
+    <string name="top7_download_none">Nothing to download for this game</string>
     <string name="top7_wish_one">Add to the wishlist</string>
     <string name="top7_wish_none">Nothing new for the wishlist</string>
     <string name="top7_confirm_title">Download games for %1$s?</string>

@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlinx.coroutines.CancellationException
 
 /** The outcome of the last restore / upload, shown under the section. */
 sealed interface CloudSavesNotice {
@@ -117,7 +118,7 @@ class CloudSavesViewModel @Inject constructor(
         _ui.update { it.copy(working = id, notice = null) }
         viewModelScope.launch {
             val result = try { block(data) }
-            catch (e: kotlinx.coroutines.CancellationException) { throw e }
+            catch (e: CancellationException) { throw e }
             catch (e: Exception) { CloudSaveResult.Failed(e.message ?: e.javaClass.simpleName) }
             if (game != g) return@launch
             val notice = when (result) {

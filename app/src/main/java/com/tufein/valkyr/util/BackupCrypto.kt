@@ -12,6 +12,7 @@ import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
+import java.io.IOException
 
 /**
  * Encrypted backup files for the cloud (`.dgxb`).
@@ -129,7 +130,7 @@ object BackupCrypto {
                     out.write(buffer, 0, n)
                 }
             }
-        } catch (e: java.io.IOException) {
+        } catch (e: IOException) {
             throw UnreadableException(e)
         }
         return out.toByteArray()

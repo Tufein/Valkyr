@@ -22,6 +22,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import android.annotation.SuppressLint
+import com.tufein.valkyr.util.GameRemoval
+import java.io.IOException
 
 @Singleton
 class DownloadFileManager @Inject constructor(
@@ -81,7 +84,7 @@ class DownloadFileManager @Inject constructor(
 
     /** Publishes only after stream close/readback; indexed links sharing a basename cannot silently replace each other. */
     // Publication requires the durable write result; asynchronous/KTX edits cannot confirm it.
-    @android.annotation.SuppressLint("ApplySharedPref", "UseKtx")
+    @SuppressLint("ApplySharedPref", "UseKtx")
     @Synchronized
     fun commitDocumentFile(file: DownloadableFileEntity, downloadDirectoryUri: String, subPath: String,
         staged: DocumentFile, expectedSha256: String, check: () -> Unit = {}): DocumentFile {
@@ -114,7 +117,7 @@ class DownloadFileManager @Inject constructor(
                     storageOwners.edit().putString(key, identity(file)).commit()
                 }
             }
-            throw if (e is java.io.IOException) StorageException("Could not verify or publish downloaded file", e) else e
+            throw if (e is IOException) StorageException("Could not verify or publish downloaded file", e) else e
         }
     }
 
@@ -156,7 +159,7 @@ class DownloadFileManager @Inject constructor(
             ) ?: return false
 
             val names = (extractedFiles + decodedFileName).distinct()
-            val plan = names.filter { StorageHelper.safeRelativePath(it) && com.tufein.valkyr.util.GameRemoval.safeReference(it.substringAfterLast('/')) }.mapNotNull { name ->
+            val plan = names.filter { StorageHelper.safeRelativePath(it) && GameRemoval.safeReference(it.substringAfterLast('/')) }.mapNotNull { name ->
                 val owner = storageOwners.getString(hashName("${directory.uri}\n$name"), null)
                 if (name == decodedFileName && owner != null && owner != identity(file)) return@mapNotNull null
                 StorageHelper.findFile(directory, name)?.takeIf { it.isFile }?.let {

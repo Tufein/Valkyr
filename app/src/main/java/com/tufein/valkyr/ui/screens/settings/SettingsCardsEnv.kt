@@ -23,6 +23,10 @@ import com.tufein.valkyr.util.SettingsMasters
 import com.tufein.valkyr.util.ToastUtil
 import com.tufein.valkyr.util.TorrentConstants
 import java.time.LocalDate
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.content.ContextCompat
+import com.tufein.valkyr.util.PowerSettings
 
 /*
  * What the rows of the Settings cards read and call (4.9: split out of SettingsScreen, no change in
@@ -46,7 +50,7 @@ internal class SettingsStates(
     val afterDownload: State<AfterDownloadSettings>,
     val digestOn: State<Boolean>,
     val metaAuto: State<Boolean>,
-    val power: State<com.tufein.valkyr.util.PowerSettings?>,
+    val power: State<PowerSettings?>,
     val pickBest: State<Boolean>,
     val appPrefs: State<AppPrefs>,
     val activeProfileName: State<String?>,
@@ -98,7 +102,7 @@ internal class SettingsEnv(
     val afterDownload: AfterDownloadSettings get() = states.afterDownload.value
     val digestOn: Boolean get() = states.digestOn.value
     val metaAuto: Boolean get() = states.metaAuto.value
-    val power: com.tufein.valkyr.util.PowerSettings get() = states.power.value ?: com.tufein.valkyr.util.PowerSettings()
+    val power: PowerSettings get() = states.power.value ?: PowerSettings()
     val pickBest: Boolean get() = states.pickBest.value
     val appPrefs: AppPrefs get() = states.appPrefs.value
     val activeProfileName: String? get() = states.activeProfileName.value
@@ -135,8 +139,8 @@ internal class SettingsEnv(
     // Android 13+ asks before the weekly digest may be shown.
     fun setDigest(on: Boolean) {
         extra.setDigest(context, on)
-        if (on && android.os.Build.VERSION.SDK_INT >= 33 &&
-            androidx.core.content.ContextCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED
+        if (on && Build.VERSION.SDK_INT >= 33 &&
+            ContextCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
         ) launchers.digestPermission.launch(android.Manifest.permission.POST_NOTIFICATIONS)
     }
 

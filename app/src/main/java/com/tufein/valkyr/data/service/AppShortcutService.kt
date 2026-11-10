@@ -38,6 +38,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.CancellationException
 
 /**
  * Android app shortcuts for Dogmatix+: Surprise me, Downloads and Search (7.0 quick access), the
@@ -82,7 +83,7 @@ class AppShortcutService @Inject constructor(
                 Menu(plan, recent.filter { it.onDevice }.mapTo(HashSet()) { it.shortcut.id })
             }.distinctUntilChanged().debounce(2_000).collect {
                 // A shortcut a launcher or the builder refuses must not end the collector (and the menu's updates with it).
-                try { publish(it) } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (_: Exception) { }
+                try { publish(it) } catch (e: CancellationException) { throw e } catch (_: Exception) { }
             }
         }
         scope.launch { followRemovals() }

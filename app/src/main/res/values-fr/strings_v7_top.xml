@@ -38,6 +38,8 @@
     <string name="top7_downloading">Téléchargement en cours</string>
     <string name="top7_wished">Dans votre liste de souhaits</string>
     <string name="top7_open_library">Ouvrir dans la bibliothèque</string>
+    <string name="top7_download_one">Télécharger ce jeu</string>
+    <string name="top7_download_none">Rien à télécharger pour ce jeu</string>
     <string name="top7_wish_one">Ajouter à la liste de souhaits</string>
     <string name="top7_wish_none">Rien de nouveau pour la liste de souhaits</string>
     <string name="top7_confirm_title">Télécharger les jeux pour %1$s ?</string>

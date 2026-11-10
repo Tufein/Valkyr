@@ -28,6 +28,8 @@ import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.tufein.valkyr.data.local.CoverSourceSettings
+import com.tufein.valkyr.data.local.RommDeviceSettings
 
 /**
  * A text report for a bug report: app and device versions, what is set up (never the values of
@@ -45,8 +47,8 @@ class DiagnosticsService @Inject constructor(
     private val rommLibraryService: RommLibraryService,
     private val appSettings: AppSettings,
     private val cloudSettings: CloudSettings,
-    private val coverSourceSettings: com.tufein.valkyr.data.local.CoverSourceSettings,
-    private val remoteInstallSettings: com.tufein.valkyr.data.local.RommDeviceSettings
+    private val coverSourceSettings: CoverSourceSettings,
+    private val remoteInstallSettings: RommDeviceSettings
 ) {
 
     /**
@@ -139,7 +141,7 @@ class DiagnosticsService @Inject constructor(
     /** Size of the library database with its write-ahead log, in bytes; -1 when it cannot be read. */
     private fun databaseBytes(): Long = runCatching {
         val db = context.getDatabasePath("dogmatix_db")
-        listOf(db, java.io.File(db.path + "-wal")).sumOf { if (it.exists()) it.length() else 0L }
+        listOf(db, File(db.path + "-wal")).sumOf { if (it.exists()) it.length() else 0L }
     }.getOrDefault(-1L)
 
     /** What is set up for the WebDAV cloud, never the values themselves. */

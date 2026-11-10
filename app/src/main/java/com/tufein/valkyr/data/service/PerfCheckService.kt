@@ -28,6 +28,9 @@ import java.io.IOException
 import java.util.Random
 import javax.inject.Inject
 import javax.inject.Singleton
+import android.net.Uri
+import androidx.documentfile.provider.DocumentFile
+import java.io.OutputStream
 
 /**
  * 4.7.0: the measuring half of the Performance check tool. Each function times one area on the
@@ -224,11 +227,11 @@ class PerfCheckService @Inject constructor(
     }
 
     /** Deletes the test file; returns its name when it is still there afterwards. */
-    private fun removeTestFile(doc: androidx.documentfile.provider.DocumentFile, name: String): String? =
+    private fun removeTestFile(doc: DocumentFile, name: String): String? =
         if (StorageHelper.deleteFile(doc) || !runCatching { doc.exists() }.getOrDefault(true)) null else name
 
     /** The write stream of the test file: a real file descriptor where the provider has one (so it can be synced), else a plain stream. */
-    private fun openWrite(uri: android.net.Uri): java.io.OutputStream {
+    private fun openWrite(uri: Uri): OutputStream {
         val pfd = runCatching { context.contentResolver.openFileDescriptor(uri, "w") }.getOrNull()
         if (pfd != null) return ParcelFileDescriptor.AutoCloseOutputStream(pfd)
         return context.contentResolver.openOutputStream(uri, "w") ?: throw IOException("Could not write the test file")

@@ -39,6 +39,10 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import androidx.datastore.preferences.core.Preferences
+import com.tufein.valkyr.util.OfflineCollections
+import com.tufein.valkyr.util.SmartCollectionRules
+import com.tufein.valkyr.util.SmartStorage
 
 /**
  * One file with everything worth keeping: settings, sources, favourites and the downloads list.
@@ -198,8 +202,8 @@ class BackupService @Inject constructor(
             }?.toMap().orEmpty()
             val mapped = settings?.mapNotNull { (name, value) -> when (name) {
                 "smart_collection_rules" -> {
-                    val rules = com.tufein.valkyr.util.SmartCollectionRules.decode(value as? String) ?: return@mapNotNull null
-                    name to com.tufein.valkyr.util.SmartCollectionRules.encode(rules.mapNotNull { (id, rule) -> idMap[id]?.let { it to rule } }.toMap())
+                    val rules = SmartCollectionRules.decode(value as? String) ?: return@mapNotNull null
+                    name to SmartCollectionRules.encode(rules.mapNotNull { (id, rule) -> idMap[id]?.let { it to rule } }.toMap())
                 }
                 "offline_collections_ids" -> name to (value as? Set<*>).orEmpty().mapNotNull { (it as? String)?.toLongOrNull()?.let(idMap::get)?.toString() }.toSet()
                 "offline_collections_quotas" -> name to (value as? Set<*>).orEmpty().mapNotNull {
@@ -207,8 +211,8 @@ class BackupService @Inject constructor(
                     idMap[text.substringBefore(':').toLongOrNull()]?.let { id -> "$id:${text.substringAfter(':')}" }
                 }.toSet()
                 "offline_collections_fetched" -> name to (value as? Set<*>).orEmpty().mapNotNull {
-                    val fetched = (it as? String)?.let(com.tufein.valkyr.util.OfflineCollections::decodeFetched) ?: return@mapNotNull null
-                    idMap[fetched.collectionId]?.let { id -> com.tufein.valkyr.util.OfflineCollections.encode(fetched.copy(collectionId = id)) }
+                    val fetched = (it as? String)?.let(OfflineCollections::decodeFetched) ?: return@mapNotNull null
+                    idMap[fetched.collectionId]?.let { id -> OfflineCollections.encode(fetched.copy(collectionId = id)) }
                 }.toSet()
                 else -> name to value
             } }
@@ -272,7 +276,7 @@ class BackupService @Inject constructor(
                         // A folder inside a granted tree (smart storage's console folders on the SD card) is usable too.
                         val usable = entries.filter { entry ->
                             val uri = entry.substringAfter(':', "")
-                            uri in granted || com.tufein.valkyr.util.SmartStorage.treeOf(uri)?.let { it in granted } == true
+                            uri in granted || SmartStorage.treeOf(uri)?.let { it in granted } == true
                         }
                         repick += entries.size - usable.size
                         val usableIds = usable.map { it.substringBefore(':') }.toSet()
@@ -293,12 +297,12 @@ class BackupService @Inject constructor(
             if (prefs[SettingsKeys.CONSOLE_DOWNLOAD_DIRECTORIES] == null && currentConsoleDirs.isNotEmpty()) {
                 prefs[SettingsKeys.CONSOLE_DOWNLOAD_DIRECTORIES] = currentConsoleDirs
             }
-            if (!backupHasDav) currentDav.forEach { (key, value) -> @Suppress("UNCHECKED_CAST") prefs[key as androidx.datastore.preferences.core.Preferences.Key<Any>] = value }
+            if (!backupHasDav) currentDav.forEach { (key, value) -> @Suppress("UNCHECKED_CAST") prefs[key as Preferences.Key<Any>] = value }
             if (!currentDavPassword.isNullOrEmpty() &&
                 CloudSettingKeys.keepsPassword(currentDavLogin.first, currentDavLogin.second, prefs[davUrl], prefs[davUser])
             ) prefs[davPassword] = currentDavPassword
             val backupHasScreenScraper = settings.any { it.first in ScreenScraper.SETTING_TYPES }
-            if (!backupHasScreenScraper) currentScreenScraper.forEach { (key, value) -> @Suppress("UNCHECKED_CAST") prefs[key as androidx.datastore.preferences.core.Preferences.Key<Any>] = value }
+            if (!backupHasScreenScraper) currentScreenScraper.forEach { (key, value) -> @Suppress("UNCHECKED_CAST") prefs[key as Preferences.Key<Any>] = value }
             ScreenScraper.keptSecrets(
                 current = currentScreenScraper.entries.associate { it.key.name to (it.value as? String).orEmpty() },
                 restored = ScreenScraper.SETTING_TYPES.keys.associateWith { prefs[stringPreferencesKey(it)].orEmpty() },

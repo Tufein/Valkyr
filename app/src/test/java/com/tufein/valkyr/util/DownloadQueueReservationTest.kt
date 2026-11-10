@@ -6,6 +6,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import kotlinx.coroutines.Job
 
 class DownloadQueueReservationTest {
     @Test fun `reverse asynchronous arrivals keep registered queue order`() = runBlocking {
@@ -36,7 +37,7 @@ class DownloadQueueReservationTest {
         val queue = DownloadQueue(1)
         queue.acquire("running")
         queue.reserveOrder(listOf("a", "b", "c", "canceled"))
-        val jobs = mutableListOf<kotlinx.coroutines.Job>()
+        val jobs = mutableListOf<Job>()
         for (name in listOf("a", "b")) jobs += launch(start = CoroutineStart.UNDISPATCHED) { queue.acquire(name) }
         queue.moveToFront("b")
         queue.forgetOrder("canceled")

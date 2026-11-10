@@ -1,5 +1,7 @@
 package com.tufein.valkyr.util
 
+import java.time.ZoneId
+
 /**
  * What the Cover sources screen shows of the ScreenScraper account's limits (5.5.0), and how
  * requests are paced. Pure JVM for the tests. The numbers come from the `ssuser` block that
@@ -41,7 +43,7 @@ object ScreenScraperQuota {
     }
 
     fun sameDay(a: Long, b: Long): Boolean {
-        val zone = java.time.ZoneId.of("Europe/Paris")
+        val zone = ZoneId.of("Europe/Paris")
         return ScreenScraper.dayOf(a, zone) == ScreenScraper.dayOf(b, zone)
     }
 

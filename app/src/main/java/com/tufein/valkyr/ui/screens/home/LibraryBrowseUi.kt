@@ -79,6 +79,9 @@ import com.tufein.valkyr.util.FilterLayout
 import com.tufein.valkyr.util.LibraryBrowse
 import com.tufein.valkyr.util.LibraryBrowse.PrimaryAction
 import com.tufein.valkyr.util.LibraryBrowse.ViewMode
+import com.tufein.valkyr.ui.navigation.NavRoutes
+import com.tufein.valkyr.ui.navigation.OnTabReselect
+import com.tufein.valkyr.util.RaStatus
 
 /** Height of every chip and segment of the filter rows (quick chips, console chips, view switch): the 48 dp touch target. */
 internal val ChipHeight = FilterLayout.CHIP_HEIGHT.dp
@@ -308,7 +311,7 @@ internal fun LibraryListRow(
     /** 5.5: marked as completed by the player. */
     completed: Boolean = false,
     /** 5.5: the user's RetroAchievements status in the game (null = nothing to show). */
-    raStatus: com.tufein.valkyr.util.RaStatus? = null,
+    raStatus: RaStatus? = null,
     /** 6.0: how many versions of the game this row stands for ("Group versions"); 1 shows nothing. */
     versions: Int = 1
 ) {
@@ -361,8 +364,8 @@ internal fun LibraryListRow(
                         tint = scheme.secondary, modifier = Modifier.size(16.dp)
                     )
                     when (raStatus) {
-                        com.tufein.valkyr.util.RaStatus.MASTERED -> Pill(stringResource(R.string.done55_ra_mastered), tone = PillTone.Warning, icon = R.drawable.ic_trophy)
-                        com.tufein.valkyr.util.RaStatus.BEATEN -> Pill(stringResource(R.string.done55_ra_beaten), tone = PillTone.Info, icon = R.drawable.ic_trophy)
+                        RaStatus.MASTERED -> Pill(stringResource(R.string.done55_ra_mastered), tone = PillTone.Warning, icon = R.drawable.ic_trophy)
+                        RaStatus.BEATEN -> Pill(stringResource(R.string.done55_ra_beaten), tone = PillTone.Info, icon = R.drawable.ic_trophy)
                         else -> Unit
                     }
                     if (isNew) Pill(stringResource(R.string.new_badge), tone = PillTone.Accent)
@@ -397,7 +400,7 @@ internal fun ResultGrid(
     versionsOf: (DownloadableFileWithTags) -> Int = { 1 }
 ) {
     val state = rememberLazyGridState()
-    com.tufein.valkyr.ui.navigation.OnTabReselect(com.tufein.valkyr.ui.navigation.NavRoutes.Home.route) { state.scrollToItem(0) }
+    OnTabReselect(NavRoutes.Home.route) { state.scrollToItem(0) }
     val focusIndex = state.firstVisibleItemIndex
     // After "Load more" focus is lost with the button; land on the first new card.
     val newPageFocus = remember { FocusRequester() }

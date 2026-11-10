@@ -36,6 +36,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.tufein.valkyr.util.SyncthingNames
 
 data class SyncthingState(
     val running: Boolean = false,
@@ -127,7 +128,7 @@ class SyncthingFolderService @Inject constructor(
             val rootId = DocumentsContract.getTreeDocumentId(tree)
             // Only saves/ and states/ matter; a folder that is not there yet is simply empty (a failed listing throws).
             for (top in query(rootId)) {
-                if (!top.isDir || com.tufein.valkyr.util.SyncthingNames.kindOfFolder(top.name) == null) continue
+                if (!top.isDir || SyncthingNames.kindOfFolder(top.name) == null) continue
                 fun walk(prefix: String, id: String, depth: Int) {
                     if (depth > MAX_DEPTH) return
                     for (child in query(id)) {

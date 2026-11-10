@@ -22,6 +22,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.CancellationException
 
 private const val TAG = "Manuals"
 
@@ -119,7 +120,7 @@ class ManualService @Inject constructor(
                         }
                     }
                 }
-            } catch (e: kotlinx.coroutines.CancellationException) {
+            } catch (e: CancellationException) {
                 tmp.delete()
                 throw e
             } catch (e: Exception) {

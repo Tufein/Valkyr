@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.ZoneId
 import javax.inject.Inject
+import com.tufein.valkyr.data.service.ProfileService
 
 /** The route of the action history screen (for NavRoutes and the link in Trash and recovery). */
 const val ACTION_HISTORY_ROUTE = "action_history"
@@ -58,7 +59,7 @@ class ActionHistoryViewModel @Inject constructor(
     private val log: ActionLogService,
     private val undoService: ActionUndoService,
     journal: OperationHistoryService,
-    private val profiles: com.tufein.valkyr.data.service.ProfileService
+    private val profiles: ProfileService
 ) : ViewModel() {
 
     private val filter = MutableStateFlow(ActionFilter.ALL)

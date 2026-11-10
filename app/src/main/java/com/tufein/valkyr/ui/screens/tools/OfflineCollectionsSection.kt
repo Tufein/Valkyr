@@ -43,6 +43,7 @@ import com.tufein.valkyr.ui.screens.settings.ThemedSwitch
 import com.tufein.valkyr.util.ConsoleFormatter
 import com.tufein.valkyr.util.FileParsingUtils
 import com.tufein.valkyr.util.OfflineCollections
+import java.text.DateFormat
 
 /*
  * 7.0 "Keep a collection on this device", as pieces the collections screen shows: a switch row under
@@ -291,7 +292,7 @@ internal fun OfflineReadinessDialog(state: OfflineReadyUi, onDismiss: () -> Unit
             state.report?.let { report ->
                 Text(report.name, style = MaterialTheme.typography.titleMedium)
                 Text(stringResource(R.string.off28_summary, report.readyCount, report.games.size + report.unchecked))
-                Text(java.text.DateFormat.getDateTimeInstance().format(java.util.Date(report.checkedAt)), style = MaterialTheme.typography.bodySmall)
+                Text(DateFormat.getDateTimeInstance().format(java.util.Date(report.checkedAt)), style = MaterialTheme.typography.bodySmall)
                 if (report.unchecked > 0) Text(stringResource(if (state.loading) R.string.off28_remaining else R.string.off28_limited, report.unchecked))
                 report.games.forEach { game ->
                     Text(game.title, style = MaterialTheme.typography.titleSmall)

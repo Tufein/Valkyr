@@ -38,6 +38,8 @@
     <string name="top7_downloading">Wordt gedownload</string>
     <string name="top7_wished">Op je verlanglijst</string>
     <string name="top7_open_library">Openen in de bibliotheek</string>
+    <string name="top7_download_one">Dit spel downloaden</string>
+    <string name="top7_download_none">Niets te downloaden voor dit spel</string>
     <string name="top7_wish_one">Op de verlanglijst zetten</string>
     <string name="top7_wish_none">Niets nieuws voor de verlanglijst</string>
     <string name="top7_confirm_title">Games voor %1$s downloaden?</string>

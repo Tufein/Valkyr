@@ -30,6 +30,8 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
+import android.content.SharedPreferences
+import com.tufein.valkyr.data.local.PersonalPreferences
 
 private const val TAG = "GameLaunchService"
 
@@ -93,7 +95,7 @@ class GameLaunchService @Inject constructor(
     private val _preferenceRevision = MutableStateFlow(0L)
     val preferenceRevision = _preferenceRevision.asStateFlow()
     // Keep a strong reference: Android stores preference listeners weakly.
-    private val preferenceListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
+    private val preferenceListener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ ->
         _preferenceRevision.update { it + 1L }
     }
     init { preferences.registerOnSharedPreferenceChangeListener(preferenceListener) }
@@ -130,7 +132,7 @@ class GameLaunchService @Inject constructor(
         }
     }
 
-    private fun preferenceKey(consoleId: String) = com.tufein.valkyr.data.local.PersonalPreferences.prefix(profiles.currentIdNow()) + consoleId
+    private fun preferenceKey(consoleId: String) = PersonalPreferences.prefix(profiles.currentIdNow()) + consoleId
     fun preferred(consoleId: String): String? = gamePreferences.console(consoleId)
     fun clear(consoleId: String) { preferences.edit().remove(preferenceKey(consoleId)).apply() }
 
