@@ -46,6 +46,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tufein.valkyr.R
 import com.tufein.valkyr.ui.common.Gamepad
+import com.tufein.valkyr.ui.components.MeterBar
 import com.tufein.valkyr.ui.components.SectionTitle
 import com.tufein.valkyr.ui.components.focusRing
 import com.tufein.valkyr.ui.components.rememberFocusSource
@@ -199,6 +200,8 @@ private fun ConsoleTileCard(
             Text(title, style = MaterialTheme.typography.titleMedium, color = scheme.onSurface, modifier = Modifier.weight(1f, fill = false))
         }
         Text(countsText(total, here), style = MaterialTheme.typography.labelMedium.tabular(), color = scheme.onSurfaceVariant)
+        // 7.0: how much of the console is on the device, as a thin bar in the console's colour.
+        if (total > 0) MeterBar(fraction = here.toFloat() / total, height = 4.dp, color = tint, track = scheme.surfaceContainerHighest)
     }
 }
 

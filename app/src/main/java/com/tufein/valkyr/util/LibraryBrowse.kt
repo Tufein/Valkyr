@@ -16,13 +16,17 @@ object LibraryBrowse {
     const val VIEW_KEY = "lib52_view"
 
     /** Their backup types, for [SettingSchema]. */
-    val SETTING_TYPES: Map<String, String> = mapOf(VIEW_KEY to "s")
+    /** 7.0: set once the Library has been moved to the console tiles (see `LibrarySettings.migrateToConsoleHome`). */
+    const val HOME_MIGRATED_KEY = "home70_migrated"
+
+    val SETTING_TYPES: Map<String, String> = mapOf(VIEW_KEY to "s", HOME_MIGRATED_KEY to "b")
 
     enum class ViewMode(val key: String) {
+        /** 7.0: the console tiles are the home of the Library (concept C), so they come first. */
+        CONSOLES("consoles"),
         OVERVIEW("overview"),
         LIST("list"),
-        COVERS("covers"),
-        CONSOLES("consoles");
+        COVERS("covers");
 
         /** The views that show the games themselves (not a start page): A / tap runs the game's main action. */
         val isBrowse: Boolean get() = this == LIST || this == COVERS
@@ -32,7 +36,7 @@ object LibraryBrowse {
     }
 
     /** The view stored under [key]; anything unknown (or nothing stored yet) is the overview, i.e. today's look. */
-    fun parseView(key: String?): ViewMode = ViewMode.entries.firstOrNull { it.key == key } ?: ViewMode.OVERVIEW
+    fun parseView(key: String?): ViewMode = ViewMode.entries.firstOrNull { it.key == key } ?: ViewMode.CONSOLES
 
     /** The views offered: without a game page to open from the shelves ([hasShelves] false) there is no overview. */
     fun availableViews(hasShelves: Boolean): List<ViewMode> =
