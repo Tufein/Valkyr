@@ -1,6 +1,15 @@
 package com.tufein.valkyr.data.service
 
 import android.app.job.JobInfo
+import kotlinx.coroutines.CancellationException
+import com.tufein.valkyr.R
+import com.tufein.valkyr.MainActivity
+import com.tufein.valkyr.DogmatixApplication
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.NotificationCompat
+import android.content.Intent
+import android.app.PendingIntent
+import android.app.NotificationManager
 import android.app.job.JobParameters
 import android.app.job.JobScheduler
 import android.app.job.JobService
@@ -35,6 +44,7 @@ private const val JOB_ID = 4231
 /** The WebDAV cloud job: encrypted backup and device sync, on an unmetered network while charging. */
 private const val CLOUD_JOB_ID = 4232
 private const val INTERVAL_DAYS = 7
+private const val FAILED_NOTIFICATION_ID = 4233
 
 /**
  * Weekly backup into a folder the user picked (Settings → Automatic backup): the same file as
@@ -106,9 +116,40 @@ class AutoBackupScheduler @Inject constructor(
     }
 
     /** Writes a backup now when one is due ([force]: regardless); returns the file name, or null. */
-    suspend fun runIfDue(force: Boolean = false): String? = withContext(Dispatchers.IO) {
-        val dirUri = appSettings.autoBackupDir.first().takeIf { it.isNotBlank() } ?: return@withContext null
-        if (!force && !BackupRotation.isDue(appSettings.autoBackupLast.first(), System.currentTimeMillis(), INTERVAL_DAYS)) return@withContext null
+    suspend fun runIfDue(force: Boolean = false): String? {
+        val dirUri = appSettings.autoBackupDir.first().takeIf { it.isNotBlank() } ?: return null
+        if (!force && !BackupRotation.isDue(appSettings.autoBackupLast.first(), System.currentTimeMillis(), INTERVAL_DAYS)) return null
+        val name = try {
+            writeBackup(dirUri)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.w("AutoBackup", "Backup failed: ${e.message}")
+            null
+        }
+        // 6.6: a backup that was due and could not be written is said out loud, once per daily run.
+        if (name == null && !force) notifyFailed()
+        return name
+    }
+
+    private fun notifyFailed() {
+        if (!NotificationManagerCompat.from(context).areNotificationsEnabled()) return
+        val open = PendingIntent.getActivity(
+            context, 3, Intent(context, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        val notification = NotificationCompat.Builder(context, DogmatixApplication.SYNC_CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_update)
+            .setContentTitle(context.getString(R.string.backup66_failed_title))
+            .setContentText(context.getString(R.string.backup66_failed_text))
+            .setStyle(NotificationCompat.BigTextStyle().bigText(context.getString(R.string.backup66_failed_text)))
+            .setContentIntent(open)
+            .setAutoCancel(true)
+            .build()
+        runCatching { context.getSystemService(NotificationManager::class.java).notify(FAILED_NOTIFICATION_ID, notification) }
+    }
+
+    private suspend fun writeBackup(dirUri: String): String? = withContext(Dispatchers.IO) {
         val dir = DiskScanner.rootOf(dirUri) ?: return@withContext null
         val (json, _) = backupService.export()
         val name = BackupRotation.fileName(LocalDate.now())

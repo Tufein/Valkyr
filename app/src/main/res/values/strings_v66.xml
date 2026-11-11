@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playlists66_section_move">Moved your games?</string>
+    <string name="playlists66_move_hint">After moving your library to another card or folder, the paths in your playlists no longer fit. Enter the old and the new folder as RetroArch sees them (for example /storage/ABCD-1234/Roms). Only the paths change; each old playlist goes to Trash and recovery first.</string>
+    <string name="playlists66_move_from">Old folder</string>
+    <string name="playlists66_move_to">New folder</string>
+    <string name="playlists66_move_check">Check</string>
+    <string name="playlists66_move_apply">Update paths</string>
+    <string name="playlists66_move_preview">%1$s entries in %2$s playlists would move to the new folder.</string>
+    <string name="playlists66_move_none">No playlist entry is under the old folder. Check the spelling.</string>
+    <string name="playlists66_move_invalid">Enter two different folders that start with / (for example /storage/ABCD-1234/Roms), or pick the playlists folder above first.</string>
+    <string name="playlists66_move_done">%1$s entries updated.</string>
+    <string name="playlists66_move_failed">Updating the paths failed; the playlists were left as they were.</string>
+    <string name="backup66_failed_title">Automatic backup failed</string>
+    <string name="backup66_failed_text">Valkyr could not write the weekly backup. Check that the backup folder still exists and has room (Settings → Automatic backup).</string>
+    <string name="wifi66_title">Receive games over Wi-Fi</string>
+    <string name="wifi66_subtitle">Your own files, from a browser on your network</string>
+    <string name="wifi66_hint">Send your own game files from a PC to the right console folder, without a cable or card reader</string>
+    <string name="wifi66_kw">wifi upload transfer pc browser send files</string>
+    <string name="wifi66_what_title">How it works</string>
+    <string name="wifi66_what_body">Off until you switch it on. Then open the address in a browser on a device on the same network and type the PIN. Pick a console and your files; they go into the same folders downloads use and are checked after writing. Existing files are never replaced. It only answers devices on your local network, switches itself off after %1$d idle minutes (%2$d at most) or after 5 wrong PINs, and the connection is plain HTTP, so use it on a network you trust. Keep Valkyr open while sending. The app includes no games.</string>
+    <string name="wifi66_open_title">Open this address in a browser on your PC:</string>
+    <string name="wifi66_pin">PIN: %1$s</string>
+    <string name="wifi66_stops">Switches off %1$s at the latest</string>
+    <string name="wifi66_start">Start receiving</string>
+    <string name="wifi66_stop">Stop receiving</string>
+    <string name="wifi66_received">Received (%1$d)</string>
+    <string name="wifi66_problem_no_wifi">No local network found. Connect to Wi-Fi (or turn on a hotspot others join) and try again.</string>
+    <string name="wifi66_problem_no_folder">Pick a download folder first (Settings → Downloads).</string>
+    <string name="wifi66_problem_pin">Switched off after too many wrong PINs.</string>
+    <string name="wifi66_problem_timeout">Switched off by itself.</string>
+    <string name="wifi66_problem_failed">The receiver could not start.</string>
+    <string name="wifi66_page_pin">PIN shown on the device</string>
+    <string name="wifi66_page_console">Console</string>
+    <string name="wifi66_page_choose">Your game files</string>
+    <string name="wifi66_page_send">Send</string>
+    <string name="wifi66_page_done">done</string>
+    <string name="wifi66_page_wrong">Wrong PIN</string>
+</resources>

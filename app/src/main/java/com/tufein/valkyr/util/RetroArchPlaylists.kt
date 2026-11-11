@@ -99,6 +99,37 @@ object RetroArchPlaylists {
         return if (current == null || at < 0) options.first() else options.getOrNull(at + 1)
     }
 
+    // ---- Moved games (6.6) --------------------------------------------------------------------
+
+    /** A folder as a plain absolute path without a trailing slash; null when it is not one RetroArch could hold. */
+    fun cleanFolder(raw: String): String? {
+        val t = raw.trim().trimEnd('/')
+        if (!t.startsWith('/') || t.length < 2) return null
+        val parts = t.split('/').drop(1)
+        if (parts.any { it.isEmpty() || it == "." || it == ".." || it.any(Char::isISOControl) }) return null
+        return t
+    }
+
+    /**
+     * [existing] with every entry path under [from] moved under [to] (a copy; nothing else in the
+     * playlist changes), and how many entries changed. Null when it is not a playlist this app reads.
+     */
+    fun movePaths(existing: Read, from: String, to: String): Pair<ByteArray, Int>? {
+        val json = existing as? Read.Json ?: return null
+        val a = cleanFolder(from) ?: return null
+        val b = cleanFolder(to) ?: return null
+        if (a == b) return null
+        val root = json.root.deepCopy()
+        var changed = 0
+        root.get("items")?.takeIf { it.isJsonArray }?.asJsonArray?.forEach { e ->
+            val item = e.takeIf { it.isJsonObject }?.asJsonObject ?: return@forEach
+            val path = item.get("path")?.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isString }?.asString ?: return@forEach
+            if (path == a || path.startsWith("$a/")) { item.addProperty("path", b + path.substring(a.length)); changed++ }
+        }
+        if (changed == 0) return null
+        return (GSON.toJson(root) + "\n").toByteArray(Charsets.UTF_8) to changed
+    }
+
     private fun blankDefault(root: JsonObject): Boolean =
         (root.get("default_core_path")?.takeIf { it.isJsonPrimitive }?.asString).isNullOrBlank() ||
             root.get("default_core_path")?.asString == DETECT

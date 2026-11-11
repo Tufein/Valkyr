@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playlists66_section_move">Jeux déplacés ?</string>
+    <string name="playlists66_move_hint">Après avoir déplacé votre bibliothèque vers une autre carte ou un autre dossier, les chemins de vos playlists ne correspondent plus. Saisissez l’ancien et le nouveau dossier tels que RetroArch les voit (par exemple /storage/ABCD-1234/Roms). Seuls les chemins changent ; chaque ancienne playlist passe d’abord à la corbeille et au centre de récupération.</string>
+    <string name="playlists66_move_from">Ancien dossier</string>
+    <string name="playlists66_move_to">Nouveau dossier</string>
+    <string name="playlists66_move_check">Vérifier</string>
+    <string name="playlists66_move_apply">Mettre à jour les chemins</string>
+    <string name="playlists66_move_preview">%1$s entrées dans %2$s playlists passeraient au nouveau dossier.</string>
+    <string name="playlists66_move_none">Aucune entrée n’est dans l’ancien dossier. Vérifiez l’orthographe.</string>
+    <string name="playlists66_move_invalid">Saisissez deux dossiers différents commençant par / (par exemple /storage/ABCD-1234/Roms), ou choisissez d’abord le dossier des playlists ci-dessus.</string>
+    <string name="playlists66_move_done">%1$s entrées mises à jour.</string>
+    <string name="playlists66_move_failed">La mise à jour des chemins a échoué ; les playlists sont restées telles quelles.</string>
+    <string name="backup66_failed_title">La sauvegarde automatique a échoué</string>
+    <string name="backup66_failed_text">Valkyr n’a pas pu écrire la sauvegarde hebdomadaire. Vérifiez que le dossier de sauvegarde existe encore et a de la place (Réglages → Sauvegarde automatique).</string>
+    <string name="wifi66_title">Recevoir des jeux par Wi-Fi</string>
+    <string name="wifi66_subtitle">Vos propres fichiers, depuis un navigateur de votre réseau</string>
+    <string name="wifi66_hint">Envoyez vos propres fichiers de jeu d’un PC vers le bon dossier de console, sans câble ni lecteur</string>
+    <string name="wifi66_kw">wifi téléverser transférer pc navigateur envoyer fichiers</string>
+    <string name="wifi66_what_title">Comment ça marche</string>
+    <string name="wifi66_what_body">Désactivé tant que vous ne l’activez pas. Ouvrez ensuite l’adresse dans un navigateur d’un appareil du même réseau et saisissez le code PIN. Choisissez une console et vos fichiers ; ils vont dans les mêmes dossiers que les téléchargements et sont vérifiés après l’écriture. Les fichiers existants ne sont jamais remplacés. Il ne répond qu’aux appareils de votre réseau local, s’arrête après %1$d minutes d’inactivité (%2$d au maximum) ou après 5 PIN erronés, et la connexion est en HTTP simple : utilisez-le sur un réseau de confiance. Gardez Valkyr ouvert pendant l’envoi. L’appli ne contient aucun jeu.</string>
+    <string name="wifi66_open_title">Ouvrez cette adresse dans un navigateur sur votre PC :</string>
+    <string name="wifi66_pin">PIN : %1$s</string>
+    <string name="wifi66_stops">S’éteint au plus tard %1$s</string>
+    <string name="wifi66_start">Démarrer la réception</string>
+    <string name="wifi66_stop">Arrêter la réception</string>
+    <string name="wifi66_received">Reçus (%1$d)</string>
+    <string name="wifi66_problem_no_wifi">Aucun réseau local trouvé. Connectez-vous au Wi-Fi et réessayez.</string>
+    <string name="wifi66_problem_no_folder">Choisissez d’abord un dossier de téléchargement (Réglages → Téléchargements).</string>
+    <string name="wifi66_problem_pin">Arrêté après trop de PIN erronés.</string>
+    <string name="wifi66_problem_timeout">S’est arrêté tout seul.</string>
+    <string name="wifi66_problem_failed">La réception n’a pas pu démarrer.</string>
+    <string name="wifi66_page_pin">PIN affiché sur l’appareil</string>
+    <string name="wifi66_page_console">Console</string>
+    <string name="wifi66_page_choose">Vos fichiers de jeu</string>
+    <string name="wifi66_page_send">Envoyer</string>
+    <string name="wifi66_page_done">terminé</string>
+    <string name="wifi66_page_wrong">PIN incorrect</string>
+</resources>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playlists66_section_move">Games verhuisd?</string>
+    <string name="playlists66_move_hint">Nadat je bibliotheek naar een andere kaart of map is verhuisd, kloppen de paden in je playlists niet meer. Geef de oude en de nieuwe map zoals RetroArch ze ziet (bijvoorbeeld /storage/ABCD-1234/Roms). Alleen de paden veranderen; elke oude playlist gaat eerst naar Prullenbak en herstelcentrum.</string>
+    <string name="playlists66_move_from">Oude map</string>
+    <string name="playlists66_move_to">Nieuwe map</string>
+    <string name="playlists66_move_check">Controleren</string>
+    <string name="playlists66_move_apply">Paden bijwerken</string>
+    <string name="playlists66_move_preview">%1$s items in %2$s playlists gaan naar de nieuwe map.</string>
+    <string name="playlists66_move_none">Geen enkel item staat in de oude map. Controleer de spelling.</string>
+    <string name="playlists66_move_invalid">Geef twee verschillende mappen die met / beginnen (bijvoorbeeld /storage/ABCD-1234/Roms), of kies hierboven eerst de playlistmap.</string>
+    <string name="playlists66_move_done">%1$s items bijgewerkt.</string>
+    <string name="playlists66_move_failed">Het bijwerken van de paden is mislukt; de playlists zijn ongewijzigd gebleven.</string>
+    <string name="backup66_failed_title">Automatische back-up mislukt</string>
+    <string name="backup66_failed_text">Valkyr kon de wekelijkse back-up niet schrijven. Controleer of de back-upmap nog bestaat en ruimte heeft (Instellingen → Automatische back-up).</string>
+    <string name="wifi66_title">Games ontvangen via wifi</string>
+    <string name="wifi66_subtitle">Je eigen bestanden, vanuit een browser op je netwerk</string>
+    <string name="wifi66_hint">Stuur je eigen gamebestanden van een pc naar de juiste consolemap, zonder kabel of kaartlezer</string>
+    <string name="wifi66_kw">wifi uploaden overzetten pc browser bestanden sturen</string>
+    <string name="wifi66_what_title">Zo werkt het</string>
+    <string name="wifi66_what_body">Uit totdat je het aanzet. Open dan het adres in een browser op een apparaat in hetzelfde netwerk en typ de pincode. Kies een console en je bestanden; ze komen in dezelfde mappen als downloads en worden na het schrijven gecontroleerd. Bestaande bestanden worden nooit vervangen. Het antwoordt alleen apparaten op je lokale netwerk, zet zichzelf uit na %1$d minuten stilte (hooguit %2$d) of na 5 foute pincodes, en de verbinding is gewone HTTP, gebruik het dus op een netwerk dat je vertrouwt. Laat Valkyr open tijdens het versturen. De app bevat geen games.</string>
+    <string name="wifi66_open_title">Open dit adres in een browser op je pc:</string>
+    <string name="wifi66_pin">Pincode: %1$s</string>
+    <string name="wifi66_stops">Zet zichzelf uiterlijk %1$s uit</string>
+    <string name="wifi66_start">Start ontvangen</string>
+    <string name="wifi66_stop">Stop ontvangen</string>
+    <string name="wifi66_received">Ontvangen (%1$d)</string>
+    <string name="wifi66_problem_no_wifi">Geen lokaal netwerk gevonden. Maak verbinding met wifi en probeer opnieuw.</string>
+    <string name="wifi66_problem_no_folder">Kies eerst een downloadmap (Instellingen → Downloads).</string>
+    <string name="wifi66_problem_pin">Uitgezet na te veel foute pincodes.</string>
+    <string name="wifi66_problem_timeout">Is vanzelf uitgezet.</string>
+    <string name="wifi66_problem_failed">Ontvangen kon niet starten.</string>
+    <string name="wifi66_page_pin">Pincode op het apparaat</string>
+    <string name="wifi66_page_console">Console</string>
+    <string name="wifi66_page_choose">Je gamebestanden</string>
+    <string name="wifi66_page_send">Versturen</string>
+    <string name="wifi66_page_done">klaar</string>
+    <string name="wifi66_page_wrong">Foute pincode</string>
+</resources>

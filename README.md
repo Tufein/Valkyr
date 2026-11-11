@@ -78,7 +78,7 @@ You need **Android 10 or newer**. The app is not on Google Play.
 - **Play from the game page** with a compatible emulator, remembered per console or chosen per game, with a **readiness check** (files, discs, BIOS, emulator), a guided setup and a test launch.
 - **ES-DE, iiSU, Daijishō and Pegasus**: a "search for more games" entry per console, plus covers and descriptions written into your launcher; for iiSU, Daijishō and any other launcher, covers go into a media folder you pick, in the file layout that launcher expects (ten ready-made layouts, or write your own).
 - **Games on your home screen**: pin a game from its page and it starts straight in its emulator; a long press on the app icon also shows your last three played games.
-- **RetroArch playlists**: writes `.lpl` playlists so RetroArch shows your library; existing playlists are only added to, and the old file goes to Trash and recovery first. You can pick a default core per system, so RetroArch stops asking. The game page shows the picture of your newest RetroArch save state.
+- **RetroArch playlists**: writes `.lpl` playlists so RetroArch shows your library; existing playlists are only added to, and the old file goes to Trash and recovery first. You can pick a default core per system, so RetroArch stops asking. After moving your library to another card, one tap rewrites the paths in your playlists. The game page shows the picture of your newest RetroArch save state.
 - **Continue on another handheld** from the game page, when your emulator and saves can travel: it shows the way back first and the save goes through RomM.
 - **Multi-disc games** get their `.m3u` playlist automatically.
 - **Continue playing** on Home, from saves on any device or from ES-DE.
@@ -90,6 +90,7 @@ You need **Android 10 or newer**. The app is not on Google Play.
 - **Library overview, Storage and Statistics** per console; **Smart storage** can move rarely played consoles to an SD card and back.
 - **File explorer** to look, rename, move and unpack; **export** your collection as CSV or a web page.
 - **Copy or send games**: whole games with every file to an SD card or USB folder, your RomM server or your NAS. You first see every file, the space needed and what is already there; every file is checked at the other end, save files stay behind and nothing is replaced. For a card that goes into another system, the console folders can follow ES-DE, Batocera, Knulli, ArkOS, ROCKNIX, OnionOS or muOS names.
+- **Receive games over Wi-Fi** (off until you switch it on): send your own game files from a browser on your network into the right console folder, behind a PIN, on the local network only, with every file checked and nothing replaced.
 - **Health check** with a fix per problem, and a **scan report** for sources that failed.
 - **Sources**: add by hand, import and export, share as QR codes, optional content catalogue with Libretro content for 29 systems, ScummVM's freeware adventure games and free Game Boy homebrew from Homebrew Hub, the provider named for each, reserve addresses and automatic background scans that skip what did not change.
 

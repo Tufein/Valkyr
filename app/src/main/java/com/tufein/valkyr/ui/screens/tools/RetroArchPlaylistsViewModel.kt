@@ -103,6 +103,32 @@ class RetroArchPlaylistsViewModel @Inject constructor(
         val next = RetroArchPlaylists.nextCore(options, ui.value.settings?.cores?.get(system))
         viewModelScope.launch { settings.setCore(system, next); refresh() }
     }
+    /** 6.6: "Moved your games to another card?": the old and new folder, what it would change, and the result. */
+    data class MoveUi(val from: String = "", val to: String = "", val preview: RetroArchPlaylistsService.MovePreview? = null, val busy: Boolean = false, val done: Int? = null)
+
+    private val _move = MutableStateFlow(MoveUi())
+    val move: StateFlow<MoveUi> = _move
+
+    fun editMove(from: String? = null, to: String? = null) { _move.value = _move.value.copy(from = from ?: _move.value.from, to = to ?: _move.value.to, preview = null, done = null) }
+
+    fun previewMove() {
+        val m = _move.value
+        if (m.busy) return
+        _move.value = m.copy(busy = true, done = null)
+        viewModelScope.launch { _move.value = _move.value.copy(busy = false, preview = service.previewMove(m.from, m.to)) }
+    }
+
+    fun applyMove() {
+        val m = _move.value
+        if (m.busy || service.state.value.running || (m.preview?.entries ?: 0) == 0) return
+        _move.value = m.copy(busy = true)
+        viewModelScope.launch {
+            val n = try { service.applyMove(m.from, m.to) } catch (e: CancellationException) { throw e } catch (_: Exception) { -1 }
+            _move.value = _move.value.copy(busy = false, preview = null, done = n)
+            refresh()
+        }
+    }
+
     fun refresh() { refresh.value++ }
 
     fun write() = service.start()

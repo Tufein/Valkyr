@@ -371,6 +371,17 @@ class RetroArchPlaylistsService @Inject constructor(
             record(plan.fileName, plan.add.size)
             return Outcome(created = true, entries = plan.add.size)
         }
+        if (!replaceFile(root, folder, entry, existing.bytes, bytes)) return Outcome(leftAlone = true)
+        record(entry.name, plan.add.size)
+        return Outcome(updated = true, entries = plan.add.size)
+    }
+
+    /**
+     * Replaces [entry] (read as [original]) by [bytes]: the new content is staged first, the old file
+     * goes to the trash (the way back) and must still be the one that was read, else it is put back.
+     * False when the file changed meanwhile and was left as it was.
+     */
+    private suspend fun replaceFile(root: DocumentFile, folder: String, entry: DiskEntry, original: ByteArray?, bytes: ByteArray): Boolean {
         // The playlist keeps its own spelling ("nintendo - game boy.lpl").
         val name = entry.name
         // The new content is on the storage before the old file moves, so a failed write (full card,
@@ -387,10 +398,10 @@ class RetroArchPlaylistsService @Inject constructor(
                 op.id !in before && op.kind == "trash" && op.files.any { it.source == entry.uri.toString() }
             } ?: error("The previous version was not kept")
             // Changed between reading and the backup (RetroArch saved it meanwhile): put it back as it is.
-            val read = existing.bytes ?: ByteArray(0)
+            val read = original ?: ByteArray(0)
             if (operation.files.single().hash != VerifiedCopy.hash(read.inputStream())) {
                 trash.restore(operation.id)
-                return Outcome(leftAlone = true)
+                return false
             }
             try {
                 StorageHelper.publishStagedFile(context, root, staged, name, VerifiedCopy.hash(bytes.inputStream()))
@@ -402,8 +413,45 @@ class RetroArchPlaylistsService @Inject constructor(
         } finally {
             if (staged.name == stagedName) runCatching { staged.delete() }
         }
-        record(name, plan.add.size)
-        return Outcome(updated = true, entries = plan.add.size)
+        return true
+    }
+
+    /** 6.6: what moving [from] to [to] in the playlists would change (nothing is written). */
+    data class MovePreview(val playlists: Int, val entries: Int, val folderOk: Boolean)
+
+    private data class MoveTarget(val entry: DiskEntry, val existing: Existing, val bytes: ByteArray, val entries: Int)
+
+    private suspend fun moveTargets(from: String, to: String): Pair<DocumentFile?, List<MoveTarget>>? {
+        val folder = settings.values.first().folder.takeIf { it.isNotBlank() } ?: return null
+        val root = StorageHelper.getDocumentFile(context, folder)?.takeIf { runCatching { it.isDirectory && it.canWrite() }.getOrDefault(false) } ?: return null
+        val dir = DiskScanner.rootOf(folder) ?: return null
+        val listing = DiskScanner.listOrNull(context, dir, strict = true) ?: return null
+        val targets = listing.filter { !it.isDirectory && it.name.endsWith(".${RetroArchPlaylists.EXTENSION}", ignoreCase = true) }.mapNotNull { entry ->
+            val existing = readExisting(entry)
+            RetroArchPlaylists.movePaths(existing.read, from, to)?.let { (bytes, n) -> MoveTarget(entry, existing, bytes, n) }
+        }
+        return root to targets
+    }
+
+    suspend fun previewMove(from: String, to: String): MovePreview = withContext(Dispatchers.IO) {
+        val ok = RetroArchPlaylists.cleanFolder(from) != null && RetroArchPlaylists.cleanFolder(to) != null && RetroArchPlaylists.cleanFolder(from) != RetroArchPlaylists.cleanFolder(to)
+        if (!ok) return@withContext MovePreview(0, 0, false)
+        val t = moveTargets(from, to)?.second.orEmpty()
+        MovePreview(t.size, t.sumOf { it.entries }, true)
+    }
+
+    /** Rewrites the paths in every playlist that has some under [from]; each old file goes to Trash and recovery first. Returns the entries changed. */
+    suspend fun applyMove(from: String, to: String): Int = withContext(Dispatchers.IO) {
+        writing.withLock {
+            val (root, targets) = moveTargets(from, to) ?: return@withLock 0
+            val folder = settings.values.first().folder
+            var total = 0
+            for (t in targets) {
+                currentCoroutineContext().ensureActive()
+                if (root != null && replaceFile(root, folder, t.entry, t.existing.bytes, t.bytes)) { total += t.entries; record(t.entry.name, t.entries) }
+            }
+            total
+        }
     }
 
     /** One line in the action history per playlist written. */

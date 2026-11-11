@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playlists66_section_move">¿Has movido tus juegos?</string>
+    <string name="playlists66_move_hint">Tras mover tu biblioteca a otra tarjeta o carpeta, las rutas de tus listas ya no encajan. Escribe la carpeta antigua y la nueva como las ve RetroArch (por ejemplo /storage/ABCD-1234/Roms). Solo cambian las rutas; cada lista anterior pasa antes a la papelera y el centro de recuperación.</string>
+    <string name="playlists66_move_from">Carpeta antigua</string>
+    <string name="playlists66_move_to">Carpeta nueva</string>
+    <string name="playlists66_move_check">Comprobar</string>
+    <string name="playlists66_move_apply">Actualizar rutas</string>
+    <string name="playlists66_move_preview">%1$s entradas en %2$s listas pasarían a la carpeta nueva.</string>
+    <string name="playlists66_move_none">Ninguna entrada está en la carpeta antigua. Revisa cómo está escrita.</string>
+    <string name="playlists66_move_invalid">Escribe dos carpetas distintas que empiecen por / (por ejemplo /storage/ABCD-1234/Roms), o elige antes arriba la carpeta de listas.</string>
+    <string name="playlists66_move_done">%1$s entradas actualizadas.</string>
+    <string name="playlists66_move_failed">No se pudieron actualizar las rutas; las listas quedaron como estaban.</string>
+    <string name="backup66_failed_title">Falló la copia automática</string>
+    <string name="backup66_failed_text">Valkyr no pudo escribir la copia semanal. Comprueba que la carpeta de copias sigue existiendo y tiene espacio (Ajustes → Copia automática).</string>
+    <string name="wifi66_title">Recibir juegos por Wi-Fi</string>
+    <string name="wifi66_subtitle">Tus propios archivos, desde un navegador de tu red</string>
+    <string name="wifi66_hint">Envía tus propios archivos de juego desde un PC a la carpeta de consola correcta, sin cable ni lector</string>
+    <string name="wifi66_kw">wifi subir transferir pc navegador enviar archivos</string>
+    <string name="wifi66_what_title">Cómo funciona</string>
+    <string name="wifi66_what_body">Apagado hasta que lo actives. Luego abre la dirección en un navegador de un dispositivo de la misma red y escribe el PIN. Elige una consola y tus archivos; van a las mismas carpetas que las descargas y se comprueban tras escribirlos. Nunca se reemplazan archivos existentes. Solo responde a dispositivos de tu red local, se apaga tras %1$d minutos sin actividad (%2$d como máximo) o tras 5 PIN erróneos, y la conexión es HTTP simple, así que úsalo en una red de confianza. Mantén Valkyr abierto mientras envías. La app no incluye juegos.</string>
+    <string name="wifi66_open_title">Abre esta dirección en un navegador de tu PC:</string>
+    <string name="wifi66_pin">PIN: %1$s</string>
+    <string name="wifi66_stops">Se apaga como máximo %1$s</string>
+    <string name="wifi66_start">Empezar a recibir</string>
+    <string name="wifi66_stop">Dejar de recibir</string>
+    <string name="wifi66_received">Recibidos (%1$d)</string>
+    <string name="wifi66_problem_no_wifi">No se encontró una red local. Conéctate al Wi-Fi e inténtalo de nuevo.</string>
+    <string name="wifi66_problem_no_folder">Elige primero una carpeta de descargas (Ajustes → Descargas).</string>
+    <string name="wifi66_problem_pin">Apagado tras demasiados PIN erróneos.</string>
+    <string name="wifi66_problem_timeout">Se apagó solo.</string>
+    <string name="wifi66_problem_failed">No se pudo iniciar la recepción.</string>
+    <string name="wifi66_page_pin">PIN que se ve en el dispositivo</string>
+    <string name="wifi66_page_console">Consola</string>
+    <string name="wifi66_page_choose">Tus archivos de juego</string>
+    <string name="wifi66_page_send">Enviar</string>
+    <string name="wifi66_page_done">hecho</string>
+    <string name="wifi66_page_wrong">PIN incorrecto</string>
+</resources>

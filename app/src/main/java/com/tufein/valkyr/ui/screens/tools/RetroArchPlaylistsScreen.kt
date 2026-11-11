@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -205,6 +206,28 @@ fun RetroArchPlaylistsScreen(viewModel: RetroArchPlaylistsViewModel = hiltViewMo
                         modifier = track,
                         icon = R.drawable.ic_playlist_play
                     )
+                }
+            }
+
+            item(key = "h-move") { SectionHeader(stringResource(R.string.playlists66_section_move), icon = R.drawable.ic_sync) }
+            item(key = "move") {
+                val move by viewModel.move.collectAsStateWithLifecycle()
+                Panel(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(stringResource(R.string.playlists66_move_hint), style = MaterialTheme.typography.bodySmall)
+                    OutlinedTextField(move.from, { viewModel.editMove(from = it.take(300)) }, label = { Text(stringResource(R.string.playlists66_move_from)) }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                    OutlinedTextField(move.to, { viewModel.editMove(to = it.take(300)) }, label = { Text(stringResource(R.string.playlists66_move_to)) }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                    val preview = move.preview
+                    when {
+                        move.done != null && move.done!! >= 0 -> Text(stringResource(R.string.playlists66_move_done, count(move.done!!)))
+                        move.done != null -> Text(stringResource(R.string.playlists66_move_failed), color = MaterialTheme.colorScheme.error)
+                        preview != null && !preview.folderOk -> Text(stringResource(R.string.playlists66_move_invalid), color = MaterialTheme.colorScheme.error)
+                        preview != null && preview.entries == 0 -> Text(stringResource(R.string.playlists66_move_none))
+                        preview != null -> Text(stringResource(R.string.playlists66_move_preview, count(preview.entries), count(preview.playlists)))
+                    }
+                    ToolsActions {
+                        ActionPill(stringResource(R.string.playlists66_move_check), { viewModel.previewMove() }, icon = R.drawable.ic_search, enabled = !move.busy && !run.running && move.from.isNotBlank() && move.to.isNotBlank())
+                        ActionPill(stringResource(R.string.playlists66_move_apply), { viewModel.applyMove() }, icon = R.drawable.ic_sync, enabled = !move.busy && !run.running && (preview?.entries ?: 0) > 0)
+                    }
                 }
             }
 

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="playlists66_section_move">Spiele verschoben?</string>
+    <string name="playlists66_move_hint">Nach dem Umzug deiner Bibliothek auf eine andere Karte oder in einen anderen Ordner passen die Pfade in deinen Playlists nicht mehr. Gib den alten und den neuen Ordner so ein, wie RetroArch sie sieht (zum Beispiel /storage/ABCD-1234/Roms). Nur die Pfade ändern sich; jede alte Playlist landet zuerst im Papierkorb und Wiederherstellungscenter.</string>
+    <string name="playlists66_move_from">Alter Ordner</string>
+    <string name="playlists66_move_to">Neuer Ordner</string>
+    <string name="playlists66_move_check">Prüfen</string>
+    <string name="playlists66_move_apply">Pfade aktualisieren</string>
+    <string name="playlists66_move_preview">%1$s Einträge in %2$s Playlists würden in den neuen Ordner verschoben.</string>
+    <string name="playlists66_move_none">Kein Playlist-Eintrag liegt im alten Ordner. Prüfe die Schreibweise.</string>
+    <string name="playlists66_move_invalid">Gib zwei verschiedene Ordner ein, die mit / beginnen (zum Beispiel /storage/ABCD-1234/Roms), oder wähle oben zuerst den Playlist-Ordner.</string>
+    <string name="playlists66_move_done">%1$s Einträge aktualisiert.</string>
+    <string name="playlists66_move_failed">Das Aktualisieren der Pfade ist fehlgeschlagen; die Playlists blieben unverändert.</string>
+    <string name="backup66_failed_title">Automatische Sicherung fehlgeschlagen</string>
+    <string name="backup66_failed_text">Valkyr konnte die wöchentliche Sicherung nicht schreiben. Prüfe, ob der Sicherungsordner noch existiert und Platz hat (Einstellungen → Automatische Sicherung).</string>
+    <string name="wifi66_title">Spiele per WLAN empfangen</string>
+    <string name="wifi66_subtitle">Deine eigenen Dateien, aus einem Browser in deinem Netzwerk</string>
+    <string name="wifi66_hint">Eigene Spieldateien vom PC in den richtigen Konsolenordner schicken, ohne Kabel oder Kartenleser</string>
+    <string name="wifi66_kw">wlan upload übertragen pc browser dateien senden</string>
+    <string name="wifi66_what_title">So funktioniert es</string>
+    <string name="wifi66_what_body">Aus, bis du es einschaltest. Öffne dann die Adresse in einem Browser auf einem Gerät im selben Netzwerk und gib die PIN ein. Wähle eine Konsole und deine Dateien; sie landen in denselben Ordnern wie Downloads und werden nach dem Schreiben geprüft. Vorhandene Dateien werden nie ersetzt. Es antwortet nur Geräten im lokalen Netzwerk, schaltet sich nach %1$d Minuten Leerlauf (höchstens %2$d) oder nach 5 falschen PINs aus, und die Verbindung ist einfaches HTTP, nutze es also nur in einem Netzwerk, dem du vertraust. Lass Valkyr beim Senden geöffnet. Die App enthält keine Spiele.</string>
+    <string name="wifi66_open_title">Öffne diese Adresse in einem Browser am PC:</string>
+    <string name="wifi66_pin">PIN: %1$s</string>
+    <string name="wifi66_stops">Schaltet sich spätestens %1$s aus</string>
+    <string name="wifi66_start">Empfang starten</string>
+    <string name="wifi66_stop">Empfang beenden</string>
+    <string name="wifi66_received">Empfangen (%1$d)</string>
+    <string name="wifi66_problem_no_wifi">Kein lokales Netzwerk gefunden. Verbinde dich mit WLAN und versuche es erneut.</string>
+    <string name="wifi66_problem_no_folder">Wähle zuerst einen Download-Ordner (Einstellungen → Downloads).</string>
+    <string name="wifi66_problem_pin">Nach zu vielen falschen PINs ausgeschaltet.</string>
+    <string name="wifi66_problem_timeout">Von selbst ausgeschaltet.</string>
+    <string name="wifi66_problem_failed">Der Empfang konnte nicht gestartet werden.</string>
+    <string name="wifi66_page_pin">PIN auf dem Gerät</string>
+    <string name="wifi66_page_console">Konsole</string>
+    <string name="wifi66_page_choose">Deine Spieldateien</string>
+    <string name="wifi66_page_send">Senden</string>
+    <string name="wifi66_page_done">fertig</string>
+    <string name="wifi66_page_wrong">Falsche PIN</string>
+</resources>
