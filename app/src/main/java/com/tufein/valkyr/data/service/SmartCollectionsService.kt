@@ -53,8 +53,12 @@ class SmartCollectionsService @Inject constructor(
         val known = metadata.observeKnown().first().associateBy { it.lookupKey }
         val restrictions = profiles.current()
         val active = profiles.activeId.value
-        val played = history.entries.filterNotNull().first().filter { it.profileId == active && it.kind == ActionKind.PLAYED }
-            .map { VersionPreference.key(it.consoleId.orEmpty(), it.fileName.orEmpty()) }.toSet()
+        val lastPlayed = HashMap<String, Long>()
+        history.entries.filterNotNull().first().filter { it.profileId == active && it.kind == ActionKind.PLAYED }.forEach {
+            val k = VersionPreference.key(it.consoleId.orEmpty(), it.fileName.orEmpty())
+            if (it.at > (lastPlayed[k] ?: 0L)) lastPlayed[k] = it.at
+        }
+        val now = System.currentTimeMillis()
         val current = SmartCollectionRules.decode(context.dataStore.data.first()[key]) ?: error("Rules are unreadable")
         val existing = collections.getAll().map { it.id }.toSet()
         for ((id, rule) in current.filterKeys { it in existing }) {
@@ -69,7 +73,8 @@ class SmartCollectionsService @Inject constructor(
                     val m = known["${console.substringAfter("_", console).lowercase()}|${title.lowercase()}"]
                     val year = m?.released?.take(4)?.toIntOrNull()
                     if (restrictions.allows(console, rowTags) && rule.matches(console, rowTags, m?.genres, year,
-                            VersionPreference.key(console, row.fileName) in played)) {
+                            VersionPreference.key(console, row.fileName) in lastPlayed,
+                            lastPlayed[VersionPreference.key(console, row.fileName)], now)) {
                         matches += CollectionItemEntity(id, console, row.fileName)
                     }
                 }

@@ -16,6 +16,8 @@ import com.tufein.valkyr.util.DiskFile
 import com.tufein.valkyr.util.DiskScanner
 import com.tufein.valkyr.util.FileParsingUtils
 import com.tufein.valkyr.util.LibraryRestrictions
+import com.tufein.valkyr.util.ApkAssets
+import com.tufein.valkyr.util.EmulatorCatalog
 import com.tufein.valkyr.util.RetroArchPlaylists
 import com.tufein.valkyr.util.StorageHelper
 import com.tufein.valkyr.util.VerifiedCopy
@@ -144,7 +146,7 @@ class RetroArchPlaylistsService @Inject constructor(
         val systems = withoutHiddenTags(found.systems, restrictions)
         currentCoroutineContext().ensureActive()
         val listing = root?.let { DiskScanner.rootOf(s.folder) }?.let { DiskScanner.listOrNull(context, it, strict = true) }
-        val plans = listing?.let { children -> systems.map { RetroArchPlaylists.plan(it, readExisting(match(children, it.system)).read) } }
+        val plans = listing?.let { children -> systems.map { RetroArchPlaylists.plan(it, readExisting(match(children, it.system)).read, coreFor(it, s.cores)) } }
         val games = systems.sumOf { it.games.size + it.discSetsWithoutM3u } + found.noSystem
         return Prepared(
             PlaylistsPreview(
@@ -162,6 +164,13 @@ class RetroArchPlaylistsService @Inject constructor(
             root,
             s.folder
         )
+    }
+
+    /** 6.5: the core chosen for [system] as RetroArch's association; null when none is chosen or RetroArch is not installed. */
+    private fun coreFor(system: RetroArchPlaylists.SystemGames, chosen: Map<String, String>): RetroArchPlaylists.DefaultCore? {
+        val id = chosen[system.system]?.takeIf { it in RetroArchPlaylists.coresOf(system.consoleIds) } ?: return null
+        val variant = EmulatorCatalog.byId("retroarch")?.variants?.firstOrNull { ApkAssets.isInstalled(context, it.packageName) } ?: return null
+        return RetroArchPlaylists.defaultCore(id, variant.packageName)
     }
 
     /** Shared storage as RetroArch sees it on this device (`/storage/emulated/0` for the usual user). */
@@ -351,10 +360,11 @@ class RetroArchPlaylistsService @Inject constructor(
         val existing = readExisting(match(listing, system.system))
         // The automatic refresh only adds to a playlist that is there: one that vanished is not made anew.
         if (existing.entry == null && !createNew) return Outcome()
-        val plan = RetroArchPlaylists.plan(system, existing.read)
+        val core = if (createNew) coreFor(system, settings.values.first().cores) else null
+        val plan = RetroArchPlaylists.plan(system, existing.read, core)
         if (plan.state == RetroArchPlaylists.State.LEFT_ALONE) return Outcome(leftAlone = true)
         if (!plan.writes) return Outcome()
-        val bytes = RetroArchPlaylists.write(existing.read, system.system, plan.add)
+        val bytes = RetroArchPlaylists.write(existing.read, system.system, plan.add, core)
         val entry = existing.entry
         if (entry == null) {
             StorageHelper.writeBytesSafely(context, root, "", plan.fileName, bytes)

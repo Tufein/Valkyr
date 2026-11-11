@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="smart65_stale_90">Sem jogar há 3 meses</string>
+    <string name="smart65_stale_180">Sem jogar há 6 meses</string>
+    <string name="smart65_stale_365">Sem jogar há um ano</string>
+    <string name="playlists65_section_cores">Núcleo predefinido por sistema</string>
+    <string name="playlists65_cores_hint">Escolha um núcleo uma vez por sistema e o RetroArch deixa de perguntar a cada jogo novo. Ele é gravado como associação de núcleo da lista, só numa lista que ainda não tem uma. Toque num sistema para percorrer os núcleos.</string>
+    <string name="playlists65_core_ask">O RetroArch pergunta no primeiro início</string>
+    <string name="playlists65_core_value">Núcleo: %1$s</string>
+    <string name="playlists65_row_core">Nada a adicionar; o núcleo predefinido é definido (%1$s jogos já listados)</string>
+    <string name="playlists65_preview_core">Definir o núcleo predefinido em %1$s listas em %2$s</string>
+    <string name="state65_title">Continuar aqui</string>
+    <string name="state65_description">Imagem do estado salvo mais recente</string>
+    <string name="state65_hint">Da pasta de estados salvos escolhida em Sincronizar saves. Inicie o jogo no RetroArch e carregue o estado.</string>
+</resources>

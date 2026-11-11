@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="smart65_stale_90">Non giocato da 3 mesi</string>
+    <string name="smart65_stale_180">Non giocato da 6 mesi</string>
+    <string name="smart65_stale_365">Non giocato da un anno</string>
+    <string name="playlists65_section_cores">Core predefinito per sistema</string>
+    <string name="playlists65_cores_hint">Scegli un core una volta per sistema e RetroArch smette di chiederlo a ogni nuovo gioco. Viene scritto come associazione del core della playlist, solo in una playlist che non ne ha ancora una. Tocca un sistema per scorrere i core.</string>
+    <string name="playlists65_core_ask">RetroArch chiede al primo avvio</string>
+    <string name="playlists65_core_value">Core: %1$s</string>
+    <string name="playlists65_row_core">Niente da aggiungere; viene impostato il core predefinito (%1$s giochi già elencati)</string>
+    <string name="playlists65_preview_core">Imposta il core predefinito in %1$s playlist in %2$s</string>
+    <string name="state65_title">Riprendi da qui</string>
+    <string name="state65_description">Immagine dell\'ultimo stato salvato</string>
+    <string name="state65_hint">Dalla cartella degli stati salvati scelta in Sincronizzazione salvataggi. Avvia il gioco in RetroArch e carica lo stato.</string>
+</resources>

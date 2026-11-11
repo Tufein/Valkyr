@@ -56,7 +56,7 @@ Necesitas **Android 10 o más reciente**. La app no está en Google Play.
 - **Imágenes extra para lanzadores**: pantallas de título y capturas para la carpeta de carátulas de ES-DE (*Herramientas → Portadas para lanzadores*), desactivado por defecto y sin reemplazar nunca archivos que ya tienes.
 - **Prueba de rendimiento** (*Herramientas → Prueba de rendimiento*): mide el arranque, la velocidad de búsqueda, la decodificación de carátulas, el almacenamiento y el desplazamiento en tu propio dispositivo, con veredicto Rápido/Bien/Lento y un informe solo con números para compartir.
 - **A continuación y Para ti**: una lista de juegos personal por perfil y sugerencias de tu propia biblioteca que siempre dicen por qué se eligieron.
-- **Colecciones y objetivos**: favoritos, listas propias, colecciones por reglas (consola, idioma, género, año, jugado), objetivos de colección, historial de juego, un resumen anual y los mejores juegos por consola según RetroAchievements.
+- **Colecciones y objetivos**: favoritos, listas propias, colecciones por reglas (consola, idioma, género, año, jugado, sin jugar en 3, 6 o 12 meses), objetivos de colección, historial de juego, un resumen anual y los mejores juegos por consola según RetroAchievements.
 - **Lista de deseos**: anota los juegos que quieres, recibe un aviso cuando aparezca uno, descárgalos automáticamente y comparte la lista.
 - **Importar una lista**: pega o carga un archivo de texto; los juegos encontrados se descargan y el resto va a la lista de deseos.
 
@@ -78,7 +78,7 @@ Necesitas **Android 10 o más reciente**. La app no está en Google Play.
 - **Jugar desde la página del juego** con un emulador compatible, recordado por consola o elegido por juego, con una **comprobación de preparación** (archivos, discos, BIOS, emulador), una configuración guiada y un lanzamiento de prueba.
 - **ES-DE, iiSU, Daijishō y Pegasus**: una entrada «buscar más juegos» por consola, además de carátulas y descripciones en tu lanzador; para iiSU, Daijishō y cualquier otro lanzador, las carátulas van a una carpeta de medios que eliges tú, con la estructura de archivos que ese lanzador espera (diez estructuras listas, o escribe la tuya).
 - **Juegos en tu pantalla de inicio**: fija un juego desde su página y arranca directamente en su emulador; al mantener pulsado el icono de la app también ves tus tres últimos juegos jugados.
-- **Listas de RetroArch**: escribe listas `.lpl` para que RetroArch muestre tu biblioteca; las listas existentes solo se completan y el archivo anterior pasa antes a la papelera y el centro de recuperación.
+- **Listas de RetroArch**: escribe listas `.lpl` para que RetroArch muestre tu biblioteca; las listas existentes solo se completan y el archivo anterior pasa antes a la papelera y el centro de recuperación. Puedes elegir un núcleo predeterminado por sistema para que RetroArch deje de preguntar. La página del juego muestra la imagen de tu estado guardado más reciente de RetroArch.
 - **Seguir en otra consola portátil** desde la página del juego, cuando tu emulador y tus partidas pueden viajar: primero se muestra el camino de vuelta y la partida pasa por RomM.
 - **Los juegos de varios discos** reciben automáticamente su lista `.m3u`.
 - **Continuar jugando** en el inicio, desde partidas guardadas de cualquier dispositivo o desde ES-DE.

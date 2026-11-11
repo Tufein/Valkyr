@@ -21,16 +21,23 @@ import javax.inject.Singleton
 class RetroArchPlaylistsSettings @Inject constructor(@param:ApplicationContext private val context: Context) {
 
     /** [excluded]: libretro system names ("Nintendo - Game Boy Advance") not to write. */
-    data class Values(val folder: String = "", val excluded: Set<String> = emptySet(), val auto: Boolean = false)
+    data class Values(val folder: String = "", val excluded: Set<String> = emptySet(), val auto: Boolean = false, val cores: Map<String, String> = emptyMap())
 
     private val folderKey = stringPreferencesKey(RetroArchPlaylists.FOLDER_KEY)
     private val excludedKey = stringSetPreferencesKey(RetroArchPlaylists.EXCLUDED_KEY)
     private val autoKey = booleanPreferencesKey(RetroArchPlaylists.AUTO_KEY)
+    private val coresKey = stringSetPreferencesKey(RetroArchPlaylists.CORES_KEY)
 
-    val values: Flow<Values> = context.dataStore.data.map { Values(it[folderKey].orEmpty(), it[excludedKey].orEmpty(), it[autoKey] ?: false) }
+    val values: Flow<Values> = context.dataStore.data.map { Values(it[folderKey].orEmpty(), it[excludedKey].orEmpty(), it[autoKey] ?: false, RetroArchPlaylists.parseCores(it[coresKey].orEmpty())) }
 
     /** 6.2: after a rescan or a finished download, games that are new are added to playlists that exist. */
     suspend fun setAuto(on: Boolean) = context.dataStore.edit { it[autoKey] = on }
+
+    /** 6.5: the core a system's playlist opens with ([core] null = RetroArch asks). */
+    suspend fun setCore(system: String, core: String?) = context.dataStore.edit {
+        val now = RetroArchPlaylists.parseCores(it[coresKey].orEmpty())
+        it[coresKey] = RetroArchPlaylists.encodeCores(if (core == null) now - system else now + (system to core))
+    }
 
     suspend fun setFolder(uri: String) = context.dataStore.edit { it[folderKey] = uri }
 

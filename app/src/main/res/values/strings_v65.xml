@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="smart65_stale_90">Not played for 3 months</string>
+    <string name="smart65_stale_180">Not played for 6 months</string>
+    <string name="smart65_stale_365">Not played for a year</string>
+    <string name="playlists65_section_cores">Default core per system</string>
+    <string name="playlists65_cores_hint">Pick a core once per system and RetroArch stops asking for one with every new game. It is written as the playlist\'s core association, only into a playlist that has none yet. Tap a system to step through the cores.</string>
+    <string name="playlists65_core_ask">RetroArch asks at the first start</string>
+    <string name="playlists65_core_value">Core: %1$s</string>
+    <string name="playlists65_row_core">Nothing to add; the default core is set (%1$s games already listed)</string>
+    <string name="playlists65_preview_core">Set the default core in %1$s playlists in %2$s</string>
+    <string name="state65_title">Resume here</string>
+    <string name="state65_description">Picture of the newest save state</string>
+    <string name="state65_hint">From the save state folder you picked in Save sync. Start the game in RetroArch and load the state.</string>
+</resources>

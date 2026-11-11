@@ -64,8 +64,44 @@ object RetroArchPlaylists {
     /** 6.2: "Keep RetroArch playlists up to date" (default off). */
     const val AUTO_KEY = "playlists62_auto"
 
+    /** 6.5: the core chosen per system, as `system<TAB>core` entries. */
+    const val CORES_KEY = "playlists65_cores"
+
     /** Their backup types, for [SettingSchema]. */
-    val SETTING_TYPES: Map<String, String> = mapOf(FOLDER_KEY to "s", EXCLUDED_KEY to "ss", AUTO_KEY to "b")
+    val SETTING_TYPES: Map<String, String> = mapOf(FOLDER_KEY to "s", EXCLUDED_KEY to "ss", AUTO_KEY to "b", CORES_KEY to "ss")
+
+    /**
+     * 6.5: the core a playlist opens its games with, as RetroArch's own *Set Core Association*
+     * stores it (`default_core_path` / `default_core_name` in the playlist). An entry that stays
+     * `DETECT` then starts with it instead of asking.
+     */
+    data class DefaultCore(val id: String, val path: String, val name: String)
+
+    /** The core file inside RetroArch's private `cores` folder of [packageName]. */
+    fun defaultCore(coreId: String, packageName: String): DefaultCore = DefaultCore(
+        coreId, "/data/data/$packageName/cores/${coreId}_libretro_android.so", coreId
+    )
+
+    /** The cores RetroArch can run [system]'s consoles with, preferred first (from the emulator catalogue). */
+    fun coresOf(consoleIds: List<String>): List<String> =
+        consoleIds.firstNotNullOfOrNull { EmulatorCatalog.systemOf(it)?.cores?.takeIf { c -> c.isNotEmpty() } }.orEmpty()
+
+    /** `system<TAB>core` entries → system to core id. */
+    fun parseCores(entries: Set<String>): Map<String, String> =
+        entries.mapNotNull { e -> e.split('\t', limit = 2).takeIf { it.size == 2 && it[0].isNotBlank() && it[1].isNotBlank() }?.let { it[0] to it[1] } }.toMap()
+
+    fun encodeCores(cores: Map<String, String>): Set<String> = cores.map { (k, v) -> "$k\t$v" }.toSet()
+
+    /** The next choice when tapping: none (RetroArch asks) → first core → second … → none. */
+    fun nextCore(options: List<String>, current: String?): String? {
+        if (options.isEmpty()) return null
+        val at = options.indexOf(current)
+        return if (current == null || at < 0) options.first() else options.getOrNull(at + 1)
+    }
+
+    private fun blankDefault(root: JsonObject): Boolean =
+        (root.get("default_core_path")?.takeIf { it.isJsonPrimitive }?.asString).isNullOrBlank() ||
+            root.get("default_core_path")?.asString == DETECT
 
     private const val EXTERNAL_STORAGE = "com.android.externalstorage.documents"
 
@@ -398,6 +434,8 @@ object RetroArchPlaylists {
         ADD,
         /** Every game that can be listed is in the playlist already (or none can be). */
         NOTHING_TO_ADD,
+        /** Nothing to add, but the playlist has no default core yet and one is chosen: only that is written. */
+        CORE,
         /** The playlist is there but is not changed ([Plan.leftAlone] says why). */
         LEFT_ALONE
     }
@@ -421,7 +459,7 @@ object RetroArchPlaylists {
     ) {
         val fileName: String get() = fileName(system)
         /** Whether a run writes this playlist. */
-        val writes: Boolean get() = state == State.NEW || state == State.ADD
+        val writes: Boolean get() = state == State.NEW || state == State.ADD || state == State.CORE
     }
 
     /**
@@ -429,7 +467,7 @@ object RetroArchPlaylists {
      * entry's path is one of its files ([pathKey]); a game without a path cannot be listed; two
      * games with the same path are one entry.
      */
-    fun plan(games: SystemGames, existing: Read): Plan {
+    fun plan(games: SystemGames, existing: Read, core: DefaultCore? = null): Plan {
         val base = Plan(games.system, games.consoleIds, State.NOTHING_TO_ADD, emptyList(), 0, 0, games.discSetsWithoutM3u, games.games.size)
         if (existing is Read.Kept) return base.copy(state = State.LEFT_ALONE, leftAlone = existing.why)
         val items = (existing as? Read.Json)?.items.orEmpty()
@@ -450,7 +488,7 @@ object RetroArchPlaylists {
         }
         val sorted = add.sortedWith(compareBy({ it.label.lowercase(Locale.ROOT) }, { it.label }, { it.path }))
         val state = when {
-            sorted.isEmpty() -> State.NOTHING_TO_ADD
+            sorted.isEmpty() -> if (core != null && existing is Read.Json && blankDefault(existing.root)) State.CORE else State.NOTHING_TO_ADD
             existing is Read.Json -> State.ADD
             else -> State.NEW
         }
@@ -484,11 +522,16 @@ object RetroArchPlaylists {
      * The playlist with [add] appended, as UTF-8 JSON: a copy of [existing] with everything in it
      * kept as it is, or a new playlist for [system]. Throws for a playlist that is left alone.
      */
-    fun write(existing: Read, system: String, add: List<Game>): ByteArray {
+    fun write(existing: Read, system: String, add: List<Game>, core: DefaultCore? = null): ByteArray {
         val root = when (existing) {
             is Read.Json -> existing.root.deepCopy()
             Read.New -> newPlaylist()
             is Read.Kept -> throw IllegalStateException("This playlist is left alone")
+        }
+        // Only a playlist without a default core gets one: a choice made in RetroArch stays.
+        if (core != null && blankDefault(root)) {
+            root.addProperty("default_core_path", core.path)
+            root.addProperty("default_core_name", core.name)
         }
         val items = root.get("items")?.takeIf { it.isJsonArray }?.asJsonArray ?: JsonArray().also { root.add("items", it) }
         for (game in add) items.add(entry(game, system))

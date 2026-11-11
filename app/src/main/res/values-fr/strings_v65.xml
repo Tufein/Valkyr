@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="smart65_stale_90">Pas joué depuis 3 mois</string>
+    <string name="smart65_stale_180">Pas joué depuis 6 mois</string>
+    <string name="smart65_stale_365">Pas joué depuis un an</string>
+    <string name="playlists65_section_cores">Cœur par défaut par système</string>
+    <string name="playlists65_cores_hint">Choisis un cœur une fois par système et RetroArch ne le redemande plus à chaque nouveau jeu. Il est écrit comme association de cœur de la liste, seulement dans une liste qui n\'en a pas encore. Touche un système pour passer d\'un cœur à l\'autre.</string>
+    <string name="playlists65_core_ask">RetroArch demande au premier lancement</string>
+    <string name="playlists65_core_value">Cœur : %1$s</string>
+    <string name="playlists65_row_core">Rien à ajouter ; le cœur par défaut est défini (%1$s jeux déjà listés)</string>
+    <string name="playlists65_preview_core">Définir le cœur par défaut dans %1$s listes dans %2$s</string>
+    <string name="state65_title">Reprendre ici</string>
+    <string name="state65_description">Image de la sauvegarde d\'état la plus récente</string>
+    <string name="state65_hint">Du dossier des sauvegardes d\'état choisi dans Synchro des sauvegardes. Lance le jeu dans RetroArch et charge l\'état.</string>
+</resources>

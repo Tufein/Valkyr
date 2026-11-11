@@ -56,7 +56,7 @@ You need **Android 10 or newer**. The app is not on Google Play.
 - **Extra launcher art**: title screens and screenshots for the ES-DE covers folder (*Tools → Covers for launchers*), off by default and never replacing files you already have.
 - **Performance check** (*Tools → Performance check*): measures start-up, search speed, cover decoding, storage speed and scrolling on your own device, with a Fast/Fine/Slow verdict and a numbers-only report you can share.
 - **Up next and For you**: a personal play list per profile, and suggestions from your own library that always say why they were picked.
-- **Collections and goals**: favourites, your own lists, rule-based collections (console, language, genre, year, played), collection goals, play history, a yearly recap and the best games per console from RetroAchievements.
+- **Collections and goals**: favourites, your own lists, rule-based collections (console, language, genre, year, played, not played for 3, 6 or 12 months), collection goals, play history, a yearly recap and the best games per console from RetroAchievements.
 - **Wishlist**: note games you want, get told when one appears, download them automatically and share the list.
 - **Import a list**: paste or load a text file; found games download, the rest go to the wishlist.
 
@@ -78,7 +78,7 @@ You need **Android 10 or newer**. The app is not on Google Play.
 - **Play from the game page** with a compatible emulator, remembered per console or chosen per game, with a **readiness check** (files, discs, BIOS, emulator), a guided setup and a test launch.
 - **ES-DE, iiSU, Daijishō and Pegasus**: a "search for more games" entry per console, plus covers and descriptions written into your launcher; for iiSU, Daijishō and any other launcher, covers go into a media folder you pick, in the file layout that launcher expects (ten ready-made layouts, or write your own).
 - **Games on your home screen**: pin a game from its page and it starts straight in its emulator; a long press on the app icon also shows your last three played games.
-- **RetroArch playlists**: writes `.lpl` playlists so RetroArch shows your library; existing playlists are only added to, and the old file goes to Trash and recovery first.
+- **RetroArch playlists**: writes `.lpl` playlists so RetroArch shows your library; existing playlists are only added to, and the old file goes to Trash and recovery first. You can pick a default core per system, so RetroArch stops asking. The game page shows the picture of your newest RetroArch save state.
 - **Continue on another handheld** from the game page, when your emulator and saves can travel: it shows the way back first and the save goes through RomM.
 - **Multi-disc games** get their `.m3u` playlist automatically.
 - **Continue playing** on Home, from saves on any device or from ES-DE.

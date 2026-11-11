@@ -37,6 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
@@ -482,11 +483,13 @@ private fun GamePageContent(
             primaryModifier = Modifier.focusRequester(firstFocus)
         )
     }
+    val statePreview by produceState<android.net.Uri?>(null, rom.fileName) { value = viewModel.statePreview(rom.fileName) }
     val moreActions: @Composable () -> Unit = {
         val switch = state.switch
         // The live ranking (the same as the Versions tab), so a pin or a preference change shows at once.
         val best = ranking?.pick ?: state.best
         GameMoreActions(modifier = Modifier.padding(horizontal = 16.dp)) {
+            StatePreviewCard(statePreview)
             // The round buttons of 3.8 that the bar no longer carries.
             val quick = GameHeaderModel.quick(owned, downloading)
             if (GameHeaderModel.Quick.HOME_SCREEN in quick) {

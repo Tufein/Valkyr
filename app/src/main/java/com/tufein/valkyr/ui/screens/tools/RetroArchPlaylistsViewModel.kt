@@ -97,6 +97,12 @@ class RetroArchPlaylistsViewModel @Inject constructor(
         if (!service.state.value.running) viewModelScope.launch { settings.setAll(systems, on) }
     }
     fun setAuto(on: Boolean) { viewModelScope.launch { settings.setAuto(on) } }
+    /** 6.5: tapping a system's core row steps through none (RetroArch asks) and the cores the catalogue knows for it. */
+    fun nextCore(system: String, options: List<String>) {
+        if (service.state.value.running) return
+        val next = RetroArchPlaylists.nextCore(options, ui.value.settings?.cores?.get(system))
+        viewModelScope.launch { settings.setCore(system, next); refresh() }
+    }
     fun refresh() { refresh.value++ }
 
     fun write() = service.start()

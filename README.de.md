@@ -56,7 +56,7 @@ Du brauchst **Android 10 oder neuer**. Die App ist nicht bei Google Play erhält
 - **Zusätzliche Launcher-Bilder**: Titelbildschirme und Screenshots für den ES-DE-Cover-Ordner (*Tools → Cover für Launcher*), standardmäßig aus und ersetzen nie vorhandene Dateien.
 - **Leistungsprüfung** (*Tools → Leistungsprüfung*): misst Start, Suchgeschwindigkeit, Cover-Dekodierung, Speichertempo und Scrollen auf deinem eigenen Gerät, mit Urteil Schnell/Okay/Langsam und einem Bericht nur mit Zahlen zum Teilen.
 - **Als Nächstes und Für dich**: eine persönliche Spielliste pro Profil und Vorschläge aus deiner eigenen Bibliothek, die immer sagen, warum sie gewählt wurden.
-- **Sammlungen und Ziele**: Favoriten, eigene Listen, regelbasierte Sammlungen (Konsole, Sprache, Genre, Jahr, gespielt), Sammlungsziele, Spielverlauf, ein Jahresrückblick und die besten Spiele je Konsole von RetroAchievements.
+- **Sammlungen und Ziele**: Favoriten, eigene Listen, regelbasierte Sammlungen (Konsole, Sprache, Genre, Jahr, gespielt, seit 3, 6 oder 12 Monaten nicht gespielt), Sammlungsziele, Spielverlauf, ein Jahresrückblick und die besten Spiele je Konsole von RetroAchievements.
 - **Wunschliste**: Spiele vormerken, Bescheid bekommen, wenn eines auftaucht, automatisch herunterladen und die Liste teilen.
 - **Liste importieren**: Text einfügen oder Datei laden; gefundene Spiele werden geladen, der Rest landet auf der Wunschliste.
 
@@ -78,7 +78,7 @@ Du brauchst **Android 10 oder neuer**. Die App ist nicht bei Google Play erhält
 - **Spielen von der Spielseite** mit einem passenden Emulator, pro Konsole gemerkt oder pro Spiel gewählt, mit einer **Bereitschaftsprüfung** (Dateien, Discs, BIOS, Emulator), geführter Einrichtung und Teststart.
 - **ES-DE, iiSU, Daijishō und Pegasus**: ein Eintrag „Mehr Spiele suchen“ je Konsole sowie Cover und Beschreibungen in deinem Launcher; für iiSU, Daijishō und jeden anderen Launcher landen die Cover in einem Medienordner, den du wählst, in der Dateiaufteilung, die der Launcher erwartet (zehn fertige Aufteilungen, oder schreibe selbst eine).
 - **Spiele auf deinem Startbildschirm**: pinne ein Spiel von seiner Seite und es startet direkt in seinem Emulator; langes Drücken auf das App-Symbol zeigt außerdem deine drei zuletzt gespielten Spiele.
-- **RetroArch-Playlists**: schreibt `.lpl`-Playlists, damit RetroArch deine Bibliothek zeigt; vorhandene Playlists werden nur ergänzt, und die alte Datei landet vorher im Papierkorb und Wiederherstellungscenter.
+- **RetroArch-Playlists**: schreibt `.lpl`-Playlists, damit RetroArch deine Bibliothek zeigt; vorhandene Playlists werden nur ergänzt, und die alte Datei landet vorher im Papierkorb und Wiederherstellungscenter. Pro System lässt sich ein Standardcore wählen, damit RetroArch nicht mehr nachfragt. Die Spielseite zeigt das Bild deines neuesten RetroArch-Spielstands.
 - **Auf einem anderen Handheld weiterspielen** von der Spielseite aus, wenn Emulator und Spielstände mitkommen können: zuerst wird der Rückweg gezeigt, der Spielstand geht über RomM.
 - **Mehr-Disc-Spiele** bekommen automatisch ihre `.m3u`-Playlist.
 - **Weiterspielen** auf der Startseite, aus Spielständen auf jedem Gerät oder aus ES-DE.

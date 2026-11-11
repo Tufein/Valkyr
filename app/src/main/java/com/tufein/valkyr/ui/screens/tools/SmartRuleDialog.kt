@@ -46,7 +46,8 @@ internal fun SmartRuleDialog(initialName: String, initial: SmartCollectionRule?,
             OutlinedTextField(from, { from = it.take(4) }, label = { Text(stringResource(R.string.smart25_from)) }, singleLine = true)
             OutlinedTextField(to, { to = it.take(4) }, label = { Text(stringResource(R.string.smart25_to)) }, singleLine = true)
             ToolsActions(horizontalPadding = 0.dp) {
-                listOf("ANY" to R.string.smart25_any, "PLAYED" to R.string.smart25_played, "NEVER" to R.string.smart25_never).forEach { (value, label) ->
+                listOf("ANY" to R.string.smart25_any, "PLAYED" to R.string.smart25_played, "NEVER" to R.string.smart25_never,
+                    "STALE_90" to R.string.smart65_stale_90, "STALE_180" to R.string.smart65_stale_180, "STALE_365" to R.string.smart65_stale_365).forEach { (value, label) ->
                     ToolAction(stringResource(label), icon = if (played == value) R.drawable.ic_check else null) { played = value }
                 }
             }

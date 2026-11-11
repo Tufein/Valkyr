@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="smart65_stale_90">3 maanden niet gespeeld</string>
+    <string name="smart65_stale_180">6 maanden niet gespeeld</string>
+    <string name="smart65_stale_365">Een jaar niet gespeeld</string>
+    <string name="playlists65_section_cores">Standaardcore per systeem</string>
+    <string name="playlists65_cores_hint">Kies één keer per systeem een core en RetroArch vraagt er niet meer om bij elk nieuw spel. Hij wordt als core-koppeling van de afspeellijst geschreven, alleen in een afspeellijst die er nog geen heeft. Tik op een systeem om door de cores te lopen.</string>
+    <string name="playlists65_core_ask">RetroArch vraagt bij de eerste start</string>
+    <string name="playlists65_core_value">Core: %1$s</string>
+    <string name="playlists65_row_core">Niets toe te voegen; de standaardcore wordt ingesteld (%1$s games staan er al in)</string>
+    <string name="playlists65_preview_core">Standaardcore instellen in %1$s afspeellijsten in %2$s</string>
+    <string name="state65_title">Hervat hier</string>
+    <string name="state65_description">Afbeelding van de nieuwste save state</string>
+    <string name="state65_hint">Uit de save state-map die je in Savesync koos. Start het spel in RetroArch en laad de state.</string>
+</resources>

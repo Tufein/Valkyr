@@ -192,6 +192,22 @@ fun RetroArchPlaylistsScreen(viewModel: RetroArchPlaylistsViewModel = hiltViewMo
                 )
             }
 
+            val withCores = systems.map { it to RetroArchPlaylists.coresOf(it.consoleIds) }.filter { it.second.isNotEmpty() }
+            if (withCores.isNotEmpty()) {
+                item(key = "h-cores") { SectionHeader(stringResource(R.string.playlists65_section_cores), icon = R.drawable.ic_playlist_play) }
+                item(key = "cores-hint") { InfoCard(listOf(stringResource(R.string.playlists65_cores_hint)), modifier = Modifier.focusableCard(), icon = R.drawable.ic_info) }
+                items(withCores, key = { "c-" + it.first.system }) { (system, options) ->
+                    val chosen = ui.settings?.cores?.get(system.system)?.takeIf { it in options }
+                    ToolRow(
+                        title = system.system,
+                        lines = listOf(chosen?.let { stringResource(R.string.playlists65_core_value, it) } ?: stringResource(R.string.playlists65_core_ask)),
+                        onClick = { viewModel.nextCore(system.system, options) },
+                        modifier = track,
+                        icon = R.drawable.ic_playlist_play
+                    )
+                }
+            }
+
             item(key = "h-after") { SectionHeader(stringResource(R.string.playlists35_section_after), icon = R.drawable.ic_info) }
             item(key = "after") {
                 InfoCard(
@@ -218,6 +234,7 @@ private fun systemLines(system: RetroArchPlaylists.SystemGames, plan: RetroArchP
         RetroArchPlaylists.State.NEW -> add(stringResource(R.string.playlists35_row_new, count(plan.add.size)))
         RetroArchPlaylists.State.ADD -> add(stringResource(R.string.playlists35_row_add, count(plan.add.size), count(plan.already)))
         RetroArchPlaylists.State.NOTHING_TO_ADD -> add(stringResource(R.string.playlists35_row_nothing, count(plan.already)))
+        RetroArchPlaylists.State.CORE -> add(stringResource(R.string.playlists65_row_core, count(plan.already)))
         RetroArchPlaylists.State.LEFT_ALONE -> add(stringResource(R.string.playlists35_row_left_alone, plan.fileName, leftAloneText(plan.leftAlone)))
     }
     if (plan != null && plan.state != RetroArchPlaylists.State.LEFT_ALONE && plan.noPath > 0) add(stringResource(R.string.playlists35_row_no_path, count(plan.noPath)))
@@ -265,11 +282,15 @@ private fun PreviewCard(ui: RetroArchPlaylistsUi) {
 private fun previewLines(preview: PlaylistsPreview, chosen: List<RetroArchPlaylists.Plan>): List<String> = buildList {
     val writing = chosen.filter { it.writes }
     val entries = writing.sumOf { it.add.size }
-    if (entries == 0) add(stringResource(R.string.playlists35_preview_nothing))
+    val coreOnly = writing.count { it.state == RetroArchPlaylists.State.CORE }
+    if (entries == 0 && coreOnly > 0) {
+        add(stringResource(R.string.playlists65_preview_core, count(coreOnly), preview.folderDisplay))
+        add(stringResource(R.string.playlists35_preview_backup, stringResource(R.string.recovery_title), stringResource(R.string.hist24_title)))
+    } else if (entries == 0) add(stringResource(R.string.playlists35_preview_nothing))
     else {
         add(stringResource(R.string.playlists35_preview_count, count(entries), preview.folderDisplay))
         val created = writing.count { it.state == RetroArchPlaylists.State.NEW }
-        val updated = writing.count { it.state == RetroArchPlaylists.State.ADD }
+        val updated = writing.count { it.state == RetroArchPlaylists.State.ADD || it.state == RetroArchPlaylists.State.CORE }
         add(stringResource(R.string.playlists35_preview_files, count(created), count(updated)))
         if (updated > 0) add(stringResource(R.string.playlists35_preview_backup, stringResource(R.string.recovery_title), stringResource(R.string.hist24_title)))
         writing.firstNotNullOfOrNull { p -> p.add.firstOrNull { it.path != null } }?.let { game ->

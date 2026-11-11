@@ -56,7 +56,7 @@ Il vous faut **Android 10 ou plus récent**. L’application n’est pas sur Goo
 - **Images supplémentaires pour lanceurs** : écrans-titres et captures pour le dossier de jaquettes d’ES-DE (*Outils → Jaquettes pour lanceurs*), désactivé par défaut et sans jamais remplacer vos fichiers existants.
 - **Test de performance** (*Outils → Test de performance*) : mesure le démarrage, la vitesse de recherche, le décodage des jaquettes, le stockage et le défilement sur votre propre appareil, avec un verdict Rapide/Correct/Lent et un rapport de simples chiffres à partager.
 - **À suivre et Pour vous** : une liste de jeux personnelle par profil, et des suggestions tirées de votre propre bibliothèque qui disent toujours pourquoi elles ont été choisies.
-- **Collections et objectifs** : favoris, listes personnelles, collections par règles (console, langue, genre, année, joué), objectifs de collection, historique de jeu, bilan annuel et meilleurs jeux par console selon RetroAchievements.
+- **Collections et objectifs** : favoris, listes personnelles, collections par règles (console, langue, genre, année, joué, pas joué depuis 3, 6 ou 12 mois), objectifs de collection, historique de jeu, bilan annuel et meilleurs jeux par console selon RetroAchievements.
 - **Liste de souhaits** : notez les jeux voulus, soyez prévenu quand l’un apparaît, téléchargez-les automatiquement et partagez la liste.
 - **Importer une liste** : collez ou chargez un fichier texte ; les jeux trouvés sont téléchargés, les autres vont dans la liste de souhaits.
 
@@ -78,7 +78,7 @@ Il vous faut **Android 10 ou plus récent**. L’application n’est pas sur Goo
 - **Jouer depuis la page du jeu** avec un émulateur compatible, mémorisé par console ou choisi par jeu, avec une **vérification de préparation** (fichiers, disques, BIOS, émulateur), une configuration guidée et un lancement d’essai.
 - **ES-DE, iiSU, Daijishō et Pegasus** : une entrée « chercher d’autres jeux » par console, plus jaquettes et descriptions dans votre lanceur ; pour iiSU, Daijishō et tout autre lanceur, les jaquettes vont dans un dossier de médias que vous choisissez, avec la structure de fichiers attendue par le lanceur (dix structures prêtes à l’emploi, ou écrivez la vôtre).
 - **Des jeux sur votre écran d’accueil** : épinglez un jeu depuis sa page et il démarre directement dans son émulateur ; un appui long sur l’icône de l’appli affiche aussi vos trois derniers jeux joués.
-- **Playlists RetroArch** : écrit des playlists `.lpl` pour que RetroArch affiche votre bibliothèque ; les playlists existantes sont seulement complétées et l’ancien fichier passe d’abord à la corbeille et au centre de récupération.
+- **Playlists RetroArch** : écrit des playlists `.lpl` pour que RetroArch affiche votre bibliothèque ; les playlists existantes sont seulement complétées et l’ancien fichier passe d’abord à la corbeille et au centre de récupération. Vous pouvez choisir un cœur par défaut par système pour que RetroArch ne demande plus. La page du jeu montre l’image de votre sauvegarde d’état RetroArch la plus récente.
 - **Continuer sur une autre console portable** depuis la page du jeu, quand votre émulateur et vos sauvegardes peuvent suivre : le chemin du retour est montré d’abord et la sauvegarde passe par RomM.
 - **Les jeux à plusieurs disques** reçoivent automatiquement leur playlist `.m3u`.
 - **Reprendre** sur l’accueil, depuis les sauvegardes de n’importe quel appareil ou depuis ES-DE.

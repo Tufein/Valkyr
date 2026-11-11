@@ -56,7 +56,7 @@ Je hebt **Android 10 of nieuwer** nodig. De app staat niet in Google Play.
 - **Extra launcherafbeeldingen**: titelschermen en screenshots voor de ES-DE-coversmap (*Tools → Covers voor launchers*), standaard uit en nooit ter vervanging van bestanden die je al hebt.
 - **Prestatiecheck** (*Tools → Prestatiecheck*): meet starten, zoeksnelheid, het decoderen van covers, opslagsnelheid en scrollen op je eigen toestel, met een Snel/Prima/Traag-oordeel en een rapport met alleen cijfers dat je kunt delen.
 - **Hierna spelen en Voor jou**: een persoonlijke speellijst per profiel, en suggesties uit je eigen bibliotheek die altijd zeggen waarom ze zijn gekozen.
-- **Collecties en doelen**: favorieten, eigen lijsten, collecties op basis van regels (console, taal, genre, jaar, gespeeld), collectiedoelen, speelgeschiedenis, een jaaroverzicht en de beste games per console van RetroAchievements.
+- **Collecties en doelen**: favorieten, eigen lijsten, collecties op basis van regels (console, taal, genre, jaar, gespeeld, 3, 6 of 12 maanden niet gespeeld), collectiedoelen, speelgeschiedenis, een jaaroverzicht en de beste games per console van RetroAchievements.
 - **Verlanglijst**: noteer games die je wilt, krijg een melding als er een opduikt, download ze automatisch en deel de lijst.
 - **Lijst importeren**: plak of laad een tekstbestand; gevonden games worden gedownload, de rest gaat naar de verlanglijst.
 
@@ -78,7 +78,7 @@ Je hebt **Android 10 of nieuwer** nodig. De app staat niet in Google Play.
 - **Spelen vanaf de gamepagina** met een geschikte emulator, onthouden per console of per game gekozen, met een **gereedheidscontrole** (bestanden, discs, BIOS, emulator), een begeleide installatie en een testlancering.
 - **ES-DE, iiSU, Daijishō en Pegasus**: een invoer "zoek meer games" per console, plus covers en beschrijvingen in je launcher; voor iiSU, Daijishō en elke andere launcher komen de covers in een mediamap die je zelf kiest, in de bestandsindeling die die launcher verwacht (tien kant-en-klare indelingen, of schrijf er zelf een).
 - **Games op je startscherm**: zet een game vast vanaf zijn pagina en hij start meteen in zijn emulator; lang drukken op het app-icoon toont ook je laatste drie gespeelde games.
-- **RetroArch-playlists**: schrijft `.lpl`-afspeellijsten zodat RetroArch je bibliotheek toont; bestaande playlists worden alleen aangevuld en het oude bestand gaat eerst naar Prullenbak en herstelcentrum.
+- **RetroArch-playlists**: schrijft `.lpl`-afspeellijsten zodat RetroArch je bibliotheek toont; bestaande playlists worden alleen aangevuld en het oude bestand gaat eerst naar Prullenbak en herstelcentrum. Per systeem kies je een standaardcore, zodat RetroArch niet meer vraagt. De gamepagina toont het plaatje van je nieuwste RetroArch-save state.
 - **Verder spelen op een andere handheld** vanaf de spelpagina, als je emulator en saves mee kunnen: je ziet eerst de weg terug en de save gaat via RomM.
 - **Games met meerdere discs** krijgen automatisch hun `.m3u`-afspeellijst.
 - **Verder spelen** op Home, vanuit saves op elk toestel of vanuit ES-DE.

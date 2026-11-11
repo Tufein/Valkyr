@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="smart65_stale_90">Seit 3 Monaten nicht gespielt</string>
+    <string name="smart65_stale_180">Seit 6 Monaten nicht gespielt</string>
+    <string name="smart65_stale_365">Seit einem Jahr nicht gespielt</string>
+    <string name="playlists65_section_cores">Standardcore pro System</string>
+    <string name="playlists65_cores_hint">Wähle einmal pro System einen Core, dann fragt RetroArch nicht bei jedem neuen Spiel danach. Er wird als Core-Zuordnung der Playlist geschrieben, nur in eine Playlist, die noch keine hat. Tippe auf ein System, um die Cores durchzugehen.</string>
+    <string name="playlists65_core_ask">RetroArch fragt beim ersten Start</string>
+    <string name="playlists65_core_value">Core: %1$s</string>
+    <string name="playlists65_row_core">Nichts hinzuzufügen; der Standardcore wird gesetzt (%1$s Spiele schon gelistet)</string>
+    <string name="playlists65_preview_core">Standardcore in %1$s Playlists in %2$s setzen</string>
+    <string name="state65_title">Hier weitermachen</string>
+    <string name="state65_description">Bild des neuesten Spielstands</string>
+    <string name="state65_hint">Aus dem Save-State-Ordner, den du in Spielstand-Sync gewählt hast. Starte das Spiel in RetroArch und lade den State.</string>
+</resources>
