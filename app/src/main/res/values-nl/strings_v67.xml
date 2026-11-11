@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="emucheck67_title">Emulatorcontrole</string>
+    <string name="emucheck67_subtitle">Wat welke console kan starten</string>
+    <string name="emucheck67_hint">Welke emulators geïnstalleerd zijn, hun versie en wat er voor je consoles ontbreekt</string>
+    <string name="emucheck67_kw">emulator geïnstalleerd versie ontbreekt retroarch core console</string>
+    <string name="emucheck67_what">Valkyr kijkt alleen welke bekende emulator-apps geïnstalleerd zijn; het installeert en downloadt niets. Een console is klaar als een geïnstalleerde app de games kan starten. Consoles waarvoor een app ontbreekt staan bovenaan.</string>
+    <string name="emucheck67_installed">Geïnstalleerde emulators (%1$d)</string>
+    <string name="emucheck67_none_installed">Er is geen bekende emulator geïnstalleerd.</string>
+    <string name="emucheck67_version">Versie %1$s</string>
+    <string name="emucheck67_covers">Draait: %1$s</string>
+    <string name="emucheck67_consoles">Je consoles</string>
+    <string name="emucheck67_consoles_hint">Consoles met games in je bronnen</string>
+    <string name="emucheck67_can_start">Te starten met: %1$s</string>
+    <string name="emucheck67_missing">Niets van wat geïnstalleerd is kan hem starten. Bekende opties: %1$s</string>
+    <string name="emucheck67_unsupported">Valkyr kent geen emulator die het voor deze console kan starten.</string>
+    <string name="emucheck67_pill_ready">Klaar</string>
+    <string name="emucheck67_pill_retroarch">Via RetroArch</string>
+    <string name="emucheck67_pill_missing">App ontbreekt</string>
+    <string name="emucheck67_pill_unsupported">Niet ondersteund</string>
+</resources>

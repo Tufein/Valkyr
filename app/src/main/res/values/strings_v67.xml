@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="emucheck67_title">Emulator check</string>
+    <string name="emucheck67_subtitle">What can start which console</string>
+    <string name="emucheck67_hint">Which emulators are installed, their version, and what is missing for your consoles</string>
+    <string name="emucheck67_kw">emulator installed version missing retroarch core console</string>
+    <string name="emucheck67_what">Valkyr only looks at which known emulator apps are installed; it installs nothing and downloads nothing. A console is ready when an installed app can start its games. Consoles that need an app you do not have are listed first.</string>
+    <string name="emucheck67_installed">Installed emulators (%1$d)</string>
+    <string name="emucheck67_none_installed">No known emulator is installed.</string>
+    <string name="emucheck67_version">Version %1$s</string>
+    <string name="emucheck67_covers">Runs: %1$s</string>
+    <string name="emucheck67_consoles">Your consoles</string>
+    <string name="emucheck67_consoles_hint">Consoles with games in your sources</string>
+    <string name="emucheck67_can_start">Can start with: %1$s</string>
+    <string name="emucheck67_missing">Nothing installed can start it. Known options: %1$s</string>
+    <string name="emucheck67_unsupported">Valkyr knows no emulator it can start for this console.</string>
+    <string name="emucheck67_pill_ready">Ready</string>
+    <string name="emucheck67_pill_retroarch">Via RetroArch</string>
+    <string name="emucheck67_pill_missing">App missing</string>
+    <string name="emucheck67_pill_unsupported">Not supported</string>
+</resources>

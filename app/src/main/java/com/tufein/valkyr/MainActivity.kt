@@ -199,6 +199,7 @@ import com.tufein.valkyr.ui.screens.tools.NewHandheldScreen
 import com.tufein.valkyr.ui.screens.tools.PackageTransferScreen
 import com.tufein.valkyr.ui.screens.tools.PerfCheckScreen
 import com.tufein.valkyr.ui.screens.tools.WifiReceiveScreen
+import com.tufein.valkyr.ui.screens.tools.EmulatorCheckScreen
 import com.tufein.valkyr.ui.screens.tools.ReadinessRoute
 import com.tufein.valkyr.ui.screens.tools.RecoveryScreen
 import com.tufein.valkyr.ui.screens.tools.ReportProblemScreen
@@ -790,6 +791,7 @@ private fun DogmatixApp(pendingFilters: PendingLibraryFilters) {
                     composable(NavRoutes.ReportProblem.route) { ReportProblemScreen() }
                     composable(NavRoutes.PerfCheck.route) { PerfCheckScreen() }
                     composable(NavRoutes.WifiReceive.route) { WifiReceiveScreen() }
+                    composable(NavRoutes.EmulatorCheck.route) { EmulatorCheckScreen() }
                     composable(NavRoutes.FrontendCovers.route) { FrontendCoversScreen() }
                     composable(NavRoutes.RetroArchPlaylists.route) { RetroArchPlaylistsScreen() }
                     composable(NavRoutes.NewHandheld.route) { NewHandheldScreen(navController) }
