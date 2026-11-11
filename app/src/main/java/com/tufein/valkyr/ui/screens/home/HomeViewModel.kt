@@ -569,6 +569,7 @@ class HomeViewModel @Inject constructor(
     @Volatile private var consoleSorts: Map<String, SortOption> = emptyMap()
 
     init {
+        viewModelScope.launch { librarySettings.migrateToConsoleHome() }
         viewModelScope.launch { librarySettings.consoleSorts.collect { consoleSorts = ConsoleSortMemory.parse(it) } }
     }
 

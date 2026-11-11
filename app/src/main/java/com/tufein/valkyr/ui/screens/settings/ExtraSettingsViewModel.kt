@@ -79,7 +79,7 @@ data class LookPrefs(
     val listCovers: Boolean = true,
     val compactLists: Boolean = false,
     /** 6.0: the view the Library tab opens in (the same value its view switch remembers). */
-    val startView: LibraryBrowse.ViewMode = LibraryBrowse.ViewMode.OVERVIEW
+    val startView: LibraryBrowse.ViewMode = LibraryBrowse.ViewMode.CONSOLES
 )
 
 /** Look, backup and update settings. */

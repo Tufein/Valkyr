@@ -252,7 +252,7 @@ internal fun ResultList(
     /** 3.5.0: shown under the empty-library state (the "Set up a new handheld" hint). */
     emptyLibraryExtra: (@Composable () -> Unit)? = null,
     /** 5.1: the Library tab's view; the overview's rows (and the list at hand) stay as they were. */
-    viewMode: LibraryBrowse.ViewMode = LibraryBrowse.ViewMode.OVERVIEW,
+    viewMode: LibraryBrowse.ViewMode = LibraryBrowse.ViewMode.CONSOLES,
     /** 5.1: what a game's button says (Download / Play / Downloading) in the List and Covers views. */
     primaryAction: (DownloadableFileWithTags) -> LibraryBrowse.PrimaryAction = { LibraryBrowse.PrimaryAction.DOWNLOAD },
     /** 6.0: how many versions of a game a row stands for ("Group versions"); 1 = a single game. */

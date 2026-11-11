@@ -13,9 +13,9 @@ class LibraryBrowseTest {
 
     @Test
     fun `nothing stored or an unknown value is the overview, today's look`() {
-        assertEquals(ViewMode.OVERVIEW, LibraryBrowse.parseView(null))
-        assertEquals(ViewMode.OVERVIEW, LibraryBrowse.parseView(""))
-        assertEquals(ViewMode.OVERVIEW, LibraryBrowse.parseView("carousel"))
+        assertEquals(ViewMode.CONSOLES, LibraryBrowse.parseView(null))
+        assertEquals(ViewMode.CONSOLES, LibraryBrowse.parseView(""))
+        assertEquals(ViewMode.CONSOLES, LibraryBrowse.parseView("carousel"))
     }
 
     @Test
@@ -34,7 +34,7 @@ class LibraryBrowseTest {
 
     @Test
     fun `the overview is only offered when the shelves can open a game page`() {
-        assertEquals(listOf(ViewMode.OVERVIEW, ViewMode.LIST, ViewMode.COVERS, ViewMode.CONSOLES), LibraryBrowse.availableViews(true))
+        assertEquals(listOf(ViewMode.CONSOLES, ViewMode.OVERVIEW, ViewMode.LIST, ViewMode.COVERS), LibraryBrowse.availableViews(true))
         assertEquals(listOf(ViewMode.LIST, ViewMode.COVERS), LibraryBrowse.availableViews(false))
     }
 
