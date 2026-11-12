@@ -1,6 +1,8 @@
 package com.tufein.valkyr.ui.screens.next
 
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import com.tufein.valkyr.ui.components.requestFocusWhenReady
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -408,7 +410,7 @@ private fun OptionsDialog(
         onDismissRequest = onDismiss,
         title = { Text(row.entry.title) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(stateText(state), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 ToolsActions(horizontalPadding = 0.dp) {
                     val focus = Modifier.focusRequester(first)

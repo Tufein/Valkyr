@@ -1,6 +1,8 @@
 package com.tufein.valkyr.ui.screens.settings.romm
 
 import android.text.format.DateUtils
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -68,7 +70,7 @@ fun PairWithCodeDialog(viewModel: RommPairingViewModel, onDismiss: () -> Unit) {
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.romm55_pair_title)) },
         text = {
-            Column {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
                 Text(stringResource(R.string.romm55_pair_dialog_hint), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Spacer(modifier = Modifier.height(12.dp))
                 OutlinedTextField(
@@ -178,7 +180,7 @@ fun DevicePairingDialog(viewModel: RommPairingViewModel) {
         onDismissRequest = dismiss,
         title = { Text(stringResource(R.string.romm55_remote_dialog_title)) },
         text = {
-            Column {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
                 when (current) {
                     is PairState.Waiting -> {
                         Text(stringResource(R.string.romm55_remote_dialog_steps), style = MaterialTheme.typography.bodyMedium)

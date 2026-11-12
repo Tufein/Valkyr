@@ -2,6 +2,7 @@ package com.tufein.valkyr.ui.screens.game
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -157,28 +158,46 @@ fun GameHeaderLayout(
     cover: @Composable () -> Unit,
     badges: @Composable () -> Unit
 ) {
+    BoxWithConstraints {
+    // Beside the cover the title needs a real column. Upright phones give it ~170 dp; the landscape page's
+    // left column on a handheld (~260 dp wide, 188 dp cover) left it ~70 dp, where the title broke letter by
+    // letter. Then the cover sits on top and title and chips get the full width below it.
+    val titleRoom = maxWidth - 32.dp - coverHeight * 0.75f - 16.dp
+    val stacked = titleRoom < MinTitleBesideCoverDp.dp
+    val titleBlock: @Composable (Modifier) -> Unit = { mod ->
+        Column(
+            modifier = mod,
+            verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Bottom)
+        ) {
+            Text(title, style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onSurface)
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                KeyChip(ConsoleFormatter.getConsoleShortName(consoleId), R.drawable.ic_gamepad, PillTone.Tint(consoleColor(consoleId)))
+                year?.let { KeyChip(it, R.drawable.ic_calendar_today, PillTone.Neutral) }
+                size?.let { KeyChip(it, R.drawable.ic_storage, PillTone.Neutral) }
+            }
+        }
+    }
     Column(
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 8.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         ActionPill(stringResource(R.string.page8_back), onBack, modifier = Modifier.heightIn(min = 48.dp), icon = R.drawable.ic_chevron_left)
-        Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.Bottom) {
+        if (stacked) {
             cover()
-            Column(
-                modifier = Modifier.weight(1f).heightIn(min = coverHeight * 0.5f),
-                verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Bottom)
-            ) {
-                Text(title, style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onSurface)
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    KeyChip(ConsoleFormatter.getConsoleShortName(consoleId), R.drawable.ic_gamepad, PillTone.Tint(consoleColor(consoleId)))
-                    year?.let { KeyChip(it, R.drawable.ic_calendar_today, PillTone.Neutral) }
-                    size?.let { KeyChip(it, R.drawable.ic_storage, PillTone.Neutral) }
-                }
+            titleBlock(Modifier.fillMaxWidth())
+        } else {
+            Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.Bottom) {
+                cover()
+                titleBlock(Modifier.weight(1f).heightIn(min = coverHeight * 0.5f))
             }
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) { badges() }
     }
+    }
 }
+
+/** The title column beside the cover keeps at least this much width (dp); narrower, the cover goes above the title. */
+private const val MinTitleBesideCoverDp = 150
 
 /** A key fact beside the cover (console, year, size): a [Pill] one size up, easy to read at arm's length. */
 @Composable
@@ -206,7 +225,8 @@ private fun KeyChip(text: String, icon: Int, tone: PillTone) {
 fun GamePrimaryAction(
     primary: GamePageModel.Primary,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    compact: Boolean = false
 ) {
     LargePrimaryButton(
         stringResource(
@@ -221,6 +241,7 @@ fun GamePrimaryAction(
         ),
         onClick = onClick,
         modifier = modifier,
+        compact = compact,
         icon = when (primary) {
             GamePageModel.Primary.DOWNLOADING -> R.drawable.ic_downloading
             GamePageModel.Primary.PLAY -> R.drawable.ic_controller

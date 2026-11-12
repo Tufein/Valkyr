@@ -1,6 +1,8 @@
 package com.tufein.valkyr.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
@@ -37,7 +39,7 @@ fun TourDialog(onDone: () -> Unit) {
         icon = { Icon(painterResource(card.icon), contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(32.dp)) },
         title = { Text(stringResource(card.title)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(stringResource(card.body), style = MaterialTheme.typography.bodyMedium)
                 Text(
                     stringResource(R.string.tour60_progress, index + 1, AppTour.cards.size),

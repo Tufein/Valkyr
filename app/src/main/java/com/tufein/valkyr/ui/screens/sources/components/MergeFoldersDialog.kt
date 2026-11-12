@@ -1,6 +1,8 @@
 package com.tufein.valkyr.ui.screens.sources.components
 
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -66,7 +68,7 @@ fun MergeFoldersDialog(
             }
         },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 when {
                     result != null -> Text(
                         stringResource(R.string.merge_folders_result, result.moved, result.duplicates, result.skipped, result.failed, result.removedFolders),

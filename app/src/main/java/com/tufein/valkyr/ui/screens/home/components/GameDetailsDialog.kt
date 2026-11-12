@@ -232,7 +232,9 @@ fun GameDetailsDialog(
             val pills: @Composable () -> Unit = { GameInfoPills(state, consoleName, onRomm, owned, downloading, favourite, rommOn) }
 
             if (isLandscape) {
-                GameHero(backdropUrl, rom.consoleId, Modifier.fillMaxWidth()) {
+                // The hero takes what the action buttons below leave (weight, not fill): on a ~390 dp high
+                // handheld screen the buttons used to be pushed out of the window; now the description scrolls instead.
+                GameHero(backdropUrl, rom.consoleId, Modifier.fillMaxWidth().weight(1f, fill = false)) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(18.dp),
                         modifier = Modifier

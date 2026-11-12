@@ -384,7 +384,9 @@ fun LargePrimaryButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     icon: Int? = null,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    /** A narrow slot (the landscape game page's left column): no icon and less side padding, so the label keeps its room. */
+    compact: Boolean = false
 ) {
     val scheme = MaterialTheme.colorScheme
     val source = rememberFocusSource()
@@ -396,12 +398,12 @@ fun LargePrimaryButton(
             .clip(shape)
             .background(if (enabled) scheme.primary else scheme.surfaceContainerHigh)
             .clickable(interactionSource = source, indication = null, enabled = enabled, onClick = onClick)
-            .padding(horizontal = 22.dp, vertical = 12.dp),
+            .padding(horizontal = if (compact) 10.dp else 22.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally)
     ) {
         val fg = if (enabled) scheme.onPrimary else scheme.onSurfaceVariant
-        icon?.let { Icon(painterResource(it), contentDescription = null, tint = fg, modifier = Modifier.size(24.dp)) }
+        if (!compact) icon?.let { Icon(painterResource(it), contentDescription = null, tint = fg, modifier = Modifier.size(24.dp)) }
         Text(text, style = MaterialTheme.typography.titleMedium, color = fg, textAlign = TextAlign.Center)
     }
 }

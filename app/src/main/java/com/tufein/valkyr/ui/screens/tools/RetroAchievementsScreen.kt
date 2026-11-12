@@ -1,6 +1,8 @@
 package com.tufein.valkyr.ui.screens.tools
 
 import android.content.Context
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -168,7 +170,7 @@ private fun CredentialsDialog(user: String, onSave: (String, String) -> Unit, on
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.ra_account)) },
         text = {
-            Column {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
                 Text(stringResource(R.string.ra_key_where))
                 Spacer(Modifier.height(8.dp))
                 OutlinedTextField(name, { name = it }, singleLine = true, label = { Text(stringResource(R.string.ra_user_label)) },

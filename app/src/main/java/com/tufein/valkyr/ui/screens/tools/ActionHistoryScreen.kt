@@ -1,6 +1,8 @@
 package com.tufein.valkyr.ui.screens.tools
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -196,7 +198,7 @@ fun ActionHistoryScreen(
         val cancelFocus = rememberInitialFocus()
         AlertDialog(modifier = Modifier.closeOnGamepadB { help = null }, onDismissRequest = { help = null },
             title = { Text(stringResource(R.string.help25_title)) },
-            text = { Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            text = { Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(selected.entry.title)
                 Text(stringResource(when (guidance) {
                     ActionHelp.NETWORK -> R.string.help25_network

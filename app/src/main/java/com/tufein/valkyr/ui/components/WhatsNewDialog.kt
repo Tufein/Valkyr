@@ -1,6 +1,8 @@
 package com.tufein.valkyr.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
@@ -20,7 +22,7 @@ fun WhatsNewDialog(version: String, onDismiss: () -> Unit) {
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.whats_new_title, version)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 stringArrayResource(R.array.whats_new_items).forEach { line ->
                     Text("• $line", style = MaterialTheme.typography.bodyMedium)
                 }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -33,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -327,9 +327,12 @@ internal fun StatGrid(
     focusable: Boolean = false,
     firstFocus: FocusRequester? = null
 ) {
-    val columns = if (LocalConfiguration.current.screenWidthDp >= 560) 4 else 2
+    // The room the grid really has (the landscape rail and the card padding already took theirs), not the
+    // screen width: a Thor top screen is ~700 dp wide but only ~570 dp of it is for the content.
+    BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
+    val columns = if (maxWidth >= StatGridWideDp.dp) 4 else 2
     Column(
-        modifier = modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 3.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 3.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         stats.chunked(columns).forEachIndexed { r, rowStats ->
@@ -355,7 +358,11 @@ internal fun StatGrid(
             }
         }
     }
+    }
 }
+
+/** A stat grid this wide (dp) or wider shows four tiles per row, narrower two. */
+private const val StatGridWideDp = 480
 
 /** A coloured dot and a label: the key of a segmented bar. */
 @Composable

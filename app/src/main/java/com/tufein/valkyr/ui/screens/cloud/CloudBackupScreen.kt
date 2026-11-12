@@ -1,6 +1,8 @@
 package com.tufein.valkyr.ui.screens.cloud
 
 import android.text.format.DateUtils
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -546,7 +548,7 @@ private fun DavTextDialog(
         onDismissRequest = onDismiss,
         title = { Text(title) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(hint, style = MaterialTheme.typography.bodyMedium)
                 OutlinedTextField(
                     value = text,
@@ -595,7 +597,7 @@ private fun DavPassphraseDialog(hasPassphrase: Boolean, onSave: (String) -> Unit
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.dav_passphrase_dialog_title)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(stringResource(R.string.dav_passphrase_dialog_message), style = MaterialTheme.typography.bodyMedium)
                 if (hasPassphrase) Text(stringResource(R.string.dav_passphrase_change_note), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 OutlinedTextField(
@@ -639,7 +641,7 @@ private fun DavRestoreDialog(message: String, onConfirm: () -> Unit, onDismiss: 
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.backup_import_title)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(message, style = MaterialTheme.typography.bodyMedium)
                 Text(stringResource(R.string.dav_restore_note), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
@@ -659,7 +661,7 @@ private fun DavCertificateDialog(prompt: DavCertPrompt, onTrust: () -> Unit, onD
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.dav_cert_dialog_title)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(stringResource(R.string.dav_cert_dialog_message, prompt.serverUrl))
                 Text(CertTrust.format(prompt.fingerprint), style = MaterialTheme.typography.bodySmall, fontFamily = FontFamily.Monospace)
                 Text(stringResource(R.string.dav_cert_dialog_details, prompt.subject, until), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)

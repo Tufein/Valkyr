@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,6 +27,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.tufein.valkyr.R
 import com.tufein.valkyr.ui.components.focusRing
@@ -51,38 +53,50 @@ fun GameActionBar(
     primaryModifier: Modifier = Modifier
 ) {
     val scheme = MaterialTheme.colorScheme
-    Column(modifier = modifier.fillMaxWidth().background(scheme.background)) {
-        HorizontalDivider(color = scheme.outlineVariant, thickness = 1.dp)
-        Row(
-            modifier = Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = 16.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            BarIconButton(
-                icon = R.drawable.ic_more_vert,
-                description = stringResource(R.string.gamepage38_more_actions),
-                onClick = onMore
-            )
-            BarIconButton(
-                icon = if (favourite) R.drawable.ic_star_fill else R.drawable.ic_star,
-                description = stringResource(if (favourite) R.string.home_details_unfavourite else R.string.home_details_favourite),
-                onClick = onFavourite,
-                selected = favourite
-            )
-            GamePrimaryAction(primary = primary, onClick = onPrimary, modifier = Modifier.weight(1f).then(primaryModifier))
+    // The bar's own width decides: upright phones are 360 dp and wider, the landscape page gives it only its
+    // left column (~260-300 dp on a handheld), where 56 dp buttons and the usual padding left the label ~20 dp.
+    BoxWithConstraints(modifier = modifier.fillMaxWidth().background(scheme.background)) {
+        val narrow = maxWidth < NarrowBarDp.dp
+        val side = if (narrow) 10.dp else 16.dp
+        val gap = if (narrow) 8.dp else 10.dp
+        Column(modifier = Modifier.fillMaxWidth()) {
+            HorizontalDivider(color = scheme.outlineVariant, thickness = 1.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = side, vertical = if (narrow) 8.dp else 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(gap)
+            ) {
+                BarIconButton(
+                    icon = R.drawable.ic_more_vert,
+                    description = stringResource(R.string.gamepage38_more_actions),
+                    onClick = onMore,
+                    size = if (narrow) 48.dp else 56.dp
+                )
+                BarIconButton(
+                    icon = if (favourite) R.drawable.ic_star_fill else R.drawable.ic_star,
+                    description = stringResource(if (favourite) R.string.home_details_unfavourite else R.string.home_details_favourite),
+                    onClick = onFavourite,
+                    selected = favourite,
+                    size = if (narrow) 48.dp else 56.dp
+                )
+                GamePrimaryAction(primary = primary, onClick = onPrimary, modifier = Modifier.weight(1f).then(primaryModifier), compact = narrow)
+            }
         }
     }
 }
 
-/** A 56 dp square icon button next to the primary action (as high as it, so the row reads as one). */
+/** A bar narrower than this (dp) uses the compact sizes. */
+private const val NarrowBarDp = 340
+
+/** A 56 dp (48 dp in a narrow bar) square icon button next to the primary action (as high as it, so the row reads as one). */
 @Composable
-private fun BarIconButton(icon: Int, description: String, onClick: () -> Unit, selected: Boolean = false) {
+private fun BarIconButton(icon: Int, description: String, onClick: () -> Unit, selected: Boolean = false, size: Dp = 56.dp) {
     val scheme = MaterialTheme.colorScheme
     val source = rememberFocusSource()
     val shape = RoundedCornerShape(18.dp)
     Box(
         modifier = Modifier
-            .defaultMinSize(minWidth = 56.dp, minHeight = 56.dp)
+            .defaultMinSize(minWidth = size, minHeight = size)
             .focusRing(source, cornerRadius = 18.dp)
             .clip(shape)
             .background(if (selected) scheme.primaryContainer else scheme.surfaceContainerHigh)

@@ -1,6 +1,8 @@
 package com.tufein.valkyr.ui.screens.sources.components
 
 import android.content.Context
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -136,7 +138,7 @@ fun QrShowDialog(parts: List<String>, onDismiss: () -> Unit) {
             }
         },
         text = {
-            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Column(Modifier.verticalScroll(rememberScrollState()), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(stringResource(R.string.qr_show_hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 // Drawn at its own pixel size (no scaling), with the quiet zone inside the bitmap.
                 Box(Modifier.background(Color.White)) {
@@ -162,7 +164,7 @@ fun ShareSourcesDialog(onFile: () -> Unit, onShowQr: () -> Unit, onReadQrCamera:
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.share_sources_title)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(stringResource(R.string.share_sources_hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 ShareOption(R.drawable.ic_share, stringResource(R.string.share_sources_file), onFile, Modifier.focusRequester(fileFocus))
                 ShareOption(R.drawable.ic_qr_code, stringResource(R.string.share_sources_qr), onShowQr)

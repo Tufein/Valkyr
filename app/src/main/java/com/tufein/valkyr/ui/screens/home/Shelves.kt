@@ -34,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.withFrameNanos
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -325,6 +326,9 @@ private fun CoverShelf(
     }
 }
 
+/** Landscape windows this high or lower (dp) get the compact continue card. */
+internal const val HeroCompactHeightDp = 480
+
 /**
  * "Continue playing": the newest game played or downloaded, with its cover, when that was and one
  * big button. On the device that button is Play (it starts the game the way the game page does);
@@ -349,8 +353,12 @@ internal fun HeroCard(
     val shape = RoundedCornerShape(HeroRadius)
     val glow = lerp(scheme.surfaceContainer, consoleColor(game.consoleId), if (tokens.isDark) 0.22f else 0.16f)
     val ground = scheme.surfaceContainer
-    val coverWidth = if (landscape) 120.dp else 108.dp
-    val coverHeight = if (landscape) 162.dp else 146.dp
+    // A handheld in landscape (Thor, Odin: ~400 dp high) cannot spare 190 dp for one card: shrink it so
+    // the quick links and the first console tiles still show without scrolling.
+    val compact = landscape && LocalConfiguration.current.screenHeightDp <= HeroCompactHeightDp
+    val coverWidth = if (compact) 90.dp else if (landscape) 120.dp else 108.dp
+    val coverHeight = if (compact) 120.dp else if (landscape) 162.dp else 146.dp
+    val inner = if (compact) 12.dp else 16.dp
     val whenText = relativeTime(hero.at)?.let {
         stringResource(if (hero.kind == ShelvesModel.RecentKind.PLAYED) R.string.shelves38_played_ago else R.string.shelves38_downloaded_ago, it)
     }
@@ -361,23 +369,23 @@ internal fun HeroCard(
             // A plain console-tinted gradient, drawn once: no blur, no offscreen layer.
             .drawBehind { drawRect(Brush.horizontalGradient(listOf(glow, ground))) }
             .border(1.dp, tokens.hairline, shape)
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+            .padding(inner),
+        horizontalArrangement = Arrangement.spacedBy(inner),
         verticalAlignment = Alignment.CenterVertically
     ) {
         val coverModifier = Modifier.size(coverWidth, coverHeight)
         val coverShape = RoundedCornerShape(14.dp)
         if (lookup) GameCover(game.consoleId, game.fileName, title, coverModifier, coverShape)
         else CoverImage(null, game.consoleId, coverModifier, coverShape)
-        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(if (compact) 4.dp else 8.dp)) {
             // Back from this game's page the cursor returns to the hero's main button.
             val mainFocus = Modifier.focusRequester(focus).then(returnFocus?.let { Modifier.focusRequester(it) } ?: Modifier)
             SectionTitle(stringResource(R.string.shelves38_continue_title), icon = R.drawable.ic_play_circle)
             Text(
                 title,
-                style = if (landscape) MaterialTheme.typography.headlineSmall else MaterialTheme.typography.titleLarge,
+                style = if (landscape && !compact) MaterialTheme.typography.headlineSmall else MaterialTheme.typography.titleLarge,
                 color = scheme.onSurface,
-                maxLines = 3,
+                maxLines = if (compact) 2 else 3,
                 overflow = TextOverflow.Ellipsis
             )
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {

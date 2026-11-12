@@ -1,6 +1,8 @@
 package com.tufein.valkyr.ui.screens.sources.components
 
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -51,7 +53,7 @@ fun AddUrlDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(if (editing) R.string.dialog_edit_source else R.string.dialog_add_source)) },
         text = {
-            Column {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
                 Text(stringResource(R.string.dialog_add_source_hint))
                 Spacer(modifier = Modifier.height(8.dp))
 

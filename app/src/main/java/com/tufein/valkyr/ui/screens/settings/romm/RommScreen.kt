@@ -1,6 +1,8 @@
 package com.tufein.valkyr.ui.screens.settings.romm
 
 import android.content.res.Configuration
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import android.text.format.DateUtils
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -448,7 +450,7 @@ private fun TrustCertificateDialog(prompt: TrustPrompt, onTrust: () -> Unit, onD
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.romm_cert_dialog_title)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(stringResource(R.string.romm_cert_dialog_message, prompt.url))
                 Text(CertTrust.format(cert.fingerprint), style = MaterialTheme.typography.bodySmall, fontFamily = FontFamily.Monospace)
                 Text(stringResource(R.string.romm_cert_dialog_details, cert.subject, until), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)

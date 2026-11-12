@@ -1,6 +1,7 @@
 package com.tufein.valkyr.ui.screens.tools
 
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.foundation.verticalScroll
 import com.tufein.valkyr.ui.components.requestFocusWhenReady
 import android.content.Context
 import android.net.Uri
@@ -700,7 +701,7 @@ private fun FileDetailsDialog(
         onDismissRequest = onDismiss,
         title = { Text(entry.name) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(stringResource(R.string.files_info_size, formatBytes(entry.size), entry.size))
                 Text(stringResource(R.string.files_info_type, ext.ifEmpty { "—" }))
                 Text(stringResource(if (DuplicateFinder.isGameFile(entry.name)) R.string.files_info_game else R.string.files_info_not_game),

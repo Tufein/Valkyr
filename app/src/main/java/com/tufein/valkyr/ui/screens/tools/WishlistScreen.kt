@@ -1,6 +1,8 @@
 package com.tufein.valkyr.ui.screens.tools
 
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import com.tufein.valkyr.ui.components.requestFocusWhenReady
 import android.Manifest
 import android.content.Context
@@ -319,7 +321,7 @@ private fun AddWishDialog(consoles: List<ConsoleEntity>, onAdd: (String, String?
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.wishlist_add_title)) },
         text = {
-            Column {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
                 Text(stringResource(R.string.wishlist_add_hint))
                 Spacer(Modifier.height(8.dp))
                 OutlinedTextField(

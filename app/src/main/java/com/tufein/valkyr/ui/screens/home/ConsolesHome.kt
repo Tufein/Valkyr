@@ -110,9 +110,10 @@ fun ConsolesHome(
     val overall = remember(tiles) { ConsoleHome.overall(tiles) }
     LazyVerticalGrid(
         state = gridState,
-        columns = GridCells.Fixed(if (landscape) 3 else 2),
+        // Adaptive, not a fixed count: three tiles on a Thor top screen, two on its narrow bottom screen or a phone, more on a TV.
+        columns = GridCells.Adaptive(minSize = tvSized(if (landscape) 176.dp else 150.dp)),
         modifier = modifier,
-        contentPadding = PaddingValues(start = Gutter, end = Gutter, top = 4.dp, bottom = 24.dp),
+        contentPadding = PaddingValues(start = Gutter, end = Gutter, top = 4.dp, bottom = if (landscape) 12.dp else 24.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {

@@ -184,7 +184,7 @@ fun SaveViewDialog(onSave: (String) -> Unit, onDismiss: () -> Unit) {
         icon = { Icon(painterResource(R.drawable.ic_star), contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
         title = { Text(stringResource(R.string.view_save)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(stringResource(R.string.view_save_hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 OutlinedTextField(value = name, onValueChange = { name = it.take(60) }, singleLine = true)
             }
