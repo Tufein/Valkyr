@@ -355,10 +355,6 @@
     <string name="dialog_new_manufacturer">Oppure un nuovo produttore</string>
     <string name="error_download_dir_missing">Cartella di download non configurata. Imposta una cartella di download nelle impostazioni.</string>
     <string name="error_download_dir_inaccessible">La cartella di download non è accessibile. Controlla i permessi della cartella nelle impostazioni.</string>
-    <string name="mime_octet_stream">application/octet-stream</string>
-    <string name="http_user_agent">Valkyr Downloader/1.0</string>
-    <string name="http_accept">*/*</string>
-    <string name="http_method_get">GET</string>
     <string name="onboarding_welcome_title">Benvenuto in Valkyr</string>
     <string name="onboarding_welcome_body">Valkyr indicizza il contenuto delle fonti di ROM — torrent, magnet e directory web —, etichetta ogni file per console, regione e lingua, e ti permette di sfogliare, filtrare e scaricare direttamente nella tua cartella ROM. Gli archivi vengono estratti automaticamente.</string>
     <string name="onboarding_welcome_point_1">Le fonti vengono indicizzate, non scaricate: sfoglia migliaia di titoli senza riempire la memoria.</string>

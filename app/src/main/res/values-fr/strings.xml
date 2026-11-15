@@ -402,13 +402,7 @@
     <string name="error_download_dir_missing">Aucun dossier de téléchargement configuré. Choisissez-en un dans les Paramètres.</string>
     <string name="error_download_dir_inaccessible">Le dossier de téléchargement est inaccessible. Vérifiez les autorisations dans les Paramètres.</string>
 
-    <!-- MIME Types -->
-    <string name="mime_octet_stream">application/octet-stream</string>
 
-    <!-- HTTP -->
-    <string name="http_user_agent">Valkyr Downloader/1.0</string>
-    <string name="http_accept">*/*</string>
-    <string name="http_method_get">GET</string>
     <!-- Onboarding -->
     <string name="onboarding_welcome_title">Bienvenue dans Valkyr</string>
     <string name="onboarding_welcome_body">Valkyr indexe le contenu de sources de ROM — torrents, magnets et répertoires web —, classe chaque fichier par console, région et langue, et vous permet de parcourir, filtrer et télécharger directement dans votre dossier de ROM. Les archives sont extraites automatiquement.</string>
