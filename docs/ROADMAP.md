@@ -4,7 +4,7 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 7.5.0** (Android build 83). The core loop is complete — find a game, download it into
+**Now: 7.6.0** (Android build 84). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
 libraries), and finishing what 7.0 and 7.1 started.
@@ -75,7 +75,7 @@ server to prove it: **SMB and SFTP** (a NAS without WebDAV), **S3-compatible sto
 **one Cloud hub** listing every target once there is more than one. Tickets:
 **[plans/7.5.md](plans/7.5.md)**.
 
-## 7.6 — Scale
+## 7.6 — Scale (shipped in 7.6.0)
 
 A library of a few thousand games hides slow spots. A curated set of 100,000 does not.
 
@@ -85,6 +85,11 @@ A library of a few thousand games hides slow spots. A curated set of 100,000 doe
   typing never waits for the library.
 - **Sizes and counts without walking every file** on every visit to Storage or Statistics.
 - **Cover loading that stays smooth** in the cover grid on a large shelf.
+
+Shipped: search that starts after a short typing pause, and one shared look at the disk for
+Storage and the health check. Still open, because they change the database or need a 100,000-game
+library on a real handheld to prove them: folder fingerprints and incremental scans, row-level
+source diffs, a scan budget that pauses on a low battery, and the cover-grid measurement.
 
 *Done when* the Performance check on a mid-range handheld shows search, scroll and cover
 decode still Fast with 100,000 games indexed, and a rescan of an unchanged library takes

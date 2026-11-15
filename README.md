@@ -23,7 +23,7 @@ The app includes no games. **Sources → More romsets** offers optional free con
 
 *The screenshots use made-up game titles and empty placeholder files.*
 
-**Latest release: [7.5.0](https://github.com/Tufein/Valkyr/releases/tag/v7.5.0)** (Android build 83).
+**Latest release: [7.6.0](https://github.com/Tufein/Valkyr/releases/tag/v7.6.0)** (Android build 84).
 
 Until 3.9.0 the app was called Dogmatix+. Valkyr 6.0.0 has its own app id, so it installs next to the old app: use *Settings → Back up* in the old app and *Restore backup* in Valkyr, then remove the old app.
 
@@ -48,7 +48,7 @@ You need **Android 10 or newer**. The app is not on Google Play.
 
 ### Find games
 - **One list** with the games from all your sources: web directories, direct links, torrents and magnet links, and your RomM server.
-- **Search that forgives mistakes** (accents, dashes, doubled letters), with recent searches, **Surprise me** and **More like this**. **Search everything** also finds settings, tools and screens.
+- **Search that forgives mistakes** (accents, dashes, doubled letters), with recent searches, **Surprise me** and **More like this**. **Search everything** also finds settings, tools and screens. Typing waits for a short pause before the search runs.
 - **Filter** by console, region, language, type, genre, decade and *New*; **sort** by name, size or newest. A green **✓** marks what you already have.
 - **A page for every game**: art, Download or Play, the best version, favourite, collections, share, notes, screenshots and manuals, and a *Versions* tab that explains how each version scores.
 - **Covers first**: Home opens on a tile per console (its games and how many are on the device, with a bar), a Continue playing card on top, and the shelves of big covers one tap away in the view switcher, navigation sits in a bottom bar, or a slim side bar on a handheld, with Games, Downloads, Sources and More. The game page starts with a large cover and one big Play or Download button.
@@ -88,7 +88,7 @@ You need **Android 10 or newer**. The app is not on Google Play.
 - **Library repair**: finds empty or cut-off files, disc sets with missing tracks, dead or duplicate playlists, leftover download data and out-of-date library marks. Every fix is previewed and removals go to Trash and recovery.
 - **Duplicate games** with a safe, previewed clean-up; **Better versions** and **Free up space**.
 - **DAT check** against No-Intro, Redump and TOSEC; **Game sets** check; **BIOS check**; **Switch updates and DLC**.
-- **Library overview, Storage and Statistics** per console; **Smart storage** can move rarely played consoles to an SD card and back.
+- **Library overview, Storage and Statistics** per console; **Smart storage** can move rarely played consoles to an SD card and back. Storage reuses one look at the disk for a minute while nothing changed.
 - **File explorer** to look, rename, move and unpack; **export** your collection as CSV or a web page.
 - **Copy or send games**: whole games with every file to an SD card or USB folder, your RomM server or your NAS. You first see every file, the space needed and what is already there; every file is checked at the other end, save files stay behind and nothing is replaced. For a card that goes into another system, the console folders can follow ES-DE, Batocera, Knulli, ArkOS, ROCKNIX, OnionOS or muOS names.
 - **Receive games over Wi-Fi** (off until you switch it on): send your own game files from a browser on your network into the right console folder, behind a PIN, on the local network only, with every file checked and nothing replaced.

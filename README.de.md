@@ -23,7 +23,7 @@ Valkyr führt eine große, durchsuchbare Liste mit den Spielen aus den Quellen, 
 
 *Die Screenshots verwenden erfundene Spieltitel und leere Platzhalterdateien und zeigen die App auf Englisch.*
 
-**Neueste Version: [7.5.0](https://github.com/Tufein/Valkyr/releases/tag/v7.5.0)** (Android-Build 83).
+**Neueste Version: [7.6.0](https://github.com/Tufein/Valkyr/releases/tag/v7.6.0)** (Android-Build 84).
 
 Bis 3.9.0 hieß die App Dogmatix+. Valkyr 6.0.0 hat eine eigene App-ID und wird daher neben der alten App installiert: Nutze *Einstellungen → Sichern* in der alten App und *Sicherung wiederherstellen* in Valkyr und entferne danach die alte App.
 
@@ -48,7 +48,7 @@ Du brauchst **Android 10 oder neuer**. Die App ist nicht bei Google Play erhält
 
 ### Spiele finden
 - **Eine Liste** mit den Spielen aus allen Quellen: Webverzeichnisse, direkte Links, Torrents und Magnet-Links sowie dein RomM-Server.
-- **Suche, die Fehler verzeiht** (Akzente, Bindestriche, doppelte Buchstaben), mit letzten Suchen, **Überrasch mich** und **Mehr davon**. **Alles durchsuchen** findet auch Einstellungen, Werkzeuge und Bildschirme.
+- **Suche, die Fehler verzeiht** (Akzente, Bindestriche, doppelte Buchstaben), mit letzten Suchen, **Überrasch mich** und **Mehr davon**. **Alles durchsuchen** findet auch Einstellungen, Werkzeuge und Bildschirme. Die Suche startet erst nach einer kurzen Tipppause.
 - **Filtern** nach Konsole, Region, Sprache, Typ, Genre, Jahrzehnt und *Neu*; **sortieren** nach Name, Größe oder Neuestem. Ein grünes **✓** zeigt, was du schon hast.
 - **Eine Seite für jedes Spiel**: Bild, Herunterladen oder Spielen, die beste Version, Favorit, Sammlungen, Teilen, Notizen, Screenshots und Handbücher sowie ein Tab *Versionen*, der erklärt, wie jede Version bewertet wird.
 - **Cover zuerst**: Home startet mit einer Kachel pro Konsole (ihre Spiele und wie viele auf dem Gerät sind, mit Balken), oben eine Karte Weiterspielen, und die Regale voller großer Cover sind einen Tipp entfernt in der Ansichtswahl; die Navigation liegt in einer Leiste unten oder, auf einem Handheld, in einer schmalen Seitenleiste mit Spiele, Downloads, Quellen und Mehr. Die Spielseite beginnt mit einem großen Cover und einer großen Schaltfläche Spielen oder Download.
@@ -88,7 +88,7 @@ Du brauchst **Android 10 oder neuer**. Die App ist nicht bei Google Play erhält
 - **Bibliothek reparieren**: findet leere oder abgebrochene Dateien, Disc-Sets mit fehlenden Tracks, tote oder doppelte Playlists, Download-Reste und veraltete Markierungen. Jede Korrektur wird vorab gezeigt, Entferntes landet im Papierkorb mit Wiederherstellung.
 - **Doppelte Spiele** mit sicherer Bereinigung samt Vorschau; **Bessere Versionen** und **Speicher freigeben**.
 - **DAT-Prüfung** gegen No-Intro, Redump und TOSEC; **Spielsets**-Prüfung; **BIOS-Prüfung**; **Switch-Updates und DLC**.
-- **Bibliotheksübersicht, Speicher und Statistik** je Konsole; **Intelligenter Speicher** kann selten gespielte Konsolen auf eine SD-Karte und zurück verschieben.
+- **Bibliotheksübersicht, Speicher und Statistik** je Konsole; **Intelligenter Speicher** kann selten gespielte Konsolen auf eine SD-Karte und zurück verschieben. Speicher nutzt eine Minute lang denselben Blick auf den Datenträger, solange sich nichts ändert.
 - **Dateimanager** zum Ansehen, Umbenennen, Verschieben und Entpacken; **Export** der Sammlung als CSV oder Webseite.
 - **Spiele kopieren oder senden**: ganze Spiele mit allen Dateien auf eine SD-Karte oder einen USB-Ordner, deinen RomM-Server oder dein NAS. Vorher siehst du jede Datei, den nötigen Platz und was schon da ist; jede Datei wird am Ziel geprüft, Spielstände bleiben zurück und nichts wird ersetzt. Für eine Karte, die in ein anderes System kommt, können die Konsolenordner die Namen von ES-DE, Batocera, Knulli, ArkOS, ROCKNIX, OnionOS oder muOS verwenden.
 - **Spiele per WLAN empfangen** (aus, bis du es einschaltest): schicke deine eigenen Spieldateien aus einem Browser in deinem Netzwerk in den richtigen Konsolenordner, mit PIN, nur im lokalen Netzwerk, jede Datei wird geprüft und nichts ersetzt.

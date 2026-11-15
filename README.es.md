@@ -23,7 +23,7 @@ Valkyr mantiene una gran lista, con buscador, de los juegos de las fuentes que *
 
 *Las capturas de pantalla usan títulos de juegos inventados y archivos vacíos de relleno. Las capturas muestran la app en inglés.*
 
-**Última versión: [7.5.0](https://github.com/Tufein/Valkyr/releases/tag/v7.5.0)** (build de Android 83).
+**Última versión: [7.6.0](https://github.com/Tufein/Valkyr/releases/tag/v7.6.0)** (build de Android 84).
 
 Hasta la 3.9.0 la app se llamaba Dogmatix+. Valkyr 6.0.0 tiene su propio ID de aplicación y se instala junto a la app antigua: usa *Ajustes → Copia de seguridad* en la app antigua y *Restaurar copia* en Valkyr, y luego elimina la app antigua.
 
@@ -48,7 +48,7 @@ Necesitas **Android 10 o más reciente**. La app no está en Google Play.
 
 ### Encontrar juegos
 - **Una sola lista** con los juegos de todas tus fuentes: directorios web, enlaces directos, torrents y enlaces magnet, y tu servidor RomM.
-- **Una búsqueda que perdona errores** (acentos, guiones, letras repetidas), con búsquedas recientes, **Sorpréndeme** y **Más como este**. **Buscar todo** también encuentra ajustes, herramientas y pantallas.
+- **Una búsqueda que perdona errores** (acentos, guiones, letras repetidas), con búsquedas recientes, **Sorpréndeme** y **Más como este**. **Buscar todo** también encuentra ajustes, herramientas y pantallas. La búsqueda espera a una breve pausa al escribir.
 - **Filtra** por consola, región, idioma, tipo, género, década y *Nuevo*; **ordena** por nombre, tamaño o novedad. Un **✓** verde marca lo que ya tienes.
 - **Una página para cada juego**: imagen, Descargar o Jugar, la mejor versión, favorito, colecciones, compartir, notas, capturas y manuales, y una pestaña *Versiones* que explica cómo puntúa cada versión.
 - **Primero las carátulas**: Inicio se abre con un mosaico por consola (sus juegos y cuántos hay en el dispositivo, con una barra), arriba una tarjeta de seguir jugando, y los estantes de carátulas grandes a un toque en el selector de vista; la navegación está en una barra inferior, o en una barra lateral estrecha en una portátil, con Juegos, Descargas, Fuentes y Más. La página del juego empieza con una carátula grande y un botón grande de Jugar o Descargar.
@@ -88,7 +88,7 @@ Necesitas **Android 10 o más reciente**. La app no está en Google Play.
 - **Reparar biblioteca**: encuentra archivos vacíos o cortados, juegos de discos con pistas que faltan, listas muertas o duplicadas, restos de descargas y marcas desactualizadas. Cada arreglo se previsualiza y lo que se retira va a la papelera con recuperación.
 - **Juegos duplicados** con una limpieza segura y previsualizada; **Mejores versiones** y **Liberar espacio**.
 - **Comprobación DAT** con No-Intro, Redump y TOSEC; revisión de **conjuntos de juego**; **comprobación de BIOS**; **actualizaciones y DLC de Switch**.
-- **Resumen de la biblioteca, Almacenamiento y Estadísticas** por consola; el **almacenamiento inteligente** puede mover a una tarjeta SD las consolas que casi no juegas y devolverlas.
+- **Resumen de la biblioteca, Almacenamiento y Estadísticas** por consola; el **almacenamiento inteligente** puede mover a una tarjeta SD las consolas que casi no juegas y devolverlas. Almacenamiento reutiliza durante un minuto una sola lectura del disco mientras nada cambie.
 - **Explorador de archivos** para mirar, renombrar, mover y descomprimir; **exporta** tu colección como CSV o página web.
 - **Copiar o enviar juegos**: juegos completos con todos sus archivos a una tarjeta SD o carpeta USB, tu servidor RomM o tu NAS. Antes ves cada archivo, el espacio necesario y lo que ya hay; cada archivo se comprueba en el destino, las partidas se quedan en el dispositivo y no se reemplaza nada. Para una tarjeta que va a otro sistema, las carpetas de consola pueden seguir los nombres de ES-DE, Batocera, Knulli, ArkOS, ROCKNIX, OnionOS o muOS.
 - **Recibir juegos por Wi-Fi** (apagado hasta que lo actives): envía tus propios archivos de juego desde un navegador de tu red a la carpeta de consola correcta, con PIN, solo en la red local, con cada archivo comprobado y sin reemplazar nada.

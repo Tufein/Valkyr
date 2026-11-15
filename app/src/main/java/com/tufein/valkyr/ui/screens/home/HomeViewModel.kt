@@ -14,6 +14,7 @@ import com.tufein.valkyr.util.VariantGroups
 import com.tufein.valkyr.util.VersionPicker
 import com.tufein.valkyr.util.VersionPreference
 import kotlinx.coroutines.flow.drop
+import com.tufein.valkyr.util.SearchDebounce
 import com.tufein.valkyr.data.local.dao.GameMetadataDao
 import com.tufein.valkyr.util.GameTitleCleaner
 import com.tufein.valkyr.util.LibraryDiscovery
@@ -701,7 +702,7 @@ class HomeViewModel @Inject constructor(
         }
         viewModelScope.launch {
             combine(
-                combine(_searchQuery, _selectedConsoles, _activeTags) { q, c, t -> Triple(q, c, t) },
+                combine(_searchQuery.debounce { SearchDebounce.waitMs(it) }, _selectedConsoles, _activeTags) { q, c, t -> Triple(q, c, t) },
                 combine(_sort, _favouritesOnly, _source, rescanStateHolder.lastRescanTime, combine(_newOnly, _collectionId) { n, c -> n to c }) { s, f, src, _, nc -> FilterExtra(s, f, src, nc.first, nc.second) },
                 // Re-query when a star changes while "Favourites only" is on, else the row would linger.
                 // …and when the active profile changes what is hidden.

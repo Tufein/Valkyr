@@ -128,6 +128,9 @@ class LibraryScanService @Inject constructor(
         LibraryOverview(rows, disk, entriesByConsole[null].orEmpty().size)
     }
 
+    /** Changes whenever the index sees different files; caches compare it to know their copy is stale. */
+    fun libraryStamp(): Any = libraryIndexService.ownedKeys.value
+
     suspend fun scan(): DiskSnapshot = withContext(Dispatchers.IO) {
         val root = settingsRepository.downloadDirectory.first()
         val custom = settingsRepository.consoleDownloadDirectories.first()

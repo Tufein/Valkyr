@@ -23,7 +23,7 @@ Valkyr rassemble les jeux des sources que *vous* ajoutez dans une seule grande l
 
 *Les captures d’écran utilisent des titres de jeux inventés et des fichiers vides de substitution, et montrent l’application en anglais.*
 
-**Dernière version : [7.5.0](https://github.com/Tufein/Valkyr/releases/tag/v7.5.0)** (build Android 83).
+**Dernière version : [7.6.0](https://github.com/Tufein/Valkyr/releases/tag/v7.6.0)** (build Android 84).
 
 Jusqu’à la 3.9.0, l’application s’appelait Dogmatix+. Valkyr 6.0.0 a son propre identifiant d’application et s’installe donc à côté de l’ancienne : utilisez *Réglages → Sauvegarder* dans l’ancienne appli et *Restaurer une sauvegarde* dans Valkyr, puis supprimez l’ancienne.
 
@@ -48,7 +48,7 @@ Il vous faut **Android 10 ou plus récent**. L’application n’est pas sur Goo
 
 ### Trouver des jeux
 - **Une seule liste** avec les jeux de toutes vos sources : répertoires web, liens directs, torrents et liens magnet, et votre serveur RomM.
-- **Une recherche qui pardonne les fautes** (accents, tirets, lettres doublées), avec les recherches récentes, **Surprenez-moi** et **Plus comme celui-ci**. **Tout rechercher** trouve aussi les réglages, outils et écrans.
+- **Une recherche qui pardonne les fautes** (accents, tirets, lettres doublées), avec les recherches récentes, **Surprenez-moi** et **Plus comme celui-ci**. **Tout rechercher** trouve aussi les réglages, outils et écrans. La recherche attend une courte pause dans la saisie.
 - **Filtrer** par console, région, langue, type, genre, décennie et *Nouveau* ; **trier** par nom, taille ou plus récent. Un **✓** vert marque ce que vous avez déjà.
 - **Une page par jeu** : visuel, Télécharger ou Jouer, la meilleure version, favori, collections, partage, notes, captures et manuels, et un onglet *Versions* qui explique comment chaque version est notée.
 - **Les jaquettes d’abord** : l’accueil s’ouvre sur une tuile par console (ses jeux et combien sont sur l’appareil, avec une barre), une carte Continuer à jouer en haut, et les étagères de grandes jaquettes à une touche dans le sélecteur de vue ; la navigation est dans une barre en bas, ou une barre latérale fine sur une console portable, avec Jeux, Téléchargements, Sources et Plus. La page d’un jeu commence par une grande jaquette et un grand bouton Jouer ou Télécharger.
@@ -88,7 +88,7 @@ Il vous faut **Android 10 ou plus récent**. L’application n’est pas sur Goo
 - **Réparer la bibliothèque** : trouve les fichiers vides ou tronqués, les jeux multi-disques avec pistes manquantes, les playlists mortes ou en double, les restes de téléchargements et les repères périmés. Chaque correction est prévisualisée et ce qui est retiré va dans la corbeille avec récupération.
 - **Jeux en double** avec un nettoyage sûr et prévisualisé ; **Meilleures versions** et **Libérer de la place**.
 - **Vérification DAT** contre No-Intro, Redump et TOSEC ; contrôle des **jeux multi-fichiers** ; **contrôle du BIOS** ; **mises à jour et DLC Switch**.
-- **Aperçu de la bibliothèque, Stockage et Statistiques** par console ; le **stockage intelligent** peut déplacer les consoles rarement jouées vers une carte SD et les rapatrier.
+- **Aperçu de la bibliothèque, Stockage et Statistiques** par console ; le **stockage intelligent** peut déplacer les consoles rarement jouées vers une carte SD et les rapatrier. Stockage réutilise pendant une minute un seul examen du disque tant que rien ne change.
 - **Explorateur de fichiers** pour regarder, renommer, déplacer et décompresser ; **export** de la collection en CSV ou page web.
 - **Copier ou envoyer des jeux** : des jeux complets, avec tous leurs fichiers, vers une carte SD ou un dossier USB, votre serveur RomM ou votre NAS. Vous voyez d’abord chaque fichier, l’espace nécessaire et ce qui s’y trouve déjà ; chaque fichier est vérifié à l’arrivée, les sauvegardes restent sur l’appareil et rien n’est remplacé. Pour une carte destinée à un autre système, les dossiers de console peuvent suivre les noms d’ES-DE, Batocera, Knulli, ArkOS, ROCKNIX, OnionOS ou muOS.
 - **Recevoir des jeux par Wi-Fi** (désactivé tant que vous ne l’activez pas) : envoyez vos propres fichiers de jeu depuis un navigateur de votre réseau vers le bon dossier de console, avec un code PIN, sur le réseau local uniquement, chaque fichier vérifié et rien de remplacé.

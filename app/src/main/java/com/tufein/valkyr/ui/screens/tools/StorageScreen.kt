@@ -105,13 +105,13 @@ class StorageViewModel @Inject constructor(
     val ui: StateFlow<StorageUiState> = _ui.asStateFlow()
     private var job: Job? = null
 
-    init { refresh() }
+    init { refresh(force = false) }
 
-    fun refresh() {
+    fun refresh(force: Boolean = true) {
         job?.cancel()
         job = viewModelScope.launch {
             _ui.update { it.copy(loading = true) }
-            val disk = try { tools.disk() } catch (e: CancellationException) { throw e } catch (e: Exception) { null }
+            val disk = try { tools.disk(force) } catch (e: CancellationException) { throw e } catch (e: Exception) { null }
             val queue = StorageInsights.queueNeed(
                 downloadService.getDownloads()
                     .filter { it.status == DownloadStatus.DOWNLOADING || it.status == DownloadStatus.QUEUED }

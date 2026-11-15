@@ -67,9 +67,15 @@ class LibraryToolsService @Inject constructor(
         DuplicateFinder.find(scanService.scan().files)
     }
 
-    suspend fun disk(): DiskOverview = withContext(Dispatchers.IO) {
+    private val diskCache = com.tufein.valkyr.util.SnapshotCache<DiskOverview>(com.tufein.valkyr.util.SnapshotCache.DEFAULT_TTL_MS)
+
+    /** 7.6: Storage and the health check share one walk for a minute, until the library changes. */
+    suspend fun disk(force: Boolean = false): DiskOverview = withContext(Dispatchers.IO) {
+        val stamp = scanService.libraryStamp()
+        if (!force) diskCache.get(stamp)?.let { return@withContext it }
         val snapshot = scanService.scan()
         DiskOverview(DuplicateFinder.entries(snapshot.files), snapshot.freeBytes, snapshot.rootDisplay.isNotBlank() || snapshot.files.isNotEmpty())
+            .also { diskCache.put(stamp, it) }
     }
 
     /** Every game on disk as an export row (console name, title, files, size, folder). */
