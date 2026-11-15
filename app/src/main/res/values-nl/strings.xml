@@ -401,13 +401,7 @@
     <string name="error_download_dir_missing">Geen downloadmap ingesteld. Kies een downloadmap bij Instellingen.</string>
     <string name="error_download_dir_inaccessible">De downloadmap is niet toegankelijk. Controleer de maprechten bij Instellingen.</string>
 
-    <!-- MIME Types -->
-    <string name="mime_octet_stream">application/octet-stream</string>
 
-    <!-- HTTP -->
-    <string name="http_user_agent">Valkyr Downloader/1.0</string>
-    <string name="http_accept">*/*</string>
-    <string name="http_method_get">GET</string>
     <!-- Onboarding -->
     <string name="onboarding_welcome_title">Welkom bij Valkyr</string>
     <string name="onboarding_welcome_body">Valkyr indexeert de inhoud van ROM-bronnen — torrents, magnets en webmappen —, tagt elk bestand op console, regio en taal, en laat je bladeren, filteren en direct naar je ROM-map downloaden. Archieven worden automatisch uitgepakt.</string>

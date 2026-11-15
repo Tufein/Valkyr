@@ -143,12 +143,12 @@ Valkyr is made for handhelds with a small landscape screen and a controller, wit
 
 ### Under the hood
 - The Kotlin package is `com.tufein.valkyr`; the application id is `com.tufein.valkyr` (kept through the rename to Valkyr so installed apps keep updating).
-- Room schema at v9 with explicit migrations (search key, download history, game metadata cache, per-console short name and folder aliases, favourites, debrid resume ids).
+- Room schema at v16 with explicit migrations (search key, download history, game metadata cache, per-console short name and folder aliases, favourites, debrid resume ids).
 - All source handling lives in `SourcesRepository`; the JSON format is read and written by one pure `SourcesJson` object shared by the bundled asset, the Room `urls` column and export/import. Sources are routed by URL: `magnet:`/`.torrent` → libtorrent, `romm://` → the RomM API, anything else → HTML directory scraping.
 - Downloads are routed in `DownloadService.perform()`: debrid service (when selected; `DebridClient` implemented by `TorBoxClient` and `RealDebridClient`) → HTTP with resume; torrent → libtorrent; HTTP otherwise (with the RomM credentials when the file comes from the RomM server). Integrations talk to their APIs with a tiny `JsonHttp` helper over `HttpURLConnection` + Gson — no OkHttp.
 - Secrets (TorBox / Real-Debrid keys, RomM token) live only in the app's DataStore; nothing is baked into the APK or the repository.
 - The library tools live in `DuplicateFinder`, `DiskScanner`, `LibraryScanService`, `BackupJson` and `BackupService` (see [Library tools](#library-tools)).
-- Unit tests for the pure logic: search/parsing (`SearchNormalizer`, `ConsoleFolderAliases`, `GameTitleCleaner`, `LibraryKeys`), sources (`SourcesJson`), deep links and shortcuts (`DeepLinkParser`, `DeepLinkResolver`, `DgmtxFile`), frontends (`EsdeXml`, `IisuJson`, `DaijishoSetup`), debrid and RomM (`DebridMatcher`, `RommPlatformMapper`, `RommSource`), save sync (`SaveSyncPlanner`, `SaveSyncEngine` with an in-memory device and server, plus `RommSaveSyncLiveTest` against a real server), versions (`VersionUtils`), and the gamepad legend (`GamepadLayout`).
+- Unit tests for the pure logic: search/parsing (`SearchNormalizer`, `ConsoleFolderAliases`, `GameTitleCleaner`, `LibraryKeys`), sources (`SourcesJson`), deep links and shortcuts (`DeepLinkParser`, `DeepLinkResolver`, `DgmtxFile`), frontends (`EsdeXml`, `IisuJson`, `DaijishoSetup`), debrid and RomM (`DebridMatcher`, `RommPlatformMapper`, `RommSource`), save sync (`SaveSyncPlanner`, `SaveSyncEngine` with an in-memory device and server, plus `RommSaveSyncLiveTest` against a real server), versions (`VersionUtils`), the gamepad legend (`GamepadLayout`), and the documentation itself (`ReleaseDocsTest` for the version in the READMEs, `StringResourceParityTest` for the seven languages).
 - Removed: FAB, `SearchSection`, old filter overlays/dropdowns, `RomList`, `SmallButtons`, `CommonButton`, `Spacing`/`Layout`.
 
 ## How it works
@@ -208,7 +208,7 @@ app/src/test/                       JVM unit tests
 
 ### How Valkyr is built
 - **Build**: Gradle 9.3.1 (wrapper) with Android Gradle Plugin 9.1.0, JDK 21 (OpenJDK), Android SDK platform 36 and build-tools 36.0.0 from the command-line tools; **R8** minification and resource shrinking for the release build
-- **Tests**: JUnit 4 — 136 JVM unit tests for the pure logic — and Android Lint
+- **Tests**: JUnit 4 — over 2,200 JVM unit tests for the pure logic — and Android Lint
 - **Trying it out**: the Android Emulator (an Android 15 / API 35 arm64 Google APIs image) driven with `adb` — installing, taps and swipes, logcat, screenshots, and `truncate` to create made-up ROM files — in portrait and landscape, in the debug and in the minified release build
 - **Checking the APKs**: `aapt2` (package, version, languages) and `apksigner` (signature) on every APK before it was released
 - **Test data**: small Python 3 scripts (not part of this repository) ran a local web server with made-up game indexes, so scans, the progress display and the duplicate finder could be tried without any real sources

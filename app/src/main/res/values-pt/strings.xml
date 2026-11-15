@@ -355,10 +355,6 @@
     <string name="dialog_new_manufacturer">Ou um novo fabricante</string>
     <string name="error_download_dir_missing">Pasta de downloads não configurada. Define uma pasta de downloads nas definições.</string>
     <string name="error_download_dir_inaccessible">A pasta de downloads não está acessível. Verifica as permissões da pasta nas definições.</string>
-    <string name="mime_octet_stream">application/octet-stream</string>
-    <string name="http_user_agent">Valkyr Downloader/1.0</string>
-    <string name="http_accept">*/*</string>
-    <string name="http_method_get">GET</string>
     <string name="onboarding_welcome_title">Bem-vindo ao Valkyr</string>
     <string name="onboarding_welcome_body">O Valkyr indexa o conteúdo de fontes de ROMs — torrents, magnets e diretórios web —, etiqueta cada ficheiro por consola, região e idioma, e deixa-te navegar, filtrar e descarregar diretamente para a tua pasta de ROMs. Os arquivos são extraídos automaticamente.</string>
     <string name="onboarding_welcome_point_1">As fontes são indexadas, não descarregadas: navega por milhares de títulos sem encher o armazenamento.</string>

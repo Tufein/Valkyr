@@ -401,13 +401,14 @@
     <string name="error_download_dir_missing">Download folder not set. Please pick a download folder in Settings.</string>
     <string name="error_download_dir_inaccessible">Download folder is not accessible. Please check your folder permissions in Settings.</string>
 
-    <!-- MIME Types -->
-    <string name="mime_octet_stream">application/octet-stream</string>
-    
-    <!-- HTTP -->
-    <string name="http_user_agent">Valkyr Downloader/1.0</string>
-    <string name="http_accept">*/*</string>
-    <string name="http_method_get">GET</string>
+    <!-- MIME Types (technical constants, never translated) -->
+    <string name="mime_octet_stream" translatable="false">application/octet-stream</string>
+
+    <!-- HTTP (technical constants, never translated) -->
+    <string name="http_user_agent" translatable="false">Valkyr Downloader/1.0</string>
+    <string name="http_accept" translatable="false">*/*</string>
+    <string name="http_method_get" translatable="false">GET</string>
+
     <!-- Onboarding -->
     <string name="onboarding_welcome_title">Welcome to Valkyr</string>
     <string name="onboarding_welcome_body">Valkyr indexes the contents of ROM sources — torrents, magnets and web directories — tags every file by console, region and language, and lets you browse, filter and download straight to your ROMs folder. Archives are extracted automatically.</string>
