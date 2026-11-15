@@ -23,6 +23,9 @@ Releases are `vX.Y.0`: the minor goes up one at a time (0–9), a big release ma
 of a major, and Android's build number always goes up. There are no patch releases; a fix
 ships in the next minor.
 
+Every release below has its work written out as tickets in [plans/](plans/), with the files to
+touch, the tests that prove it and what still needs a device or a real server.
+
 ## 7.2 — Bookkeeping (shipped in 7.2.0)
 
 The documentation, the translations and the test gates. Nothing in the app behaves differently.
@@ -59,7 +62,8 @@ Dolphin and NetherSX2 memory cards and Wii saves. Every other emulator has to be
 
 *Done when* no screen is cut off at 400 dp and large text, the destructive-path tests fail if
 recovery is skipped, and three emulators that store saves in three different shapes sync both
-ways without typing a path.
+ways without typing a path. Tickets: **[plans/7.2.md](plans/7.2.md)** (the audits) and
+**[plans/7.3.md](plans/7.3.md)** (the saves).
 
 ## 7.4 — Emulator setup, not only the check
 
@@ -75,7 +79,7 @@ one that actually helps.
   a dead end.
 
 *Done when* a fresh handheld goes from Emulator check to playing a two-disc game in one guided
-flow, with every written file listed beforehand.
+flow, with every written file listed beforehand. Tickets: **[plans/7.4.md](plans/7.4.md)**.
 
 ## 7.5 — More places to keep your data
 
@@ -91,7 +95,7 @@ object storage, is out of reach.
   anything.
 
 *Done when* a backup goes to a NAS over SMB, restores on a second device byte for byte, and a
-failed target says why without blocking the others.
+failed target says why without blocking the others. Tickets: **[plans/7.5.md](plans/7.5.md)**.
 
 ## 7.6 — Scale
 
@@ -106,7 +110,7 @@ A library of a few thousand games hides slow spots. A curated set of 100,000 doe
 
 *Done when* the Performance check on a mid-range handheld shows search, scroll and cover
 decode still Fast with 100,000 games indexed, and a rescan of an unchanged library takes
-seconds.
+seconds. Tickets: **[plans/7.6.md](plans/7.6.md)**.
 
 ## 7.7 — Metadata without RomM
 
@@ -122,7 +126,8 @@ needs to.
   provider is named wherever its data is shown.
 
 *Done when* a library with no RomM gets covers, manuals and screenshots at the same quality
-bar, and a failed provider reads as a sentence rather than an empty screen.
+bar, and a failed provider reads as a sentence rather than an empty screen. Tickets:
+**[plans/7.7.md](plans/7.7.md)**.
 
 ## 7.8 — Catalogue and sources
 
@@ -136,7 +141,7 @@ bar, and a failed provider reads as a sentence rather than an empty screen.
   catalogues.
 
 *Done when* every catalogue names its provider on the game page and a source that failed last
-week is visible before it fails again.
+week is visible before it fails again. Tickets: **[plans/7.8.md](plans/7.8.md)**.
 
 ## 7.9 — Series and discovery
 
@@ -147,6 +152,7 @@ week is visible before it fails again.
 - **Search that finds a series by name** even when the games do not share a title.
 
 *Done when* grouping is off by default, explains what it folded, and can be undone in one tap.
+Tickets: **[plans/7.9.md](plans/7.9.md)**.
 
 ## 8.0 — One library on several handhelds
 
@@ -160,7 +166,8 @@ through RomM. The rest of the library still lives on one device.
 - **Still no accounts**: your WebDAV folder is the account.
 
 *Done when* two handhelds on the same WebDAV folder show the same Up next and progress after a
-sync, and one device going offline for a week does not lose its week.
+sync, and one device going offline for a week does not lose its week. Tickets:
+**[plans/8.0.md](plans/8.0.md)**.
 
 ## Later, if there is a reason
 
