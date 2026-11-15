@@ -171,3 +171,15 @@ Valkyr est réalisé par [Tufein](https://github.com/Tufein). Il s’appuie sur 
 ## Avertissement
 
 Cette application est uniquement destinée à un usage éducatif. Il vous incombe de vous assurer que vous avez le droit légal de télécharger tout contenu.
+
+## Licence
+
+Valkyr est distribué sous licence [GPL-3.0-or-later](LICENSE). L’application ne contient aucun jeu ; les bibliothèques, sources de données et romsets regroupés conservent leur propre licence (voir [Crédits](#credits)).
+
+## Sécurité
+
+Consulter [SECURITY.md](SECURITY.md) pour signaler une vulnérabilité et savoir quels secrets ce projet conserve.
+
+## Documentation
+
+[Contributing](CONTRIBUTING.md) · [Sécurité](SECURITY.md) · [Roadmap](docs/ROADMAP.md)

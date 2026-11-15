@@ -171,3 +171,16 @@ Valkyr is made by [Tufein](https://github.com/Tufein). It is built with these op
 ## Disclaimer
 
 This app is for educational purposes only. You are responsible for making sure you have the legal right to download any content.
+
+## License
+
+Valkyr is released under the [GPL-3.0-or-later](LICENSE). The app ships no games; bundled libraries,
+data sources and romsets keep their own licenses (see [Credits](#credits)).
+
+## Security
+
+See [SECURITY.md](SECURITY.md) for how to report a vulnerability and which secrets this project stores.
+
+## Documentation
+
+[Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Roadmap](docs/ROADMAP.md)
