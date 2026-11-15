@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="setup74_tap_hint">Toca una consola para ver sus pasos: qué falta antes de que sus juegos arranquen y qué cambia cada paso.</string>
+    <string name="setup74_ready">Lista para jugar, hasta donde Valkyr puede ver.</string>
+    <string name="setup74_left">Pasos pendientes: %1$d</string>
+    <string name="setup74_emulator_standalone">Emulador: %1$s está instalado.</string>
+    <string name="setup74_emulator_retroarch">Emulador: %1$s está instalado y ejecuta esta consola con un núcleo.</string>
+    <string name="setup74_emulator_missing">Emulador: no hay ninguno instalado para esta consola. Conocidos: %1$s. Valkyr no instala nada; instalas la aplicación tú mismo.</string>
+    <string name="setup74_emulator_unknown">Emulador: Valkyr no conoce ningún emulador para esta consola. No es un callejón sin salida: en la página de un juego puedes elegir cualquier aplicación instalada para abrirlo.</string>
+    <string name="setup74_core">Núcleo: RetroArch necesita un núcleo para esta consola (%1$s). En RetroArch: Load Core → Download a Core. Valkyr no puede ver qué núcleos tiene RetroArch; arrancar un juego te lo dirá.</string>
+    <string name="setup74_bios_no_folder">BIOS: aún no se ha elegido carpeta de BIOS. Esta consola pide: %1$s.</string>
+    <string name="setup74_bios_missing">BIOS: no encontrado en tu carpeta de BIOS: %1$s.</string>
+    <string name="setup74_bios_optional">BIOS: los archivos necesarios están. Opcionales y no encontrados: %1$s.</string>
+    <string name="setup74_bios_ok">BIOS: encontrado (%1$s).</string>
+    <string name="setup74_saves_emulator">Partidas: la carpeta de %1$s está configurada en la sincronización de partidas.</string>
+    <string name="setup74_saves_retroarch">Partidas: la carpeta de saves o states de RetroArch está configurada en la sincronización de partidas.</string>
+    <string name="setup74_saves_none">Partidas: no hay carpeta de partidas configurada para este emulador, así que se quedan en este dispositivo. No hace falta para jugar.</string>
+    <string name="setup74_discs_auto">Discos: un juego en varios discos recibe su lista .m3u tras la descarga.</string>
+    <string name="setup74_discs_off">Discos: las listas .m3u automáticas están desactivadas, así que un juego en varios discos arranca disco a disco.</string>
+    <string name="setup74_writes_nothing_here">No cambia nada en Valkyr ni en tus archivos.</string>
+    <string name="setup74_writes_retroarch">Esto lo cambias en RetroArch. El botón abre las listas de RetroArch, donde puedes fijar el núcleo con el que arranca una lista; solo se escribe en la lista tras su propia vista previa.</string>
+    <string name="setup74_writes_bios">Abre la comprobación de BIOS. Solo cambia el ajuste de la carpeta de BIOS; tus archivos solo se leen.</string>
+    <string name="setup74_writes_saves">Abre la sincronización de partidas. Solo cambian los ajustes de carpetas; las partidas se mueven cuando inicias una sincronización.</string>
+    <string name="setup74_writes_m3u">Abre Ajustes. Solo cambia el ajuste de .m3u automático; la lista se escribe junto al juego tras su descarga.</string>
+    <string name="setup74_action_find">Buscar %1$s</string>
+    <string name="setup74_action_playlists">Listas de RetroArch</string>
+    <string name="setup74_action_bios">Comprobación de BIOS</string>
+    <string name="setup74_action_saves">Sincronización de partidas</string>
+    <string name="setup74_action_settings">Ajustes</string>
+    <string name="setup74_search_query">%1$s emulador Android</string>
+    <string name="setup74_no_browser">Ninguna aplicación de aquí puede buscar en la web. Busca %1$s en otro dispositivo.</string>
+    <string name="setup74_state_done">Hecho</string>
+    <string name="setup74_state_todo">Pendiente</string>
+    <string name="setup74_state_check">Compruébalo tú</string>
+</resources>

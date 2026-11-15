@@ -791,7 +791,7 @@ private fun DogmatixApp(pendingFilters: PendingLibraryFilters) {
                     composable(NavRoutes.ReportProblem.route) { ReportProblemScreen() }
                     composable(NavRoutes.PerfCheck.route) { PerfCheckScreen() }
                     composable(NavRoutes.WifiReceive.route) { WifiReceiveScreen() }
-                    composable(NavRoutes.EmulatorCheck.route) { EmulatorCheckScreen() }
+                    composable(NavRoutes.EmulatorCheck.route) { EmulatorCheckScreen(navController) }
                     composable(NavRoutes.FrontendCovers.route) { FrontendCoversScreen() }
                     composable(NavRoutes.RetroArchPlaylists.route) { RetroArchPlaylistsScreen() }
                     composable(NavRoutes.NewHandheld.route) { NewHandheldScreen(navController) }

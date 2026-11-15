@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="setup74_tap_hint">Touchez une console pour voir ses étapes : ce qu’il manque encore avant que ses jeux démarrent, et ce que chaque étape modifie.</string>
+    <string name="setup74_ready">Prêt à jouer, pour autant que Valkyr puisse le voir.</string>
+    <string name="setup74_left">Étapes restantes : %1$d</string>
+    <string name="setup74_emulator_standalone">Émulateur : %1$s est installé.</string>
+    <string name="setup74_emulator_retroarch">Émulateur : %1$s est installé et fait tourner cette console avec un cœur.</string>
+    <string name="setup74_emulator_missing">Émulateur : aucun n’est installé pour cette console. Connus : %1$s. Valkyr n’installe rien ; vous installez l’application vous-même.</string>
+    <string name="setup74_emulator_unknown">Émulateur : Valkyr ne connaît aucun émulateur pour cette console. Ce n’est pas une impasse : sur la page d’un jeu, vous pouvez toujours choisir n’importe quelle application installée pour l’ouvrir.</string>
+    <string name="setup74_core">Cœur : RetroArch a besoin d’un cœur pour cette console (%1$s). Dans RetroArch : Load Core → Download a Core. Valkyr ne peut pas voir les cœurs de RetroArch ; lancer un jeu vous le dira.</string>
+    <string name="setup74_bios_no_folder">BIOS : aucun dossier BIOS n’est encore choisi. Cette console demande : %1$s.</string>
+    <string name="setup74_bios_missing">BIOS : introuvable dans votre dossier BIOS : %1$s.</string>
+    <string name="setup74_bios_optional">BIOS : les fichiers requis sont là. Facultatifs et introuvables : %1$s.</string>
+    <string name="setup74_bios_ok">BIOS : trouvé (%1$s).</string>
+    <string name="setup74_saves_emulator">Sauvegardes : le dossier de %1$s est configuré dans la synchro des sauvegardes.</string>
+    <string name="setup74_saves_retroarch">Sauvegardes : le dossier saves ou states de RetroArch est configuré dans la synchro des sauvegardes.</string>
+    <string name="setup74_saves_none">Sauvegardes : aucun dossier de sauvegarde n’est configuré pour cet émulateur, ses sauvegardes restent donc sur cet appareil. Pas nécessaire pour jouer.</string>
+    <string name="setup74_discs_auto">Disques : un jeu sur plusieurs disques reçoit sa liste .m3u après le téléchargement.</string>
+    <string name="setup74_discs_off">Disques : les listes .m3u automatiques sont désactivées, un jeu sur plusieurs disques démarre donc disque par disque.</string>
+    <string name="setup74_writes_nothing_here">Ne change rien dans Valkyr ni dans vos fichiers.</string>
+    <string name="setup74_writes_retroarch">Vous changez cela dans RetroArch. Le bouton ouvre les playlists RetroArch, où vous pouvez définir le cœur de démarrage d’une playlist ; il n’est écrit dans la playlist qu’après son propre aperçu.</string>
+    <string name="setup74_writes_bios">Ouvre la vérification du BIOS. Seul le réglage du dossier BIOS change ; vos fichiers sont seulement lus.</string>
+    <string name="setup74_writes_saves">Ouvre la synchro des sauvegardes. Seuls les réglages de dossiers changent ; les sauvegardes ne bougent que lorsque vous lancez une synchro.</string>
+    <string name="setup74_writes_m3u">Ouvre les réglages. Seul le réglage .m3u automatique change ; une liste est écrite à côté d’un jeu après son téléchargement.</string>
+    <string name="setup74_action_find">Chercher %1$s</string>
+    <string name="setup74_action_playlists">Playlists RetroArch</string>
+    <string name="setup74_action_bios">Vérification du BIOS</string>
+    <string name="setup74_action_saves">Synchro des sauvegardes</string>
+    <string name="setup74_action_settings">Réglages</string>
+    <string name="setup74_search_query">%1$s émulateur Android</string>
+    <string name="setup74_no_browser">Aucune application ici ne peut chercher sur le web. Cherchez %1$s sur un autre appareil.</string>
+    <string name="setup74_state_done">Fait</string>
+    <string name="setup74_state_todo">À faire</string>
+    <string name="setup74_state_check">À vérifier vous-même</string>
+</resources>

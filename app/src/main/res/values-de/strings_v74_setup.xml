@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="setup74_tap_hint">Tippe auf eine Konsole für ihre Einrichtungsschritte: was noch fehlt, bevor ihre Spiele starten, und was jeder Schritt ändert.</string>
+    <string name="setup74_ready">Spielbereit, soweit Valkyr es sehen kann.</string>
+    <string name="setup74_left">Verbleibende Schritte: %1$d</string>
+    <string name="setup74_emulator_standalone">Emulator: %1$s ist installiert.</string>
+    <string name="setup74_emulator_retroarch">Emulator: %1$s ist installiert und startet diese Konsole mit einem Core.</string>
+    <string name="setup74_emulator_missing">Emulator: Für diese Konsole ist keiner installiert. Bekannte: %1$s. Valkyr installiert nichts; du installierst die App selbst.</string>
+    <string name="setup74_emulator_unknown">Emulator: Valkyr kennt keinen Emulator für diese Konsole. Das ist keine Sackgasse: Auf einer Spielseite kannst du weiterhin jede installierte App wählen, um das Spiel zu öffnen.</string>
+    <string name="setup74_core">Core: RetroArch braucht für diese Konsole einen Core (%1$s). In RetroArch: Load Core → Download a Core. Valkyr kann nicht sehen, welche Cores RetroArch hat; ein Spielstart zeigt es dir.</string>
+    <string name="setup74_bios_no_folder">BIOS: Es ist noch kein BIOS-Ordner gewählt. Diese Konsole verlangt: %1$s.</string>
+    <string name="setup74_bios_missing">BIOS: In deinem BIOS-Ordner nicht gefunden: %1$s.</string>
+    <string name="setup74_bios_optional">BIOS: Die erforderlichen Dateien sind da. Optional und nicht gefunden: %1$s.</string>
+    <string name="setup74_bios_ok">BIOS: gefunden (%1$s).</string>
+    <string name="setup74_saves_emulator">Spielstände: Der Ordner von %1$s ist im Spielstand-Sync eingerichtet.</string>
+    <string name="setup74_saves_retroarch">Spielstände: RetroArchs Saves- oder States-Ordner ist im Spielstand-Sync eingerichtet.</string>
+    <string name="setup74_saves_none">Spielstände: Für diesen Emulator ist kein Spielstand-Ordner eingerichtet, die Spielstände bleiben also auf diesem Gerät. Zum Spielen nicht nötig.</string>
+    <string name="setup74_discs_auto">Discs: Ein Spiel auf mehreren Discs bekommt nach dem Download seine .m3u-Liste.</string>
+    <string name="setup74_discs_off">Discs: Automatische .m3u-Listen sind ausgeschaltet, ein Spiel auf mehreren Discs startet also Disc für Disc.</string>
+    <string name="setup74_writes_nothing_here">Ändert nichts in Valkyr oder an deinen Dateien.</string>
+    <string name="setup74_writes_retroarch">Das änderst du in RetroArch. Die Schaltfläche öffnet die RetroArch-Playlists, wo du den Core festlegen kannst, mit dem eine Playlist startet; das wird erst nach der eigenen Vorschau in die Playlist geschrieben.</string>
+    <string name="setup74_writes_bios">Öffnet die BIOS-Prüfung. Nur die Einstellung des BIOS-Ordners ändert sich; deine Dateien werden nur gelesen.</string>
+    <string name="setup74_writes_saves">Öffnet den Spielstand-Sync. Nur die Ordnereinstellungen ändern sich; Spielstände bewegen sich erst, wenn du einen Sync startest.</string>
+    <string name="setup74_writes_m3u">Öffnet die Einstellungen. Nur die Einstellung für automatische .m3u ändert sich; eine Liste wird nach dem Download neben ein Spiel geschrieben.</string>
+    <string name="setup74_action_find">%1$s suchen</string>
+    <string name="setup74_action_playlists">RetroArch-Playlists</string>
+    <string name="setup74_action_bios">BIOS-Prüfung</string>
+    <string name="setup74_action_saves">Spielstand-Sync</string>
+    <string name="setup74_action_settings">Einstellungen</string>
+    <string name="setup74_search_query">%1$s Android Emulator</string>
+    <string name="setup74_no_browser">Keine App hier kann im Web suchen. Suche %1$s auf einem anderen Gerät.</string>
+    <string name="setup74_state_done">Erledigt</string>
+    <string name="setup74_state_todo">Offen</string>
+    <string name="setup74_state_check">Selbst prüfen</string>
+</resources>

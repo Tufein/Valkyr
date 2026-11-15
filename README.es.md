@@ -23,7 +23,7 @@ Valkyr mantiene una gran lista, con buscador, de los juegos de las fuentes que *
 
 *Las capturas de pantalla usan títulos de juegos inventados y archivos vacíos de relleno. Las capturas muestran la app en inglés.*
 
-**Última versión: [7.3.0](https://github.com/Tufein/Valkyr/releases/tag/v7.3.0)** (build de Android 81).
+**Última versión: [7.4.0](https://github.com/Tufein/Valkyr/releases/tag/v7.4.0)** (build de Android 82).
 
 Hasta la 3.9.0 la app se llamaba Dogmatix+. Valkyr 6.0.0 tiene su propio ID de aplicación y se instala junto a la app antigua: usa *Ajustes → Copia de seguridad* en la app antigua y *Restaurar copia* en Valkyr, y luego elimina la app antigua.
 
@@ -55,7 +55,7 @@ Necesitas **Android 10 o más reciente**. La app no está en Google Play.
 - **Carátulas de varias fuentes**: RomM, libretro-thumbnails, [ScreenScraper](https://www.screenscraper.fr) (con tu propio acceso), TheGamesDB, SteamGridDB e IGDB (cada una con tu propia clave gratuita) y las imágenes de juegos en caché, en el orden que elijas. La app avisa con claridad si falla el acceso o se alcanza un límite diario, y una fuente que solo no estaba disponible se vuelve a consultar más tarde (*Ajustes → Fuentes de carátulas*).
 - **Imágenes extra para lanzadores**: pantallas de título y capturas para la carpeta de carátulas de ES-DE (*Herramientas → Portadas para lanzadores*), desactivado por defecto y sin reemplazar nunca archivos que ya tienes.
 - **Prueba de rendimiento** (*Herramientas → Prueba de rendimiento*): mide el arranque, la velocidad de búsqueda, la decodificación de carátulas, el almacenamiento y el desplazamiento en tu propio dispositivo, con veredicto Rápido/Bien/Lento y un informe solo con números para compartir.
-- **Revisión de emuladores** (*Herramientas → Revisión de emuladores*): qué emuladores conocidos hay instalados, en qué versión, y si para cada consola de tu biblioteca algo instalado puede iniciar sus juegos, con lo que falta. Solo mira las apps instaladas y no instala nada.
+- **Revisión de emuladores** (*Herramientas → Revisión de emuladores*): qué emuladores conocidos hay instalados, en qué versión, y si para cada consola de tu biblioteca algo instalado puede iniciar sus juegos, con lo que falta. Solo mira las apps instaladas y no instala nada. Toca una consola para ver sus pasos: emulador, núcleo, BIOS, partidas y listas de discos, cada uno indicando qué cambia.
 - **A continuación y Para ti**: una lista de juegos personal por perfil y sugerencias de tu propia biblioteca que siempre dicen por qué se eligieron.
 - **Colecciones y objetivos**: favoritos, listas propias, colecciones por reglas (consola, idioma, género, año, jugado, sin jugar en 3, 6 o 12 meses), objetivos de colección, historial de juego, un resumen anual y los mejores juegos por consola según RetroAchievements.
 - **Lista de deseos**: anota los juegos que quieres, recibe un aviso cuando aparezca uno, descárgalos automáticamente y comparte la lista.

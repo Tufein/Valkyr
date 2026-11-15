@@ -23,7 +23,7 @@ Valkyr rassemble les jeux des sources que *vous* ajoutez dans une seule grande l
 
 *Les captures d’écran utilisent des titres de jeux inventés et des fichiers vides de substitution, et montrent l’application en anglais.*
 
-**Dernière version : [7.3.0](https://github.com/Tufein/Valkyr/releases/tag/v7.3.0)** (build Android 81).
+**Dernière version : [7.4.0](https://github.com/Tufein/Valkyr/releases/tag/v7.4.0)** (build Android 82).
 
 Jusqu’à la 3.9.0, l’application s’appelait Dogmatix+. Valkyr 6.0.0 a son propre identifiant d’application et s’installe donc à côté de l’ancienne : utilisez *Réglages → Sauvegarder* dans l’ancienne appli et *Restaurer une sauvegarde* dans Valkyr, puis supprimez l’ancienne.
 
@@ -55,7 +55,7 @@ Il vous faut **Android 10 ou plus récent**. L’application n’est pas sur Goo
 - **Jaquettes de plusieurs sources** : RomM, libretro-thumbnails, [ScreenScraper](https://www.screenscraper.fr) (avec votre propre compte), TheGamesDB, SteamGridDB et IGDB (chacune avec votre propre clé gratuite) et les images de jeux en cache, dans l’ordre de votre choix. L’appli dit clairement quand une connexion échoue ou qu’une limite quotidienne est atteinte, et une source simplement indisponible est réinterrogée plus tard (*Réglages → Sources de jaquettes*).
 - **Images supplémentaires pour lanceurs** : écrans-titres et captures pour le dossier de jaquettes d’ES-DE (*Outils → Jaquettes pour lanceurs*), désactivé par défaut et sans jamais remplacer vos fichiers existants.
 - **Test de performance** (*Outils → Test de performance*) : mesure le démarrage, la vitesse de recherche, le décodage des jaquettes, le stockage et le défilement sur votre propre appareil, avec un verdict Rapide/Correct/Lent et un rapport de simples chiffres à partager.
-- **Contrôle des émulateurs** (*Outils → Contrôle des émulateurs*) : quels émulateurs connus sont installés, en quelle version, et pour chaque console de votre bibliothèque si quelque chose d’installé peut lancer ses jeux, avec ce qui manque. Il regarde seulement les applis installées et n’installe rien.
+- **Contrôle des émulateurs** (*Outils → Contrôle des émulateurs*) : quels émulateurs connus sont installés, en quelle version, et pour chaque console de votre bibliothèque si quelque chose d’installé peut lancer ses jeux, avec ce qui manque. Il regarde seulement les applis installées et n’installe rien. Touchez une console pour ses étapes : émulateur, cœur, BIOS, sauvegardes et listes de disques, chacune disant ce qu’elle modifie.
 - **À suivre et Pour vous** : une liste de jeux personnelle par profil, et des suggestions tirées de votre propre bibliothèque qui disent toujours pourquoi elles ont été choisies.
 - **Collections et objectifs** : favoris, listes personnelles, collections par règles (console, langue, genre, année, joué, pas joué depuis 3, 6 ou 12 mois), objectifs de collection, historique de jeu, bilan annuel et meilleurs jeux par console selon RetroAchievements.
 - **Liste de souhaits** : notez les jeux voulus, soyez prévenu quand l’un apparaît, téléchargez-les automatiquement et partagez la liste.

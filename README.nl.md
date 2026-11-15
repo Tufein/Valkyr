@@ -23,7 +23,7 @@ Valkyr houdt één grote, doorzoekbare lijst bij van de games uit de bronnen die
 
 *De screenshots gebruiken verzonnen gametitels en lege dummybestanden en tonen de app in het Engels.*
 
-**Laatste release: [7.3.0](https://github.com/Tufein/Valkyr/releases/tag/v7.3.0)** (Android build 81).
+**Laatste release: [7.4.0](https://github.com/Tufein/Valkyr/releases/tag/v7.4.0)** (Android build 82).
 
 Tot en met 3.9.0 heette de app Dogmatix+. Valkyr 6.0.0 heeft een eigen app-id en installeert dus naast de oude app: gebruik *Instellingen → Back-up maken* in de oude app en *Back-up terugzetten* in Valkyr, en verwijder daarna de oude app.
 
@@ -55,7 +55,7 @@ Je hebt **Android 10 of nieuwer** nodig. De app staat niet in Google Play.
 - **Covers uit meerdere bronnen**: RomM, libretro-thumbnails, [ScreenScraper](https://www.screenscraper.fr) (met je eigen inlog), TheGamesDB, SteamGridDB en IGDB (elk met je eigen gratis sleutel) en de opgeslagen spelafbeeldingen, in een volgorde die jij kiest. De app meldt duidelijk als een login mislukt of een daglimiet is bereikt, en een bron die alleen even niet beschikbaar was, wordt later opnieuw gevraagd (*Instellingen → Coverbronnen*).
 - **Extra launcherafbeeldingen**: titelschermen en screenshots voor de ES-DE-coversmap (*Tools → Covers voor launchers*), standaard uit en nooit ter vervanging van bestanden die je al hebt.
 - **Prestatiecheck** (*Tools → Prestatiecheck*): meet starten, zoeksnelheid, het decoderen van covers, opslagsnelheid en scrollen op je eigen toestel, met een Snel/Prima/Traag-oordeel en een rapport met alleen cijfers dat je kunt delen.
-- **Emulatorcontrole** (*Tools → Emulatorcontrole*): welke bekende emulators geïnstalleerd zijn, in welke versie, en of voor elke console van je bibliotheek iets geïnstalleerds de games kan starten, met wat er ontbreekt. Het kijkt alleen naar geïnstalleerde apps en installeert niets.
+- **Emulatorcontrole** (*Tools → Emulatorcontrole*): welke bekende emulators geïnstalleerd zijn, in welke versie, en of voor elke console van je bibliotheek iets geïnstalleerds de games kan starten, met wat er ontbreekt. Het kijkt alleen naar geïnstalleerde apps en installeert niets. Tik op een console voor de stappen: emulator, core, BIOS, saves en disclijsten, elk met wat het verandert.
 - **Hierna spelen en Voor jou**: een persoonlijke speellijst per profiel, en suggesties uit je eigen bibliotheek die altijd zeggen waarom ze zijn gekozen.
 - **Collecties en doelen**: favorieten, eigen lijsten, collecties op basis van regels (console, taal, genre, jaar, gespeeld, 3, 6 of 12 maanden niet gespeeld), collectiedoelen, speelgeschiedenis, een jaaroverzicht en de beste games per console van RetroAchievements.
 - **Verlanglijst**: noteer games die je wilt, krijg een melding als er een opduikt, download ze automatisch en deel de lijst.

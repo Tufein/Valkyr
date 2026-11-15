@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="setup74_tap_hint">Tik op een console voor de stappen: wat er nog nodig is voordat de games starten, en wat elke stap verandert.</string>
+    <string name="setup74_ready">Klaar om te spelen, voor zover Valkyr kan zien.</string>
+    <string name="setup74_left">Stappen over: %1$d</string>
+    <string name="setup74_emulator_standalone">Emulator: %1$s is geïnstalleerd.</string>
+    <string name="setup74_emulator_retroarch">Emulator: %1$s is geïnstalleerd en draait deze console met een core.</string>
+    <string name="setup74_emulator_missing">Emulator: voor deze console is er geen geïnstalleerd. Bekende: %1$s. Valkyr installeert niets; je installeert de app zelf.</string>
+    <string name="setup74_emulator_unknown">Emulator: Valkyr kent geen emulator voor deze console. Het loopt niet dood: op een gamepagina kun je nog steeds elke geïnstalleerde app kiezen om de game mee te openen.</string>
+    <string name="setup74_core">Core: RetroArch heeft voor deze console een core nodig (%1$s). In RetroArch: Load Core → Download a Core. Valkyr kan niet zien welke cores RetroArch heeft; een game starten vertelt het je.</string>
+    <string name="setup74_bios_no_folder">BIOS: er is nog geen BIOS-map gekozen. Deze console vraagt om: %1$s.</string>
+    <string name="setup74_bios_missing">BIOS: niet gevonden in je BIOS-map: %1$s.</string>
+    <string name="setup74_bios_optional">BIOS: de vereiste bestanden zijn er. Optioneel en niet gevonden: %1$s.</string>
+    <string name="setup74_bios_ok">BIOS: gevonden (%1$s).</string>
+    <string name="setup74_saves_emulator">Saves: de map van %1$s is ingesteld in Savesynchronisatie.</string>
+    <string name="setup74_saves_retroarch">Saves: de saves- of statesmap van RetroArch is ingesteld in Savesynchronisatie.</string>
+    <string name="setup74_saves_none">Saves: voor deze emulator is geen savemap ingesteld, dus de saves blijven op dit toestel. Niet nodig om te spelen.</string>
+    <string name="setup74_discs_auto">Discs: een game op meerdere discs krijgt na de download zijn .m3u-lijst.</string>
+    <string name="setup74_discs_off">Discs: automatische .m3u-lijsten staan uit, dus een game op meerdere discs start per losse disc.</string>
+    <string name="setup74_writes_nothing_here">Verandert niets in Valkyr of in je bestanden.</string>
+    <string name="setup74_writes_retroarch">Dit verander je in RetroArch. De knop opent RetroArch-playlists, waar je de core kunt instellen waarmee een playlist start; dat wordt pas na de eigen voorvertoning in de playlist geschreven.</string>
+    <string name="setup74_writes_bios">Opent de BIOS-controle. Alleen de instelling van de BIOS-map verandert; je bestanden worden alleen gelezen.</string>
+    <string name="setup74_writes_saves">Opent Savesynchronisatie. Alleen de mapinstellingen veranderen; saves verplaatsen pas als je een synchronisatie start.</string>
+    <string name="setup74_writes_m3u">Opent Instellingen. Alleen de instelling voor automatische .m3u verandert; een lijst wordt na de download naast een game geschreven.</string>
+    <string name="setup74_action_find">Zoek %1$s</string>
+    <string name="setup74_action_playlists">RetroArch-playlists</string>
+    <string name="setup74_action_bios">BIOS-controle</string>
+    <string name="setup74_action_saves">Savesynchronisatie</string>
+    <string name="setup74_action_settings">Instellingen</string>
+    <string name="setup74_search_query">%1$s Android emulator</string>
+    <string name="setup74_no_browser">Geen app hier kan op het web zoeken. Zoek %1$s op een ander toestel.</string>
+    <string name="setup74_state_done">Klaar</string>
+    <string name="setup74_state_todo">Te doen</string>
+    <string name="setup74_state_check">Zelf nakijken</string>
+</resources>

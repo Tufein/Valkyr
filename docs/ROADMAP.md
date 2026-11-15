@@ -4,7 +4,7 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 7.3.0** (Android build 81). The core loop is complete — find a game, download it into
+**Now: 7.4.0** (Android build 82). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
 libraries), and finishing what 7.0 and 7.1 started.
@@ -50,21 +50,18 @@ sweep at 400 dp with large text, the empty-state audit, save shapes for more emu
 M64Plus FZ, Flycast, Redream, the Switch family), and folder mode for memory cards with its own
 schedule. Tickets: **[plans/7.2.md](plans/7.2.md)** and **[plans/7.3.md](plans/7.3.md)**.
 
-## 7.4 — Emulator setup, not only the check
+## 7.4 — Emulator setup, not only the check (shipped in 7.4.0)
 
-*Tools → Emulator check* says which emulator is missing and stops there. The next step is the
-one that actually helps.
+- **From "missing" to "set up"**: a console in *Tools → Emulator check* opens into its steps —
+  emulator, RetroArch core, BIOS files, save folder and disc lists — each done, to do, or for you
+  to check.
+- **Nothing is installed silently and every step says what it changes**: a button opens the
+  screen that does it, or a web search for the app.
+- **An unknown emulator is no dead end**: the manual way is named.
 
-- **From "missing" to "set up"**: a guided step per console for the core, the BIOS folder, the
-  save folder and (for multi-disc games) the `.m3u`, each with a preview of what changes.
-- **Nothing is installed silently**: the app explains what to install, opens the page, and
-  verifies afterwards.
-- **A test launch** that reports what the emulator said, not just that it started.
-- **Keep working when it cannot help**: an unknown emulator gets the manual instructions, not
-  a dead end.
-
-*Done when* a fresh handheld goes from Emulator check to playing a two-disc game in one guided
-flow, with every written file listed beforehand. Tickets: **[plans/7.4.md](plans/7.4.md)**.
+Still open from this plan: a test launch that reports what the emulator said, writing a missing
+`.m3u` from the setup steps, and the new-handheld checklist turning green from the same plan.
+Tickets: **[plans/7.4.md](plans/7.4.md)**.
 
 ## 7.5 — More places to keep your data
 
