@@ -23,7 +23,7 @@ Valkyr mantiene una gran lista, con buscador, de los juegos de las fuentes que *
 
 *Las capturas de pantalla usan títulos de juegos inventados y archivos vacíos de relleno. Las capturas muestran la app en inglés.*
 
-**Última versión: [7.7.0](https://github.com/Tufein/Valkyr/releases/tag/v7.7.0)** (build de Android 85).
+**Última versión: [7.8.0](https://github.com/Tufein/Valkyr/releases/tag/v7.8.0)** (build de Android 86).
 
 Hasta la 3.9.0 la app se llamaba Dogmatix+. Valkyr 6.0.0 tiene su propio ID de aplicación y se instala junto a la app antigua: usa *Ajustes → Copia de seguridad* en la app antigua y *Restaurar copia* en Valkyr, y luego elimina la app antigua.
 
@@ -92,7 +92,7 @@ Necesitas **Android 10 o más reciente**. La app no está en Google Play.
 - **Explorador de archivos** para mirar, renombrar, mover y descomprimir; **exporta** tu colección como CSV o página web.
 - **Copiar o enviar juegos**: juegos completos con todos sus archivos a una tarjeta SD o carpeta USB, tu servidor RomM o tu NAS. Antes ves cada archivo, el espacio necesario y lo que ya hay; cada archivo se comprueba en el destino, las partidas se quedan en el dispositivo y no se reemplaza nada. Para una tarjeta que va a otro sistema, las carpetas de consola pueden seguir los nombres de ES-DE, Batocera, Knulli, ArkOS, ROCKNIX, OnionOS o muOS.
 - **Recibir juegos por Wi-Fi** (apagado hasta que lo actives): envía tus propios archivos de juego desde un navegador de tu red a la carpeta de consola correcta, con PIN, solo en la red local, con cada archivo comprobado y sin reemplazar nada.
-- **Comprobación de salud** con una solución por problema e **informe de escaneo** de las fuentes que fallaron.
+- **Comprobación de salud** con una solución por problema e **informe de escaneo** de las fuentes que fallaron. Cada fuente recuerda sus últimos doce análisis y avisa cuando falla a menudo.
 - **Fuentes**: añadir a mano, importar y exportar, compartir como códigos QR, catálogo de contenido opcional con contenido de Libretro para 29 sistemas, las aventuras freeware de ScummVM y homebrew gratuito de Game Boy de Homebrew Hub, cada uno con su proveedor, direcciones de reserva y escaneos automáticos en segundo plano que omiten lo que no cambió.
 
 ### Seguro por diseño

@@ -23,7 +23,7 @@ Valkyr rassemble les jeux des sources que *vous* ajoutez dans une seule grande l
 
 *Les captures d’écran utilisent des titres de jeux inventés et des fichiers vides de substitution, et montrent l’application en anglais.*
 
-**Dernière version : [7.7.0](https://github.com/Tufein/Valkyr/releases/tag/v7.7.0)** (build Android 85).
+**Dernière version : [7.8.0](https://github.com/Tufein/Valkyr/releases/tag/v7.8.0)** (build Android 86).
 
 Jusqu’à la 3.9.0, l’application s’appelait Dogmatix+. Valkyr 6.0.0 a son propre identifiant d’application et s’installe donc à côté de l’ancienne : utilisez *Réglages → Sauvegarder* dans l’ancienne appli et *Restaurer une sauvegarde* dans Valkyr, puis supprimez l’ancienne.
 
@@ -92,7 +92,7 @@ Il vous faut **Android 10 ou plus récent**. L’application n’est pas sur Goo
 - **Explorateur de fichiers** pour regarder, renommer, déplacer et décompresser ; **export** de la collection en CSV ou page web.
 - **Copier ou envoyer des jeux** : des jeux complets, avec tous leurs fichiers, vers une carte SD ou un dossier USB, votre serveur RomM ou votre NAS. Vous voyez d’abord chaque fichier, l’espace nécessaire et ce qui s’y trouve déjà ; chaque fichier est vérifié à l’arrivée, les sauvegardes restent sur l’appareil et rien n’est remplacé. Pour une carte destinée à un autre système, les dossiers de console peuvent suivre les noms d’ES-DE, Batocera, Knulli, ArkOS, ROCKNIX, OnionOS ou muOS.
 - **Recevoir des jeux par Wi-Fi** (désactivé tant que vous ne l’activez pas) : envoyez vos propres fichiers de jeu depuis un navigateur de votre réseau vers le bon dossier de console, avec un code PIN, sur le réseau local uniquement, chaque fichier vérifié et rien de remplacé.
-- **Contrôle de santé** avec une solution par problème, et **rapport d’analyse** pour les sources en échec.
+- **Contrôle de santé** avec une solution par problème, et **rapport d’analyse** pour les sources en échec. Chaque source retient ses douze dernières analyses et signale qu’elle échoue souvent.
 - **Sources** : ajout manuel, import et export, partage par codes QR, catalogue de contenus optionnel avec du contenu Libretro pour 29 systèmes, les jeux d’aventure freeware de ScummVM et des homebrews Game Boy gratuits de Homebrew Hub, chacun avec son fournisseur, adresses de secours et analyses automatiques en arrière-plan qui sautent ce qui n’a pas changé.
 
 ### Sûr par conception

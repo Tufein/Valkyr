@@ -23,7 +23,7 @@ Valkyr führt eine große, durchsuchbare Liste mit den Spielen aus den Quellen, 
 
 *Die Screenshots verwenden erfundene Spieltitel und leere Platzhalterdateien und zeigen die App auf Englisch.*
 
-**Neueste Version: [7.7.0](https://github.com/Tufein/Valkyr/releases/tag/v7.7.0)** (Android-Build 85).
+**Neueste Version: [7.8.0](https://github.com/Tufein/Valkyr/releases/tag/v7.8.0)** (Android-Build 86).
 
 Bis 3.9.0 hieß die App Dogmatix+. Valkyr 6.0.0 hat eine eigene App-ID und wird daher neben der alten App installiert: Nutze *Einstellungen → Sichern* in der alten App und *Sicherung wiederherstellen* in Valkyr und entferne danach die alte App.
 
@@ -92,7 +92,7 @@ Du brauchst **Android 10 oder neuer**. Die App ist nicht bei Google Play erhält
 - **Dateimanager** zum Ansehen, Umbenennen, Verschieben und Entpacken; **Export** der Sammlung als CSV oder Webseite.
 - **Spiele kopieren oder senden**: ganze Spiele mit allen Dateien auf eine SD-Karte oder einen USB-Ordner, deinen RomM-Server oder dein NAS. Vorher siehst du jede Datei, den nötigen Platz und was schon da ist; jede Datei wird am Ziel geprüft, Spielstände bleiben zurück und nichts wird ersetzt. Für eine Karte, die in ein anderes System kommt, können die Konsolenordner die Namen von ES-DE, Batocera, Knulli, ArkOS, ROCKNIX, OnionOS oder muOS verwenden.
 - **Spiele per WLAN empfangen** (aus, bis du es einschaltest): schicke deine eigenen Spieldateien aus einem Browser in deinem Netzwerk in den richtigen Konsolenordner, mit PIN, nur im lokalen Netzwerk, jede Datei wird geprüft und nichts ersetzt.
-- **Gesundheitsprüfung** mit einer Lösung pro Problem und ein **Scanbericht** für fehlgeschlagene Quellen.
+- **Gesundheitsprüfung** mit einer Lösung pro Problem und ein **Scanbericht** für fehlgeschlagene Quellen. Jede Quelle merkt sich ihre letzten zwölf Scans und meldet, wenn sie immer wieder ausfällt.
 - **Quellen**: von Hand hinzufügen, importieren und exportieren, als QR-Codes teilen, optionaler Inhaltskatalog mit Libretro-Inhalten für 29 Systeme, den Freeware-Adventures von ScummVM und kostenlosen Game-Boy-Homebrews von Homebrew Hub, jeweils mit Anbieter, Reserveadressen und automatische Hintergrundscans, die Unverändertes überspringen.
 
 ### Sicher gebaut

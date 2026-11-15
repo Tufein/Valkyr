@@ -423,6 +423,9 @@ private fun UrlItem(
                     style = MaterialTheme.typography.bodySmall,
                     color = if (result.failure != null) scheme.error else inkOf(scheme.tertiary)
                 )
+                sourceTrendText(result)?.let {
+                    Text(text = it, style = MaterialTheme.typography.labelSmall, color = scheme.onSurfaceVariant)
+                }
             }
         }
 

@@ -107,3 +107,12 @@ fun ScanReportDialog(failures: List<ScanFailure>, onRetry: () -> Unit, onDismiss
         dismissButton = { DialogButton(text = stringResource(R.string.dialog_close), onClick = onDismiss) }
     )
 }
+
+/** 7.8: "failed 3 scans in a row, last: rate limited", or null while the source looks healthy. */
+@Composable
+fun sourceTrendText(result: SourceScanResult): String? {
+    val trend = com.tufein.valkyr.util.SourceHealth.trend(result.history, System.currentTimeMillis()) ?: return null
+    val why = failureText(trend.last, result.httpCode.takeIf { result.failure == trend.last })
+    return if (trend.streak >= 2) stringResource(R.string.src78_streak, trend.streak, why)
+    else stringResource(R.string.src78_often, trend.failures, trend.scans, why)
+}

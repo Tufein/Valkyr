@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="src78_streak">%1$d analyses de suite en échec, dernière : %2$s</string>
+    <string name="src78_often">%1$d des %2$d dernières analyses en échec, dernière : %3$s</string>
+</resources>

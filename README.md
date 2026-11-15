@@ -23,7 +23,7 @@ The app includes no games. **Sources → More romsets** offers optional free con
 
 *The screenshots use made-up game titles and empty placeholder files.*
 
-**Latest release: [7.7.0](https://github.com/Tufein/Valkyr/releases/tag/v7.7.0)** (Android build 85).
+**Latest release: [7.8.0](https://github.com/Tufein/Valkyr/releases/tag/v7.8.0)** (Android build 86).
 
 Until 3.9.0 the app was called Dogmatix+. Valkyr 6.0.0 has its own app id, so it installs next to the old app: use *Settings → Back up* in the old app and *Restore backup* in Valkyr, then remove the old app.
 
@@ -92,7 +92,7 @@ You need **Android 10 or newer**. The app is not on Google Play.
 - **File explorer** to look, rename, move and unpack; **export** your collection as CSV or a web page.
 - **Copy or send games**: whole games with every file to an SD card or USB folder, your RomM server or your NAS. You first see every file, the space needed and what is already there; every file is checked at the other end, save files stay behind and nothing is replaced. For a card that goes into another system, the console folders can follow ES-DE, Batocera, Knulli, ArkOS, ROCKNIX, OnionOS or muOS names.
 - **Receive games over Wi-Fi** (off until you switch it on): send your own game files from a browser on your network into the right console folder, behind a PIN, on the local network only, with every file checked and nothing replaced.
-- **Health check** with a fix per problem, and a **scan report** for sources that failed.
+- **Health check** with a fix per problem, and a **scan report** for sources that failed. Each source remembers its last twelve scans and says when it keeps failing.
 - **Sources**: add by hand, import and export, share as QR codes, optional content catalogue with Libretro content for 29 systems, ScummVM's freeware adventure games and free Game Boy homebrew from Homebrew Hub, the provider named for each, reserve addresses and automatic background scans that skip what did not change.
 
 ### Safe by design

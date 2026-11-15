@@ -23,7 +23,7 @@ Valkyr houdt één grote, doorzoekbare lijst bij van de games uit de bronnen die
 
 *De screenshots gebruiken verzonnen gametitels en lege dummybestanden en tonen de app in het Engels.*
 
-**Laatste release: [7.7.0](https://github.com/Tufein/Valkyr/releases/tag/v7.7.0)** (Android build 85).
+**Laatste release: [7.8.0](https://github.com/Tufein/Valkyr/releases/tag/v7.8.0)** (Android build 86).
 
 Tot en met 3.9.0 heette de app Dogmatix+. Valkyr 6.0.0 heeft een eigen app-id en installeert dus naast de oude app: gebruik *Instellingen → Back-up maken* in de oude app en *Back-up terugzetten* in Valkyr, en verwijder daarna de oude app.
 
@@ -92,7 +92,7 @@ Je hebt **Android 10 of nieuwer** nodig. De app staat niet in Google Play.
 - **Bestandsverkenner** om te kijken, hernoemen, verplaatsen en uitpakken; **exporteer** je collectie als CSV of webpagina.
 - **Spellen kopiëren of versturen**: complete spellen met alle bestanden naar een SD-kaart of USB-map, je RomM-server of je NAS. Je ziet eerst elk bestand, de benodigde ruimte en wat er al staat; elk bestand wordt aan de andere kant gecontroleerd, savebestanden blijven achter en er wordt niets vervangen. Voor een kaart die in een ander systeem gaat, kunnen de consolemappen de namen van ES-DE, Batocera, Knulli, ArkOS, ROCKNIX, OnionOS of muOS volgen.
 - **Games ontvangen via wifi** (uit tot je het aanzet): stuur je eigen gamebestanden vanuit een browser op je netwerk naar de juiste consolemap, met pincode, alleen op het lokale netwerk, elk bestand gecontroleerd en niets vervangen.
-- **Gezondheidscontrole** met een oplossing per probleem, en een **scanrapport** voor bronnen die mislukten.
+- **Gezondheidscontrole** met een oplossing per probleem, en een **scanrapport** voor bronnen die mislukten. Elke bron onthoudt haar laatste twaalf scans en meldt het als ze blijft falen.
 - **Bronnen**: met de hand toevoegen, importeren en exporteren, delen als QR-codes, optionele inhoudscatalogus met Libretro-content voor 29 systemen, de freeware-avonturenspellen van ScummVM en gratis Game Boy-homebrew van Homebrew Hub, steeds met de aanbieder erbij, reserveadressen en automatische achtergrondscans die overslaan wat niet veranderde.
 
 ### Veilig ontworpen

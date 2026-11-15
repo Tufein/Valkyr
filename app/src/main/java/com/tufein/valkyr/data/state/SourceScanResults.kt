@@ -30,7 +30,9 @@ data class SourceScanResult(
     val etag: String? = null,
     val lastModified: String? = null,
     val bodyHash: String? = null,
-    val fingerprint: String? = null
+    val fingerprint: String? = null,
+    /** 7.8: the last scans of this source, oldest first (see [com.tufein.valkyr.util.SourceHealth.trend]). */
+    val history: List<com.tufein.valkyr.util.SourceHealth.Outcome> = emptyList()
 )
 
 /**
@@ -44,7 +46,10 @@ class SourceScanResults @Inject constructor(@param:ApplicationContext context: C
     val results: StateFlow<Map<String, SourceScanResult>> = _results.asStateFlow()
 
     fun record(consoleId: String, url: String, result: SourceScanResult) {
-        _results.update { it + (key(consoleId, url) to result) }
+        _results.update { all ->
+            val before = all[key(consoleId, url)]?.history.orEmpty()
+            all + (key(consoleId, url) to result.copy(history = com.tufein.valkyr.util.SourceHealth.append(before, com.tufein.valkyr.util.SourceHealth.Outcome(result.at, result.failure))))
+        }
         save(_results.value)
     }
 
@@ -73,7 +78,8 @@ class SourceScanResults @Inject constructor(@param:ApplicationContext context: C
                     etag = o.str("etag"),
                     lastModified = o.str("lastModified"),
                     bodyHash = o.str("bodyHash"),
-                    fingerprint = o.str("fingerprint")
+                    fingerprint = o.str("fingerprint"),
+                    history = com.tufein.valkyr.util.SourceHealth.decode(o.str("history"))
                 )
             }.getOrNull()
         }.toMap()
@@ -97,6 +103,7 @@ class SourceScanResults @Inject constructor(@param:ApplicationContext context: C
                     r.lastModified?.let { addProperty("lastModified", it) }
                     r.bodyHash?.let { addProperty("bodyHash", it) }
                     r.fingerprint?.let { addProperty("fingerprint", it) }
+                    if (r.history.isNotEmpty()) addProperty("history", com.tufein.valkyr.util.SourceHealth.encode(r.history))
                 })
             }
             val tmp = File(file.parentFile, file.name + ".tmp")

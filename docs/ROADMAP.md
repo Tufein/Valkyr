@@ -4,7 +4,7 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 7.7.0** (Android build 85). The core loop is complete — find a game, download it into
+**Now: 7.8.0** (Android build 86). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
 libraries), and finishing what 7.0 and 7.1 started.
@@ -116,7 +116,7 @@ manuals from the cover sources inside the app, and the source line on every othe
 bar, and a failed provider reads as a sentence rather than an empty screen. Tickets:
 **[plans/7.7.md](plans/7.7.md)**.
 
-## 7.8 — Catalogue and sources
+## 7.8 — Catalogue and sources (shipped in 7.8.0)
 
 - **More content catalogues**, per request, each with clear attribution and console mapping.
   MAME's free-to-download games are a candidate once there is an arcade console in the app and
@@ -126,6 +126,11 @@ bar, and a failed provider reads as a sentence rather than an empty screen. Tick
   it last said — not only for the current scan.
 - **Reserve addresses and background scans** that skip unchanged content, extended to the
   catalogues.
+
+Shipped: source history — the last twelve scans of each source, and one sentence under the last
+scan when it keeps failing. Still open, because each is a review of someone else's terms or needs
+the provider to test against: more Homebrew Hub systems, MAME's free content, catalogue mirrors and
+the provider line on every catalogue game.
 
 *Done when* every catalogue names its provider on the game page and a source that failed last
 week is visible before it fails again. Tickets: **[plans/7.8.md](plans/7.8.md)**.
