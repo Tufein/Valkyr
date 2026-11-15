@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="saves73_batch_title">%1$d sauvegardes diffèrent : un seul choix pour toutes</string>
+    <string name="saves73_batch_summary">Plus récentes sur cet appareil : %1$d · plus récentes sur le serveur : %2$d · indéterminé d’après les heures : %3$d</string>
+    <string name="saves73_batch_newer">Garder la plus récente de chacune</string>
+    <string name="saves73_batch_device">Garder cet appareil pour toutes</string>
+    <string name="saves73_batch_server">Garder le serveur pour toutes</string>
+    <string name="saves73_batch_both">Garder les deux pour toutes</string>
+    <string name="saves73_batch_hint">Chaque choix garde d’abord une copie de sécurité de ce qu’il remplace. Avec la plus récente de chacune, les sauvegardes dont les heures ne disent pas laquelle est la plus récente restent dans la liste ci-dessous pour que vous décidiez.</string>
+    <string name="saves73_find_row">Chercher les dossiers des émulateurs</string>
+    <string name="saves73_find_row_hint">Choisissez une fois votre stockage et Valkyr regarde aux endroits où les émulateurs rangent leurs sauvegardes (DraStic, Pizza Boy, DuckStation, PPSSPP, Dolphin). Vous voyez ce qui a été trouvé avant tout ajout.</string>
+    <string name="saves73_find_action">Chercher</string>
+    <string name="saves73_find_title">Dossiers d’émulateurs trouvés</string>
+    <string name="saves73_find_hint">Décochez ce qui doit rester en dehors. Vous pourrez retirer un dossier plus tard ; l’ajout n’y change rien.</string>
+    <string name="saves73_find_none">Aucun dossier d’émulateur n’a été reconnu ici. Beaucoup d’émulateurs rangent leurs sauvegardes dans Android/data, qu’Android ferme aux autres applications : indiquez à l’émulateur un dossier du stockage partagé, ou ajoutez son dossier à la main avec la ligne ci-dessous.</string>
+    <string name="saves73_find_add">Ajouter (%1$d)</string>
+    <string name="saves73_find_on">Sera ajouté</string>
+    <string name="saves73_find_off">Laissé de côté</string>
+    <string name="saves73_last_save">Dernière sauvegarde : %1$s · %2$s</string>
+    <string name="saves73_last_state">Dernier état sauvegardé : %1$s · %2$s</string>
+    <string name="saves73_last_save_undated">Dernière sauvegarde : %1$s</string>
+    <string name="saves73_last_state_undated">Dernier état sauvegardé : %1$s</string>
+</resources>

@@ -9,6 +9,12 @@ import kotlinx.coroutines.ensureActive
 /** Both sides changed since the last sync; the user picks which one stays. */
 data class SaveConflict(val local: LocalSaveFile, val remote: RemoteSaveFile)
 
+/** One choice for a whole batch of conflicts ([SaveSyncEngine.resolveAll]). */
+enum class BatchChoice { DEVICE, SERVER, NEWER, KEEP_BOTH }
+
+/** What a batch did: the conflicts settled, the ones left (failed, or no newer side known) and the first few errors. */
+data class BatchOutcome(val resolved: List<SaveConflict>, val skipped: List<SaveConflict>, val errors: List<String>)
+
 data class SaveSyncResult(
     val finishedAt: Long,
     val uploaded: Int = 0,
@@ -216,6 +222,47 @@ class SaveSyncEngine(
      */
     suspend fun resolveKeepBoth(conflict: SaveConflict, records: MutableMap<String, SaveSyncRecord>) {
         keepBoth(freshLocal(conflict), conflict.remote, records)
+    }
+
+    /**
+     * Settles [conflicts] with one [choice] for all of them: the device and the server are each listed
+     * once for the whole batch (a conflict resolved alone lists both again), then every file gets the
+     * same safety as [resolve] (the copy that is replaced is kept first). A file that fails stays a
+     * conflict and does not stop the others. With [BatchChoice.NEWER] a conflict whose newer side is
+     * not known from the times is left for the user.
+     */
+    suspend fun resolveAll(conflicts: List<SaveConflict>, choice: BatchChoice, records: MutableMap<String, SaveSyncRecord>): BatchOutcome {
+        if (conflicts.isEmpty()) return BatchOutcome(emptyList(), emptyList(), emptyList())
+        val locals = store.list().files.associateBy { key(it) }
+        val remotes = conflicts.map { it.remote.kind }.distinct().flatMap { server.list(it) }.associateBy { it.kind to it.id }
+        val resolved = mutableListOf<SaveConflict>(); val skipped = mutableListOf<SaveConflict>(); val errors = mutableListOf<String>()
+        for (conflict in conflicts) {
+            currentCoroutineContext().ensureActive()
+            val keepDevice = when (choice) {
+                BatchChoice.DEVICE -> true
+                BatchChoice.SERVER -> false
+                BatchChoice.KEEP_BOTH -> null
+                BatchChoice.NEWER -> when (SaveConflictInfo.of(conflict).newer) {
+                    NewerSide.DEVICE -> true
+                    NewerSide.SERVER -> false
+                    NewerSide.SAME, NewerSide.UNKNOWN -> { skipped += conflict; continue }
+                }
+            }
+            try {
+                val local = locals[key(conflict.local)] ?: throw IOException("${conflict.local.name} is no longer on the device")
+                when (keepDevice) {
+                    null -> keepBoth(local, conflict.remote, records)
+                    true -> (remotes[conflict.remote.kind to conflict.remote.id] ?: conflict.remote).let { upload(local, it.romId, records, it) }
+                    false -> download(conflict.remote, local.path, local, records)
+                }
+                resolved += conflict
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                skipped += conflict
+                if (errors.size < 5) errors += "${conflict.local.name}: ${e.message ?: e.javaClass.simpleName}"
+            }
+        }
+        return BatchOutcome(resolved, skipped, errors)
     }
 
     private suspend fun freshLocal(conflict: SaveConflict): LocalSaveFile =

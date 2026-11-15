@@ -23,7 +23,7 @@ Valkyr führt eine große, durchsuchbare Liste mit den Spielen aus den Quellen, 
 
 *Die Screenshots verwenden erfundene Spieltitel und leere Platzhalterdateien und zeigen die App auf Englisch.*
 
-**Neueste Version: [7.2.0](https://github.com/Tufein/Valkyr/releases/tag/v7.2.0)** (Android-Build 80).
+**Neueste Version: [7.3.0](https://github.com/Tufein/Valkyr/releases/tag/v7.3.0)** (Android-Build 81).
 
 Bis 3.9.0 hieß die App Dogmatix+. Valkyr 6.0.0 hat eine eigene App-ID und wird daher neben der alten App installiert: Nutze *Einstellungen → Sichern* in der alten App und *Sicherung wiederherstellen* in Valkyr und entferne danach die alte App.
 
@@ -103,7 +103,7 @@ Du brauchst **Android 10 oder neuer**. Die App ist nicht bei Google Play erhält
 
 ### Cloud und Sync
 - **RomM**: fertige Downloads und ganze Spiele aus mehreren Dateien senden, als Quelle nutzen, Spiele, Genres und Screenshots sehen, Spielstatus, Bewertung und Favoriten abgleichen, fehlende BIOS-Dateien holen.
-- **Spielstand-Sync und Cloud-Saves**: Spielstände und Savestates wandern zwischen Handhelds und RomM, auch DuckStation-Memory-Cards, PPSSPP-Speicherordner und, wenn du es wählst, ganze Dolphin- und NetherSX2-Memory-Cards, Dolphin-GameCube-Speicherordner und Wii-Saves; bei Konflikten wirst du gefragt, ersetzte Kopien bleiben 30 Tage erhalten.
+- **Spielstand-Sync und Cloud-Saves**: Spielstände und Savestates wandern zwischen Handhelds und RomM, auch DuckStation-Memory-Cards, PPSSPP-Speicherordner und, wenn du es wählst, ganze Dolphin- und NetherSX2-Memory-Cards, Dolphin-GameCube-Speicherordner und Wii-Saves; bei Konflikten wirst du gefragt, ersetzte Kopien bleiben 30 Tage erhalten. Weichen mehrere Spielstände ab, regelt eine Wahl alle, und *Emulator-Ordner suchen* findet die Spielstand-Ordner bekannter Emulatoren für dich.
 - **Deine eigene Cloud (WebDAV)**: verschlüsselte Backups (Nextcloud, ownCloud, Synology und andere) und Geräte-Sync von Favoriten, Wunschliste und Sammlungen.
 - **RetroAchievements**: Fortschritt und Abzeichen je Spiel, dein Profil und welche Spiele Erfolge haben.
 

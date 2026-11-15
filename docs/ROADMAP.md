@@ -4,7 +4,7 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 7.1.0** (Android build 79). The core loop is complete — find a game, download it into
+**Now: 7.3.0** (Android build 81). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
 libraries), and finishing what 7.0 and 7.1 started.
@@ -36,34 +36,19 @@ The documentation, the translations and the test gates. Nothing in the app behav
 - The roadmap below, and **[plans/7.2.md](plans/7.2.md)** with the remaining 7.x work written out
   as tickets.
 
-## 7.3 — Finish the pass, then saves
+## 7.3 — Saves (shipped in 7.3.0)
 
-The landscape work in 7.1 touched every screen; some corners did not get the same pass. These
-three come first, with the screens, files and checks in **[plans/7.2.md](plans/7.2.md)**:
+- **One choice for a batch of conflicts**: the newest of each, this device, the server or both,
+  with the same safety copy per file and one listing of each side for the whole batch.
+- **Find emulator folders**: one picked storage root is searched for the places DraStic, Pizza
+  Boy, DuckStation, PPSSPP and Dolphin keep their saves; what was found is shown before it is
+  added.
+- **Last save on the game page**: the newest save or state with its date, also without a picture.
 
-- **Landscape sweep** on a ~400 dp high screen with large text, beyond the dialogs that 7.1
-  already made scroll: the screens behind them and the Tools graphs.
-- **Empty states**: 31 of them use the shared `EmptyState`; check that the rest say what a
-  screen is for before there is a library, a RomM server or a source.
-- **Regression tests for the destructive paths**: delete, move, replace and playlist rewrite
-  must fail a test if they ever bypass the preview or Trash.
-
-Then save sync, which knows RomM, DuckStation memory cards, PPSSPP folders, and (optionally)
-Dolphin and NetherSX2 memory cards and Wii saves. Every other emulator has to be found by hand.
-
-- **More emulator mappings**, each with the folder and file shapes it really uses: melonDS
-  and DraStic, Mupen64Plus FZ, Flycast and Redream, the Switch emulators, and the cores
-  RetroArch actually writes.
-- **Find the folders for you**: detect the installed emulator's save folder instead of asking
-  for a path, with the detected path shown and editable.
-- **One conflict screen**: the newer side first, both previews, and one choice for the whole
-  batch, instead of a list you work through file by file.
-- **Save state on the game page**: the newest save and its picture, with *continue here*.
-
-*Done when* no screen is cut off at 400 dp and large text, the destructive-path tests fail if
-recovery is skipped, and three emulators that store saves in three different shapes sync both
-ways without typing a path. Tickets: **[plans/7.2.md](plans/7.2.md)** (the audits) and
-**[plans/7.3.md](plans/7.3.md)** (the saves).
+Still open from this plan, and picked up when there is a device to check them on: the landscape
+sweep at 400 dp with large text, the empty-state audit, save shapes for more emulators (melonDS,
+M64Plus FZ, Flycast, Redream, the Switch family), and folder mode for memory cards with its own
+schedule. Tickets: **[plans/7.2.md](plans/7.2.md)** and **[plans/7.3.md](plans/7.3.md)**.
 
 ## 7.4 — Emulator setup, not only the check
 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="saves73_batch_title">%1$d partidas difieren: una elección para todas</string>
+    <string name="saves73_batch_summary">Más recientes en este dispositivo: %1$d · más recientes en el servidor: %2$d · no queda claro por las horas: %3$d</string>
+    <string name="saves73_batch_newer">Conservar la más reciente de cada una</string>
+    <string name="saves73_batch_device">Conservar este dispositivo para todas</string>
+    <string name="saves73_batch_server">Conservar el servidor para todas</string>
+    <string name="saves73_batch_both">Conservar ambas para todas</string>
+    <string name="saves73_batch_hint">Cada elección guarda primero una copia de seguridad de lo que sustituye. Con la más reciente de cada una, las partidas cuyas horas no indican cuál es más reciente se quedan en la lista de abajo para que decidas.</string>
+    <string name="saves73_find_row">Buscar carpetas de emuladores</string>
+    <string name="saves73_find_row_hint">Elige una vez tu almacenamiento y Valkyr mira en los lugares donde los emuladores guardan sus partidas (DraStic, Pizza Boy, DuckStation, PPSSPP, Dolphin). Ves lo encontrado antes de añadir nada.</string>
+    <string name="saves73_find_action">Buscar</string>
+    <string name="saves73_find_title">Carpetas de emuladores encontradas</string>
+    <string name="saves73_find_hint">Desmarca lo que deba quedar fuera. Puedes quitar una carpeta más adelante; añadirla no cambia nada en ella.</string>
+    <string name="saves73_find_none">Aquí no se ha reconocido ninguna carpeta de emulador. Muchos emuladores guardan sus partidas en Android/data, que Android cierra a otras aplicaciones: haz que el emulador use una carpeta del almacenamiento compartido, o añade su carpeta a mano con la fila de abajo.</string>
+    <string name="saves73_find_add">Añadir (%1$d)</string>
+    <string name="saves73_find_on">Se añadirá</string>
+    <string name="saves73_find_off">Queda fuera</string>
+    <string name="saves73_last_save">Última partida guardada: %1$s · %2$s</string>
+    <string name="saves73_last_state">Último estado guardado: %1$s · %2$s</string>
+    <string name="saves73_last_save_undated">Última partida guardada: %1$s</string>
+    <string name="saves73_last_state_undated">Último estado guardado: %1$s</string>
+</resources>

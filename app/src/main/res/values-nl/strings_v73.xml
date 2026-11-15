@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="saves73_batch_title">%1$d saves verschillen: één keuze voor alle</string>
+    <string name="saves73_batch_summary">Nieuwer op dit toestel: %1$d · nieuwer op de server: %2$d · niet duidelijk uit de tijden: %3$d</string>
+    <string name="saves73_batch_newer">Bewaar van elk de nieuwste</string>
+    <string name="saves73_batch_device">Bewaar dit toestel voor alle</string>
+    <string name="saves73_batch_server">Bewaar de server voor alle</string>
+    <string name="saves73_batch_both">Bewaar beide voor alle</string>
+    <string name="saves73_batch_hint">Elke keuze bewaart eerst een veiligheidskopie van wat ze vervangt. Bij de nieuwste van elk blijven saves waarvan de tijden niet zeggen welke nieuwer is in de lijst hieronder staan, zodat jij beslist.</string>
+    <string name="saves73_find_row">Emulatormappen zoeken</string>
+    <string name="saves73_find_row_hint">Kies één keer je opslag en Valkyr kijkt op de plekken waar emulators hun saves bewaren (DraStic, Pizza Boy, DuckStation, PPSSPP, Dolphin). Je ziet wat er gevonden is voordat er iets wordt toegevoegd.</string>
+    <string name="saves73_find_action">Zoeken</string>
+    <string name="saves73_find_title">Gevonden emulatormappen</string>
+    <string name="saves73_find_hint">Vink uit wat erbuiten moet blijven. Je kunt een map later weer verwijderen; door toevoegen verandert er niets in.</string>
+    <string name="saves73_find_none">Hier is geen emulatormap herkend. Veel emulators bewaren hun saves in Android/data, dat Android voor andere apps afsluit: laat de emulator een map op de gedeelde opslag gebruiken, of voeg de map met de hand toe via de rij hieronder.</string>
+    <string name="saves73_find_add">Toevoegen (%1$d)</string>
+    <string name="saves73_find_on">Wordt toegevoegd</string>
+    <string name="saves73_find_off">Blijft erbuiten</string>
+    <string name="saves73_last_save">Laatste save: %1$s · %2$s</string>
+    <string name="saves73_last_state">Laatste save state: %1$s · %2$s</string>
+    <string name="saves73_last_save_undated">Laatste save: %1$s</string>
+    <string name="saves73_last_state_undated">Laatste save state: %1$s</string>
+</resources>

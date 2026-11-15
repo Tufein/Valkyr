@@ -17,8 +17,10 @@ import com.tufein.valkyr.util.EmulatorSaveFolders
 import com.tufein.valkyr.util.LocalSaveFile
 import com.tufein.valkyr.util.RemoteSaveFile
 import com.tufein.valkyr.util.RestoreTarget
+import com.tufein.valkyr.util.SafUris
 import com.tufein.valkyr.util.SafetyCopy
 import com.tufein.valkyr.util.SaveBackups
+import com.tufein.valkyr.util.BatchChoice
 import com.tufein.valkyr.util.SaveConflict
 import com.tufein.valkyr.util.SafetyCopyTrash
 import com.tufein.valkyr.util.SaveMerge
@@ -202,6 +204,34 @@ class SaveSyncService @Inject constructor(
     /** Keeps both: the server version is set aside as a safety copy on the device and nothing is replaced. */
     fun resolveKeepBoth(conflict: SaveConflict) = resolveWith(conflict) { records -> engine.resolveKeepBoth(conflict, records) }
 
+    /**
+     * One [choice] for every open conflict: the lock is taken once and both sides are listed once
+     * ([SaveSyncEngine.resolveAll]); conflicts that could not be settled stay in the list.
+     */
+    fun resolveAll(choice: BatchChoice) {
+        scope.launch {
+            lock.withLock {
+                val open = _state.value.conflicts
+                if (open.isEmpty()) return@withLock
+                val records = loadRecords().toMutableMap()
+                runCatching { engine.resolveAll(open, choice, records) }
+                    .onSuccess { outcome ->
+                        saveRecords(records)
+                        val done = outcome.resolved.map { it.local.kind to it.local.path }.toSet()
+                        _state.update { s ->
+                            s.copy(error = outcome.errors.firstOrNull(), conflicts = s.conflicts.filterNot { (it.local.kind to it.local.path) in done })
+                        }
+                    }
+                    .onFailure { e ->
+                        if (e is CancellationException) throw e
+                        Log.w(TAG, "Resolving ${open.size} conflicts failed", e)
+                        saveRecords(records)
+                        _state.update { it.copy(error = e.message) }
+                    }
+            }
+        }
+    }
+
     private fun resolveWith(conflict: SaveConflict, block: suspend (MutableMap<String, SaveSyncRecord>) -> Unit) {
         scope.launch {
             lock.withLock {
@@ -217,6 +247,32 @@ class SaveSyncService @Inject constructor(
                         _state.update { it.copy(error = "${conflict.local.name}: ${e.message}") }
                     }
             }
+        }
+    }
+
+    /** An emulator folder found below a picked root: its preset, its path there and the URI it is stored with. */
+    data class FoundFolder(val preset: EmulatorSaveFolders.Preset, val path: String, val uri: String)
+
+    /**
+     * The emulator folders below the picked [rootUri], in the places emulators are known to keep them
+     * ([EmulatorSaveFolders.propose]). Folders already added are left out. Nothing is changed.
+     */
+    suspend fun findEmulatorFolders(rootUri: String): List<FoundFolder> = withContext(Dispatchers.IO) {
+        val tree = rootUri.toUri()
+        val rootId = runCatching { SafUris.pickedId(tree) }.getOrNull() ?: throw IOException("Pick the folder again (no access)")
+        val ids = HashMap<String, String>().apply { put("", rootId) }
+        val listed = HashMap<String, List<Child>?>()
+        fun dirsAt(path: String): Set<String>? {
+            val id = ids[path] ?: return null
+            val children = listed.getOrPut(path) { query(tree, id)?.filter { it.isDir } } ?: return null
+            children.forEach { ids[if (path.isEmpty()) it.name else "$path/${it.name}"] = it.documentId }
+            return children.map { it.name }.toSet()
+        }
+        val have = appSettings.saveSyncEmulatorFolders.first().map { it.uri }.toSet()
+        EmulatorSaveFolders.propose(rootId.substringAfter(':').substringAfterLast('/'), dirsAt = ::dirsAt).mapNotNull { p ->
+            val id = ids[p.path] ?: return@mapNotNull null
+            val uri = (if (p.path.isEmpty()) tree else SafUris.childOf(tree, id)).toString()
+            if (uri in have) null else FoundFolder(p.preset, p.path, uri)
         }
     }
 
@@ -427,7 +483,7 @@ class SaveSyncService @Inject constructor(
             }
             fun scan(treeUri: String, kindOf: (String) -> SaveKind, kinds: List<SaveKind>, under: EmulatorSaveFolder? = null) {
                 val tree = treeUri.toUri()
-                val rootId = runCatching { DocumentsContract.getTreeDocumentId(tree) }.getOrNull()
+                val rootId = runCatching { SafUris.pickedId(tree) }.getOrNull()
                     ?: throw IOException("Pick the folder again (no access)")
                 val children = query(tree, rootId) ?: throw IOException("${folderName(tree)} cannot be read; pick it again")
                 // An emulator's own folder shows up as one folder named after the emulator.
@@ -774,7 +830,7 @@ class SaveSyncService @Inject constructor(
         }
 
         private fun folderName(tree: Uri): String =
-            runCatching { DocumentsContract.getTreeDocumentId(tree).substringAfter(':') }.getOrDefault(tree.toString())
+            runCatching { SafUris.pickedId(tree).substringAfter(':') }.getOrDefault(tree.toString())
     }
 
     private data class Child(val documentId: String, val name: String, val isDir: Boolean, val size: Long, val modified: Long)
@@ -790,7 +846,7 @@ class SaveSyncService @Inject constructor(
     private fun innerPath(folder: EmulatorSaveFolder): String {
         if (folder.layout == SaveFolderLayout.FILES) return ""
         val tree = folder.uri.toUri()
-        val rootId = runCatching { DocumentsContract.getTreeDocumentId(tree) }.getOrNull() ?: throw IOException("Pick the folder again (no access)")
+        val rootId = runCatching { SafUris.pickedId(tree) }.getOrNull() ?: throw IOException("Pick the folder again (no access)")
         fun idAt(path: String): String? {
             var id = rootId
             for (part in path.split('/').filter { it.isNotEmpty() }) {
@@ -811,7 +867,7 @@ class SaveSyncService @Inject constructor(
     /** The tree and the document of the folder that holds [folder]'s cards / save folders. */
     private fun layoutRoot(folder: EmulatorSaveFolder): Pair<Uri, String> {
         val tree = folder.uri.toUri()
-        var id = runCatching { DocumentsContract.getTreeDocumentId(tree) }.getOrNull() ?: throw IOException("Pick the folder again (no access)")
+        var id = runCatching { SafUris.pickedId(tree) }.getOrNull() ?: throw IOException("Pick the folder again (no access)")
         for (part in innerPath(folder).split('/').filter { it.isNotEmpty() }) {
             id = query(tree, id)?.firstOrNull { it.isDir && it.name == part }?.documentId ?: throw IOException("${folder.label} changed; pick it again")
         }
@@ -841,7 +897,7 @@ class SaveSyncService @Inject constructor(
      */
     private fun dolphinUserFolder(folder: EmulatorSaveFolder, tree: Uri): String? {
         if (innerPath(folder).isEmpty()) return null
-        return runCatching { DocumentsContract.getTreeDocumentId(tree) }.getOrNull() ?: throw IOException("Pick the folder again (no access)")
+        return runCatching { SafUris.pickedId(tree) }.getOrNull() ?: throw IOException("Pick the folder again (no access)")
     }
 
     /** The folders from the base (`GC`, or Dolphin's user folder for Wii) down to [bundle]'s folder. */

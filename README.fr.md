@@ -23,7 +23,7 @@ Valkyr rassemble les jeux des sources que *vous* ajoutez dans une seule grande l
 
 *Les captures d’écran utilisent des titres de jeux inventés et des fichiers vides de substitution, et montrent l’application en anglais.*
 
-**Dernière version : [7.2.0](https://github.com/Tufein/Valkyr/releases/tag/v7.2.0)** (build Android 80).
+**Dernière version : [7.3.0](https://github.com/Tufein/Valkyr/releases/tag/v7.3.0)** (build Android 81).
 
 Jusqu’à la 3.9.0, l’application s’appelait Dogmatix+. Valkyr 6.0.0 a son propre identifiant d’application et s’installe donc à côté de l’ancienne : utilisez *Réglages → Sauvegarder* dans l’ancienne appli et *Restaurer une sauvegarde* dans Valkyr, puis supprimez l’ancienne.
 
@@ -103,7 +103,7 @@ Il vous faut **Android 10 ou plus récent**. L’application n’est pas sur Goo
 
 ### Cloud et synchronisation
 - **RomM** : envoyer les téléchargements terminés et des jeux complets en plusieurs fichiers, l’utiliser comme source, voir jeux, genres et captures, synchroniser statut de jeu, note et favoris, récupérer les BIOS manquants.
-- **Synchro des sauvegardes et sauvegardes cloud** : vos sauvegardes voyagent entre consoles et RomM, y compris les cartes mémoire DuckStation, les dossiers de sauvegarde PPSSPP et, si vous le choisissez, des cartes entières Dolphin et NetherSX2, dossiers de sauvegarde GameCube de Dolphin et sauvegardes Wii ; en cas de conflit on vous demande, et les copies remplacées sont gardées 30 jours.
+- **Synchro des sauvegardes et sauvegardes cloud** : vos sauvegardes voyagent entre consoles et RomM, y compris les cartes mémoire DuckStation, les dossiers de sauvegarde PPSSPP et, si vous le choisissez, des cartes entières Dolphin et NetherSX2, dossiers de sauvegarde GameCube de Dolphin et sauvegardes Wii ; en cas de conflit on vous demande, et les copies remplacées sont gardées 30 jours. Quand plusieurs sauvegardes diffèrent, un seul choix les règle toutes, et *Chercher les dossiers des émulateurs* retrouve pour vous les dossiers de sauvegarde des émulateurs connus.
 - **Votre propre cloud (WebDAV)** : sauvegardes chiffrées (Nextcloud, ownCloud, Synology et autres) et synchro d’appareils pour favoris, liste de souhaits et collections.
 - **RetroAchievements** : progression et badges par jeu, votre profil et les jeux qui ont des succès.
 

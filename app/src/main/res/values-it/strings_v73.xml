@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="saves73_batch_title">%1$d salvataggi sono diversi: una scelta per tutti</string>
+    <string name="saves73_batch_summary">Più recenti su questo dispositivo: %1$d · più recenti sul server: %2$d · non chiaro dagli orari: %3$d</string>
+    <string name="saves73_batch_newer">Tieni il più recente di ognuno</string>
+    <string name="saves73_batch_device">Tieni questo dispositivo per tutti</string>
+    <string name="saves73_batch_server">Tieni il server per tutti</string>
+    <string name="saves73_batch_both">Tieni entrambi per tutti</string>
+    <string name="saves73_batch_hint">Ogni scelta conserva prima una copia di sicurezza di ciò che sostituisce. Con il più recente di ognuno, i salvataggi i cui orari non dicono quale sia più recente restano nell’elenco qui sotto perché decida tu.</string>
+    <string name="saves73_find_row">Cerca le cartelle degli emulatori</string>
+    <string name="saves73_find_row_hint">Scegli una volta la tua memoria e Valkyr guarda nei posti in cui gli emulatori tengono i salvataggi (DraStic, Pizza Boy, DuckStation, PPSSPP, Dolphin). Vedi cosa è stato trovato prima che venga aggiunto qualcosa.</string>
+    <string name="saves73_find_action">Cerca</string>
+    <string name="saves73_find_title">Cartelle degli emulatori trovate</string>
+    <string name="saves73_find_hint">Togli la spunta a ciò che deve restare fuori. Puoi rimuovere una cartella in seguito; aggiungerla non cambia nulla al suo interno.</string>
+    <string name="saves73_find_none">Qui non è stata riconosciuta alcuna cartella di emulatore. Molti emulatori tengono i salvataggi in Android/data, che Android chiude alle altre app: fai usare all’emulatore una cartella della memoria condivisa, oppure aggiungi la sua cartella a mano con la riga qui sotto.</string>
+    <string name="saves73_find_add">Aggiungi (%1$d)</string>
+    <string name="saves73_find_on">Verrà aggiunta</string>
+    <string name="saves73_find_off">Lasciata fuori</string>
+    <string name="saves73_last_save">Ultimo salvataggio: %1$s · %2$s</string>
+    <string name="saves73_last_state">Ultimo stato salvato: %1$s · %2$s</string>
+    <string name="saves73_last_save_undated">Ultimo salvataggio: %1$s</string>
+    <string name="saves73_last_state_undated">Ultimo stato salvato: %1$s</string>
+</resources>

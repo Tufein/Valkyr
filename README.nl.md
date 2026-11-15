@@ -23,7 +23,7 @@ Valkyr houdt één grote, doorzoekbare lijst bij van de games uit de bronnen die
 
 *De screenshots gebruiken verzonnen gametitels en lege dummybestanden en tonen de app in het Engels.*
 
-**Laatste release: [7.2.0](https://github.com/Tufein/Valkyr/releases/tag/v7.2.0)** (Android build 80).
+**Laatste release: [7.3.0](https://github.com/Tufein/Valkyr/releases/tag/v7.3.0)** (Android build 81).
 
 Tot en met 3.9.0 heette de app Dogmatix+. Valkyr 6.0.0 heeft een eigen app-id en installeert dus naast de oude app: gebruik *Instellingen → Back-up maken* in de oude app en *Back-up terugzetten* in Valkyr, en verwijder daarna de oude app.
 
@@ -103,7 +103,7 @@ Je hebt **Android 10 of nieuwer** nodig. De app staat niet in Google Play.
 
 ### Cloud en synchronisatie
 - **RomM**: verstuur voltooide downloads en complete spellen met meerdere bestanden, gebruik het als bron, zie games, genres en schermafbeeldingen, synchroniseer speelstatus, beoordeling en favorieten, haal ontbrekende BIOS-bestanden op.
-- **Savesynchronisatie en cloudsaves**: je saves en savestates reizen tussen handhelds en RomM, ook DuckStation-geheugenkaarten, PPSSPP-savemappen en, als je dat kiest, hele Dolphin- en NetherSX2-geheugenkaarten, Dolphin-GameCube-savemappen en Wii-saves; bij conflicten word je gevraagd en vervangen kopieën blijven 30 dagen bewaard.
+- **Savesynchronisatie en cloudsaves**: je saves en savestates reizen tussen handhelds en RomM, ook DuckStation-geheugenkaarten, PPSSPP-savemappen en, als je dat kiest, hele Dolphin- en NetherSX2-geheugenkaarten, Dolphin-GameCube-savemappen en Wii-saves; bij conflicten word je gevraagd en vervangen kopieën blijven 30 dagen bewaard. Als meerdere saves verschillen, regelt één keuze ze allemaal, en *Emulatormappen zoeken* zoekt de savemappen van bekende emulators voor je op.
 - **Je eigen cloud (WebDAV)**: versleutelde back-ups (Nextcloud, ownCloud, Synology en andere) en toestelsynchronisatie van favorieten, verlanglijst en collecties.
 - **RetroAchievements**: voortgang en badges per game, je profiel, en welke games achievements hebben.
 

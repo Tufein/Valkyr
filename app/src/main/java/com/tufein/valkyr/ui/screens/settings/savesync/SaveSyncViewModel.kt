@@ -8,6 +8,7 @@ import com.tufein.valkyr.data.local.AppSettings
 import com.tufein.valkyr.data.repository.SettingsRepository
 import com.tufein.valkyr.util.SafetyCopy
 import com.tufein.valkyr.util.SaveBackups
+import com.tufein.valkyr.util.BatchChoice
 import com.tufein.valkyr.util.SaveConflict
 import com.tufein.valkyr.data.service.SaveSyncService
 import com.tufein.valkyr.data.service.SaveSyncState
@@ -70,6 +71,34 @@ class SaveSyncViewModel @Inject constructor(
         val current = appSettings.saveSyncEmulatorFolders.first()
         val label = EmulatorSaveFolders.uniqueLabel(preset.label, current.map { it.label })
         appSettings.setSaveSyncEmulatorFolders(current + EmulatorSaveFolder(label, preset.platforms, uri, preset.layout))
+    }
+
+    /** Emulator folders found below a picked root (null = no search shown); the user ticks which to add. */
+    private val _found = MutableStateFlow<List<SaveSyncService.FoundFolder>?>(null)
+    val found: StateFlow<List<SaveSyncService.FoundFolder>?> = _found
+
+    /** Looks below the picked [rootUri] for the folders emulators are known to use; nothing is added yet. */
+    fun findEmulatorFolders(context: Context, rootUri: String) {
+        viewModelScope.launch {
+            try { _found.value = service.findEmulatorFolders(rootUri) }
+            catch (e: CancellationException) { throw e }
+            catch (e: Exception) { _found.value = null; ToastUtil.showError(context, e.message ?: e.javaClass.simpleName) }
+        }
+    }
+
+    fun closeFound() { _found.value = null }
+
+    /** Adds the ticked folders of a search, each under its emulator's name. */
+    fun addFound(context: Context, picked: List<SaveSyncService.FoundFolder>) = executeWithToast(context, TAG) {
+        var current = appSettings.saveSyncEmulatorFolders.first()
+        picked.forEach { f ->
+            if (current.none { it.uri == f.uri }) {
+                val label = EmulatorSaveFolders.uniqueLabel(f.preset.label, current.map { it.label })
+                current = current + EmulatorSaveFolder(label, f.preset.platforms, f.uri, f.preset.layout)
+            }
+        }
+        appSettings.setSaveSyncEmulatorFolders(current)
+        _found.value = null
     }
 
     /** RomM games found for a folder's shared memory cards (the picker's list); null while nothing was searched. */
@@ -238,6 +267,9 @@ class SaveSyncViewModel @Inject constructor(
 
     /** Keeps both copies: the server version is saved as a safety copy and nothing is replaced. */
     fun resolveKeepBoth(conflict: SaveConflict) = service.resolveKeepBoth(conflict)
+
+    /** One choice for every open conflict. */
+    fun resolveAll(choice: BatchChoice) = service.resolveAll(choice)
 
     private companion object { const val TAG = "SaveSyncViewModel" }
 }

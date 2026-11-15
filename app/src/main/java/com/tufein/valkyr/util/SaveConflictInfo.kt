@@ -33,4 +33,12 @@ object SaveConflictInfo {
         }
         return ConflictInfo(device, server, local.size, remote.size, newer, remote.size - local.size)
     }
+
+    /** How a batch of conflicts splits: newer on the device, newer on the server, and those the times do not settle. */
+    data class Summary(val deviceNewer: Int, val serverNewer: Int, val unclear: Int)
+
+    fun summary(conflicts: List<SaveConflict>): Summary {
+        val sides = conflicts.map { of(it).newer }
+        return Summary(sides.count { it == NewerSide.DEVICE }, sides.count { it == NewerSide.SERVER }, sides.count { it == NewerSide.SAME || it == NewerSide.UNKNOWN })
+    }
 }

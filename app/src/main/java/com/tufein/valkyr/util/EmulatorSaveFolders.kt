@@ -70,29 +70,75 @@ object EmulatorSaveFolders {
         val layout: SaveFolderLayout = SaveFolderLayout.FILES,
         val emulatorId: String? = null,
         /** Forks that keep their saves the same way (Dolphin MMJR for Dolphin). */
-        val otherEmulatorIds: Set<String> = emptySet()
+        val otherEmulatorIds: Set<String> = emptySet(),
+        /**
+         * Where the emulator keeps this folder on shared storage, as folder names from the storage
+         * root ("DraStic/backup"): what [propose] looks for. Empty when the place is not fixed or
+         * lies in the emulator's private `Android/data`, which other apps cannot read.
+         */
+        val knownPaths: List<String> = emptyList(),
+        /** A folder that must sit inside a known path before it is proposed (Dolphin's `GC`). */
+        val mustHold: String? = null
     ) {
         fun isFor(id: String): Boolean = id == emulatorId || id in otherEmulatorIds
     }
 
     val presets: List<Preset> = listOf(
-        Preset("DraStic (standalone)", setOf("nds"), "DraStic/backup", emulatorId = "drastic"),
+        Preset("DraStic (standalone)", setOf("nds"), "DraStic/backup", emulatorId = "drastic", knownPaths = listOf("DraStic/backup")),
         Preset("melonDS (standalone)", setOf("nds"), "melonDS saves folder", emulatorId = "melonds"),
         Preset("mGBA (standalone)", setOf("gba", "gbc", "gb"), "mGBA saves folder"),
-        Preset("Pizza Boy GBA", setOf("gba"), "PizzaBoyGBA/saves", emulatorId = "pizza_boy_gba"),
-        Preset("Pizza Boy GBC", setOf("gbc", "gb"), "PizzaBoyGBC/saves", emulatorId = "pizza_boy_gbc"),
+        Preset("Pizza Boy GBA", setOf("gba"), "PizzaBoyGBA/saves", emulatorId = "pizza_boy_gba", knownPaths = listOf("PizzaBoyGBA/saves")),
+        Preset("Pizza Boy GBC", setOf("gbc", "gb"), "PizzaBoyGBC/saves", emulatorId = "pizza_boy_gbc", knownPaths = listOf("PizzaBoyGBC/saves")),
         Preset("GBA.emu", setOf("gba"), "GBA.emu saves", emulatorId = "gba_emu"),
         Preset("GBC.emu", setOf("gbc", "gb"), "GBC.emu saves", emulatorId = "gbc_emu"),
         Preset("Snes9x EX+", setOf("snes", "sfc"), "Snes9x EX+ saves", emulatorId = "snes9x_explus"),
         Preset("NES.emu", setOf("nes", "famicom"), "NES.emu saves", emulatorId = "nes_emu"),
         Preset("MD.emu", setOf("genesis", "megadrive", "md", "genesisslashmegadrive"), "MD.emu saves", emulatorId = "md_emu"),
-        Preset("DuckStation (standalone)", setOf("psx", "ps", "ps1", "playstation"), "DuckStation/memcards", SaveFolderLayout.MEMCARDS, "duckstation"),
-        Preset("PPSSPP (standalone)", setOf("psp", "playstationportable"), "PSP/SAVEDATA", SaveFolderLayout.SAVEDATA, "ppsspp"),
+        Preset("DuckStation (standalone)", setOf("psx", "ps", "ps1", "playstation"), "DuckStation/memcards", SaveFolderLayout.MEMCARDS, "duckstation", knownPaths = listOf("DuckStation/memcards")),
+        Preset("PPSSPP (standalone)", setOf("psp", "playstationportable"), "PSP/SAVEDATA", SaveFolderLayout.SAVEDATA, "ppsspp", knownPaths = listOf("PSP/SAVEDATA")),
         // Both apps keep `Mcd001.ps2` / `Mcd002.ps2` in the `memcards` folder of their data folder.
         Preset("AetherSX2 - NetherSX2 (standalone)", setOf("ps2", "playstation2"), "AetherSX2 or NetherSX2 data folder/memcards", SaveFolderLayout.PS2_MEMCARDS, "nethersx2"),
         // GameCube cards (`GC/MemoryCardA.USA.raw`); GCI folders and Wii saves as opt-in bundles (see DolphinSaveBundles).
-        Preset("Dolphin (standalone)", setOf("ngc", "gc", "gamecube"), "Dolphin user folder/GC", SaveFolderLayout.GC_MEMCARDS, "dolphin", setOf("dolphin_mmjr"))
+        Preset("Dolphin (standalone)", setOf("ngc", "gc", "gamecube"), "Dolphin user folder/GC", SaveFolderLayout.GC_MEMCARDS, "dolphin", setOf("dolphin_mmjr"), knownPaths = listOf("dolphin-emu"), mustHold = "GC")
     )
+
+    /** A folder [propose] recognised: the emulator it belongs to and its path below the chosen root ("" = the root itself). */
+    data class Proposal(val preset: Preset, val path: String)
+
+    /**
+     * The emulator folders below a chosen root (the storage root, or a folder on the way to one), found
+     * by the fixed places emulators keep them in ([Preset.knownPaths]). [rootName] is the chosen
+     * folder's own name, so a root that is already `DraStic` still finds `backup`; [dirsAt] lists the
+     * folders at a path below the root (null when it cannot be read). Only folders that exist are
+     * proposed, each once, and never a path already in [taken] (lower case). Nothing is guessed from
+     * file names: a proposal is a place the emulator is known to use.
+     */
+    fun propose(rootName: String, taken: Set<String> = emptySet(), dirsAt: (String) -> Set<String>?): List<Proposal> {
+        fun resolve(parts: List<String>): String? {
+            var path = ""
+            for (part in parts) {
+                val real = dirsAt(path)?.firstOrNull { it.equals(part, ignoreCase = true) } ?: return null
+                path = if (path.isEmpty()) real else "$path/$real"
+            }
+            return path
+        }
+        val out = mutableListOf<Proposal>()
+        for (preset in presets) {
+            for (known in preset.knownPaths) {
+                val parts = known.split('/')
+                // From the root, or from inside the known path when the root is one of its folders.
+                val found = (0 until parts.size).firstNotNullOfOrNull { skip ->
+                    if (skip > 0 && !rootName.equals(parts[skip - 1], ignoreCase = true)) null else resolve(parts.drop(skip))
+                } ?: if (parts.size == 1 && rootName.equals(parts[0], ignoreCase = true)) "" else null
+                if (found == null) continue
+                if (preset.mustHold != null && dirsAt(found)?.any { it.equals(preset.mustHold, ignoreCase = true) } != true) continue
+                if (found.lowercase() in taken || out.any { it.path.equals(found, ignoreCase = true) }) continue
+                out += Proposal(preset, found)
+                break
+            }
+        }
+        return out
+    }
 
     /** The preset a folder was added with: its label is the preset's, or the preset's with a number ("DraStic 2"). */
     fun presetOf(folder: EmulatorSaveFolder): Preset? = presets.firstOrNull { p ->

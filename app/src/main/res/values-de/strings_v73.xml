@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="saves73_batch_title">%1$d Spielstände weichen ab: eine Wahl für alle</string>
+    <string name="saves73_batch_summary">Neuer auf diesem Gerät: %1$d · neuer auf dem Server: %2$d · aus den Zeiten nicht ersichtlich: %3$d</string>
+    <string name="saves73_batch_newer">Jeweils den neuesten behalten</string>
+    <string name="saves73_batch_device">Für alle dieses Gerät behalten</string>
+    <string name="saves73_batch_server">Für alle den Server behalten</string>
+    <string name="saves73_batch_both">Für alle beide behalten</string>
+    <string name="saves73_batch_hint">Jede Wahl behält zuerst eine Sicherheitskopie dessen, was sie ersetzt. Bei „jeweils den neuesten“ bleiben Spielstände, deren Zeiten nicht zeigen, welcher neuer ist, unten in der Liste, damit du entscheidest.</string>
+    <string name="saves73_find_row">Emulator-Ordner suchen</string>
+    <string name="saves73_find_row_hint">Wähle einmal deinen Speicher und Valkyr sieht an den Orten nach, an denen Emulatoren ihre Spielstände ablegen (DraStic, Pizza Boy, DuckStation, PPSSPP, Dolphin). Du siehst, was gefunden wurde, bevor etwas hinzugefügt wird.</string>
+    <string name="saves73_find_action">Suchen</string>
+    <string name="saves73_find_title">Gefundene Emulator-Ordner</string>
+    <string name="saves73_find_hint">Entferne den Haken bei allem, was draußen bleiben soll. Du kannst einen Ordner später wieder entfernen; das Hinzufügen ändert nichts darin.</string>
+    <string name="saves73_find_none">Hier wurde kein Emulator-Ordner erkannt. Viele Emulatoren legen ihre Spielstände in Android/data ab, das Android für andere Apps sperrt: Lass den Emulator einen Ordner im gemeinsamen Speicher verwenden oder füge seinen Ordner über die Zeile darunter von Hand hinzu.</string>
+    <string name="saves73_find_add">Hinzufügen (%1$d)</string>
+    <string name="saves73_find_on">Wird hinzugefügt</string>
+    <string name="saves73_find_off">Bleibt draußen</string>
+    <string name="saves73_last_save">Letzter Spielstand: %1$s · %2$s</string>
+    <string name="saves73_last_state">Letzter Schnellspeicherstand: %1$s · %2$s</string>
+    <string name="saves73_last_save_undated">Letzter Spielstand: %1$s</string>
+    <string name="saves73_last_state_undated">Letzter Schnellspeicherstand: %1$s</string>
+</resources>

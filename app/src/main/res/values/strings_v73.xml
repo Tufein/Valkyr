@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="saves73_batch_title">%1$d saves differ: one choice for all</string>
+    <string name="saves73_batch_summary">Newer on this device: %1$d · newer on the server: %2$d · not clear from the times: %3$d</string>
+    <string name="saves73_batch_newer">Keep the newest of each</string>
+    <string name="saves73_batch_device">Keep this device for all</string>
+    <string name="saves73_batch_server">Keep the server for all</string>
+    <string name="saves73_batch_both">Keep both for all</string>
+    <string name="saves73_batch_hint">Every choice keeps a safety copy of what it replaces. With the newest of each, saves whose times do not say which is newer stay in the list below for you to decide.</string>
+    <string name="saves73_find_row">Find emulator folders</string>
+    <string name="saves73_find_row_hint">Pick your storage once and Valkyr looks in the places emulators are known to keep their saves (DraStic, Pizza Boy, DuckStation, PPSSPP, Dolphin). You see what was found before anything is added.</string>
+    <string name="saves73_find_action">Find</string>
+    <string name="saves73_find_title">Emulator folders found</string>
+    <string name="saves73_find_hint">Untick what should stay out. You can remove a folder again later; nothing in it is changed by adding it.</string>
+    <string name="saves73_find_none">No emulator folder was recognised here. Many emulators keep their saves in Android/data, which Android closes to other apps: point the emulator at a folder on shared storage, or add its folder by hand with the row below.</string>
+    <string name="saves73_find_add">Add (%1$d)</string>
+    <string name="saves73_find_on">Will be added</string>
+    <string name="saves73_find_off">Left out</string>
+    <string name="saves73_last_save">Last save: %1$s · %2$s</string>
+    <string name="saves73_last_state">Last save state: %1$s · %2$s</string>
+    <string name="saves73_last_save_undated">Last save: %1$s</string>
+    <string name="saves73_last_state_undated">Last save state: %1$s</string>
+</resources>

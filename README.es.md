@@ -23,7 +23,7 @@ Valkyr mantiene una gran lista, con buscador, de los juegos de las fuentes que *
 
 *Las capturas de pantalla usan títulos de juegos inventados y archivos vacíos de relleno. Las capturas muestran la app en inglés.*
 
-**Última versión: [7.2.0](https://github.com/Tufein/Valkyr/releases/tag/v7.2.0)** (build de Android 80).
+**Última versión: [7.3.0](https://github.com/Tufein/Valkyr/releases/tag/v7.3.0)** (build de Android 81).
 
 Hasta la 3.9.0 la app se llamaba Dogmatix+. Valkyr 6.0.0 tiene su propio ID de aplicación y se instala junto a la app antigua: usa *Ajustes → Copia de seguridad* en la app antigua y *Restaurar copia* en Valkyr, y luego elimina la app antigua.
 
@@ -103,7 +103,7 @@ Necesitas **Android 10 o más reciente**. La app no está en Google Play.
 
 ### Nube y sincronización
 - **RomM**: enviar descargas terminadas y juegos completos de varios archivos, usarlo como fuente, ver juegos, géneros y capturas, sincronizar estado de juego, valoración y favoritos, y traer los BIOS que faltan.
-- **Sincronización de partidas y partidas en la nube**: tus partidas y estados viajan entre consolas y RomM, incluidas las tarjetas de memoria de DuckStation, las carpetas de guardado de PPSSPP y, si lo eliges, tarjetas completas de Dolphin y NetherSX2, carpetas de guardado de GameCube de Dolphin y partidas de Wii; si hay conflicto se te pregunta y las copias reemplazadas se guardan 30 días.
+- **Sincronización de partidas y partidas en la nube**: tus partidas y estados viajan entre consolas y RomM, incluidas las tarjetas de memoria de DuckStation, las carpetas de guardado de PPSSPP y, si lo eliges, tarjetas completas de Dolphin y NetherSX2, carpetas de guardado de GameCube de Dolphin y partidas de Wii; si hay conflicto se te pregunta y las copias reemplazadas se guardan 30 días. Cuando varias partidas difieren, una sola elección las resuelve todas, y *Buscar carpetas de emuladores* localiza por ti las carpetas de partidas de los emuladores conocidos.
 - **Tu propia nube (WebDAV)**: copias cifradas (Nextcloud, ownCloud, Synology y otras) y sincronización entre dispositivos de favoritos, lista de deseos y colecciones.
 - **RetroAchievements**: progreso e insignias por juego, tu perfil y qué juegos tienen logros.
 

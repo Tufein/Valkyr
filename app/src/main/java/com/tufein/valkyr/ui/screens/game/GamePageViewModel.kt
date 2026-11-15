@@ -22,6 +22,7 @@ import com.tufein.valkyr.ui.screens.home.DetailsState
 import com.tufein.valkyr.ui.screens.home.GameDetailsLoader
 import com.tufein.valkyr.util.DownloadCondition
 import com.tufein.valkyr.util.RommMarks
+import com.tufein.valkyr.util.StatePreviews
 import com.tufein.valkyr.util.StorageHelper
 import com.tufein.valkyr.util.ToastUtil
 import com.tufein.valkyr.util.VersionCompare
@@ -86,6 +87,9 @@ class GamePageViewModel @Inject constructor(
 
     /** 6.5: the newest save-state picture of [fileName] in the states folder, or null. */
     suspend fun statePreview(fileName: String): android.net.Uri? = statePreviews.find(fileName)
+
+    /** 7.3: the game's newest save or state in the Save sync folders, or null. */
+    suspend fun newestSave(fileName: String): StatePreviews.SaveLine? = statePreviews.newestSave(fileName)
 
 
     private val _phase = MutableStateFlow(GamePagePhase.LOADING)

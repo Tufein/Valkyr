@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import android.provider.DocumentsContract
 import android.text.format.DateUtils
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -97,6 +96,7 @@ import com.tufein.valkyr.util.BackgroundSyncPolicy
 import com.tufein.valkyr.util.CardGrid
 import com.tufein.valkyr.util.EmulatorSaveFolder
 import com.tufein.valkyr.util.EmulatorSaveFolders
+import com.tufein.valkyr.util.SafUris
 import com.tufein.valkyr.util.SaveFolderLayout
 import androidx.compose.material3.OutlinedTextField
 import com.tufein.valkyr.util.NewerSide
@@ -167,6 +167,12 @@ fun SaveSyncScreen(viewModel: SaveSyncViewModel = hiltViewModel()) {
             )
         }
     }
+    // 7.3: a folder higher up is searched for the places emulators are known to keep their saves.
+    val findPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+        uri?.let { persist(it); viewModel.findEmulatorFolders(context, it.toString()) }
+    }
+    val found by viewModel.found.collectAsStateWithLifecycle()
+    found?.let { list -> FoundFoldersDialog(list, onAdd = { viewModel.addFound(context, it) }, onDismiss = viewModel::closeFound) }
     pickedEmulatorFolder?.let { uri ->
         EmulatorPresetDialog(
             onPick = { preset -> viewModel.addEmulatorFolder(context, preset, uri); pickedEmulatorFolder = null },
@@ -232,6 +238,14 @@ fun SaveSyncScreen(viewModel: SaveSyncViewModel = hiltViewModel()) {
                 onChannels = { on -> viewModel.setWiiChannels(context, folder.label, on) },
                 onWiiWare = { on -> viewModel.setWiiWare(context, folder.label, on) }
             ).forEach { add(it) }
+        }
+        add {
+            SettingRow(
+                icon = R.drawable.ic_manage_search,
+                title = stringResource(R.string.saves73_find_row),
+                hint = stringResource(R.string.saves73_find_row_hint),
+                onClick = { findPicker.launch(null) },
+            ) { ActionPill(stringResource(R.string.saves73_find_action), { findPicker.launch(null) }, icon = R.drawable.ic_manage_search) }
         }
         add {
             SettingRow(
@@ -404,6 +418,8 @@ fun SaveSyncScreen(viewModel: SaveSyncViewModel = hiltViewModel()) {
     val folderModeRows = folderModeRows()
     prune?.let { PruneDialog(it, onConfirm = { viewModel.confirmPrune(context) }, onDismiss = viewModel::closePrune) }
     val conflictRows: List<@Composable () -> Unit> = buildList {
+        // One choice for all of them first; the per-file list stays below for whoever wants to look.
+        if (sync.conflicts.size > 1) add { ConflictBatchRow(sync.conflicts, viewModel::resolveAll) }
         sync.conflicts.forEach { conflict -> add { ConflictRow(conflict, notSet, viewModel) } }
     }
 
@@ -682,7 +698,7 @@ internal fun relative(millis: Long?): String? =
 /** `content://…/tree/primary%3ARetroArch%2Fsaves` → `RetroArch/saves`; null when nothing is picked. */
 private fun folderLabel(uri: String): String? {
     if (uri.isBlank()) return null
-    return runCatching { DocumentsContract.getTreeDocumentId(uri.toUri()).substringAfter(':').ifBlank { "/" } }.getOrDefault(uri)
+    return runCatching { SafUris.pickedId(uri.toUri()).substringAfter(':').ifBlank { "/" } }.getOrDefault(uri)
 }
 
 /** What a folder of [layout] syncs, for the folder's row and the emulator picker; null for plain save files. */
