@@ -23,7 +23,7 @@ The app includes no games. **Sources → More romsets** offers optional free con
 
 *The screenshots use made-up game titles and empty placeholder files.*
 
-**Latest release: [7.9.0](https://github.com/Tufein/Valkyr/releases/tag/v7.9.0)** (Android build 87).
+**Latest release: [8.0.0](https://github.com/Tufein/Valkyr/releases/tag/v8.0.0)** (Android build 88).
 
 Until 3.9.0 the app was called Dogmatix+. Valkyr 6.0.0 has its own app id, so it installs next to the old app: use *Settings → Back up* in the old app and *Restore backup* in Valkyr, then remove the old app.
 
@@ -104,7 +104,7 @@ You need **Android 10 or newer**. The app is not on Google Play.
 ### Cloud and sync
 - **RomM**: send finished downloads and whole multi-file games, use it as a source, see games, genres and screenshots, sync play status, rating and favourites, fetch missing BIOS files.
 - **Save sync and cloud saves**: your saves and save states travel between handhelds and RomM, including DuckStation memory cards, PPSSPP save folders and, if you choose, wwhole Dolphin and NetherSX2 memory cards, Dolphin GameCube save folders and Wii saves; conflicts ask you, and replaced copies are kept for 30 days. When several saves differ, one choice settles them all, and *Find emulator folders* looks up the save folders of known emulators for you.
-- **Your own cloud (WebDAV)**: encrypted backups (Nextcloud, ownCloud, Synology and others) and device sync of favourites, wishlist and collections.
+- **Your own cloud (WebDAV)**: encrypted backups (Nextcloud, ownCloud, Synology and others) and device sync of favourites, wishlist and collections. Up next travels too, merged so that nothing is lost.
 - **RetroAchievements**: progress and badges per game, your profile, and which games have achievements.
 
 - **Pair RomM with a short code** and let games sent from the RomM web page land in your download queue; *Use RomM* switches every RomM call off and on.

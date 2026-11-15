@@ -115,6 +115,18 @@ class UpNextService @Inject constructor(
         }
     }
 
+    /** 8.0: the active profile's list and its name, for the device sync; null before it was read. */
+    suspend fun forSync(): Pair<String, List<UpNextEntry>> = withContext(Dispatchers.IO) {
+        lock.withLock {
+            val id = profiles.currentIdNow()
+            val name = profiles.profiles.value.firstOrNull { it.id == id }?.name.orEmpty()
+            name to ensure(id)
+        }
+    }
+
+    /** 8.0: replaces the active profile's list by what a sync merged (saved like any other change). */
+    suspend fun replaceFromSync(merged: List<UpNextEntry>): Boolean = edit { merged }
+
     /** Puts a game on the list (after the open ones); true when it is on the list afterwards. */
     suspend fun add(consoleId: String, fileName: String, title: String): Boolean {
         val ok = edit { UpNext.add(it, UpNextEntry(consoleId, fileName, title.ifBlank { fileName.substringBeforeLast('.') }, System.currentTimeMillis())) }

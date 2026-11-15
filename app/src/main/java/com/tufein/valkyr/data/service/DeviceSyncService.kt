@@ -19,6 +19,8 @@ import com.tufein.valkyr.data.local.entity.WishlistEntity
 import com.tufein.valkyr.util.CloudErrors
 import com.tufein.valkyr.util.CloudNotConfiguredException
 import com.tufein.valkyr.util.DeviceSyncEngine
+import com.tufein.valkyr.util.UpNextEntry
+import com.tufein.valkyr.util.UpNextSyncEngine
 import com.tufein.valkyr.util.DeviceSyncJson
 import com.tufein.valkyr.util.DeviceSyncMerge
 import com.tufein.valkyr.util.SyncCollection
@@ -72,7 +74,8 @@ class DeviceSyncService @Inject constructor(
     private val wishlistDao: WishlistDao,
     private val collectionDao: CollectionDao,
     private val history: OperationHistoryService,
-    private val actionLog: ActionLogService
+    private val actionLog: ActionLogService,
+    private val upNext: UpNextService
 ) {
     /** Why a background sync was asked for. */
     enum class Trigger { START, LOCAL_CHANGE, BACKGROUND, SCHEDULED }
@@ -150,6 +153,7 @@ class DeviceSyncService @Inject constructor(
                 account = DeviceSyncEngine.accountKey(settings.user.first())
             )
             val device = DeviceSyncEngine.Device(settings.deviceId(), settings.deviceName.first())
+            syncUpNext(session)
             when (val outcome = engine.sync(device, allowMassRemoval, onlyIfLocalChanges)) {
                 is DeviceSyncEngine.Outcome.Synced -> {
                     settings.recordSync(System.currentTimeMillis(), outcome.added, outcome.removed, outcome.sent)
@@ -180,6 +184,26 @@ class DeviceSyncService @Inject constructor(
             Result.Failed(e)
         } finally {
             _running.value = false
+        }
+    }
+
+    /**
+     * 8.0: the active profile's Up next list goes through its own document. It never makes the
+     * library sync fail: a newer or damaged file or a passing network problem is only logged.
+     */
+    private suspend fun syncUpNext(session: CloudConnection.Session) {
+        try {
+            val (profileName, _) = upNext.forSync()
+            val side = object : UpNextSyncEngine.Local {
+                override suspend fun snapshot() = upNext.forSync().second
+                override suspend fun replace(merged: List<UpNextEntry>) = upNext.replaceFromSync(merged)
+            }
+            val outcome = UpNextSyncEngine(session.store, session.serverUrl, session.rootUrl, profileName, side).sync()
+            if (outcome.gained > 0 || outcome.sent) Log.i(TAG, "Up next sync: +${outcome.gained}${if (outcome.sent) ", sent" else ""}")
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.w(TAG, "Up next sync skipped: ${e.javaClass.simpleName}")
         }
     }
 

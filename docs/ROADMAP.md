@@ -4,7 +4,7 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 7.9.0** (Android build 87). The core loop is complete — find a game, download it into
+**Now: 8.0.0** (Android build 88). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
 libraries), and finishing what 7.0 and 7.1 started.
@@ -150,7 +150,7 @@ search that finds a series by name.
 *Done when* grouping is off by default, explains what it folded, and can be undone in one tap.
 Tickets: **[plans/7.9.md](plans/7.9.md)**.
 
-## 8.0 — One library on several handhelds
+## 8.0 — One library on several handhelds (shipped in 8.0.0)
 
 Two devices can already share favourites, wishlist and collections through WebDAV, and saves
 through RomM. The rest of the library still lives on one device.
@@ -160,6 +160,12 @@ through RomM. The rest of the library still lives on one device.
 - **Conflicts you decide**, with the same preview and way back as save sync; nothing is
   overwritten silently.
 - **Still no accounts**: your WebDAV folder is the account.
+
+Shipped: **Up next** travels between handhelds as its own document in the WebDAV folder, merged
+so a week offline loses nothing; the newest change of a game wins and taking a game off a list does
+not travel. Still open, because each needs a database migration or a profile format that must be
+proved on two real devices: play history, ratings and notes, profiles that travel (the Up next
+list is matched by profile name until they do), and a screen for the conflicts.
 
 *Done when* two handhelds on the same WebDAV folder show the same Up next and progress after a
 sync, and one device going offline for a week does not lose its week. Tickets:
