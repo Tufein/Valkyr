@@ -694,6 +694,12 @@ private fun TabContent(
                         state.details?.let { details ->
                             Text(stringResource(R.string.details_source, details.source), style = MaterialTheme.typography.labelSmall, color = scheme.onSurfaceVariant)
                         }
+                        val coverFrom by produceState<com.tufein.valkyr.util.CoverSources.Source?>(null, rom.consoleId, rom.fileName) {
+                            value = viewModel.coverSource(rom.consoleId, rom.fileName)
+                        }
+                        coverFrom?.let {
+                            Text(stringResource(R.string.cover77_from, com.tufein.valkyr.ui.screens.settings.covers.sourceName(it)), style = MaterialTheme.typography.labelSmall, color = scheme.onSurfaceVariant)
+                        }
                     }
                     GameJournalSection(rom.consoleId, rom.fileName)
                     // RomM's summary, genres, screenshots, play status and rating (draws nothing without RomM).

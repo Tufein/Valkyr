@@ -4,7 +4,7 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 7.6.0** (Android build 84). The core loop is complete — find a game, download it into
+**Now: 7.7.0** (Android build 85). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
 libraries), and finishing what 7.0 and 7.1 started.
@@ -95,7 +95,7 @@ source diffs, a scan budget that pauses on a low battery, and the cover-grid mea
 decode still Fast with 100,000 games indexed, and a rescan of an unchanged library takes
 seconds. Tickets: **[plans/7.6.md](plans/7.6.md)**.
 
-## 7.7 — Metadata without RomM
+## 7.7 — Metadata without RomM (shipped in 7.7.0)
 
 RomM supplies manuals, screenshots and genres. Without it, a library looks plainer than it
 needs to.
@@ -107,6 +107,10 @@ needs to.
 - **Cache once, keep it**: fetched metadata survives a rescan and is listed with its source.
 - **Respect every provider's terms**: no scraping that a provider does not allow, and the
   provider is named wherever its data is shown.
+
+Shipped: the game page names the provider of its stored cover. Still open, because they add a
+database table and need the provider accounts to prove them: screenshots, title screens and
+manuals from the cover sources inside the app, and the source line on every other place art is shown.
 
 *Done when* a library with no RomM gets covers, manuals and screenshots at the same quality
 bar, and a failed provider reads as a sentence rather than an empty screen. Tickets:

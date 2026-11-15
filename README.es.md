@@ -23,7 +23,7 @@ Valkyr mantiene una gran lista, con buscador, de los juegos de las fuentes que *
 
 *Las capturas de pantalla usan títulos de juegos inventados y archivos vacíos de relleno. Las capturas muestran la app en inglés.*
 
-**Última versión: [7.6.0](https://github.com/Tufein/Valkyr/releases/tag/v7.6.0)** (build de Android 84).
+**Última versión: [7.7.0](https://github.com/Tufein/Valkyr/releases/tag/v7.7.0)** (build de Android 85).
 
 Hasta la 3.9.0 la app se llamaba Dogmatix+. Valkyr 6.0.0 tiene su propio ID de aplicación y se instala junto a la app antigua: usa *Ajustes → Copia de seguridad* en la app antigua y *Restaurar copia* en Valkyr, y luego elimina la app antigua.
 
@@ -50,7 +50,7 @@ Necesitas **Android 10 o más reciente**. La app no está en Google Play.
 - **Una sola lista** con los juegos de todas tus fuentes: directorios web, enlaces directos, torrents y enlaces magnet, y tu servidor RomM.
 - **Una búsqueda que perdona errores** (acentos, guiones, letras repetidas), con búsquedas recientes, **Sorpréndeme** y **Más como este**. **Buscar todo** también encuentra ajustes, herramientas y pantallas. La búsqueda espera a una breve pausa al escribir.
 - **Filtra** por consola, región, idioma, tipo, género, década y *Nuevo*; **ordena** por nombre, tamaño o novedad. Un **✓** verde marca lo que ya tienes.
-- **Una página para cada juego**: imagen, Descargar o Jugar, la mejor versión, favorito, colecciones, compartir, notas, capturas y manuales, y una pestaña *Versiones* que explica cómo puntúa cada versión.
+- **Una página para cada juego**: imagen, Descargar o Jugar, la mejor versión, favorito, colecciones, compartir, notas, capturas y manuales, y una pestaña *Versiones* que explica cómo puntúa cada versión. La página del juego nombra al proveedor de la carátula.
 - **Primero las carátulas**: Inicio se abre con un mosaico por consola (sus juegos y cuántos hay en el dispositivo, con una barra), arriba una tarjeta de seguir jugando, y los estantes de carátulas grandes a un toque en el selector de vista; la navegación está en una barra inferior, o en una barra lateral estrecha en una portátil, con Juegos, Descargas, Fuentes y Más. La página del juego empieza con una carátula grande y un botón grande de Jugar o Descargar.
 - **Carátulas de varias fuentes**: RomM, libretro-thumbnails, [ScreenScraper](https://www.screenscraper.fr) (con tu propio acceso), TheGamesDB, SteamGridDB e IGDB (cada una con tu propia clave gratuita) y las imágenes de juegos en caché, en el orden que elijas. La app avisa con claridad si falla el acceso o se alcanza un límite diario, y una fuente que solo no estaba disponible se vuelve a consultar más tarde (*Ajustes → Fuentes de carátulas*).
 - **Imágenes extra para lanzadores**: pantallas de título y capturas para la carpeta de carátulas de ES-DE (*Herramientas → Portadas para lanzadores*), desactivado por defecto y sin reemplazar nunca archivos que ya tienes.

@@ -23,7 +23,7 @@ Valkyr rassemble les jeux des sources que *vous* ajoutez dans une seule grande l
 
 *Les captures d’écran utilisent des titres de jeux inventés et des fichiers vides de substitution, et montrent l’application en anglais.*
 
-**Dernière version : [7.6.0](https://github.com/Tufein/Valkyr/releases/tag/v7.6.0)** (build Android 84).
+**Dernière version : [7.7.0](https://github.com/Tufein/Valkyr/releases/tag/v7.7.0)** (build Android 85).
 
 Jusqu’à la 3.9.0, l’application s’appelait Dogmatix+. Valkyr 6.0.0 a son propre identifiant d’application et s’installe donc à côté de l’ancienne : utilisez *Réglages → Sauvegarder* dans l’ancienne appli et *Restaurer une sauvegarde* dans Valkyr, puis supprimez l’ancienne.
 
@@ -50,7 +50,7 @@ Il vous faut **Android 10 ou plus récent**. L’application n’est pas sur Goo
 - **Une seule liste** avec les jeux de toutes vos sources : répertoires web, liens directs, torrents et liens magnet, et votre serveur RomM.
 - **Une recherche qui pardonne les fautes** (accents, tirets, lettres doublées), avec les recherches récentes, **Surprenez-moi** et **Plus comme celui-ci**. **Tout rechercher** trouve aussi les réglages, outils et écrans. La recherche attend une courte pause dans la saisie.
 - **Filtrer** par console, région, langue, type, genre, décennie et *Nouveau* ; **trier** par nom, taille ou plus récent. Un **✓** vert marque ce que vous avez déjà.
-- **Une page par jeu** : visuel, Télécharger ou Jouer, la meilleure version, favori, collections, partage, notes, captures et manuels, et un onglet *Versions* qui explique comment chaque version est notée.
+- **Une page par jeu** : visuel, Télécharger ou Jouer, la meilleure version, favori, collections, partage, notes, captures et manuels, et un onglet *Versions* qui explique comment chaque version est notée. La page du jeu nomme le fournisseur de la jaquette.
 - **Les jaquettes d’abord** : l’accueil s’ouvre sur une tuile par console (ses jeux et combien sont sur l’appareil, avec une barre), une carte Continuer à jouer en haut, et les étagères de grandes jaquettes à une touche dans le sélecteur de vue ; la navigation est dans une barre en bas, ou une barre latérale fine sur une console portable, avec Jeux, Téléchargements, Sources et Plus. La page d’un jeu commence par une grande jaquette et un grand bouton Jouer ou Télécharger.
 - **Jaquettes de plusieurs sources** : RomM, libretro-thumbnails, [ScreenScraper](https://www.screenscraper.fr) (avec votre propre compte), TheGamesDB, SteamGridDB et IGDB (chacune avec votre propre clé gratuite) et les images de jeux en cache, dans l’ordre de votre choix. L’appli dit clairement quand une connexion échoue ou qu’une limite quotidienne est atteinte, et une source simplement indisponible est réinterrogée plus tard (*Réglages → Sources de jaquettes*).
 - **Images supplémentaires pour lanceurs** : écrans-titres et captures pour le dossier de jaquettes d’ES-DE (*Outils → Jaquettes pour lanceurs*), désactivé par défaut et sans jamais remplacer vos fichiers existants.

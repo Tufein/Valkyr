@@ -23,7 +23,7 @@ Valkyr führt eine große, durchsuchbare Liste mit den Spielen aus den Quellen, 
 
 *Die Screenshots verwenden erfundene Spieltitel und leere Platzhalterdateien und zeigen die App auf Englisch.*
 
-**Neueste Version: [7.6.0](https://github.com/Tufein/Valkyr/releases/tag/v7.6.0)** (Android-Build 84).
+**Neueste Version: [7.7.0](https://github.com/Tufein/Valkyr/releases/tag/v7.7.0)** (Android-Build 85).
 
 Bis 3.9.0 hieß die App Dogmatix+. Valkyr 6.0.0 hat eine eigene App-ID und wird daher neben der alten App installiert: Nutze *Einstellungen → Sichern* in der alten App und *Sicherung wiederherstellen* in Valkyr und entferne danach die alte App.
 
@@ -50,7 +50,7 @@ Du brauchst **Android 10 oder neuer**. Die App ist nicht bei Google Play erhält
 - **Eine Liste** mit den Spielen aus allen Quellen: Webverzeichnisse, direkte Links, Torrents und Magnet-Links sowie dein RomM-Server.
 - **Suche, die Fehler verzeiht** (Akzente, Bindestriche, doppelte Buchstaben), mit letzten Suchen, **Überrasch mich** und **Mehr davon**. **Alles durchsuchen** findet auch Einstellungen, Werkzeuge und Bildschirme. Die Suche startet erst nach einer kurzen Tipppause.
 - **Filtern** nach Konsole, Region, Sprache, Typ, Genre, Jahrzehnt und *Neu*; **sortieren** nach Name, Größe oder Neuestem. Ein grünes **✓** zeigt, was du schon hast.
-- **Eine Seite für jedes Spiel**: Bild, Herunterladen oder Spielen, die beste Version, Favorit, Sammlungen, Teilen, Notizen, Screenshots und Handbücher sowie ein Tab *Versionen*, der erklärt, wie jede Version bewertet wird.
+- **Eine Seite für jedes Spiel**: Bild, Herunterladen oder Spielen, die beste Version, Favorit, Sammlungen, Teilen, Notizen, Screenshots und Handbücher sowie ein Tab *Versionen*, der erklärt, wie jede Version bewertet wird. Die Spieleseite nennt den Anbieter des Covers.
 - **Cover zuerst**: Home startet mit einer Kachel pro Konsole (ihre Spiele und wie viele auf dem Gerät sind, mit Balken), oben eine Karte Weiterspielen, und die Regale voller großer Cover sind einen Tipp entfernt in der Ansichtswahl; die Navigation liegt in einer Leiste unten oder, auf einem Handheld, in einer schmalen Seitenleiste mit Spiele, Downloads, Quellen und Mehr. Die Spielseite beginnt mit einem großen Cover und einer großen Schaltfläche Spielen oder Download.
 - **Cover aus mehreren Quellen**: RomM, libretro-thumbnails, [ScreenScraper](https://www.screenscraper.fr) (mit deinem eigenen Login), TheGamesDB, SteamGridDB und IGDB (jeweils mit deinem eigenen kostenlosen Schlüssel) und die zwischengespeicherten Spielbilder, in einer Reihenfolge, die du wählst. Die App meldet klar, wenn ein Login scheitert oder ein Tageslimit erreicht ist; eine nur kurz nicht erreichbare Quelle wird später erneut gefragt (*Einstellungen → Cover-Quellen*).
 - **Zusätzliche Launcher-Bilder**: Titelbildschirme und Screenshots für den ES-DE-Cover-Ordner (*Tools → Cover für Launcher*), standardmäßig aus und ersetzen nie vorhandene Dateien.
