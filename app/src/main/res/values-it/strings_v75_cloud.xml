@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cloud75_keep_all">Tutte</string>
+    <string name="cloud75_keep_all_hint">Sul server non viene mai rimosso nulla; la cartella cresce a ogni backup</string>
+</resources>

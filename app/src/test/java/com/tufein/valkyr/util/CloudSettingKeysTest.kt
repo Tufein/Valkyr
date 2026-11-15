@@ -32,8 +32,8 @@ class CloudSettingKeysTest {
     }
 
     @Test fun `keep is held within its range and must be a number`() {
-        assertEquals(1, CloudSettingKeys.sanitize(CloudSettingKeys.KEEP, 0))
-        assertEquals(1, CloudSettingKeys.sanitize(CloudSettingKeys.KEEP, -7))
+        assertEquals(0, CloudSettingKeys.sanitize(CloudSettingKeys.KEEP, 0))
+        assertEquals(0, CloudSettingKeys.sanitize(CloudSettingKeys.KEEP, -7))
         assertEquals(7, CloudSettingKeys.sanitize(CloudSettingKeys.KEEP, 7))
         assertEquals(100, CloudSettingKeys.sanitize(CloudSettingKeys.KEEP, 5000))
         assertNull(CloudSettingKeys.sanitize(CloudSettingKeys.KEEP, "7"))

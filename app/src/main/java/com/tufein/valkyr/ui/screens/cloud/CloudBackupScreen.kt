@@ -299,15 +299,15 @@ fun CloudBackupScreen(viewModel: CloudBackupViewModel = hiltViewModel()) {
                     DavRow(
                         icon = R.drawable.ic_archive,
                         title = stringResource(R.string.dav_keep),
-                        hint = stringResource(R.string.dav_keep_hint),
+                        hint = stringResource(if (ui.keep == CloudBackupNames.KEEP_ALL) R.string.cloud75_keep_all_hint else R.string.dav_keep_hint),
                         onClick = { viewModel.setKeep(CloudBackupNames.shiftKeep(ui.keep, 1)) },
                         onAdjust = { viewModel.setKeep(CloudBackupNames.shiftKeep(ui.keep, it)) }
                     ) {
                         Stepper(
-                            ui.keep.toString(),
+                            if (ui.keep == CloudBackupNames.KEEP_ALL) stringResource(R.string.cloud75_keep_all) else ui.keep.toString(),
                             onDecrement = { viewModel.setKeep(CloudBackupNames.shiftKeep(ui.keep, -1)) },
                             onIncrement = { viewModel.setKeep(CloudBackupNames.shiftKeep(ui.keep, 1)) },
-                            valueWidth = 48.dp
+                            valueWidth = 64.dp
                         )
                     }
                     val records = ui.records

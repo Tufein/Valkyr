@@ -27,7 +27,8 @@ object CloudSettingKeys {
     const val SHARED_LIST = "dav_shared_list"
     const val SHARED_NAME = "dav_shared_name"
 
-    const val MIN_KEEP = 1
+    /** 0 = keep every backup ([CloudBackupNames.KEEP_ALL]). */
+    const val MIN_KEEP = 0
     const val MAX_KEEP = 100
 
     /** Type tag per key, as in [BackupJson]: `b` boolean, `i` int, `s` string. */

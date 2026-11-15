@@ -23,7 +23,7 @@ Valkyr houdt één grote, doorzoekbare lijst bij van de games uit de bronnen die
 
 *De screenshots gebruiken verzonnen gametitels en lege dummybestanden en tonen de app in het Engels.*
 
-**Laatste release: [7.4.0](https://github.com/Tufein/Valkyr/releases/tag/v7.4.0)** (Android build 82).
+**Laatste release: [7.5.0](https://github.com/Tufein/Valkyr/releases/tag/v7.5.0)** (Android build 83).
 
 Tot en met 3.9.0 heette de app Dogmatix+. Valkyr 6.0.0 heeft een eigen app-id en installeert dus naast de oude app: gebruik *Instellingen → Back-up maken* in de oude app en *Back-up terugzetten* in Valkyr, en verwijder daarna de oude app.
 

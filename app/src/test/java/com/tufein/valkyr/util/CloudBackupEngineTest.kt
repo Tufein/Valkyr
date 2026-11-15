@@ -104,6 +104,20 @@ class CloudBackupEngineTest {
         }
     }
 
+    @Test fun `with keep everything on, a long run of backups leaves every remote file in place`() {
+        val store = FakeDavStore("/dav")
+        val c = CloudBackupEngine.connect(store, "https://nas.local/dav", "", "Games/Dogmatix")
+        val sealed = BackupCrypto.seal(json, "passphrase one")
+        (1..12).forEach { day ->
+            val up = CloudBackupEngine.upload(store, c.serverUrl, c.rootUrl, sealed, "Thor", keep = CloudBackupNames.KEEP_ALL, now = Instant.parse("2026-10-%02dT03:00:00Z".format(day)))
+            assertTrue(up.deleted.isEmpty())
+        }
+        assertEquals(12, CloudBackupEngine.list(store, c.rootUrl, "Thor").size)
+        // The old rule still deletes: the same twelve with a keep of 3 leave three.
+        CloudBackupEngine.upload(store, c.serverUrl, c.rootUrl, sealed, "Thor", keep = 3, now = Instant.parse("2026-10-13T03:00:00Z"))
+        assertEquals(3, CloudBackupEngine.list(store, c.rootUrl, "Thor").size)
+    }
+
     @Test fun `a backup the server stored short is reported`() {
         val store = FakeDavStore("/dav").apply { sizeSkew = -10 }
         val root = "https://nas.local/dav/Dogmatix/"

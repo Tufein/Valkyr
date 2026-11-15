@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cloud75_keep_all">Todas</string>
+    <string name="cloud75_keep_all_hint">Nunca se borra nada del servidor; la carpeta crece con cada copia</string>
+</resources>

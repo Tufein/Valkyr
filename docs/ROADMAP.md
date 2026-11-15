@@ -4,7 +4,7 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 7.4.0** (Android build 82). The core loop is complete — find a game, download it into
+**Now: 7.5.0** (Android build 83). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
 libraries), and finishing what 7.0 and 7.1 started.
@@ -63,21 +63,17 @@ Still open from this plan: a test launch that reports what the emulator said, wr
 `.m3u` from the setup steps, and the new-handheld checklist turning green from the same plan.
 Tickets: **[plans/7.4.md](plans/7.4.md)**.
 
-## 7.5 — More places to keep your data
+## 7.5 — More places to keep your data (partly shipped in 7.5.0)
 
-Backups and device sync speak WebDAV; RomM speaks its own protocol. A NAS without WebDAV, or
-object storage, is out of reach.
+Shipped: the *never delete on the remote side* choice (*Backups to keep → All*) and retries for
+a failed automatic cloud backup with growing waits that skip final problems. Backups are
+verified when they are restored: the encryption authenticates the file, so a damaged copy is
+refused before anything local is replaced.
 
-- **SMB and SFTP** for backups and device sync.
-- **S3-compatible storage** (Backblaze, Cloudflare R2, MinIO) with a bucket, a prefix and a
-  key.
-- **One Cloud hub**: every target with its last run, its result and a plain sentence when it
-  failed, and one *Back up now* that covers all of them.
-- **Never delete on the remote side**, and verify a restore by checksum before it replaces
-  anything.
-
-*Done when* a backup goes to a NAS over SMB, restores on a second device byte for byte, and a
-failed target says why without blocking the others. Tickets: **[plans/7.5.md](plans/7.5.md)**.
+Still open, because each needs a new client library or a protocol written by hand and a real
+server to prove it: **SMB and SFTP** (a NAS without WebDAV), **S3-compatible storage**, and the
+**one Cloud hub** listing every target once there is more than one. Tickets:
+**[plans/7.5.md](plans/7.5.md)**.
 
 ## 7.6 — Scale
 

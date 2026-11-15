@@ -19,6 +19,7 @@ import android.provider.DocumentsContract
 import android.util.Log
 import com.tufein.valkyr.data.local.AppSettings
 import com.tufein.valkyr.data.local.CloudSettings
+import com.tufein.valkyr.util.CloudRetryPolicy
 import com.tufein.valkyr.util.BackupRotation
 import com.tufein.valkyr.util.DiskScanner
 import dagger.hilt.EntryPoint
@@ -30,6 +31,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
@@ -98,7 +100,15 @@ class AutoBackupScheduler @Inject constructor(
 
     /** The daily cloud run: an encrypted backup when one is due, then the device sync (both only when switched on). */
     suspend fun runCloud() {
-        cloudBackup.runIfDue()
+        // 7.5: a passing failure (no network, a slow server) is tried again within the window, with growing waits.
+        var attempt = 1
+        while (true) {
+            val failure = (cloudBackup.runIfDue() as? CloudResult.Failed)?.error ?: break
+            attempt++
+            val wait = CloudRetryPolicy.waitBefore(attempt, failure) ?: break
+            Log.i("AutoBackup", "Cloud backup will be tried again in ${wait / 1000} s (attempt $attempt of ${CloudRetryPolicy.MAX_ATTEMPTS})")
+            delay(wait)
+        }
         deviceSync.syncScheduled()
         sharedWishlist.syncScheduled()
     }

@@ -24,8 +24,10 @@ object CloudBackupNames {
     const val LEGACY_PREFIX = "dogmatix-"
     const val EXTENSION = ".dgxb"
     const val DEFAULT_KEEP = 7
-    /** The choices offered for "Backups to keep". */
-    val KEEP_CHOICES = listOf(3, 5, 7, 10, 14, 30)
+    /** 7.5: "keep everything": rotation never deletes a backup from the server. */
+    const val KEEP_ALL = 0
+    /** The choices offered for "Backups to keep"; the last one keeps them all. */
+    val KEEP_CHOICES = listOf(3, 5, 7, 10, 14, 30, KEEP_ALL)
     /** Hours between automatic backups. */
     const val INTERVAL_HOURS = 24
 
@@ -117,6 +119,7 @@ object CloudBackupNames {
      * other devices and files named another way are never touched.
      */
     fun toDelete(names: List<String>, device: String, keep: Int, deviceId: String = ""): List<String> {
+        if (keep == KEEP_ALL) return emptyList()
         return names.mapNotNull { name -> parseName(name)?.takeIf { isMine(it, device, deviceId) }?.let { name to it.time } }
             .sortedWith(compareByDescending<Pair<String, Long>> { it.second }.thenByDescending { it.first })
             .drop(keep.coerceAtLeast(1))

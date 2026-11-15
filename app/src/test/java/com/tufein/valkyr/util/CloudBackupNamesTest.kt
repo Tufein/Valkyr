@@ -43,7 +43,8 @@ class CloudBackupNamesTest {
         assertEquals(listOf("dogmatix-20261002-0300-thor.dgxb", "dogmatix-20261001-0300-thor.dgxb"), delete)
         assertTrue(CloudBackupNames.toDelete(mine, "Thor", keep = 30).isEmpty())
         // At least one backup always stays.
-        assertEquals(8, CloudBackupNames.toDelete(mine, "Thor", keep = 0).size)
+        assertEquals(8, CloudBackupNames.toDelete(mine, "Thor", keep = -1).size)   // a damaged value never deletes everything
+        assertTrue(CloudBackupNames.toDelete(mine, "Thor", keep = CloudBackupNames.KEEP_ALL).isEmpty())
     }
 
     @Test fun `the listing shows backups newest first, with device and size`() {
@@ -78,7 +79,9 @@ class CloudBackupNamesTest {
     @Test fun `keep steps through its choices`() {
         assertEquals(10, CloudBackupNames.shiftKeep(7, 1))
         assertEquals(5, CloudBackupNames.shiftKeep(7, -1))
-        assertEquals(30, CloudBackupNames.shiftKeep(30, 1))
+        assertEquals(CloudBackupNames.KEEP_ALL, CloudBackupNames.shiftKeep(30, 1))
+        assertEquals(CloudBackupNames.KEEP_ALL, CloudBackupNames.shiftKeep(CloudBackupNames.KEEP_ALL, 1))
+        assertEquals(30, CloudBackupNames.shiftKeep(CloudBackupNames.KEEP_ALL, -1))
         assertEquals(3, CloudBackupNames.shiftKeep(3, -1))
         assertEquals(10, CloudBackupNames.shiftKeep(8, 1))
     }

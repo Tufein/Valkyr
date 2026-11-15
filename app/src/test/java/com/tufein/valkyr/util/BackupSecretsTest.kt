@@ -40,7 +40,7 @@ class BackupSecretsTest {
     }
 
     @Test fun `keep and the certificate pin are checked on the way in`() {
-        assertEquals(1, BackupJson.decodeSetting(CloudSettingKeys.KEEP, setting("i", "0")))
+        assertEquals(0, BackupJson.decodeSetting(CloudSettingKeys.KEEP, setting("i", "0")))
         assertEquals(100, BackupJson.decodeSetting(CloudSettingKeys.KEEP, setting("i", "100000")))
         assertNull(BackupJson.decodeSetting(CloudSettingKeys.TRUST_FINGERPRINT, setting("s", "\"abcd\"")))
         assertEquals("", BackupJson.decodeSetting(CloudSettingKeys.TRUST_FINGERPRINT, setting("s", "\"\"")))

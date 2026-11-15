@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cloud75_keep_all">All</string>
+    <string name="cloud75_keep_all_hint">Nothing is ever removed from the server; the folder grows with every backup</string>
+</resources>

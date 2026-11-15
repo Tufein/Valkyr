@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cloud75_keep_all">Toutes</string>
+    <string name="cloud75_keep_all_hint">Rien n’est jamais supprimé du serveur ; le dossier grossit à chaque sauvegarde</string>
+</resources>
