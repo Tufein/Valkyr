@@ -23,7 +23,7 @@ The app includes no games. **Sources → More romsets** offers optional free con
 
 *The screenshots use made-up game titles and empty placeholder files.*
 
-**Latest release: [7.8.0](https://github.com/Tufein/Valkyr/releases/tag/v7.8.0)** (Android build 86).
+**Latest release: [7.9.0](https://github.com/Tufein/Valkyr/releases/tag/v7.9.0)** (Android build 87).
 
 Until 3.9.0 the app was called Dogmatix+. Valkyr 6.0.0 has its own app id, so it installs next to the old app: use *Settings → Back up* in the old app and *Restore backup* in Valkyr, then remove the old app.
 
@@ -48,7 +48,7 @@ You need **Android 10 or newer**. The app is not on Google Play.
 
 ### Find games
 - **One list** with the games from all your sources: web directories, direct links, torrents and magnet links, and your RomM server.
-- **Search that forgives mistakes** (accents, dashes, doubled letters), with recent searches, **Surprise me** and **More like this**. **Search everything** also finds settings, tools and screens. Typing waits for a short pause before the search runs.
+- **Search that forgives mistakes** (accents, dashes, doubled letters), with recent searches, **Surprise me** and **More like this**. **Search everything** also finds settings, tools and screens. Typing waits for a short pause before the search runs. Each “More like this” card says why it was picked.
 - **Filter** by console, region, language, type, genre, decade and *New*; **sort** by name, size or newest. A green **✓** marks what you already have.
 - **A page for every game**: art, Download or Play, the best version, favourite, collections, share, notes, screenshots and manuals, and a *Versions* tab that explains how each version scores. The game page names the provider of its cover.
 - **Covers first**: Home opens on a tile per console (its games and how many are on the device, with a bar), a Continue playing card on top, and the shelves of big covers one tap away in the view switcher, navigation sits in a bottom bar, or a slim side bar on a handheld, with Games, Downloads, Sources and More. The game page starts with a large cover and one big Play or Download button.

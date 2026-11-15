@@ -717,7 +717,7 @@ private fun TabContent(
                     CloudSavesSection(consoleId = rom.consoleId, fileName = rom.fileName)
                     Text(stringResource(R.string.page8_progress_hint), style = MaterialTheme.typography.bodySmall, color = scheme.onSurfaceVariant)
                 }
-                Tab.SIMILAR -> SimilarSection(state.similar, onOpen = { onOpenGame(it.file.consoleId, it.file.fileName) })
+                Tab.SIMILAR -> SimilarSection(state.similar, onOpen = { onOpenGame(it.file.consoleId, it.file.fileName) }, why = state.similarWhy)
             }
         }
     }

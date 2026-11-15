@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="disc79_why_series">Stessa serie</string>
+    <string name="disc79_why_developer">Stesso sviluppatore</string>
+    <string name="disc79_why_genre">Stesso genere</string>
+    <string name="disc79_why_console">Stessa console</string>
+</resources>

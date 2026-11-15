@@ -23,7 +23,7 @@ Valkyr führt eine große, durchsuchbare Liste mit den Spielen aus den Quellen, 
 
 *Die Screenshots verwenden erfundene Spieltitel und leere Platzhalterdateien und zeigen die App auf Englisch.*
 
-**Neueste Version: [7.8.0](https://github.com/Tufein/Valkyr/releases/tag/v7.8.0)** (Android-Build 86).
+**Neueste Version: [7.9.0](https://github.com/Tufein/Valkyr/releases/tag/v7.9.0)** (Android-Build 87).
 
 Bis 3.9.0 hieß die App Dogmatix+. Valkyr 6.0.0 hat eine eigene App-ID und wird daher neben der alten App installiert: Nutze *Einstellungen → Sichern* in der alten App und *Sicherung wiederherstellen* in Valkyr und entferne danach die alte App.
 
@@ -48,7 +48,7 @@ Du brauchst **Android 10 oder neuer**. Die App ist nicht bei Google Play erhält
 
 ### Spiele finden
 - **Eine Liste** mit den Spielen aus allen Quellen: Webverzeichnisse, direkte Links, Torrents und Magnet-Links sowie dein RomM-Server.
-- **Suche, die Fehler verzeiht** (Akzente, Bindestriche, doppelte Buchstaben), mit letzten Suchen, **Überrasch mich** und **Mehr davon**. **Alles durchsuchen** findet auch Einstellungen, Werkzeuge und Bildschirme. Die Suche startet erst nach einer kurzen Tipppause.
+- **Suche, die Fehler verzeiht** (Akzente, Bindestriche, doppelte Buchstaben), mit letzten Suchen, **Überrasch mich** und **Mehr davon**. **Alles durchsuchen** findet auch Einstellungen, Werkzeuge und Bildschirme. Die Suche startet erst nach einer kurzen Tipppause. Jede Vorschlagskarte bei „Ähnliche Spiele“ nennt ihren Grund.
 - **Filtern** nach Konsole, Region, Sprache, Typ, Genre, Jahrzehnt und *Neu*; **sortieren** nach Name, Größe oder Neuestem. Ein grünes **✓** zeigt, was du schon hast.
 - **Eine Seite für jedes Spiel**: Bild, Herunterladen oder Spielen, die beste Version, Favorit, Sammlungen, Teilen, Notizen, Screenshots und Handbücher sowie ein Tab *Versionen*, der erklärt, wie jede Version bewertet wird. Die Spieleseite nennt den Anbieter des Covers.
 - **Cover zuerst**: Home startet mit einer Kachel pro Konsole (ihre Spiele und wie viele auf dem Gerät sind, mit Balken), oben eine Karte Weiterspielen, und die Regale voller großer Cover sind einen Tipp entfernt in der Ansichtswahl; die Navigation liegt in einer Leiste unten oder, auf einem Handheld, in einer schmalen Seitenleiste mit Spiele, Downloads, Quellen und Mehr. Die Spielseite beginnt mit einem großen Cover und einer großen Schaltfläche Spielen oder Download.

@@ -23,7 +23,7 @@ Valkyr houdt één grote, doorzoekbare lijst bij van de games uit de bronnen die
 
 *De screenshots gebruiken verzonnen gametitels en lege dummybestanden en tonen de app in het Engels.*
 
-**Laatste release: [7.8.0](https://github.com/Tufein/Valkyr/releases/tag/v7.8.0)** (Android build 86).
+**Laatste release: [7.9.0](https://github.com/Tufein/Valkyr/releases/tag/v7.9.0)** (Android build 87).
 
 Tot en met 3.9.0 heette de app Dogmatix+. Valkyr 6.0.0 heeft een eigen app-id en installeert dus naast de oude app: gebruik *Instellingen → Back-up maken* in de oude app en *Back-up terugzetten* in Valkyr, en verwijder daarna de oude app.
 
@@ -48,7 +48,7 @@ Je hebt **Android 10 of nieuwer** nodig. De app staat niet in Google Play.
 
 ### Games vinden
 - **Eén lijst** met de games van al je bronnen: webmappen, directe links, torrents en magnetlinks, en je RomM-server.
-- **Zoeken dat fouten vergeeft** (accenten, streepjes, dubbele letters), met recente zoekopdrachten, **Verras me** en **Meer zoals dit**. **Alles doorzoeken** vindt ook instellingen, hulpmiddelen en schermen. Het zoeken start pas na een korte pauze in het typen.
+- **Zoeken dat fouten vergeeft** (accenten, streepjes, dubbele letters), met recente zoekopdrachten, **Verras me** en **Meer zoals dit**. **Alles doorzoeken** vindt ook instellingen, hulpmiddelen en schermen. Het zoeken start pas na een korte pauze in het typen. Elke suggestie bij “Meer zoals dit” zegt waarom ze is gekozen.
 - **Filter** op console, regio, taal, type, genre, decennium en *Nieuw*; **sorteer** op naam, grootte of nieuwste. Een groen **✓** toont wat je al hebt.
 - **Een pagina voor elke game**: afbeelding, Downloaden of Spelen, de beste versie, favoriet, collecties, delen, notities, schermafbeeldingen en handleidingen, en een tabblad *Versies* dat uitlegt hoe elke versie scoort. De gamepagina noemt de aanbieder van de cover.
 - **Covers eerst**: Home opent met een tegel per console (de games en hoeveel er op het apparaat staan, met een balk), bovenaan een kaart Verder spelen, en de planken vol grote covers een tik verderop in de weergavekeuze; de navigatie zit in een balk onderaan, of een smalle zijbalk op een handheld, met Games, Downloads, Bronnen en Meer. De spelpagina begint met een grote cover en één grote knop Spelen of Download.

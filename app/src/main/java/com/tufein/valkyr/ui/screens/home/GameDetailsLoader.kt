@@ -79,14 +79,14 @@ class GameDetailsLoader @Inject constructor(
             }
         }.getOrDefault(LibraryDiscovery.Index.EMPTY)
         // "More like this" from what is cached: shown before the (slower) online lookup returns.
-        val similar = similarTo(item, null, discover)
-        if (similar.isNotEmpty()) update { it.copy(similar = similar) }
+        val (similar, why) = similarTo(item, null, discover)
+        if (similar.isNotEmpty()) update { it.copy(similar = similar, similarWhy = why) }
         val found = metadataService.lookup(item.file.name, item.file.consoleId, item.file.fileName)
         update { it.copy(loading = false, details = found) }
         // The lookup may have brought genres / developer the first pass did not have.
         if (found != null && (found.genres.isNotEmpty() || found.developer.isNotBlank())) {
-            val better = similarTo(item, found, discover)
-            if (better.isNotEmpty()) update { it.copy(similar = better) }
+            val (better, betterWhy) = similarTo(item, found, discover)
+            if (better.isNotEmpty()) update { it.copy(similar = better, similarWhy = betterWhy) }
         }
     }
 
@@ -108,7 +108,7 @@ class GameDetailsLoader @Inject constructor(
         item: DownloadableFileWithTags,
         extra: GameDetails?,
         index: LibraryDiscovery.Index
-    ): List<DownloadableFileWithTags> = runCatching {
+    ): Pair<List<DownloadableFileWithTags>, Map<Long, SimilarGames.Why>> = runCatching {
         withContext(Dispatchers.Default) {
             val file = item.file
             val own = index.metaFor(file.consoleId, file.name)
@@ -135,9 +135,11 @@ class GameDetailsLoader @Inject constructor(
                 SimilarGames.Candidate(it.file.id, it.file.consoleId, it.file.name, meta?.genres.orEmpty(), meta?.developer.orEmpty())
             }
             val restrictions = profiles.current()
-            SimilarGames.rank(target, candidates, SIMILAR_LIMIT).mapNotNull { pool[it.id] }.filter { restrictions.allows(it.file.consoleId, it.tags) }
+            val ranked = SimilarGames.rank(target, candidates, SIMILAR_LIMIT)
+            val why = ranked.mapNotNull { c -> SimilarGames.reasons(target, c).firstOrNull()?.let { c.id to it } }.toMap()
+            ranked.mapNotNull { pool[it.id] }.filter { restrictions.allows(it.file.consoleId, it.tags) } to why
         }
-    }.getOrDefault(emptyList())
+    }.getOrDefault(emptyList<DownloadableFileWithTags>() to emptyMap())
 
     private companion object {
         const val SIMILAR_LIMIT = 6

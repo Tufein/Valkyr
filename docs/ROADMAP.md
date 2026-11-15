@@ -4,7 +4,7 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 7.8.0** (Android build 86). The core loop is complete — find a game, download it into
+**Now: 7.9.0** (Android build 87). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
 libraries), and finishing what 7.0 and 7.1 started.
@@ -135,13 +135,17 @@ the provider line on every catalogue game.
 *Done when* every catalogue names its provider on the game page and a source that failed last
 week is visible before it fails again. Tickets: **[plans/7.8.md](plans/7.8.md)**.
 
-## 7.9 — Series and discovery
+## 7.9 — Series and discovery (shipped in 7.9.0)
 
 - **Series grouping** as an optional view on top of *Group versions*: all *Mega Man* games as
   one shelf, without folding regional copies into it.
 - **Better "More like this"**: from series, genres and what you actually play, always saying
   why a game was picked.
 - **Search that finds a series by name** even when the games do not share a title.
+
+Shipped: every *More like this* card on the game page says why it was picked. Still open, because
+they need a stored series key and a new view to be checked on a real library: series grouping and
+search that finds a series by name.
 
 *Done when* grouping is off by default, explains what it folded, and can be undone in one tap.
 Tickets: **[plans/7.9.md](plans/7.9.md)**.

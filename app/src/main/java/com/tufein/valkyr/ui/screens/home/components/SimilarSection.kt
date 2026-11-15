@@ -28,6 +28,7 @@ import com.tufein.valkyr.ui.components.focusRing
 import com.tufein.valkyr.ui.components.rememberFocusSource
 import com.tufein.valkyr.ui.components.stripExtension
 import com.tufein.valkyr.util.ConsoleFormatter
+import com.tufein.valkyr.util.SimilarGames
 
 /**
  * "More like this" in the details card: a row of cover cards (D-pad left / right, A opens that game's
@@ -37,7 +38,8 @@ import com.tufein.valkyr.util.ConsoleFormatter
 fun SimilarSection(
     items: List<DownloadableFileWithTags>,
     onOpen: (DownloadableFileWithTags) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    why: Map<Long, SimilarGames.Why> = emptyMap()
 ) {
     if (items.isEmpty()) return
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -46,13 +48,13 @@ fun SimilarSection(
             modifier = Modifier.horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            items.forEach { SimilarCard(it) { onOpen(it) } }
+            items.forEach { SimilarCard(it, why[it.file.id]) { onOpen(it) } }
         }
     }
 }
 
 @Composable
-private fun SimilarCard(item: DownloadableFileWithTags, onClick: () -> Unit) {
+private fun SimilarCard(item: DownloadableFileWithTags, why: SimilarGames.Why?, onClick: () -> Unit) {
     val source = rememberFocusSource()
     val file = item.file
     val title = stripExtension(file.name)
@@ -88,5 +90,21 @@ private fun SimilarCard(item: DownloadableFileWithTags, onClick: () -> Unit) {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             maxLines = 1
         )
+        why?.let {
+            Text(
+                stringResource(
+                    when (it) {
+                        SimilarGames.Why.SAME_SERIES -> R.string.disc79_why_series
+                        SimilarGames.Why.SAME_DEVELOPER -> R.string.disc79_why_developer
+                        SimilarGames.Why.SHARED_GENRE -> R.string.disc79_why_genre
+                        SimilarGames.Why.SAME_CONSOLE -> R.string.disc79_why_console
+                    }
+                ),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.primary,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }

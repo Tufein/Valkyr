@@ -23,7 +23,7 @@ Valkyr rassemble les jeux des sources que *vous* ajoutez dans une seule grande l
 
 *Les captures d’écran utilisent des titres de jeux inventés et des fichiers vides de substitution, et montrent l’application en anglais.*
 
-**Dernière version : [7.8.0](https://github.com/Tufein/Valkyr/releases/tag/v7.8.0)** (build Android 86).
+**Dernière version : [7.9.0](https://github.com/Tufein/Valkyr/releases/tag/v7.9.0)** (build Android 87).
 
 Jusqu’à la 3.9.0, l’application s’appelait Dogmatix+. Valkyr 6.0.0 a son propre identifiant d’application et s’installe donc à côté de l’ancienne : utilisez *Réglages → Sauvegarder* dans l’ancienne appli et *Restaurer une sauvegarde* dans Valkyr, puis supprimez l’ancienne.
 
@@ -48,7 +48,7 @@ Il vous faut **Android 10 ou plus récent**. L’application n’est pas sur Goo
 
 ### Trouver des jeux
 - **Une seule liste** avec les jeux de toutes vos sources : répertoires web, liens directs, torrents et liens magnet, et votre serveur RomM.
-- **Une recherche qui pardonne les fautes** (accents, tirets, lettres doublées), avec les recherches récentes, **Surprenez-moi** et **Plus comme celui-ci**. **Tout rechercher** trouve aussi les réglages, outils et écrans. La recherche attend une courte pause dans la saisie.
+- **Une recherche qui pardonne les fautes** (accents, tirets, lettres doublées), avec les recherches récentes, **Surprenez-moi** et **Plus comme celui-ci**. **Tout rechercher** trouve aussi les réglages, outils et écrans. La recherche attend une courte pause dans la saisie. Chaque suggestion « Dans le même esprit » indique pourquoi elle a été choisie.
 - **Filtrer** par console, région, langue, type, genre, décennie et *Nouveau* ; **trier** par nom, taille ou plus récent. Un **✓** vert marque ce que vous avez déjà.
 - **Une page par jeu** : visuel, Télécharger ou Jouer, la meilleure version, favori, collections, partage, notes, captures et manuels, et un onglet *Versions* qui explique comment chaque version est notée. La page du jeu nomme le fournisseur de la jaquette.
 - **Les jaquettes d’abord** : l’accueil s’ouvre sur une tuile par console (ses jeux et combien sont sur l’appareil, avec une barre), une carte Continuer à jouer en haut, et les étagères de grandes jaquettes à une touche dans le sélecteur de vue ; la navigation est dans une barre en bas, ou une barre latérale fine sur une console portable, avec Jeux, Téléchargements, Sources et Plus. La page d’un jeu commence par une grande jaquette et un grand bouton Jouer ou Télécharger.

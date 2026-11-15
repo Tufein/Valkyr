@@ -55,4 +55,19 @@ class SimilarGamesTest {
         assertEquals(3, SimilarGames.rank(target, pool, limit = 3).size)
         assertTrue(SimilarGames.rank(target, emptyList()).isEmpty())
     }
+
+    @Test fun `every ranked game carries a reason and the series comes first`() {
+        val target = SimilarGames.Candidate(1, "snes", "Super Mario World (USA)", setOf("platform"), "Nintendo")
+        val pool = listOf(
+            SimilarGames.Candidate(2, "snes", "Super Mario Kart (USA)", setOf("racing"), "Nintendo"),
+            SimilarGames.Candidate(3, "gba", "Wario Land 4 (USA)", setOf("platform"), "Nintendo"),
+            SimilarGames.Candidate(4, "snes", "Yoshi Island (USA)", setOf("platform"), "Other")
+        )
+        val ranked = SimilarGames.rank(target, pool)
+        assertTrue(ranked.isNotEmpty())
+        ranked.forEach { assertTrue(SimilarGames.reasons(target, it).isNotEmpty()) }
+        assertEquals(SimilarGames.Why.SAME_SERIES, SimilarGames.reasons(target, pool[0]).first())
+        assertEquals(listOf(SimilarGames.Why.SAME_DEVELOPER, SimilarGames.Why.SHARED_GENRE), SimilarGames.reasons(target, pool[1]))
+        assertEquals(listOf(SimilarGames.Why.SHARED_GENRE, SimilarGames.Why.SAME_CONSOLE), SimilarGames.reasons(target, pool[2]))
+    }
 }

@@ -23,7 +23,7 @@ Valkyr mantiene una gran lista, con buscador, de los juegos de las fuentes que *
 
 *Las capturas de pantalla usan títulos de juegos inventados y archivos vacíos de relleno. Las capturas muestran la app en inglés.*
 
-**Última versión: [7.8.0](https://github.com/Tufein/Valkyr/releases/tag/v7.8.0)** (build de Android 86).
+**Última versión: [7.9.0](https://github.com/Tufein/Valkyr/releases/tag/v7.9.0)** (build de Android 87).
 
 Hasta la 3.9.0 la app se llamaba Dogmatix+. Valkyr 6.0.0 tiene su propio ID de aplicación y se instala junto a la app antigua: usa *Ajustes → Copia de seguridad* en la app antigua y *Restaurar copia* en Valkyr, y luego elimina la app antigua.
 
@@ -48,7 +48,7 @@ Necesitas **Android 10 o más reciente**. La app no está en Google Play.
 
 ### Encontrar juegos
 - **Una sola lista** con los juegos de todas tus fuentes: directorios web, enlaces directos, torrents y enlaces magnet, y tu servidor RomM.
-- **Una búsqueda que perdona errores** (acentos, guiones, letras repetidas), con búsquedas recientes, **Sorpréndeme** y **Más como este**. **Buscar todo** también encuentra ajustes, herramientas y pantallas. La búsqueda espera a una breve pausa al escribir.
+- **Una búsqueda que perdona errores** (acentos, guiones, letras repetidas), con búsquedas recientes, **Sorpréndeme** y **Más como este**. **Buscar todo** también encuentra ajustes, herramientas y pantallas. La búsqueda espera a una breve pausa al escribir. Cada sugerencia de «Más como este» indica por qué se eligió.
 - **Filtra** por consola, región, idioma, tipo, género, década y *Nuevo*; **ordena** por nombre, tamaño o novedad. Un **✓** verde marca lo que ya tienes.
 - **Una página para cada juego**: imagen, Descargar o Jugar, la mejor versión, favorito, colecciones, compartir, notas, capturas y manuales, y una pestaña *Versiones* que explica cómo puntúa cada versión. La página del juego nombra al proveedor de la carátula.
 - **Primero las carátulas**: Inicio se abre con un mosaico por consola (sus juegos y cuántos hay en el dispositivo, con una barra), arriba una tarjeta de seguir jugando, y los estantes de carátulas grandes a un toque en el selector de vista; la navegación está en una barra inferior, o en una barra lateral estrecha en una portátil, con Juegos, Descargas, Fuentes y Más. La página del juego empieza con una carátula grande y un botón grande de Jugar o Descargar.

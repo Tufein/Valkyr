@@ -1026,6 +1026,8 @@ data class DetailsState(
     val achievements: Pair<RaGame, Boolean>? = null,
     /** 6.0: "More like this", ranked from local data; empty hides the section. */
     val similar: List<DownloadableFileWithTags> = emptyList(),
+    /** 7.9: why each suggestion in [similar] was picked (by file id). */
+    val similarWhy: Map<Long, com.tufein.valkyr.util.SimilarGames.Why> = emptyMap(),
     /** 8.0: every version of the game the library lists (this one included), for the game page. */
     val versions: List<DownloadableFileWithTags> = emptyList(),
     /** 8.0: file name of the version that suits the user best (null with one version or no pick). */

@@ -50,6 +50,19 @@ object SimilarGames {
         return s
     }
 
+    /** 7.9: why a game is suggested, strongest first. */
+    enum class Why { SAME_SERIES, SAME_DEVELOPER, SHARED_GENRE, SAME_CONSOLE }
+
+    /** The reasons [other] matches [target], strongest first; empty when nothing matches. */
+    fun reasons(target: Candidate, other: Candidate): List<Why> = buildList {
+        val ow = seriesWords(other.name).toSet()
+        if (seriesWords(target.name).any { it in ow }) add(Why.SAME_SERIES)
+        val dev = target.developer.trim()
+        if (dev.isNotEmpty() && dev.equals(other.developer.trim(), ignoreCase = true)) add(Why.SAME_DEVELOPER)
+        if (target.genres.any { it in other.genres }) add(Why.SHARED_GENRE)
+        if (target.consoleId == other.consoleId) add(Why.SAME_CONSOLE)
+    }
+
     /** Minimum score worth showing: a genre + console match alone (3) is too loose, family or developer + genre is not. */
     const val MIN_SCORE = 4
 
