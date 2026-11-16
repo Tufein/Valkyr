@@ -63,6 +63,22 @@ object CloudBackupEngine {
     }
 
     /**
+     * 8.2: the same check for an S3 bucket: there is nothing to discover and no folder to create (a
+     * "folder" is a key prefix), so the connection is proven by writing, reading back and deleting
+     * one small object under [folder].
+     */
+    fun connectS3(store: DavStore, target: S3Target, folder: String): Connection {
+        val base = target.baseUrl
+        val root = WebDavPaths.folderUrl(base, folder) ?: throw DavException(DavProblem.BAD_URL)
+        val probe = WebDavPaths.child(root, PROBE_NAME)
+        store.put(probe, "ok".toByteArray(), "text/plain")
+        val back = store.get(probe, 64)
+        runCatching { store.delete(probe) }
+        if (back == null || !back.bytes.contentEquals("ok".toByteArray())) throw DavException(DavProblem.BAD_RESPONSE, 0, "the bucket did not return what was written")
+        return Connection(base, root, false)
+    }
+
+    /**
      * Sends [sealed] (a [BackupCrypto.seal]ed backup) as this device's backup of [now], checks the
      * server lists it with the right size, then deletes this device's backups beyond the newest
      * [keep] (others' are never touched; a failed delete is left for next time). The file is

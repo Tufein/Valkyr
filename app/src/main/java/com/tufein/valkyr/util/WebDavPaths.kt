@@ -19,6 +19,8 @@ object WebDavPaths {
      * query or fragment, ending in `/`. Null when it cannot be an http(s) address.
      */
     fun normalizeServer(input: String): String? {
+        // 8.2: an S3 bucket (s3://host/bucket) is addressed path-style over http(s), like any other server here.
+        if (S3Target.isS3(input)) return S3Target.parse(input)?.baseUrl
         var s = input.trim()
         if (s.isEmpty() || s.any { it.isWhitespace() && it != ' ' }) return null
         if (!s.contains("://")) s = "https://$s"

@@ -11,7 +11,7 @@
     <!-- Server -->
     <string name="dav_section_server">Serveur</string>
     <string name="dav_server">Adresse du serveur</string>
-    <string name="dav_server_dialog_hint">L\'adresse de votre serveur WebDAV, par exemple https://cloud.exemple.fr. Nextcloud et ownCloud sont reconnus : Valkyr trouve lui-même l\'adresse des fichiers (…/remote.php/dav/files/votre-nom/). Un lien collé depuis l\'interface web fonctionne aussi.</string>
+    <string name="dav_server_dialog_hint">L\'adresse de votre serveur WebDAV, par exemple https://cloud.exemple.fr. Nextcloud et ownCloud sont reconnus : Valkyr trouve lui-même l\'adresse des fichiers (…/remote.php/dav/files/votre-nom/). Un lien collé depuis l\'interface web fonctionne aussi. Pour un bucket compatible S3 (Amazon S3, MinIO, Backblaze B2, Wasabi, Cloudflare R2), écrivez s3://hôte/bucket, ou s3+http://hôte:9000/bucket pour du http non chiffré sur votre propre réseau, avec éventuellement ?region=eu-west-1. Le nom d\'utilisateur est alors la clé d\'accès, le mot de passe est la clé secrète et le dossier est le préfixe dans le bucket.</string>
     <string name="dav_user">Nom d\'utilisateur</string>
     <string name="dav_user_dialog_hint">Le nom du compte sur le serveur.</string>
     <string name="dav_password">Mot de passe d\'application</string>

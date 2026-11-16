@@ -9,6 +9,7 @@ import com.tufein.valkyr.util.CloudNotConfiguredException
 import com.tufein.valkyr.util.DavException
 import com.tufein.valkyr.util.DavProblem
 import com.tufein.valkyr.util.DavStore
+import com.tufein.valkyr.util.S3Target
 import com.tufein.valkyr.util.WebDavPaths
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +44,9 @@ class CloudConnection @Inject constructor(
         if (!tested.isConfigured) throw CloudNotConfiguredException()
         val now = System.currentTimeMillis()
         try {
-            val connection = CloudBackupEngine.connect(WebDavClient(tested.user, tested.password, tested.trustFingerprint), tested.server, tested.user, tested.folder)
+            val s3 = S3Target.parse(tested.server)
+            val connection = if (s3 != null) CloudBackupEngine.connectS3(clientFor(tested), s3, tested.folder)
+            else CloudBackupEngine.connect(WebDavClient(tested.user, tested.password, tested.trustFingerprint), tested.server, tested.user, tested.folder)
             var saved = tested
             if (connection.serverUrl != WebDavPaths.normalizeServer(tested.server)) {
                 settings.setServer(connection.serverUrl)
@@ -61,6 +64,11 @@ class CloudConnection @Inject constructor(
         }
     }
 
+    /** The store for [config]: an S3 bucket when the address is `s3://…` (access key = user, secret key = password), otherwise WebDAV. */
+    private fun clientFor(config: CloudConfig): DavStore =
+        S3Target.parse(config.server)?.let { S3Client(it, config.user.trim(), config.password) }
+            ?: WebDavClient(config.user, config.password, config.trustFingerprint)
+
     /** A session for the saved settings; runs [test] first when they were not tested as they are now. */
     suspend fun open(): Session = withContext(Dispatchers.IO) {
         val config = settings.config.first()
@@ -70,10 +78,10 @@ class CloudConnection @Inject constructor(
         if (tested) {
             val server = WebDavPaths.normalizeServer(config.server) ?: throw DavException(DavProblem.BAD_URL)
             val root = config.rootUrl ?: throw DavException(DavProblem.BAD_URL)
-            Session(WebDavClient(config.user, config.password, config.trustFingerprint), server, root)
+            Session(clientFor(config), server, root)
         } else {
             val connection = test(config)
-            Session(WebDavClient(config.user, config.password, config.trustFingerprint), connection.serverUrl, connection.rootUrl)
+            Session(clientFor(config), connection.serverUrl, connection.rootUrl)
         }
     }
 

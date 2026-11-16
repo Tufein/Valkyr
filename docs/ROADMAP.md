@@ -4,7 +4,7 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 8.1.0** (Android build 89). The core loop is complete — find a game, download it into
+**Now: 8.2.0** (Android build 90). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
 libraries), and finishing what 7.0 and 7.1 started.
@@ -63,17 +63,19 @@ Still open from this plan: a test launch that reports what the emulator said, wr
 `.m3u` from the setup steps, and the new-handheld checklist turning green from the same plan.
 Tickets: **[plans/7.4.md](plans/7.4.md)**.
 
-## 7.5 — More places to keep your data (partly shipped in 7.5.0)
+## 7.5 — More places to keep your data (partly shipped in 7.5.0, 8.2.0)
 
 Shipped: the *never delete on the remote side* choice (*Backups to keep → All*) and retries for
-a failed automatic cloud backup with growing waits that skip final problems. Backups are
-verified when they are restored: the encryption authenticates the file, so a damaged copy is
-refused before anything local is replaced.
+a failed automatic cloud backup with growing waits that skip final problems (7.5.0); and in 8.2.0
+**S3-compatible storage** (Amazon S3, MinIO, Backblaze B2, Wasabi, Cloudflare R2) as the cloud
+target, behind the same interface WebDAV uses, so backups, device sync, the shared wishlist and
+game transfer all work on it. It is written as `s3://host/bucket` in the server field of the one
+cloud connection. Backups are verified when they are restored: the encryption authenticates the
+file, so a damaged copy is refused before anything local is replaced.
 
-Still open, because each needs a new client library or a protocol written by hand and a real
-server to prove it: **SMB and SFTP** (a NAS without WebDAV), **S3-compatible storage**, and the
-**one Cloud hub** listing every target once there is more than one. Tickets:
-**[plans/7.5.md](plans/7.5.md)**.
+Still open, because each needs a new client library and a real server to prove it: **SMB and
+SFTP** (a NAS without WebDAV), and a list of several targets at once (today there is one cloud
+connection, which is WebDAV or S3). Tickets: **[plans/7.5.md](plans/7.5.md)**.
 
 ## 7.6 — Scale (shipped in 7.6.0)
 
