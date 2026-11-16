@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="v83_progress_title">Mijn voortgang</string>
+    <string name="v83_status_playing">Bezig</string>
+    <string name="v83_status_finished">Uitgespeeld</string>
+    <string name="v83_status_completed">Helemaal voltooid</string>
+    <string name="v83_status_dropped">Gestopt</string>
+    <string name="v83_value_none">niets ingesteld</string>
+    <string name="v83_rating_label">Mijn cijfer</string>
+    <string name="v83_star_cd">%1$d van 5 sterren</string>
+    <string name="v83_progress_hint">Bewaard op deze handheld voor dit profiel en gedeeld met je andere handhelds als apparaatsync aan staat. Tik de gekozen status of ster nog eens aan om hem te wissen.</string>
+    <string name="v83_conflicts_title">Sync-conflicten</string>
+    <plurals name="v83_conflicts_pill">
+        <item quantity="one">%1$d spel om te beslissen</item>
+        <item quantity="other">%1$d spellen om te beslissen</item>
+    </plurals>
+    <string name="v83_conflicts_body">Deze spellen kregen op twee handhelds een andere status of een ander cijfer. De nieuwste wijziging is voorlopig bewaard en er ging niets verloren; kies welke blijft.</string>
+    <string name="v83_conflicts_decide">Beslissen</string>
+    <string name="v83_conflicts_dialog_hint">Je keuze gaat bij de volgende sync naar je andere handhelds.</string>
+    <string name="v83_conflicts_mine">Deze handheld: %1$s</string>
+    <string name="v83_conflicts_theirs">Andere handheld: %1$s</string>
+    <string name="v83_conflicts_keep_mine">Deze houden</string>
+    <string name="v83_conflicts_keep_theirs">De andere nemen</string>
+    <string name="v83_conflicts_close">Sluiten</string>
+</resources>

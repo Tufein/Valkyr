@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="v83_progress_title">My progress</string>
+    <string name="v83_status_playing">Playing</string>
+    <string name="v83_status_finished">Finished</string>
+    <string name="v83_status_completed">Completed</string>
+    <string name="v83_status_dropped">Dropped</string>
+    <string name="v83_value_none">nothing set</string>
+    <string name="v83_rating_label">My rating</string>
+    <string name="v83_star_cd">%1$d of 5 stars</string>
+    <string name="v83_progress_hint">Kept on this handheld for this profile, and shared with your other handhelds when device sync is on. Tap the chosen status or star again to clear it.</string>
+    <string name="v83_conflicts_title">Sync conflicts</string>
+    <plurals name="v83_conflicts_pill">
+        <item quantity="one">%1$d game to decide</item>
+        <item quantity="other">%1$d games to decide</item>
+    </plurals>
+    <string name="v83_conflicts_body">These games got a different status or rating on two handhelds. The newer change was kept for now and nothing was lost; choose which one stays.</string>
+    <string name="v83_conflicts_decide">Decide</string>
+    <string name="v83_conflicts_dialog_hint">The choice you make is sent to your other handhelds at the next sync.</string>
+    <string name="v83_conflicts_mine">This handheld: %1$s</string>
+    <string name="v83_conflicts_theirs">Other handheld: %1$s</string>
+    <string name="v83_conflicts_keep_mine">Keep this one</string>
+    <string name="v83_conflicts_keep_theirs">Use the other</string>
+    <string name="v83_conflicts_close">Close</string>
+</resources>

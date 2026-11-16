@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="v83_progress_title">Ma progression</string>
+    <string name="v83_status_playing">En cours</string>
+    <string name="v83_status_finished">Terminé</string>
+    <string name="v83_status_completed">Complété</string>
+    <string name="v83_status_dropped">Abandonné</string>
+    <string name="v83_value_none">rien de défini</string>
+    <string name="v83_rating_label">Ma note</string>
+    <string name="v83_star_cd">%1$d étoile(s) sur 5</string>
+    <string name="v83_progress_hint">Enregistré sur cette console pour ce profil, et partagé avec vos autres consoles quand la synchronisation des appareils est activée. Touchez de nouveau le statut ou l\'étoile choisis pour l\'effacer.</string>
+    <string name="v83_conflicts_title">Conflits de synchronisation</string>
+    <plurals name="v83_conflicts_pill">
+        <item quantity="one">%1$d jeu à trancher</item>
+        <item quantity="other">%1$d jeux à trancher</item>
+    </plurals>
+    <string name="v83_conflicts_body">Ces jeux ont reçu un statut ou une note différents sur deux consoles. Le changement le plus récent a été gardé pour l\'instant et rien n\'est perdu ; choisissez lequel reste.</string>
+    <string name="v83_conflicts_decide">Trancher</string>
+    <string name="v83_conflicts_dialog_hint">Votre choix est envoyé à vos autres consoles à la prochaine synchronisation.</string>
+    <string name="v83_conflicts_mine">Cette console : %1$s</string>
+    <string name="v83_conflicts_theirs">Autre console : %1$s</string>
+    <string name="v83_conflicts_keep_mine">Garder celle-ci</string>
+    <string name="v83_conflicts_keep_theirs">Prendre l\'autre</string>
+    <string name="v83_conflicts_close">Fermer</string>
+</resources>

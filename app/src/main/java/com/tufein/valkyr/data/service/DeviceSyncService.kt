@@ -19,6 +19,13 @@ import com.tufein.valkyr.data.local.entity.WishlistEntity
 import com.tufein.valkyr.util.CloudErrors
 import com.tufein.valkyr.util.CloudNotConfiguredException
 import com.tufein.valkyr.util.DeviceSyncEngine
+import com.tufein.valkyr.util.DocSyncEngine
+import com.tufein.valkyr.util.NoteDoc
+import com.tufein.valkyr.util.NotesCodec
+import com.tufein.valkyr.util.NotesSync
+import com.tufein.valkyr.util.ProgressCodec
+import com.tufein.valkyr.util.ProgressEntry
+import com.tufein.valkyr.util.ProgressSync
 import com.tufein.valkyr.util.UpNextEntry
 import com.tufein.valkyr.util.UpNextSyncEngine
 import com.tufein.valkyr.util.DeviceSyncJson
@@ -75,7 +82,9 @@ class DeviceSyncService @Inject constructor(
     private val collectionDao: CollectionDao,
     private val history: OperationHistoryService,
     private val actionLog: ActionLogService,
-    private val upNext: UpNextService
+    private val upNext: UpNextService,
+    private val progress: GameProgressService,
+    private val journal: GameJournalService
 ) {
     /** Why a background sync was asked for. */
     enum class Trigger { START, LOCAL_CHANGE, BACKGROUND, SCHEDULED }
@@ -154,6 +163,8 @@ class DeviceSyncService @Inject constructor(
             )
             val device = DeviceSyncEngine.Device(settings.deviceId(), settings.deviceName.first())
             syncUpNext(session)
+            syncProgress(session)
+            syncNotes(session)
             when (val outcome = engine.sync(device, allowMassRemoval, onlyIfLocalChanges)) {
                 is DeviceSyncEngine.Outcome.Synced -> {
                     settings.recordSync(System.currentTimeMillis(), outcome.added, outcome.removed, outcome.sent)
@@ -204,6 +215,48 @@ class DeviceSyncService @Inject constructor(
             throw e
         } catch (e: Exception) {
             Log.w(TAG, "Up next sync skipped: ${e.javaClass.simpleName}")
+        }
+    }
+
+    /**
+     * 8.3: play status and ratings of the active profile through their own document, three-way merged
+     * against what both handhelds last agreed on. Games changed on both sides are kept as conflicts
+     * (the newer value stays) for the Cloud hub to settle. Like Up next, it never fails the library sync.
+     */
+    private suspend fun syncProgress(session: CloudConnection.Session) {
+        try {
+            val (profileId, profileName, start) = progress.forSync()
+            val side = object : DocSyncEngine.Local<Map<String, ProgressEntry>, ProgressSync.Merged> {
+                override suspend fun snapshot() = progress.forSync().third.entries
+                override fun merge(mine: Map<String, ProgressEntry>, remote: Map<String, ProgressEntry>?) = ProgressSync.merge(start.base, mine, remote)
+                override fun docOf(merged: ProgressSync.Merged) = merged.entries
+                override suspend fun commit(merged: ProgressSync.Merged, mine: Map<String, ProgressEntry>) = progress.commitSync(profileId, mine, merged)
+            }
+            val outcome = DocSyncEngine(session.store, session.serverUrl, session.rootUrl, ProgressSync.fileName(profileName), side, ProgressCodec).sync()
+            if (outcome.changedHere || outcome.sent) Log.i(TAG, "Progress sync${if (outcome.changedHere) ": changed here" else ""}${if (outcome.sent) ", sent" else ""}")
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.w(TAG, "Progress sync skipped: ${e.javaClass.simpleName}")
+        }
+    }
+
+    /** 8.3: the notes of the active profile, text only; the older text of a game edited on both sides stays as a recovered note. */
+    private suspend fun syncNotes(session: CloudConnection.Session) {
+        try {
+            val (profileId, profileName, _) = progress.forSync()
+            val side = object : DocSyncEngine.Local<Map<String, NoteDoc>, Map<String, NoteDoc>> {
+                override suspend fun snapshot() = journal.notesForSync(profileId)
+                override fun merge(mine: Map<String, NoteDoc>, remote: Map<String, NoteDoc>?) = NotesSync.merge(mine, remote)
+                override fun docOf(merged: Map<String, NoteDoc>) = merged
+                override suspend fun commit(merged: Map<String, NoteDoc>, mine: Map<String, NoteDoc>) = merged != mine && journal.applyNotes(profileId, merged)
+            }
+            val outcome = DocSyncEngine(session.store, session.serverUrl, session.rootUrl, NotesSync.fileName(profileName), side, NotesCodec).sync()
+            if (outcome.changedHere || outcome.sent) Log.i(TAG, "Notes sync${if (outcome.changedHere) ": changed here" else ""}${if (outcome.sent) ", sent" else ""}")
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.w(TAG, "Notes sync skipped: ${e.javaClass.simpleName}")
         }
     }
 

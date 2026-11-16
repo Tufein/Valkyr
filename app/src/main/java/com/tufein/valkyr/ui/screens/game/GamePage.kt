@@ -715,6 +715,7 @@ private fun TabContent(
                 }
                 Tab.VERSIONS -> Versions(state, ownedOf, downloadingOf, onDownload, viewModel, onOpenVersionPreference)
                 Tab.PROGRESS -> {
+                    MyProgressSection(rom.consoleId, rom.fileName)
                     AchievementsSection(consoleId = rom.consoleId, fileName = rom.fileName, title = rom.name, match = state.achievements)
                     CloudSavesSection(consoleId = rom.consoleId, fileName = rom.fileName)
                     Text(stringResource(R.string.page8_progress_hint), style = MaterialTheme.typography.bodySmall, color = scheme.onSurfaceVariant)

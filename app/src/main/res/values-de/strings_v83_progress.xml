@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="v83_progress_title">Mein Fortschritt</string>
+    <string name="v83_status_playing">Spiele ich</string>
+    <string name="v83_status_finished">Durchgespielt</string>
+    <string name="v83_status_completed">Komplett abgeschlossen</string>
+    <string name="v83_status_dropped">Abgebrochen</string>
+    <string name="v83_value_none">nichts gesetzt</string>
+    <string name="v83_rating_label">Meine Wertung</string>
+    <string name="v83_star_cd">%1$d von 5 Sternen</string>
+    <string name="v83_progress_hint">Wird für dieses Profil auf diesem Handheld gespeichert und mit deinen anderen Handhelds geteilt, wenn der Geräteabgleich an ist. Tippe den gewählten Status oder Stern erneut an, um ihn zu löschen.</string>
+    <string name="v83_conflicts_title">Abgleich-Konflikte</string>
+    <plurals name="v83_conflicts_pill">
+        <item quantity="one">%1$d Spiel zu entscheiden</item>
+        <item quantity="other">%1$d Spiele zu entscheiden</item>
+    </plurals>
+    <string name="v83_conflicts_body">Diese Spiele haben auf zwei Handhelds einen unterschiedlichen Status oder eine andere Wertung bekommen. Vorerst wurde die neuere Änderung behalten, nichts ging verloren; entscheide, welche bleibt.</string>
+    <string name="v83_conflicts_decide">Entscheiden</string>
+    <string name="v83_conflicts_dialog_hint">Deine Wahl wird beim nächsten Abgleich an deine anderen Handhelds gesendet.</string>
+    <string name="v83_conflicts_mine">Dieses Handheld: %1$s</string>
+    <string name="v83_conflicts_theirs">Anderes Handheld: %1$s</string>
+    <string name="v83_conflicts_keep_mine">Dieses behalten</string>
+    <string name="v83_conflicts_keep_theirs">Das andere nehmen</string>
+    <string name="v83_conflicts_close">Schließen</string>
+</resources>

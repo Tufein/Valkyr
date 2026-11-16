@@ -13,6 +13,8 @@ import com.tufein.valkyr.util.JournalAttachment
 import com.tufein.valkyr.util.JournalAttachmentKind
 import com.tufein.valkyr.util.JournalEntry
 import com.tufein.valkyr.util.JournalKey
+import com.tufein.valkyr.util.NoteDoc
+import com.tufein.valkyr.util.UpNext
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -115,6 +117,43 @@ class GameJournalService @Inject constructor(
     }
 
     /** Export fails loudly on an unreadable journal; notes never silently disappear from a backup. */
+    /** 8.3: the notes of [profileId] as shared documents (text only: attachments are references to files on this device). */
+    suspend fun notesForSync(profileId: String): Map<String, NoteDoc> = withContext(Dispatchers.IO) {
+        lock.withLock {
+            store.read().filter { it.key.profileId == profileId && (it.note.isNotBlank() || it.recoveredNotes.isNotEmpty()) }.associate {
+                val key = UpNext.key(it.key.consoleId, it.key.fileName)
+                key to NoteDoc(key, it.note, (listOf(it.note) + it.recoveredNotes).filter { t -> t.isNotBlank() }.toSet(), it.modifiedAt)
+            }
+        }
+    }
+
+    /**
+     * 8.3: saves what a notes sync decided for [profileId]: the note of the newer edit is shown, every
+     * other text stays as a recovered note, and attachments are never touched. True when something changed here.
+     */
+    suspend fun applyNotes(profileId: String, merged: Map<String, NoteDoc>): Boolean = withContext(Dispatchers.IO) {
+        lock.withLock {
+            val current = store.read()
+            val byKey = current.associateBy { it.key }.toMutableMap()
+            var changed = false
+            for (doc in merged.values) {
+                val console = doc.key.substringBefore('|'); val file = doc.key.substringAfter('|')
+                val key = JournalKey(profileId, console, file)
+                val existing = byKey[key]
+                val recovered = doc.texts.filter { it != doc.current && it.isNotBlank() }.take(4)
+                val next = (existing ?: JournalEntry(key)).copy(note = doc.current, recoveredNotes = recovered, modifiedAt = maxOf(existing?.modifiedAt ?: 0L, doc.changedAt))
+                if (existing?.note == next.note && existing.recoveredNotes == next.recoveredNotes) continue
+                runCatching { GameJournal.validate(next) }.onSuccess { byKey[key] = next; changed = true }
+            }
+            if (!changed) return@withLock false
+            val saved = runCatching { GameJournal.encode(byKey.values.toList()) }.isSuccess
+            if (!saved) return@withLock false
+            store.write(byKey.values.toList())
+            _revision.value++
+            true
+        }
+    }
+
     suspend fun export(): JsonObject = withContext(Dispatchers.IO) { lock.withLock { GameJournal.encode(store.read()) } }
     fun validateRestore(element: JsonElement): List<JournalEntry> = GameJournal.decode(element, importing = true)
     suspend fun preflightRestore(incoming: List<JournalEntry>) = withContext(Dispatchers.IO) { lock.withLock { GameJournal.merge(store.read(), incoming); Unit } }

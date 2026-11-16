@@ -23,6 +23,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRequester
@@ -43,6 +46,7 @@ import com.tufein.valkyr.data.service.RommErrorKind
 import com.tufein.valkyr.data.service.RommServerInfo
 import com.tufein.valkyr.data.service.SaveSyncState
 import com.tufein.valkyr.ui.components.ActionPill
+import com.tufein.valkyr.ui.components.closeOnGamepadB
 import com.tufein.valkyr.ui.components.ActionTone
 import com.tufein.valkyr.ui.components.IconTile
 import com.tufein.valkyr.ui.components.MeterBar
@@ -79,6 +83,10 @@ fun CloudScreen(navController: NavController, viewModel: CloudViewModel = hiltVi
     val saveCard by viewModel.saveSyncCard.collectAsStateWithLifecycle()
     val debrid by viewModel.debrid.collectAsStateWithLifecycle()
     val overall by viewModel.overall.collectAsStateWithLifecycle()
+    val conflicts by viewModel.syncConflicts.collectAsStateWithLifecycle()
+    var deciding by remember { mutableStateOf(false) }
+    if (deciding && conflicts.isEmpty()) deciding = false
+    if (deciding) ConflictsDialog(conflicts, onResolve = viewModel::resolveConflict, onClose = { deciding = false })
     val dav by viewModel.dav.collectAsStateWithLifecycle()
     val landscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
     val firstFocus = rememberInitialFocus()
@@ -102,6 +110,7 @@ fun CloudScreen(navController: NavController, viewModel: CloudViewModel = hiltVi
         } else {
             add { m -> DavPitchCard(m) { open(NavRoutes.CloudBackup) } }
         }
+        if (conflicts.isNotEmpty()) add { m -> ConflictsCard(conflicts.size, m) { deciding = true } }
         add { m ->
             RaUserSummaryCard(
                 modifier = m,
@@ -201,6 +210,62 @@ private fun Pitch(text: String) {
 @Composable
 private fun FactLine(text: String, color: Color = MaterialTheme.colorScheme.onSurfaceVariant) {
     Text(text, style = MaterialTheme.typography.bodySmall.tabular(), color = color)
+}
+
+// ---- Sync conflicts (8.3) ---------------------------------------------------------------------------
+
+@Composable
+private fun ConflictsCard(count: Int, modifier: Modifier, onDecide: () -> Unit) {
+    CloudCard(
+        icon = R.drawable.ic_warning,
+        title = stringResource(R.string.v83_conflicts_title),
+        modifier = modifier,
+        tone = PanelTone.Normal,
+        pills = { Pill(pluralStringResource(R.plurals.v83_conflicts_pill, count, count), tone = PillTone.Warning, icon = R.drawable.ic_warning) },
+        actions = { ActionPill(stringResource(R.string.v83_conflicts_decide), onDecide, icon = R.drawable.ic_tune, tone = ActionTone.Accent) }
+    ) {
+        Pitch(stringResource(R.string.v83_conflicts_body))
+    }
+}
+
+/** One row per game: what this handheld says, what the other says, and which one to keep. Nothing is lost until a choice is made. */
+@Composable
+private fun ConflictsDialog(
+    conflicts: List<com.tufein.valkyr.util.ProgressConflict>,
+    onResolve: (String, Boolean) -> Unit,
+    onClose: () -> Unit
+) {
+    androidx.compose.material3.AlertDialog(
+        modifier = Modifier.closeOnGamepadB(onClose),
+        onDismissRequest = onClose,
+        title = { Text(stringResource(R.string.v83_conflicts_title)) },
+        text = {
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                Text(stringResource(R.string.v83_conflicts_dialog_hint), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                conflicts.forEach { c ->
+                    val console = com.tufein.valkyr.util.ConsoleFormatter.getConsoleShortName(c.key.substringBefore('|'))
+                    val title = c.key.substringAfter('|').substringBeforeLast('.')
+                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text("$title · $console", style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                        Text(stringResource(R.string.v83_conflicts_mine, progressValue(c.mine)), style = MaterialTheme.typography.bodySmall)
+                        Text(stringResource(R.string.v83_conflicts_theirs, progressValue(c.theirs)), style = MaterialTheme.typography.bodySmall)
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            com.tufein.valkyr.ui.components.DialogButton(stringResource(R.string.v83_conflicts_keep_mine), { onResolve(c.key, true) })
+                            com.tufein.valkyr.ui.components.DialogButton(stringResource(R.string.v83_conflicts_keep_theirs), { onResolve(c.key, false) })
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = { com.tufein.valkyr.ui.components.DialogButton(stringResource(R.string.v83_conflicts_close), onClose, initialFocus = rememberInitialFocus()) }
+    )
+}
+
+/** "Finished · ★★★★" or "nothing set". */
+@Composable
+private fun progressValue(e: com.tufein.valkyr.util.ProgressEntry): String {
+    val status = com.tufein.valkyr.ui.screens.game.playStatusLabel(e.status)
+    return if (e.rating > 0) "$status · " + "★".repeat(e.rating) else status
 }
 
 // ---- RomM ---------------------------------------------------------------------------------------

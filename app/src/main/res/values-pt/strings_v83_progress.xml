@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="v83_progress_title">O meu progresso</string>
+    <string name="v83_status_playing">A jogar</string>
+    <string name="v83_status_finished">Terminado</string>
+    <string name="v83_status_completed">Concluído por completo</string>
+    <string name="v83_status_dropped">Abandonado</string>
+    <string name="v83_value_none">nada definido</string>
+    <string name="v83_rating_label">A minha nota</string>
+    <string name="v83_star_cd">%1$d de 5 estrelas</string>
+    <string name="v83_progress_hint">Guardado nesta consola para este perfil e partilhado com as tuas outras consolas quando a sincronização de dispositivos está ativa. Toca de novo no estado ou na estrela escolhidos para os limpar.</string>
+    <string name="v83_conflicts_title">Conflitos de sincronização</string>
+    <plurals name="v83_conflicts_pill">
+        <item quantity="one">%1$d jogo por decidir</item>
+        <item quantity="other">%1$d jogos por decidir</item>
+    </plurals>
+    <string name="v83_conflicts_body">Estes jogos receberam um estado ou nota diferentes em duas consolas. Por agora ficou a alteração mais recente e nada se perdeu; escolhe qual fica.</string>
+    <string name="v83_conflicts_decide">Decidir</string>
+    <string name="v83_conflicts_dialog_hint">A tua escolha é enviada às tuas outras consolas na próxima sincronização.</string>
+    <string name="v83_conflicts_mine">Esta consola: %1$s</string>
+    <string name="v83_conflicts_theirs">Outra consola: %1$s</string>
+    <string name="v83_conflicts_keep_mine">Manter esta</string>
+    <string name="v83_conflicts_keep_theirs">Usar a outra</string>
+    <string name="v83_conflicts_close">Fechar</string>
+</resources>

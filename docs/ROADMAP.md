@@ -4,7 +4,7 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 8.2.0** (Android build 90). The core loop is complete — find a game, download it into
+**Now: 8.3.0** (Android build 91). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
 libraries), and finishing what 7.0 and 7.1 started.
@@ -155,7 +155,7 @@ open: a stored series column, so that search can find a series whose titles shar
 *Done when* grouping is off by default, explains what it folded, and can be undone in one tap.
 Tickets: **[plans/7.9.md](plans/7.9.md)**.
 
-## 8.0 — One library on several handhelds (shipped in 8.0.0)
+## 8.0 — One library on several handhelds (shipped in 8.0.0 and 8.3.0)
 
 Two devices can already share favourites, wishlist and collections through WebDAV, and saves
 through RomM. The rest of the library still lives on one device.
@@ -171,6 +171,14 @@ so a week offline loses nothing; the newest change of a game wins and taking a g
 not travel. Still open, because each needs a database migration or a profile format that must be
 proved on two real devices: play history, ratings and notes, profiles that travel (the Up next
 list is matched by profile name until they do), and a screen for the conflicts.
+
+Shipped in 8.3.0: a local **play status and star rating** per game and profile (no RomM needed), and
+**status, ratings and notes travelling** as their own documents next to Up next, merged three-way
+against what both handhelds last agreed on. A game changed differently on two handhelds keeps the
+newer value and is listed under *Settings → Cloud → Sync conflicts* until you choose; the choice is
+sent at the next sync. Notes keep the older text as a recovered note. Still open: play history,
+profiles that travel (with a child profile and its PIN rules), and a conflict screen for the
+library lists (favourites, wishlist, collections), which today merge as a union.
 
 *Done when* two handhelds on the same WebDAV folder show the same Up next and progress after a
 sync, and one device going offline for a week does not lose its week. Tickets:

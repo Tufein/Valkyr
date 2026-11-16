@@ -41,6 +41,7 @@ class CloudViewModel @Inject constructor(
     private val saveSync: SaveSyncService,
     private val cloudBackup: CloudBackupService,
     private val deviceSync: DeviceSyncService,
+    private val progress: com.tufein.valkyr.data.service.GameProgressService,
     settingsRepository: SettingsRepository,
     appSettings: AppSettings,
     cloudStatus: CloudStatusService,
@@ -50,6 +51,14 @@ class CloudViewModel @Inject constructor(
     /** The WebDAV cloud: encrypted backup and device sync. */
     val dav: StateFlow<DavStatus> = davStatus.status
 
+
+    /** 8.3: games whose status or rating was changed differently on two handhelds, waiting for a decision. */
+    val syncConflicts: StateFlow<List<com.tufein.valkyr.util.ProgressConflict>> = progress.conflicts
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    fun resolveConflict(key: String, keepMine: Boolean) {
+        viewModelScope.launch { progress.resolve(key, keepMine) }
+    }
 
     val rommInfo: StateFlow<RommServerInfo> = romm.info
 
