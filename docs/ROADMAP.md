@@ -7,7 +7,8 @@ bug or a request matters more, and requests are welcome as
 **Now: 8.5.0** (Android build 93). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
-libraries), and finishing what 7.0 and 7.1 started.
+libraries), and finishing what 7.0 and 7.1 started. The 8.x line closes here: the next release
+is **9.0**, built under the rule below.
 
 ## How a release is chosen
 
@@ -22,6 +23,26 @@ libraries), and finishing what 7.0 and 7.1 started.
 Releases are `vX.Y.0`: the minor goes up one at a time (0–9), a big release may skip the rest
 of a major, and Android's build number always goes up. There are no patch releases; a fix
 ships in the next minor.
+
+### What counts as a release
+
+A release is a theme, not a ticket. One button or one screen is not a release — it waits on
+`master` until its theme is complete.
+
+1. **A theme in one sentence, with three to five visible features** that belong to it.
+2. **Nothing half-done**: strings in all seven languages, the READMEs and the release notes, the
+   tests that prove the new behaviour, and a migration when the schema changed.
+3. **Two real devices** have run it: a phone and a handheld, in landscape, with buttons. Green
+   CI is the floor, not the proof.
+4. **Numbers, not impressions**: the Performance check is run, and its result is written down
+   when the release claims speed.
+5. **Destructive paths re-checked**: delete, move, replace and playlist rewrites still show
+   their preview and keep the way back.
+6. **A few days on a real device** before the tag. A release is soaked, not shipped the hour it
+   compiles.
+
+That gives the rhythm: **at most one release every one or two weeks**, and short of an emergency
+the rule is not bent for a release that only adds one thing.
 
 Every release below has its work written out as tickets in [plans/](plans/), with the files to
 touch, the tests that prove it and what still needs a device or a real server.
@@ -198,13 +219,39 @@ library lists (favourites, wishlist, collections), which today merge as a union.
 sync, and one device going offline for a week does not lose its week. Tickets:
 **[plans/8.0.md](plans/8.0.md)**.
 
+## 9.0 — One evening, one handheld
+
+The first release under the rule above, and what the small ones were meant to add up to: a
+wiped device becomes a playable handheld in one sitting, and the library starts to feel lived-in
+on the way.
+
+- **One flow from install to first game**: restore a backup from any target you configured
+  (WebDAV, S3 or a folder), confirm the folders it needs, run the setup steps per console,
+  verify a sample of the library, then launch. Closing the app halfway keeps the work done so
+  far, and one page at the end says what is ready and which screen fixes what is missing.
+- **Time played**: sessions measured around the launch, per game and per profile — time played,
+  sessions, first and last played — so *Recap* and *Continue playing* finally say something.
+- **Cheats, honestly**: a `.cht` imported per game, listed and switched on or off, refused with
+  a sentence while RetroAchievements runs in hardcore, and never fetched from a cheat site.
+- **Fix the match**: title, year, genre and cover corrected per game, a pinned cover above the
+  provider chain, one tap back to automatic, and the override carried in backups.
+- **Readable for everyone**: TalkBack sentences per cover and tile, text at 200% on the 400 dp
+  screens, a colour-blind-safe palette, less motion, and an accessibility line in Health.
+
+*Done when* a device straight out of the box reaches a playable two-disc game in one flow
+without opening Settings, a week of use fills the recap with numbers that survive a restart, and
+TalkBack can walk from the library to a game and back without a dead end. Tickets:
+**[plans/9.0.md](plans/9.0.md)**.
+
 ## Later, if there is a reason
 
 - **TV and remote depth**: every screen reachable with a remote, larger text, no touch-only
   action.
 - **More languages**, including right-to-left, when there are reviewers for them.
-- **Accessibility**: TalkBack labels on the gamepad-driven screens, contrast and font scaling
-  checked on every screen.
+- **Couch co-op without accounts**: two handhelds on one Wi-Fi, same core and a hash check
+  before the session, through the emulators that support it. No relay, no account.
+- **Your screenshots**: a gallery per game from the state pictures that already exist, sharing
+  one at a time, and a size cap that trims with a preview.
 - **More launcher layouts** and more folder names for other systems, from public
   documentation; tell us where your launcher reads covers from.
 - **Streaming unpack**: start a game from a ZIP or 7z without unpacking the whole archive
