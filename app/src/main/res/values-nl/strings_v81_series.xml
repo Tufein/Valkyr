@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="v81_series_pill">
+        <item quantity="one">%1$s · %2$d spel</item>
+        <item quantity="other">%1$s · %2$d spellen</item>
+    </plurals>
+    <string name="v81_filter_series">Groeperen per serie</string>
+    <string name="v81_series_off">Elk spel</string>
+    <string name="v81_series_on">Eén item per serie</string>
+    <string name="v81_series_all">Alles uit deze serie</string>
+</resources>

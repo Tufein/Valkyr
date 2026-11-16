@@ -196,6 +196,7 @@ fun HomeScreen(
     val listing by viewModel.listing.collectAsStateWithLifecycle()
     val results = listing.rows
     val groupVersions by viewModel.groupVersions.collectAsStateWithLifecycle()
+    val groupSeries by viewModel.groupSeries.collectAsStateWithLifecycle()
     val hasMoreResults by viewModel.hasMoreResults.collectAsStateWithLifecycle()
     val isLoadingMore by viewModel.isLoadingMore.collectAsStateWithLifecycle()
     val query by viewModel.searchQuery.collectAsStateWithLifecycle()
@@ -459,6 +460,16 @@ fun HomeScreen(
             onSelectionChange = { viewModel.setGroupVersions(FAV_ONLY in it) }
         ),
         FilterRowSpec(
+            label = stringResource(R.string.v81_filter_series),
+            options = listOf(
+                FilterOption(FAV_ALL, stringResource(R.string.v81_series_off)),
+                FilterOption(FAV_ONLY, stringResource(R.string.v81_series_on))
+            ),
+            selected = setOf(if (groupSeries) FAV_ONLY else FAV_ALL),
+            single = true,
+            onSelectionChange = { viewModel.setGroupSeries(FAV_ONLY in it) }
+        ),
+        FilterRowSpec(
             label = stringResource(R.string.filter_new),
             options = listOf(
                 FilterOption(FAV_ALL, stringResource(R.string.filter_all)),
@@ -654,7 +665,7 @@ fun HomeScreen(
     // 6.0: a row that stands for several versions opens the game page (its Versions tab picks the one to get or play).
     val onSingleClick: (DownloadableFileWithTags) -> Unit = if (viewMode.isBrowse) onPrimary else onRowClick
     val onItemClick: (DownloadableFileWithTags) -> Unit = { item ->
-        if (listing.versionsOf(item) > 1) openGame(item) else onSingleClick(item)
+        if (listing.versionsOf(item) > 1 || listing.seriesOf(item) != null) openGame(item) else onSingleClick(item)
     }
     val shelvesPanel: @Composable (Modifier, (@Composable () -> Unit)?) -> Unit = { modifier, header ->
         if (showConsoles) ConsolesHome(
@@ -1127,7 +1138,8 @@ fun HomeScreen(
                             emptyLibraryExtra = newHandheldHint,
                             viewMode = viewMode,
                             primaryAction = primaryActionOf,
-                            versionsOf = listing::versionsOf
+                            versionsOf = listing::versionsOf,
+                            seriesOf = listing::seriesOf
                         )
                         }
                     }
@@ -1266,7 +1278,8 @@ fun HomeScreen(
                     emptyLibraryExtra = newHandheldHint,
                     viewMode = viewMode,
                     primaryAction = primaryActionOf,
-                    versionsOf = listing::versionsOf
+                    versionsOf = listing::versionsOf,
+                            seriesOf = listing::seriesOf
                 )
                 }
             }

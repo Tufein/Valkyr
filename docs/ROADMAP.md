@@ -4,7 +4,7 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 8.0.0** (Android build 88). The core loop is complete — find a game, download it into
+**Now: 8.1.0** (Android build 89). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
 libraries), and finishing what 7.0 and 7.1 started.
@@ -135,7 +135,7 @@ the provider line on every catalogue game.
 *Done when* every catalogue names its provider on the game page and a source that failed last
 week is visible before it fails again. Tickets: **[plans/7.8.md](plans/7.8.md)**.
 
-## 7.9 — Series and discovery (shipped in 7.9.0)
+## 7.9 — Series and discovery (shipped in 7.9.0 and 8.1.0)
 
 - **Series grouping** as an optional view on top of *Group versions*: all *Mega Man* games as
   one shelf, without folding regional copies into it.
@@ -143,9 +143,12 @@ week is visible before it fails again. Tickets: **[plans/7.8.md](plans/7.8.md)**
   why a game was picked.
 - **Search that finds a series by name** even when the games do not share a title.
 
-Shipped: every *More like this* card on the game page says why it was picked. Still open, because
-they need a stored series key and a new view to be checked on a real library: series grouping and
-search that finds a series by name.
+Shipped: every *More like this* card on the game page says why it was picked (7.9.0), and in 8.1.0
+**Group by series** — a Library filter, off by default, that folds a franchise's games on one console
+into one entry marked "Mega Man · 6 games" (known franchises from two games, other titles from
+three that share their first two words), plus *All in this series* on the game page. The series is
+worked out from the title each time and nothing is stored, so there is no database change. Still
+open: a stored series column, so that search can find a series whose titles share no word.
 
 *Done when* grouping is off by default, explains what it folded, and can be undone in one tap.
 Tickets: **[plans/7.9.md](plans/7.9.md)**.

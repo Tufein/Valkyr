@@ -10,6 +10,7 @@ import com.tufein.valkyr.data.local.LibrarySettings
 import com.tufein.valkyr.data.local.LookSettings
 import com.tufein.valkyr.util.ConsoleSortMemory
 import com.tufein.valkyr.util.LibraryBrowse
+import com.tufein.valkyr.util.SeriesGroups
 import com.tufein.valkyr.util.VariantGroups
 import com.tufein.valkyr.util.VersionPicker
 import com.tufein.valkyr.util.VersionPreference
@@ -583,9 +584,17 @@ class HomeViewModel @Inject constructor(
     val results: StateFlow<List<DownloadableFileWithTags>> = _results
 
     /** 6.0: the list as shown: [results], with the copies of one game folded into one row while "Group versions" is on. */
-    class Listing(val rows: List<DownloadableFileWithTags>, val versions: Map<Long, Int> = emptyMap()) {
+    class Listing(
+        val rows: List<DownloadableFileWithTags>,
+        val versions: Map<Long, Int> = emptyMap(),
+        /** 8.1: the series a row stands for, by file id; absent = a game on its own. */
+        val series: Map<Long, SeriesGroups.Badge> = emptyMap()
+    ) {
         /** How many versions the row stands for (1 = a single game). */
         fun versionsOf(item: DownloadableFileWithTags): Int = versions[item.file.id] ?: 1
+
+        /** The series the row stands for, or null. */
+        fun seriesOf(item: DownloadableFileWithTags): SeriesGroups.Badge? = series[item.file.id]
     }
 
     private val _listing = MutableStateFlow(Listing(emptyList()))
@@ -596,6 +605,13 @@ class HomeViewModel @Inject constructor(
 
     fun setGroupVersions(on: Boolean) {
         viewModelScope.launch { librarySettings.setGroupVersions(on) }
+    }
+
+    val groupSeries: StateFlow<Boolean> = librarySettings.groupSeries
+        .stateIn(viewModelScope, SharingStarted.Eagerly, SeriesGroups.DEFAULT_ON)
+
+    fun setGroupSeries(on: Boolean) {
+        viewModelScope.launch { librarySettings.setGroupSeries(on) }
     }
 
     /**
@@ -611,11 +627,23 @@ class HomeViewModel @Inject constructor(
         publishLock.withLock {
             if (seq != publishSeq) return
             _results.value = rows
-            _listing.value = withContext(Dispatchers.Default) { listingOf(rows, groupVersions.value) }
+            _listing.value = withContext(Dispatchers.Default) { listingOf(rows, groupVersions.value, groupSeries.value) }
         }
     }
 
-    private suspend fun listingOf(rows: List<DownloadableFileWithTags>, group: Boolean): Listing {
+    private suspend fun listingOf(rows: List<DownloadableFileWithTags>, group: Boolean, bySeries: Boolean): Listing {
+        val versionsListing = versionListing(rows, group)
+        if (!bySeries) return versionsListing
+        val entries = SeriesGroups.group(versionsListing.rows, { it.file.consoleId }, { it.file.name })
+        if (entries.all { it.badge == null }) return versionsListing
+        return Listing(
+            entries.map { it.item },
+            versionsListing.versions,
+            entries.mapNotNull { e -> e.badge?.let { e.item.file.id to it } }.toMap()
+        )
+    }
+
+    private suspend fun versionListing(rows: List<DownloadableFileWithTags>, group: Boolean): Listing {
         if (!group) return Listing(rows)
         val prefs = versionSettings.snapshot()
         val pins = versionPreference.snapshot()
@@ -688,6 +716,7 @@ class HomeViewModel @Inject constructor(
         rememberSearches()
         // 6.0: the switch re-folds the rows already loaded (a search re-runs on its own when anything else changes).
         viewModelScope.launch { groupVersions.drop(1).collect { publish(_results.value) } }
+        viewModelScope.launch { groupSeries.drop(1).collect { publish(_results.value) } }
         // "Use RomM" off: a RomM source filter would list nothing, so it goes back to All.
         viewModelScope.launch { rommEnabled.collect { on -> if (!on && _source.value == SourceFilter.ROMM) _source.value = SourceFilter.ALL } }
         // 5.5: with an RA account the Beaten / Mastered badges need the user's award list: one paged fetch, throttled in the service.

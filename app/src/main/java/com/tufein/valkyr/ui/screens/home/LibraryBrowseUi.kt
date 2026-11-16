@@ -313,7 +313,9 @@ internal fun LibraryListRow(
     /** 5.5: the user's RetroAchievements status in the game (null = nothing to show). */
     raStatus: RaStatus? = null,
     /** 6.0: how many versions of the game this row stands for ("Group versions"); 1 shows nothing. */
-    versions: Int = 1
+    versions: Int = 1,
+    /** 8.1: the series this row stands for ("Group by series"); null shows nothing. */
+    series: com.tufein.valkyr.util.SeriesGroups.Badge? = null
 ) {
     val scheme = MaterialTheme.colorScheme
     val source = rememberFocusSource()
@@ -349,6 +351,7 @@ internal fun LibraryListRow(
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     ConsoleTag(rom.consoleId)
                     if (versions > 1) Pill(pluralStringResource(R.plurals.var60_versions, versions, versions), tone = PillTone.Accent)
+                    if (series != null) com.tufein.valkyr.ui.components.SeriesPill(series)
                     if (rom.fileSize > 0 && versions <= 1) Text(
                         formatBytes(rom.fileSize),
                         style = MaterialTheme.typography.bodySmall.tabular(),
@@ -397,7 +400,8 @@ internal fun ResultGrid(
     returnFocus: FocusRequester? = null,
     isCompleted: (DownloadableFileWithTags) -> Boolean = { false },
     /** 6.0: how many versions a card stands for ("Group versions"). */
-    versionsOf: (DownloadableFileWithTags) -> Int = { 1 }
+    versionsOf: (DownloadableFileWithTags) -> Int = { 1 },
+    seriesOf: (DownloadableFileWithTags) -> com.tufein.valkyr.util.SeriesGroups.Badge? = { null }
 ) {
     val state = rememberLazyGridState()
     OnTabReselect(NavRoutes.Home.route) { state.scrollToItem(0) }
@@ -437,6 +441,7 @@ internal fun ResultGrid(
                     owned = action == PrimaryAction.PLAY,
                     completed = isCompleted(item),
                     versions = versionsOf(item),
+                    series = seriesOf(item),
                     width = 128.dp,
                     coverHeight = 174.dp,
                     actionLabel = when (action) {

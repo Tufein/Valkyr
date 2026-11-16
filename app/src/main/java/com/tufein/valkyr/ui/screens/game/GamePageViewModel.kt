@@ -83,8 +83,15 @@ class GamePageViewModel @Inject constructor(
     private val profiles: ProfileService,
     private val versionSettings: VersionPreferenceSettings,
     private val statePreviews: com.tufein.valkyr.data.service.StatePreviewService,
-    private val coverDao: com.tufein.valkyr.data.local.dao.CoverDao
+    private val coverDao: com.tufein.valkyr.data.local.dao.CoverDao,
+    private val pendingFilters: com.tufein.valkyr.data.state.PendingLibraryFilters
 ) : ViewModel() {
+
+    /** 8.1: lists this game's series in the Library (the shell switches to its tab). */
+    fun showSeries(file: com.tufein.valkyr.data.local.entity.DownloadableFileEntity) {
+        val query = com.tufein.valkyr.util.SeriesKey.query(file.name).ifBlank { file.name }
+        pendingFilters.submit(com.tufein.valkyr.data.state.LibraryFilterRequest(consoles = setOf(file.consoleId), query = query))
+    }
 
     /** 7.7: which provider the stored cover of this game came from, or null (RomM's own cover, none yet, or a miss). */
     suspend fun coverSource(consoleId: String, fileName: String): com.tufein.valkyr.util.CoverSources.Source? {

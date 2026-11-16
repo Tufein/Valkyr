@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.tufein.valkyr.util.ConsoleSortMemory
 import com.tufein.valkyr.util.LibraryBrowse
+import com.tufein.valkyr.util.SeriesGroups
 import com.tufein.valkyr.util.VariantGroups
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -71,6 +72,15 @@ class LibrarySettings @Inject constructor(@param:ApplicationContext private val 
         .distinctUntilChanged()
 
     suspend fun setGroupVersions(on: Boolean) = context.dataStore.edit { it[groupKey] = on }
+
+    private val seriesKey = booleanPreferencesKey(SeriesGroups.GROUP_KEY)
+
+    /** 8.1: the games of one franchise listed as one entry ("Group by series" in the Library filters). */
+    val groupSeries: Flow<Boolean> = context.dataStore.data
+        .map { it[seriesKey] ?: SeriesGroups.DEFAULT_ON }
+        .distinctUntilChanged()
+
+    suspend fun setGroupSeries(on: Boolean) = context.dataStore.edit { it[seriesKey] = on }
 
     private val consoleSortsKey = stringPreferencesKey(ConsoleSortMemory.KEY)
 

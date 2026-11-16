@@ -568,7 +568,8 @@ private fun GamePageContent(
             onDownload = { download(it, null) },
             onOpenGame = onOpenGame,
             viewModel = viewModel,
-            onOpenVersionPreference = onOpenVersionPreference
+            onOpenVersionPreference = onOpenVersionPreference,
+            onSeries = { viewModel.showSeries(state.item.file); onBack() }
         )
     }
 
@@ -673,7 +674,8 @@ private fun TabContent(
     onDownload: (DownloadableFileWithTags) -> Unit,
     onOpenGame: (String, String) -> Unit,
     viewModel: GamePageViewModel,
-    onOpenVersionPreference: (() -> Unit)?
+    onOpenVersionPreference: (() -> Unit)?,
+    onSeries: () -> Unit
 ) {
     val rom = state.item.file
     val scheme = MaterialTheme.colorScheme
@@ -717,7 +719,7 @@ private fun TabContent(
                     CloudSavesSection(consoleId = rom.consoleId, fileName = rom.fileName)
                     Text(stringResource(R.string.page8_progress_hint), style = MaterialTheme.typography.bodySmall, color = scheme.onSurfaceVariant)
                 }
-                Tab.SIMILAR -> SimilarSection(state.similar, onOpen = { onOpenGame(it.file.consoleId, it.file.fileName) }, why = state.similarWhy)
+                Tab.SIMILAR -> SimilarSection(state.similar, onOpen = { onOpenGame(it.file.consoleId, it.file.fileName) }, why = state.similarWhy, onSeries = onSeries)
             }
         }
     }

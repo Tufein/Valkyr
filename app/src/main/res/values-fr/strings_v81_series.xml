@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="v81_series_pill">
+        <item quantity="one">%1$s · %2$d jeu</item>
+        <item quantity="other">%1$s · %2$d jeux</item>
+    </plurals>
+    <string name="v81_filter_series">Grouper par série</string>
+    <string name="v81_series_off">Chaque jeu</string>
+    <string name="v81_series_on">Une entrée par série</string>
+    <string name="v81_series_all">Toute la série</string>
+</resources>

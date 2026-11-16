@@ -53,6 +53,7 @@ object SettingSchema {
         putAll(ConsoleSortMemory.SETTING_TYPES)
         putAll(PerfNotices.SETTING_TYPES)
         putAll(VariantGroups.SETTING_TYPES)
+        putAll(SeriesGroups.SETTING_TYPES)
         putAll(SaveMerge.SETTING_TYPES)
         putAll(SyncthingFolderSettings.TYPES)
         putAll(RommRemoteInstall.SETTING_TYPES)

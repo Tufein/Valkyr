@@ -161,6 +161,15 @@ fun pillColors(tone: PillTone): Pair<Color, Color> {
 }
 
 /** A small rounded label: status, badge, tag or count. */
+/** 8.1: "Mega Man · 6 games", the marker of a row that stands for a whole series (see [com.tufein.valkyr.util.SeriesGroups]). */
+@Composable
+fun SeriesPill(badge: com.tufein.valkyr.util.SeriesGroups.Badge) {
+    Pill(
+        androidx.compose.ui.res.pluralStringResource(com.tufein.valkyr.R.plurals.v81_series_pill, badge.games, badge.name, badge.games),
+        tone = PillTone.Accent
+    )
+}
+
 @Composable
 fun Pill(
     text: String,

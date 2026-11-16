@@ -39,7 +39,9 @@ fun SimilarSection(
     items: List<DownloadableFileWithTags>,
     onOpen: (DownloadableFileWithTags) -> Unit,
     modifier: Modifier = Modifier,
-    why: Map<Long, SimilarGames.Why> = emptyMap()
+    why: Map<Long, SimilarGames.Why> = emptyMap(),
+    /** 8.1: lists every game of this game's series in the Library; null hides the button. */
+    onSeries: (() -> Unit)? = null
 ) {
     if (items.isEmpty()) return
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -50,6 +52,7 @@ fun SimilarSection(
         ) {
             items.forEach { SimilarCard(it, why[it.file.id]) { onOpen(it) } }
         }
+        if (onSeries != null) androidx.compose.material3.TextButton(onClick = onSeries) { Text(stringResource(R.string.v81_series_all)) }
     }
 }
 

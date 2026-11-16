@@ -69,7 +69,9 @@ fun CoverCard(
     /** 5.5: the player marked the game as completed: a check mark in the corner opposite the on-device one. */
     completed: Boolean = false,
     /** 6.0: how many versions of the game this card stands for ("Group versions"); 1 shows nothing. */
-    versions: Int = 1
+    versions: Int = 1,
+    /** 8.1: the series this card stands for ("Group by series"); null shows nothing. */
+    series: com.tufein.valkyr.util.SeriesGroups.Badge? = null
 ) {
     val scheme = MaterialTheme.colorScheme
     val source = rememberFocusSource()
@@ -104,7 +106,7 @@ fun CoverCard(
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(horizontal = 6.dp)
         )
-        if (actionLabel == null && versions <= 1) ConsoleTag(consoleId, Modifier.padding(horizontal = 6.dp))
+        if (actionLabel == null && versions <= 1 && series == null) ConsoleTag(consoleId, Modifier.padding(horizontal = 6.dp))
         else Row(
             modifier = Modifier.padding(horizontal = 6.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -118,6 +120,7 @@ fun CoverCard(
                 modifier = Modifier.background(scheme.primary, RoundedCornerShape(50)).padding(horizontal = 8.dp, vertical = 2.dp)
             )
             if (versions > 1) Pill(androidx.compose.ui.res.pluralStringResource(R.plurals.var60_versions, versions, versions), tone = PillTone.Accent)
+            if (series != null) SeriesPill(series)
         }
     }
 }

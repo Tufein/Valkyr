@@ -256,7 +256,8 @@ internal fun ResultList(
     /** 5.1: what a game's button says (Download / Play / Downloading) in the List and Covers views. */
     primaryAction: (DownloadableFileWithTags) -> LibraryBrowse.PrimaryAction = { LibraryBrowse.PrimaryAction.DOWNLOAD },
     /** 6.0: how many versions of a game a row stands for ("Group versions"); 1 = a single game. */
-    versionsOf: (DownloadableFileWithTags) -> Int = { 1 }
+    versionsOf: (DownloadableFileWithTags) -> Int = { 1 },
+    seriesOf: (DownloadableFileWithTags) -> com.tufein.valkyr.util.SeriesGroups.Badge? = { null }
 ) {
     if (results.isEmpty()) {
         // The flags are read only here: while the list has rows, a new search or a library change
@@ -314,7 +315,8 @@ internal fun ResultList(
             returnGame = returnGame,
             returnFocus = returnFocus,
             isCompleted = isCompleted,
-            versionsOf = versionsOf
+            versionsOf = versionsOf,
+            seriesOf = seriesOf
         )
         return
     }
@@ -402,7 +404,8 @@ internal fun ResultList(
                 contentShift = contentShift,
                 completed = isCompleted(item),
                 raStatus = raStatusOf(item),
-                versions = versionsOf(item)
+                versions = versionsOf(item),
+                series = seriesOf(item)
             ) else RomRow(
                 item = item,
                 consoleName = getConsoleName(item.file.consoleId),
@@ -423,7 +426,8 @@ internal fun ResultList(
                 modifier = rowModifier,
                 completed = isCompleted(item),
                 raStatus = raStatusOf(item),
-                versions = versionsOf(item)
+                versions = versionsOf(item),
+                series = seriesOf(item)
             )
         }
         if (hasMore) {
