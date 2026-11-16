@@ -4,7 +4,7 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 8.3.0** (Android build 91). The core loop is complete — find a game, download it into
+**Now: 8.4.0** (Android build 92). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
 libraries), and finishing what 7.0 and 7.1 started.
@@ -77,7 +77,7 @@ Still open, because each needs a new client library and a real server to prove i
 SFTP** (a NAS without WebDAV), and a list of several targets at once (today there is one cloud
 connection, which is WebDAV or S3). Tickets: **[plans/7.5.md](plans/7.5.md)**.
 
-## 7.6 — Scale (shipped in 7.6.0)
+## 7.6 — Scale (shipped in 7.6.0 and 8.4.0)
 
 A library of a few thousand games hides slow spots. A curated set of 100,000 does not.
 
@@ -92,6 +92,15 @@ Shipped: search that starts after a short typing pause, and one shared look at t
 Storage and the health check. Still open, because they change the database or need a 100,000-game
 library on a real handheld to prove them: folder fingerprints and incremental scans, row-level
 source diffs, a scan budget that pauses on a low battery, and the cover-grid measurement.
+
+8.4.0 shipped the row-level source diff: a rescan of a changed source now writes only the games that
+were added, removed or changed, and unchanged games keep their id and their search-index entry. The
+background scan job already waits for a battery that is not low. Folder fingerprints for the *disk*
+scan were looked at and left out on purpose: Android's storage access framework lists a folder with
+one query whatever it holds, and a folder's own change time does not tell whether something changed
+deeper down, so skipping a folder would either miss changes or still need the query it is meant to
+save. Still open: a validator for RomM and Homebrew Hub listings, and the cover-grid measurement on a
+100,000-game library.
 
 *Done when* the Performance check on a mid-range handheld shows search, scroll and cover
 decode still Fast with 100,000 games indexed, and a rescan of an unchanged library takes

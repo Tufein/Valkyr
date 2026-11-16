@@ -12,6 +12,7 @@ import com.tufein.valkyr.data.local.queries.LibraryQueryBuilder
 import com.tufein.valkyr.data.local.entity.DownloadableFileEntity
 import com.tufein.valkyr.data.local.entity.FileTagEntity
 import com.tufein.valkyr.util.SearchNormalizer
+import com.tufein.valkyr.util.SourceDiff
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -183,15 +184,41 @@ interface DownloadableFileDao {
      * listed before keeps when it was first seen; a file it did not list before gets [now] — unless
      * the source had no rows yet, then nothing counts as new (its first scan).
      */
+    @Query("SELECT * FROM downloadable_files WHERE consoleId = :consoleId AND sourceUrl = :sourceUrl")
+    suspend fun rowsOfSource(consoleId: String, sourceUrl: String): List<DownloadableFileEntity>
+
+    @Query("SELECT fileId, tag FROM downloadable_file_tags WHERE fileId IN (SELECT id FROM downloadable_files WHERE consoleId = :consoleId AND sourceUrl = :sourceUrl)")
+    suspend fun tagRowsOfSource(consoleId: String, sourceUrl: String): List<FileTagRow>
+
+    @Query("DELETE FROM downloadable_files WHERE id IN (:ids)")
+    suspend fun deleteFilesByIds(ids: List<Long>)
+
+    /**
+     * Brings the rows of one source (and, the first time after the update to 2.0, the console's rows
+     * from before sources were remembered) in line with [files], in one transaction. Since 8.4 only
+     * the difference is written ([SourceDiff]): a row that is listed again unchanged keeps its id and
+     * its place in the search index, so a one-line change costs a few writes, not a rewrite of the
+     * source. A file the source listed before keeps when it was first seen; a file it did not list
+     * before gets [now] — unless the source had no rows yet, then nothing counts as new (its first scan).
+     */
     @Transaction
     suspend fun replaceSource(consoleId: String, sourceUrl: String, files: List<DownloadableFileEntity>, tags: List<List<String>>, now: Long): SourceWrite {
+        val current = rowsOfSource(consoleId, sourceUrl)
+        val legacy = if (sourceUrl.isEmpty()) emptyList() else rowsOfSource(consoleId, "")
         val seen = HashMap<String, Long>()
-        seenIn(consoleId, sourceUrl).forEach { seen[it.fileName] = maxOf(seen[it.fileName] ?: 0L, it.firstSeenAt) }
+        (current + legacy).forEach { seen[it.fileName] = maxOf(seen[it.fileName] ?: 0L, it.firstSeenAt) }
         val known = seen.isNotEmpty()
-        deleteSource(consoleId, sourceUrl)
-        deleteSource(consoleId, "")
-        val stamped = files.map { it.copy(consoleId = consoleId, sourceUrl = sourceUrl, firstSeenAt = seen[it.fileName] ?: if (known) now else 0L) }
-        return SourceWrite(insertSource(stamped, tags), stamped.count { it.firstSeenAt == now })
+        val stamped = files.map { it.copy(id = 0L, consoleId = consoleId, sourceUrl = sourceUrl, firstSeenAt = seen[it.fileName] ?: if (known) now else 0L) }
+        val storedTags = tagRowsOfSource(consoleId, sourceUrl).groupBy({ it.fileId }, { it.tag })
+        val plan = SourceDiff.plan(
+            current.map { it.id to SourceDiff.Content(it.copy(id = 0L, firstSeenAt = 0L), storedTags[it.id].orEmpty().sorted()) },
+            stamped.mapIndexed { i, f -> SourceDiff.Content(f.copy(firstSeenAt = 0L), tags.getOrNull(i).orEmpty().sorted()) }
+        )
+        if (legacy.isNotEmpty()) deleteSource(consoleId, "")
+        // 500 ids per DELETE: well under SQLite's variable limit.
+        plan.deleteIds.chunked(500).forEach { deleteFilesByIds(it) }
+        insertSource(plan.insertIndexes.map { stamped[it] }, plan.insertIndexes.map { tags.getOrNull(it).orEmpty() })
+        return SourceWrite(tags.sumOf { it.size }, stamped.count { it.firstSeenAt == now })
     }
 
     @Query("SELECT id, name FROM downloadable_files WHERE searchKey = ''")
