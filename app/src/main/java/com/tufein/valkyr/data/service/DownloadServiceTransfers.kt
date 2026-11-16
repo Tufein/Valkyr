@@ -164,7 +164,7 @@ internal suspend fun DownloadService.moveTorrentFile(file: DownloadableFileEntit
         val subPath = downloadFileManager.getSubPath(file)
         requireSourceChecksum(file, DocumentFile.fromFile(internalFile))
 
-        if (ArchiveUtils.isExtractable(fileExtension) && settingsRepository.autoUnzip.first()) {
+        if (ArchiveUtils.autoExtracts(file.consoleId, fileExtension) && settingsRepository.autoUnzip.first()) {
             // Extract directly from cache — skips writing the compressed archive to SAF entirely.
             // Flow: cacheDir/torrent_data/ → extraction_temp/ → SAF destination
             Log.d(TAG, "Extracting torrent archive directly from cache: ${internalFile.name}")
@@ -581,7 +581,7 @@ internal suspend fun DownloadService.handlePostDownload(
     subPath: String
 ) {
     currentCoroutineContext().ensureActive()
-    if (!ArchiveUtils.isExtractable(file.fileExtension) || !settingsRepository.autoUnzip.first()) {
+    if (!ArchiveUtils.autoExtracts(file.consoleId, file.fileExtension) || !settingsRepository.autoUnzip.first()) {
         gamePackages.record(file, rootUri.toString(), subPath,
             listOf(FileParsingUtils.storageFileName(file.fileName)))
         updateStatus(file.fileName, DownloadStatus.COMPLETED)

@@ -94,6 +94,17 @@ object BiosCatalog {
         BiosSystem("Neo Geo", listOf("neo_geo", "neogeo"), listOf(
             BiosFile("neogeo.zip", emptyList(), true, BiosNote.NEOGEO_SET)
         )),
+        // 8.5: MAME and FBNeo name their board BIOS sets as zips that stay zipped next to the games; the games of a board need its set.
+        BiosSystem("Arcade (MAME, FBNeo)", listOf("arcade_mame", "arcade_fbneo", "mame", "fbneo", "arcade"), listOf(
+            BiosFile("neogeo.zip", emptyList(), false, BiosNote.NEOGEO_SET),
+            BiosFile("pgm.zip", emptyList(), false),
+            BiosFile("skns.zip", emptyList(), false),
+            BiosFile("decocass.zip", emptyList(), false),
+            BiosFile("cchip.zip", emptyList(), false),
+            BiosFile("ym2608.zip", emptyList(), false),
+            BiosFile("nmk004.zip", emptyList(), false),
+            BiosFile("midssio.zip", emptyList(), false)
+        ), anyOf = true),
         BiosSystem("Pokémon mini", listOf("pokemon_mini", "pokemini"), listOf(
             BiosFile("bios.min", listOf("1e4fb124a3a886865acb574f388c803d"), false)
         ))

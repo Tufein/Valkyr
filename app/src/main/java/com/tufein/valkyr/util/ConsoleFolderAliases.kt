@@ -30,6 +30,9 @@ object ConsoleFolderAliases {
         "genesis" to listOf("genesis", "megadrive", "md", "segagenesis", "segamegadrive"),
         "dreamcast" to listOf("dreamcast", "dc", "segadreamcast"),
         "cd" to listOf("segacd", "megacd"),
+        // 8.5: the arcade consoles (`arcade_mame`, `arcade_fbneo`); ES-DE and ArkOS call the shared folder `arcade`.
+        "mame" to listOf("mame", "arcade", "mame2003", "mame2003plus", "mame2010", "mamearcade"),
+        "fbneo" to listOf("fbneo", "fba", "fbalpha", "finalburnneo"),
     )
 
     fun normalize(name: String): String =

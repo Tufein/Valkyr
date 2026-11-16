@@ -44,6 +44,8 @@ object ConsoleFormatter {
         "playstation_2" to "PS2",
         "playstation_portable" to "PSP",
         "master_system" to "SMS",
+        "mame" to "MAME",
+        "fbneo" to "FBNeo",
         "genesis" to "MD",
         "dreamcast" to "DC",
         "cd" to "SCD",

@@ -4,7 +4,7 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 8.4.0** (Android build 92). The core loop is complete — find a game, download it into
+**Now: 8.5.0** (Android build 93). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
 libraries), and finishing what 7.0 and 7.1 started.
@@ -127,7 +127,7 @@ manuals from the cover sources inside the app, and the source line on every othe
 bar, and a failed provider reads as a sentence rather than an empty screen. Tickets:
 **[plans/7.7.md](plans/7.7.md)**.
 
-## 7.8 — Catalogue and sources (shipped in 7.8.0)
+## 7.8 — Catalogue and sources (shipped in 7.8.0 and 8.5.0)
 
 - **More content catalogues**, per request, each with clear attribution and console mapping.
   MAME's free-to-download games are a candidate once there is an arcade console in the app and
@@ -142,6 +142,11 @@ Shipped: source history — the last twelve scans of each source, and one senten
 scan when it keeps failing. Still open, because each is a review of someone else's terms or needs
 the provider to test against: more Homebrew Hub systems, MAME's free content, catalogue mirrors and
 the provider line on every catalogue game.
+
+8.5.0 made the arcade consoles complete as consoles: ROM-set zips are no longer unpacked, and MAME and
+FBNeo have names, folder aliases and a BIOS check (covers for them are still open: each cover provider needs its arcade system id confirmed first). A downloadable MAME catalogue is still *not*
+built: it needs the non-commercial terms shown before a download and a catalogue reviewed against
+the provider's own list, and this project does not point at sources that exist to distribute games.
 
 *Done when* every catalogue names its provider on the game page and a source that failed last
 week is visible before it fails again. Tickets: **[plans/7.8.md](plans/7.8.md)**.
