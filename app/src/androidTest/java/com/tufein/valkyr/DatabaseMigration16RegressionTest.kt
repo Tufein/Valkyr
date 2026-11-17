@@ -79,7 +79,7 @@ class DatabaseMigration16RegressionTest {
         makeVersion15(name)
         val graph = EntryPointAccessors.fromApplication(context.applicationContext, GamePackagesEntryPoint::class.java)
         val db = Room.databaseBuilder(context, DogmatixDatabase::class.java, name)
-            .addMigrations(DogmatixDatabase.MIGRATION_15_16).build()
+            .addMigrations(DogmatixDatabase.MIGRATION_15_16, DogmatixDatabase.MIGRATION_16_17).build()
         try {
             val dao = db.downloadableFileDao()
             val sql = db.openHelper.writableDatabase
