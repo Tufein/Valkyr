@@ -20,6 +20,7 @@ import com.tufein.valkyr.data.local.entity.DatSetEntity
 import com.tufein.valkyr.data.local.dao.CollectionDao
 import com.tufein.valkyr.data.local.dao.DatDao
 import com.tufein.valkyr.data.local.dao.CoverDao
+import com.tufein.valkyr.data.local.dao.GameOverrideDao
 import com.tufein.valkyr.data.local.entity.CoverEntity
 import com.tufein.valkyr.data.local.entity.ConsoleEntity
 import com.tufein.valkyr.data.local.entity.DownloadHistoryEntity
@@ -27,12 +28,13 @@ import com.tufein.valkyr.data.local.entity.DownloadableFileEntity
 import com.tufein.valkyr.data.local.entity.FavouriteEntity
 import com.tufein.valkyr.data.local.entity.FileTagEntity
 import com.tufein.valkyr.data.local.entity.GameMetadataEntity
+import com.tufein.valkyr.data.local.entity.GameOverrideEntity
 import com.tufein.valkyr.data.local.entity.ManufacturerEntity
 import com.tufein.valkyr.data.local.queries.DownloadableFileFts
 
 @Database(
-    entities = [ManufacturerEntity::class, ConsoleEntity::class, DownloadableFileEntity::class, FileTagEntity::class, DownloadableFileFts::class, DownloadHistoryEntity::class, GameMetadataEntity::class, FavouriteEntity::class, WishlistEntity::class, CollectionEntity::class, CollectionItemEntity::class, DatSetEntity::class, DatRomEntity::class, CoverEntity::class, PersonalProfileEntity::class],
-    version = 16,
+    entities = [ManufacturerEntity::class, ConsoleEntity::class, DownloadableFileEntity::class, FileTagEntity::class, DownloadableFileFts::class, DownloadHistoryEntity::class, GameMetadataEntity::class, FavouriteEntity::class, WishlistEntity::class, CollectionEntity::class, CollectionItemEntity::class, DatSetEntity::class, DatRomEntity::class, CoverEntity::class, PersonalProfileEntity::class, GameOverrideEntity::class],
+    version = 17,
     exportSchema = false
 )
 abstract class DogmatixDatabase : RoomDatabase() {
@@ -46,11 +48,14 @@ abstract class DogmatixDatabase : RoomDatabase() {
     abstract fun collectionDao(): CollectionDao
     abstract fun datDao(): DatDao
     abstract fun coverDao(): CoverDao
+    abstract fun gameOverrideDao(): GameOverrideDao
 
     companion object {
         /** 4.6: indexes, `searchWords` / `isRomm` columns and the FTS table over the words (see [Migration15To16]). */
         val MIGRATION_15_16: Migration = Migration15To16
 
+        /** 9.0: per-game metadata overrides ("Fix the match"). */
+        val MIGRATION_16_17: Migration = Migration16To17
         /** 2.6: safe download failure reasons survive process death. Existing rows remain readable. */
         val MIGRATION_14_15 = object : Migration(14, 15) {
             override fun migrate(db: SupportSQLiteDatabase) {

@@ -11,6 +11,7 @@ import com.tufein.valkyr.data.local.dao.DownloadableFileDao
 import com.tufein.valkyr.data.local.dao.FavouriteDao
 import com.tufein.valkyr.data.local.dao.GameMetadataDao
 import com.tufein.valkyr.data.local.dao.CoverDao
+import com.tufein.valkyr.data.local.dao.GameOverrideDao
 import com.tufein.valkyr.data.local.dao.ManufacturerDao
 import com.tufein.valkyr.data.local.dao.WishlistDao
 import com.tufein.valkyr.data.local.SettingsDataStore
@@ -36,6 +37,7 @@ object DatabaseModule {
         Room.databaseBuilder(context, DogmatixDatabase::class.java, "dogmatix_db")
             .addMigrations(DogmatixDatabase.MIGRATION_1_2, DogmatixDatabase.MIGRATION_2_3, DogmatixDatabase.MIGRATION_3_4, DogmatixDatabase.MIGRATION_4_5, DogmatixDatabase.MIGRATION_5_6, DogmatixDatabase.MIGRATION_6_7, DogmatixDatabase.MIGRATION_7_8, DogmatixDatabase.MIGRATION_8_9, DogmatixDatabase.MIGRATION_9_10, DogmatixDatabase.MIGRATION_10_11, DogmatixDatabase.MIGRATION_11_12, DogmatixDatabase.MIGRATION_12_13, DogmatixDatabase.MIGRATION_13_14)
             .addMigrations(DogmatixDatabase.MIGRATION_14_15, DogmatixDatabase.MIGRATION_15_16)
+            .addMigrations(DogmatixDatabase.MIGRATION_16_17)
             .build()
 
     @Provides
@@ -68,6 +70,8 @@ object DatabaseModule {
     @Provides
     fun provideCoverDao(db: DogmatixDatabase): CoverDao = db.coverDao()
 
+    @Provides
+    fun provideGameOverrideDao(db: DogmatixDatabase): GameOverrideDao = db.gameOverrideDao()
     @Provides
     @Singleton
     fun provideSettingsDataStore(@ApplicationContext context: Context): SettingsDataStore = SettingsDataStore(context)
