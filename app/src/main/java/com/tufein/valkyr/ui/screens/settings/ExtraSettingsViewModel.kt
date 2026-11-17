@@ -86,6 +86,7 @@ data class LookPrefs(
 data class AppPrefs(
     val preReleases: Boolean = false,
     val boldFocus: Boolean = false,
+    val accessiblePalette: Boolean = false,
     val secondScreen: Boolean = true,
     val autoBackup: Boolean = false,
     val autoBackupDir: String = "",
@@ -185,10 +186,13 @@ class ExtraSettingsViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AfterDownloadSettings())
 
     val appPrefs: StateFlow<AppPrefs> = combine(
-        combine(settings.updatePreReleases, appSettings.boldFocus, appSettings.secondScreen) { pre, bold, second -> Triple(pre, bold, second) },
+        combine(settings.updatePreReleases, appSettings.boldFocus) { pre, bold -> pre to bold },
+        combine(appSettings.secondScreen, appSettings.accessiblePalette) { second, palette -> second to palette },
         combine(appSettings.autoBackup, appSettings.autoBackupDir) { backup, dir -> backup to dir },
         appSettings.autoBackupLast, appSettings.textSizePercent
-    ) { (pre, bold, second), (backup, dir), last, textSize -> AppPrefs(pre, bold, second, backup, dir, last, textSize) }
+    ) { (pre, bold), (second, palette), (backup, dir), last, textSize ->
+        AppPrefs(pre, bold, palette, second, backup, dir, last, textSize)
+    }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AppPrefs())
 
     fun setPegasusArtwork(context: Context, on: Boolean) = executeWithToast(context, TAG) { appSettings.setPegasusArtwork(on) }
@@ -240,6 +244,7 @@ class ExtraSettingsViewModel @Inject constructor(
         appSettings.setTextSizePercent(TextSize.shift(appPrefs.value.textSize, delta))
     }
     fun setBoldFocus(context: Context, on: Boolean) = executeWithToast(context, TAG) { appSettings.setBoldFocus(on) }
+    fun setAccessiblePalette(context: Context, on: Boolean) = executeWithToast(context, TAG) { appSettings.setAccessiblePalette(on) }
 
     /** Progress of an update download (0..1), or null when none runs. */
     val updateProgress: StateFlow<Float?> = updateInstaller.progress

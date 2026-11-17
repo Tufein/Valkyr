@@ -143,7 +143,7 @@ Valkyr is made for handhelds with a small landscape screen and a controller, wit
 
 ### Under the hood
 - The Kotlin package is `com.tufein.valkyr`; the application id is `com.tufein.valkyr` (kept through the rename to Valkyr so installed apps keep updating).
-- Room schema at v16 with explicit migrations (search key, download history, game metadata cache, per-console short name and folder aliases, favourites, debrid resume ids).
+- Room schema at v17 with explicit migrations (search key, download history, game metadata cache, per-console short name and folder aliases, favourites, debrid resume ids, per-game metadata overrides).
 - All source handling lives in `SourcesRepository`; the JSON format is read and written by one pure `SourcesJson` object shared by the bundled asset, the Room `urls` column and export/import. Sources are routed by URL: `magnet:`/`.torrent` → libtorrent, `romm://` → the RomM API, anything else → HTML directory scraping.
 - Downloads are routed in `DownloadService.perform()`: debrid service (when selected; `DebridClient` implemented by `TorBoxClient` and `RealDebridClient`) → HTTP with resume; torrent → libtorrent; HTTP otherwise (with the RomM credentials when the file comes from the RomM server). Integrations talk to their APIs with a tiny `JsonHttp` helper over `HttpURLConnection` + Gson — no OkHttp.
 - Secrets (TorBox / Real-Debrid keys, RomM token) live only in the app's DataStore; nothing is baked into the APK or the repository.

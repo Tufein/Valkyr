@@ -86,7 +86,8 @@ class GameLaunchService @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val library: LibraryIndexService,
     private val actionLog: ActionLogService,
-    private val profiles: ProfileService
+    private val profiles: ProfileService,
+    private val playSessions: PlaySessionService
 ) {
     private val preferences = context.getSharedPreferences("game_launchers", Context.MODE_PRIVATE)
     private val gamePreferences = GameEmulatorPreferences(preferences, profiles::currentIdNow)
@@ -209,13 +210,17 @@ class GameLaunchService @Inject constructor(
      * is set, the handler (or [GameLaunchKeys.AUTOMATIC] when [automatic]) is kept for the console.
      * With [gameFileName] (the library file) the game's remembered resume slot goes to an emulator that has one.
      */
-    fun launch(context: Context, consoleId: String, game: GameLaunch, handler: GameHandler, remember: Boolean, automatic: Boolean = false, gameFileName: String? = null): LaunchOutcome {
+    fun launch(context: Context, consoleId: String, game: GameLaunch, handler: GameHandler, remember: Boolean, automatic: Boolean = false, gameFileName: String? = null, trackPlay: Boolean = true): LaunchOutcome {
         check(game.handlers.any { it.key == handler.key })
         val outcome = if (handler.emulatorId != null) launchCatalogue(context, game, handler, gameFileName?.let { resumeSlot(consoleId, it) }) else {
             val component = ComponentName.unflattenFromString(handler.key) ?: error("Application unavailable")
             if (start(context, GameLaunchIntents.view(game.uri, game.name, game.siblings).setComponent(component))) LaunchOutcome.STARTED else LaunchOutcome.FAILED
         }
-        if (outcome == LaunchOutcome.STARTED) actionLog.played(consoleId, game.name)
+        if (outcome == LaunchOutcome.STARTED) {
+            actionLog.played(consoleId, game.name)
+            if (trackPlay) playSessions.start(consoleId, gameFileName ?: game.name) else playSessions.abandon()
+        }
+        if (outcome != LaunchOutcome.STARTED && trackPlay) playSessions.abandon()
         if (outcome == LaunchOutcome.STARTED && remember) setPreferred(consoleId, if (automatic) GameLaunchKeys.AUTOMATIC else handler.key)
         return outcome
     }

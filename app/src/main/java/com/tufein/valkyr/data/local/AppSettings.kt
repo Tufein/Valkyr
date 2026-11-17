@@ -40,6 +40,7 @@ class AppSettings @Inject constructor(@param:ApplicationContext private val cont
     }
 
     private object Keys {
+        val CHEATS_HARDCORE = booleanPreferencesKey("cheats_hardcore")
         val AUTO_SCAN = booleanPreferencesKey("auto_scan")
         val AUTO_SCAN_HOURS = intPreferencesKey("auto_scan_hours")
         val AUTO_SCAN_WIFI = booleanPreferencesKey("auto_scan_wifi")
@@ -48,6 +49,7 @@ class AppSettings @Inject constructor(@param:ApplicationContext private val cont
         val AUTO_SCAN_LAST = longPreferencesKey("auto_scan_last")
         val SPEED_LIMIT_DAY_ONLY = booleanPreferencesKey("speed_limit_day_only")
         val BOLD_FOCUS = booleanPreferencesKey("bold_focus")
+        val A11Y_PALETTE = booleanPreferencesKey("a11y_palette")
         val BIOS_DIR = stringPreferencesKey("bios_dir")
         val MIN_FREE_GB = intPreferencesKey("min_free_gb")
         val AUTO_BACKUP = booleanPreferencesKey("auto_backup")
@@ -98,6 +100,12 @@ class AppSettings @Inject constructor(@param:ApplicationContext private val cont
     val speedLimitDayOnly: Flow<Boolean> = context.dataStore.data.map { it[Keys.SPEED_LIMIT_DAY_ONLY] ?: false }
     /** A thicker, high-contrast focus ring for TV / handheld use. */
     val boldFocus: Flow<Boolean> = context.dataStore.data.map { it[Keys.BOLD_FOCUS] ?: false }
+
+    /** 9.0: cheats are refused while RetroAchievements hardcore is on (the user knows their RA mode). */
+    val cheatsHardcore: Flow<Boolean> = context.dataStore.data.map { it[Keys.CHEATS_HARDCORE] ?: true }
+
+    /** 9.0: console colours with distinct hues for colour-blind players. */
+    val accessiblePalette: Flow<Boolean> = context.dataStore.data.map { it[Keys.A11Y_PALETTE] ?: false }
 
     /** SAF tree of the emulator's BIOS / system folder (RetroArch: `system`). */
     val biosDir: Flow<String> = context.dataStore.data.map { it[Keys.BIOS_DIR] ?: "" }
@@ -222,4 +230,6 @@ class AppSettings @Inject constructor(@param:ApplicationContext private val cont
     suspend fun setAutoScanLast(at: Long) = context.dataStore.edit { it[Keys.AUTO_SCAN_LAST] = at }
     suspend fun setSpeedLimitDayOnly(on: Boolean) = context.dataStore.edit { it[Keys.SPEED_LIMIT_DAY_ONLY] = on }
     suspend fun setBoldFocus(on: Boolean) = context.dataStore.edit { it[Keys.BOLD_FOCUS] = on }
+    suspend fun setCheatsHardcore(on: Boolean) = context.dataStore.edit { it[Keys.CHEATS_HARDCORE] = on }
+    suspend fun setAccessiblePalette(on: Boolean) = context.dataStore.edit { it[Keys.A11Y_PALETTE] = on }
 }

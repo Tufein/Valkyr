@@ -9,6 +9,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.tufein.valkyr.data.local.AppSettings
 import com.tufein.valkyr.data.repository.DownloadableFileRepository
 import com.tufein.valkyr.data.service.GameJournalService
+import com.tufein.valkyr.data.service.GameOverrideService
 import com.tufein.valkyr.data.service.JournalGameAccess
 import com.tufein.valkyr.data.service.ProfileService
 import com.tufein.valkyr.data.service.BackupService
@@ -111,7 +112,7 @@ class GameJournalRegressionTest {
         val key = JournalKey("journal-parent", "gba", "Game.gba")
         val isolated = object : ContextWrapper(context) { override fun getFilesDir() = dir }
         val backup = BackupService(isolated, graph.journalSources(), graph.journalFavourites(), graph.journalDownloads(),
-            graph.journalWishlist(), graph.journalCollections(), service, settings)
+            graph.journalWishlist(), graph.journalCollections(), service, settings, GameOverrideService(graph.journalOverrides()))
         service.saveNote(key, 0, "backup chapter") { true }
         val exported = JsonParser.parseString(backup.export().first).asJsonObject
         assertEquals("backup chapter", GameJournal.decode(exported.get("gameJournal")).single().note)

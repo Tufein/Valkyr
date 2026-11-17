@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="v90_played_title">Temps de jeu</string>
+    <string name="v90_played_total">%1$s joués sur %2$d sessions</string>
+    <string name="v90_played_minutes">%1$d min</string>
+    <string name="v90_played_hours">%1$d h %2$02d min</string>
+    <string name="v90_played_never">Aucun temps de jeu enregistré.</string>
+    <string name="v90_played_dates">Première %1$s · Dernière %2$s</string>
+    <string name="v90_played_hint">Mesuré du lancement du jeu jusqu\'à votre retour. Un appareil laissé allumé compte jusqu\'à l\'extinction de l\'écran.</string>
+    <string name="v90_fix_action">Corriger cette fiche</string>
+    <string name="v90_fix_title">Corriger cette fiche</string>
+    <string name="v90_fix_hint">Laissez un champ vide pour continuer à utiliser les données des sources. Une correction survit à un rescan et fait partie de la sauvegarde.</string>
+    <string name="v90_fix_name">Titre (actuellement %1$s)</string>
+    <string name="v90_fix_year">Année (actuellement %1$s)</string>
+    <string name="v90_fix_genre">Genre (actuellement %1$s)</string>
+    <string name="v90_fix_cover">Épingler une URL de jaquette (https uniquement)</string>
+    <string name="v90_fix_save">Enregistrer</string>
+    <string name="v90_fix_reset">Tout effacer</string>
+    <string name="v90_cheats_title">Astuces</string>
+    <string name="v90_cheats_import">Importer un fichier .cht</string>
+    <string name="v90_cheats_imported">Fichier d\'astuces importé.</string>
+    <string name="v90_cheats_none">Aucun fichier importé. Valkyr ne télécharge jamais d\'astuces.</string>
+    <string name="v90_cheats_hardcore">Le mode hardcore de RetroAchievements est actif</string>
+    <string name="v90_cheats_hardcore_hint">Les astuces sont désactivées tant que le mode hardcore est actif. Désactivez-le ici si vous jouez en softcore.</string>
+    <string name="v90_cheats_note">Les fichiers restent dans cette application et ne sont partagés qu\'à votre demande. Valkyr ne peut pas écrire dans le stockage privé d\'un autre émulateur.</string>
+    <string name="v90_cheats_share">Partager ce fichier avec un émulateur</string>
+    <string name="v90_flow_title">Configurer cette handheld</string>
+    <string name="v90_flow_hint">D\'un appareil vide à votre premier jeu : restauration, dossiers, émulateurs, BIOS, bibliothèque, jeu. Rien n\'est installé ni écrit sans demande.</string>
+    <string name="v90_flow_progress">%1$d étapes sur %2$d prêtes</string>
+    <string name="v90_flow_check">Vérifié avec : %1$s</string>
+    <string name="v90_flow_mark">Marquer comme fait</string>
+    <string name="v90_flow_undo">Annuler</string>
+    <string name="v90_flow_skipped">Pas nécessaire</string>
+    <string name="v90_flow_reset">Recommencer</string>
+    <string name="v90_step_restore">Restaurer une sauvegarde</string>
+    <string name="v90_step_folders">Confirmer les dossiers</string>
+    <string name="v90_step_emulators">Configurer les émulateurs</string>
+    <string name="v90_step_bios">Vérifier les fichiers BIOS</string>
+    <string name="v90_step_library">Vérifier la bibliothèque</string>
+    <string name="v90_step_launch">Lancer le premier jeu</string>
+    <string name="v90_a11y_cover">%1$s, %2$s, %3$s</string>
+    <string name="v90_a11y_plain">dans la bibliothèque</string>
+    <string name="v90_a11y_palette">Couleurs de console adaptées aux daltoniens</string>
+    <string name="v90_a11y_palette_hint">Une teinte distincte par famille de consoles, pour que la couleur ne soit jamais le seul indice.</string>
+</resources>

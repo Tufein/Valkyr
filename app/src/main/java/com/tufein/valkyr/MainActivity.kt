@@ -137,8 +137,10 @@ import com.tufein.valkyr.ui.screens.tools.SetsScreen
 import com.tufein.valkyr.ui.screens.tools.StorageScreen
 import com.tufein.valkyr.ui.screens.tools.ToolsHubScreen
 import com.tufein.valkyr.ui.screens.tools.WishlistScreen
+import com.tufein.valkyr.ui.theme.ConsolePalette
 import com.tufein.valkyr.ui.theme.DogmatixTheme
 import com.tufein.valkyr.ui.theme.LocalDogmatixTokens
+import com.tufein.valkyr.data.service.PlaySessionService
 import com.tufein.valkyr.data.service.SaveSyncService
 import com.tufein.valkyr.ui.screens.settings.savesync.SaveSyncScreen
 import android.provider.Settings
@@ -195,6 +197,7 @@ import com.tufein.valkyr.ui.screens.tools.FrontendCoversScreen
 import com.tufein.valkyr.ui.screens.tools.GameReadinessScreen
 import com.tufein.valkyr.ui.screens.tools.GameTransferScreen
 import com.tufein.valkyr.ui.screens.tools.LibraryRepairScreen
+import com.tufein.valkyr.ui.screens.tools.NewDeviceFlowScreen
 import com.tufein.valkyr.ui.screens.tools.NewHandheldScreen
 import com.tufein.valkyr.ui.screens.tools.PackageTransferScreen
 import com.tufein.valkyr.ui.screens.tools.PerfCheckScreen
@@ -218,6 +221,7 @@ class MainActivity : AppCompatActivity() {
     @Inject lateinit var smartCollections: SmartCollectionsService
     @Inject lateinit var pendingFilters: PendingLibraryFilters
     @Inject lateinit var saveSyncService: SaveSyncService
+    @Inject lateinit var playSessionService: PlaySessionService
     @Inject lateinit var appSettings: AppSettings
     @Inject lateinit var downloadService: DownloadService
     @Inject lateinit var rommRemoteInstall: RommRemoteInstallService
@@ -312,6 +316,8 @@ class MainActivity : AppCompatActivity() {
             val animations by lookSettings.animations.collectAsStateWithLifecycle(initialValue = true)
             val glow by lookSettings.glow.collectAsStateWithLifecycle(initialValue = true)
             val tvSetting by tvModeSettings.mode.collectAsStateWithLifecycle(initialValue = TvModeSetting.AUTO)
+            val accessiblePalette by appSettings.accessiblePalette.collectAsStateWithLifecycle(initialValue = false)
+            ConsolePalette.accessible = accessiblePalette
             val systemAnimationsOff = remember {
                 runCatching { Settings.Global.getFloat(contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f }.getOrDefault(false)
             }
@@ -365,6 +371,8 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         saveSyncService.autoSync()
+        // Back from a game: close the session that was opened when it launched.
+        playSessionService.returning()
         (application as? DogmatixApplication)?.flushOfflineQueue()
     }
 
@@ -795,6 +803,7 @@ private fun DogmatixApp(pendingFilters: PendingLibraryFilters) {
                     composable(NavRoutes.FrontendCovers.route) { FrontendCoversScreen() }
                     composable(NavRoutes.RetroArchPlaylists.route) { RetroArchPlaylistsScreen() }
                     composable(NavRoutes.NewHandheld.route) { NewHandheldScreen(navController) }
+                    composable(NavRoutes.NewDeviceFlow.route) { NewDeviceFlowScreen(navController) }
                     composable(NavRoutes.Tools.route) { ToolsHubScreen(navController) }
                     composable(NavRoutes.Sets.route) { SetsScreen() }
                     composable(NavRoutes.Storage.route) { StorageScreen() }

@@ -221,6 +221,7 @@ private fun GamePageContent(
     val tabs = GamePageModel.tabs(state.versionCount, progressAvailable || state.achievements != null, state.similar.size)
     var tabName by rememberSaveable(rom.consoleId, rom.fileName) { mutableStateOf(Tab.ABOUT.name) }
     val tab = GamePageModel.visible(tabs, Tab.valueOf(tabName))
+    var showFixMatch by remember(rom.consoleId, rom.fileName) { mutableStateOf(false) }
 
     val snackbar = remember { SnackbarHostState() }
     val showMessage: (String) -> Unit = { message ->
@@ -326,6 +327,16 @@ private fun GamePageContent(
     }
     if (showWhen) {
         DownloadWhenDialog(onDismiss = { showWhen = false }, onConfirm = { condition -> showWhen = false; download(item, condition) })
+    }
+    if (showFixMatch) {
+        FixMatchDialog(
+            consoleId = rom.consoleId,
+            fileName = rom.fileName,
+            title = state.details?.title ?: rom.name,
+            released = state.details?.released.orEmpty(),
+            genre = state.details?.genres?.firstOrNull().orEmpty(),
+            onDismiss = { showFixMatch = false }
+        )
     }
     if (showCollections) {
         CollectionPickerDialog(collections = collections, selected = state.collectionIds,
@@ -569,7 +580,8 @@ private fun GamePageContent(
             onOpenGame = onOpenGame,
             viewModel = viewModel,
             onOpenVersionPreference = onOpenVersionPreference,
-            onSeries = { viewModel.showSeries(state.item.file); onBack() }
+            onSeries = { viewModel.showSeries(state.item.file); onBack() },
+            onFixMatch = { showFixMatch = true }
         )
     }
 
@@ -675,7 +687,8 @@ private fun TabContent(
     onOpenGame: (String, String) -> Unit,
     viewModel: GamePageViewModel,
     onOpenVersionPreference: (() -> Unit)?,
-    onSeries: () -> Unit
+    onSeries: () -> Unit,
+    onFixMatch: () -> Unit
 ) {
     val rom = state.item.file
     val scheme = MaterialTheme.colorScheme
@@ -702,6 +715,7 @@ private fun TabContent(
                         coverFrom?.let {
                             Text(stringResource(R.string.cover77_from, com.tufein.valkyr.ui.screens.settings.covers.sourceName(it)), style = MaterialTheme.typography.labelSmall, color = scheme.onSurfaceVariant)
                         }
+                        ActionPill(stringResource(R.string.v90_fix_action), onFixMatch, modifier = PageTarget, icon = R.drawable.ic_content_copy)
                     }
                     GameJournalSection(rom.consoleId, rom.fileName)
                     // RomM's summary, genres, screenshots, play status and rating (draws nothing without RomM).
@@ -715,8 +729,10 @@ private fun TabContent(
                 }
                 Tab.VERSIONS -> Versions(state, ownedOf, downloadingOf, onDownload, viewModel, onOpenVersionPreference)
                 Tab.PROGRESS -> {
+                    PlayTimeSection(rom.consoleId, rom.fileName)
                     MyProgressSection(rom.consoleId, rom.fileName)
                     AchievementsSection(consoleId = rom.consoleId, fileName = rom.fileName, title = rom.name, match = state.achievements)
+                    CheatsSection(consoleId = rom.consoleId, fileName = rom.fileName)
                     CloudSavesSection(consoleId = rom.consoleId, fileName = rom.fileName)
                     Text(stringResource(R.string.page8_progress_hint), style = MaterialTheme.typography.bodySmall, color = scheme.onSurfaceVariant)
                 }

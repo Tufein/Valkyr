@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="v90_played_title">Speeltijd</string>
+    <string name="v90_played_total">%1$s gespeeld in %2$d sessies</string>
+    <string name="v90_played_minutes">%1$d min</string>
+    <string name="v90_played_hours">%1$d u %2$02d min</string>
+    <string name="v90_played_never">Nog geen speeltijd vastgelegd.</string>
+    <string name="v90_played_dates">Eerst %1$s · Laatst %2$s</string>
+    <string name="v90_played_hint">Gemeten vanaf het starten van een game tot je terugkomt. Een apparaat dat aan blijft telt tot het scherm uitgaat.</string>
+    <string name="v90_fix_action">Deze match corrigeren</string>
+    <string name="v90_fix_title">Deze match corrigeren</string>
+    <string name="v90_fix_hint">Laat een veld leeg om de gegevens van de bronnen te blijven gebruiken. Een correctie overleeft een rescan en gaat mee in je backup.</string>
+    <string name="v90_fix_name">Titel (nu %1$s)</string>
+    <string name="v90_fix_year">Jaar (nu %1$s)</string>
+    <string name="v90_fix_genre">Genre (nu %1$s)</string>
+    <string name="v90_fix_cover">Cover-URL vastmaken (alleen https)</string>
+    <string name="v90_fix_save">Opslaan</string>
+    <string name="v90_fix_reset">Alles wissen</string>
+    <string name="v90_cheats_title">Cheats</string>
+    <string name="v90_cheats_import">Een .cht-bestand importeren</string>
+    <string name="v90_cheats_imported">Cheatbestand geïmporteerd.</string>
+    <string name="v90_cheats_none">Geen cheatbestand geïmporteerd. Valkyr downloadt nooit cheats.</string>
+    <string name="v90_cheats_hardcore">RetroAchievements hardcore staat aan</string>
+    <string name="v90_cheats_hardcore_hint">Cheats staan uit zolang hardcore aan staat. Zet het hier uit als je in softcore speelt.</string>
+    <string name="v90_cheats_note">Bestanden blijven in deze app en worden alleen gedeeld als jij dat vraagt. Valkyr kan niet in de privéopslag van een andere emulator schrijven.</string>
+    <string name="v90_cheats_share">Dit bestand delen met een emulator</string>
+    <string name="v90_flow_title">Deze handheld instellen</string>
+    <string name="v90_flow_hint">Van een leeg apparaat naar je eerste game: terugzetten, mappen, emulators, BIOS, bibliotheek, spelen. Niets wordt geïnstalleerd of geschreven zonder vragen.</string>
+    <string name="v90_flow_progress">%1$d van %2$d stappen klaar</string>
+    <string name="v90_flow_check">Gecontroleerd met: %1$s</string>
+    <string name="v90_flow_mark">Als klaar markeren</string>
+    <string name="v90_flow_undo">Ongedaan maken</string>
+    <string name="v90_flow_skipped">Niet nodig</string>
+    <string name="v90_flow_reset">Opnieuw beginnen</string>
+    <string name="v90_step_restore">Een backup terugzetten</string>
+    <string name="v90_step_folders">De mappen bevestigen</string>
+    <string name="v90_step_emulators">De emulators instellen</string>
+    <string name="v90_step_bios">De BIOS-bestanden controleren</string>
+    <string name="v90_step_library">De bibliotheek controleren</string>
+    <string name="v90_step_launch">De eerste game spelen</string>
+    <string name="v90_a11y_cover">%1$s, %2$s, %3$s</string>
+    <string name="v90_a11y_plain">in de bibliotheek</string>
+    <string name="v90_a11y_palette">Kleurenblinde-vriendelijke consolekleuren</string>
+    <string name="v90_a11y_palette_hint">Een eigen tint per consolefamilie, zodat kleur nooit de enige aanwijzing is.</string>
+</resources>

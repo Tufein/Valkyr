@@ -4,6 +4,13 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class ConsoleFamilyTest {
+    @Test fun `the accessible palette has one distinct hue per family`() {
+        val hues = ConsoleFamily.entries.map { it.accessibleArgb }
+        assertEquals(ConsoleFamily.entries.size, hues.toSet().size)
+        ConsoleFamily.entries.forEach { assertEquals(it.accessibleArgb, it.color(true)) }
+        ConsoleFamily.entries.forEach { assertEquals(it.argb, it.color(false)) }
+    }
+
 
     @Test fun `nintendo home consoles and handhelds get their own colours`() {
         assertEquals(ConsoleFamily.NINTENDO, ConsoleFamily.of("nintendo_entertainment_system"))

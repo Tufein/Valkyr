@@ -3,6 +3,7 @@ package com.tufein.valkyr.util
 import com.tufein.valkyr.data.local.SettingsKeys
 import com.tufein.valkyr.data.local.entity.DownloadHistoryEntity
 import com.tufein.valkyr.data.local.entity.FavouriteEntity
+import com.tufein.valkyr.data.local.entity.GameOverrideEntity
 import com.tufein.valkyr.data.local.entity.WishlistEntity
 import com.tufein.valkyr.data.model.DownloadStatus
 import com.google.gson.JsonArray
@@ -186,6 +187,38 @@ object BackupJson {
                 failureAt = if (failure != null) PersistedDownloadFailure.timestamp(o.long("failureAt")) else null
             )
         }
+
+    // ---- 9.0: per-game corrections -------------------------------------------------------------
+
+    /** Fixed field names; an older backup simply has no "gameOverrides" section. */
+    fun overridesToJson(entries: List<GameOverrideEntity>): JsonArray = JsonArray().apply {
+        entries.forEach { o ->
+            val row = JsonObject()
+            row.addProperty("key", o.key)
+            o.title?.let { row.addProperty("title", it) }
+            o.year?.let { row.addProperty("year", it) }
+            o.genre?.let { row.addProperty("genre", it) }
+            o.pinnedCoverUrl?.let { row.addProperty("pinnedCoverUrl", it) }
+            row.addProperty("updatedAt", o.updatedAt)
+            add(row)
+        }
+    }
+
+    fun overridesFromJson(element: JsonElement?): List<GameOverrideEntity> {
+        val array = element as? JsonArray ?: return emptyList()
+        return array.mapNotNull { row ->
+            val o = row as? JsonObject ?: return@mapNotNull null
+            val key = o.string("key") ?: return@mapNotNull null
+            GameOverrideEntity(
+                key = key,
+                title = o.string("title"),
+                year = o.long("year")?.toInt(),
+                genre = o.string("genre"),
+                pinnedCoverUrl = o.string("pinnedCoverUrl"),
+                updatedAt = o.long("updatedAt") ?: 0L
+            )
+        }
+    }
 
     private fun JsonArray?.orEmpty(): List<JsonElement> = this?.toList().orEmpty()
 

@@ -25,6 +25,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -76,8 +79,16 @@ fun CoverCard(
     val scheme = MaterialTheme.colorScheme
     val source = rememberFocusSource()
     val shape = RoundedCornerShape(CardRadius)
+    // 9.0: one sentence for TalkBack instead of an unlabelled image plus scattered badges.
+    val state = buildList {
+        if (owned) add(stringResource(R.string.next30_on_device))
+        if (completed) add(stringResource(R.string.done55_completed))
+        actionLabel?.let(::add)
+    }.joinToString(", ").ifBlank { stringResource(R.string.v90_a11y_plain) }
+    val description = stringResource(R.string.v90_a11y_cover, title, ConsoleFormatter.getConsoleShortName(consoleId), state)
     Column(
         modifier = modifier
+            .semantics(mergeDescendants = true) { contentDescription = description }
             .width(width)
             .focusScale(source, 1.04f)
             .focusRing(source, cornerRadius = CardRadius, fill = true)

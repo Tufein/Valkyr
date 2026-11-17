@@ -19,4 +19,13 @@ interface GameOverrideDao {
 
     @Query("SELECT COUNT(*) FROM game_overrides")
     suspend fun count(): Int
+
+    @Query("SELECT * FROM game_overrides ORDER BY `key`")
+    suspend fun all(): List<GameOverrideEntity>
+
+    @Query("DELETE FROM game_overrides")
+    suspend fun clearAll()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun restore(entries: List<GameOverrideEntity>)
 }

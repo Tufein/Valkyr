@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="v90_played_title">Tiempo jugado</string>
+    <string name="v90_played_total">%1$s jugados en %2$d sesiones</string>
+    <string name="v90_played_minutes">%1$d min</string>
+    <string name="v90_played_hours">%1$d h %2$02d min</string>
+    <string name="v90_played_never">Todavía no hay tiempo registrado.</string>
+    <string name="v90_played_dates">Primera %1$s · Última %2$s</string>
+    <string name="v90_played_hint">Medido desde que se inicia el juego hasta que vuelves. Un dispositivo encendido cuenta hasta que se apaga la pantalla.</string>
+    <string name="v90_fix_action">Corregir esta ficha</string>
+    <string name="v90_fix_title">Corregir esta ficha</string>
+    <string name="v90_fix_hint">Deja un campo vacío para seguir usando los datos de las fuentes. Una corrección sobrevive al reescaneo y se guarda en la copia.</string>
+    <string name="v90_fix_name">Título (actual %1$s)</string>
+    <string name="v90_fix_year">Año (actual %1$s)</string>
+    <string name="v90_fix_genre">Género (actual %1$s)</string>
+    <string name="v90_fix_cover">Fijar URL de portada (solo https)</string>
+    <string name="v90_fix_save">Guardar</string>
+    <string name="v90_fix_reset">Borrar todo</string>
+    <string name="v90_cheats_title">Trucos</string>
+    <string name="v90_cheats_import">Importar un archivo .cht</string>
+    <string name="v90_cheats_imported">Archivo de trucos importado.</string>
+    <string name="v90_cheats_none">No hay ningún archivo importado. Valkyr nunca descarga trucos.</string>
+    <string name="v90_cheats_hardcore">El modo hardcore de RetroAchievements está activo</string>
+    <string name="v90_cheats_hardcore_hint">Los trucos están desactivados mientras el modo hardcore esté activo. Desactívalo aquí si juegas en softcore.</string>
+    <string name="v90_cheats_note">Los archivos se quedan en esta app y solo se comparten si tú lo pides. Valkyr no puede escribir en el almacenamiento privado de otro emulador.</string>
+    <string name="v90_cheats_share">Compartir este archivo con un emulador</string>
+    <string name="v90_flow_title">Configurar esta handheld</string>
+    <string name="v90_flow_hint">De un dispositivo vacío a tu primer juego: restaurar, carpetas, emuladores, BIOS, biblioteca y jugar. Nada se instala ni se escribe sin preguntar.</string>
+    <string name="v90_flow_progress">%1$d de %2$d pasos listos</string>
+    <string name="v90_flow_check">Comprobado con: %1$s</string>
+    <string name="v90_flow_mark">Marcar como hecho</string>
+    <string name="v90_flow_undo">Deshacer</string>
+    <string name="v90_flow_skipped">No hace falta</string>
+    <string name="v90_flow_reset">Empezar de nuevo</string>
+    <string name="v90_step_restore">Restaurar una copia</string>
+    <string name="v90_step_folders">Confirmar las carpetas</string>
+    <string name="v90_step_emulators">Configurar los emuladores</string>
+    <string name="v90_step_bios">Comprobar los archivos BIOS</string>
+    <string name="v90_step_library">Verificar la biblioteca</string>
+    <string name="v90_step_launch">Jugar el primer juego</string>
+    <string name="v90_a11y_cover">%1$s, %2$s, %3$s</string>
+    <string name="v90_a11y_plain">en la biblioteca</string>
+    <string name="v90_a11y_palette">Colores de consola para daltónicos</string>
+    <string name="v90_a11y_palette_hint">Un tono distinto para cada familia de consolas, para que el color nunca sea la única pista.</string>
+</resources>

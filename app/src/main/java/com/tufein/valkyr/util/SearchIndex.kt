@@ -38,6 +38,7 @@ object SettingKeys {
     const val SWAP_BUTTONS = "swap_buttons"
     const val SECOND_SCREEN = "second_screen"
     const val BOLD_FOCUS = "bold_focus"
+    const val A11Y_PALETTE = "a11y_palette"
     const val ANIMATIONS = "animations"
     const val GLOW = "glow"
     const val TV_MODE = "tv_mode"
@@ -152,6 +153,7 @@ object SearchIndex {
         SearchEntry("recovery", SearchGroup.TOOLS, R.string.recovery_title, R.string.recovery_hint, R.drawable.ic_history, SearchTarget(NavRoutes.Recovery.route)),
         SearchEntry("package_transfer", SearchGroup.TOOLS, R.string.package_transfer_title, R.string.package_transfer_hint, R.drawable.ic_stacks, SearchTarget(NavRoutes.PackageTransfer.route)),
         SearchEntry("new_handheld", SearchGroup.TOOLS, R.string.wizard35_title, R.string.wizard35_hint, R.drawable.ic_devices, SearchTarget(NavRoutes.NewHandheld.route), keywords = R.string.wizard35_kw),
+        SearchEntry("new_device_flow", SearchGroup.TOOLS, R.string.v90_flow_title, R.string.v90_flow_hint, R.drawable.ic_devices, SearchTarget(NavRoutes.NewDeviceFlow.route)),
         SearchEntry("game_transfer", SearchGroup.TOOLS, R.string.transfer31_title, R.string.transfer31_hint, R.drawable.ic_file_export, SearchTarget(NavRoutes.GameTransfer.route), keywords = R.string.transfer31_kw),
         SearchEntry("version_preference", SearchGroup.TOOLS, R.string.compare24_title, R.string.compare24_row_hint, R.drawable.ic_compare, SearchTarget(NavRoutes.VersionPreference.route), keywords = R.string.find8_kw_regions),
         SearchEntry("up_next", SearchGroup.TOOLS, R.string.next30_title, R.string.next30_hint, R.drawable.ic_playlist_play, SearchTarget(NavRoutes.UpNext.route)),
@@ -180,6 +182,7 @@ object SearchIndex {
             setting(SettingKeys.GAMEPAD_LAYOUT, R.string.settings_gamepad_layout, R.string.settings_gamepad_layout_hint, R.drawable.ic_gamepad, R.string.find8_kw_gamepad),
             setting(SettingKeys.SWAP_BUTTONS, R.string.settings_swap_face_buttons, R.string.settings_swap_face_buttons_hint, R.drawable.ic_swap_horiz, R.string.find8_kw_gamepad),
             setting(SettingKeys.BOLD_FOCUS, R.string.settings_bold_focus, R.string.settings_bold_focus_hint, R.drawable.ic_center_focus_strong, R.string.find8_kw_accessibility),
+            setting(SettingKeys.A11Y_PALETTE, R.string.v90_a11y_palette, R.string.v90_a11y_palette_hint, R.drawable.ic_palette, R.string.find8_kw_accessibility),
             setting(SettingKeys.TV_MODE, R.string.tv8_setting_title, null, R.drawable.ic_tv),
             setting(SettingKeys.SECOND_SCREEN, R.string.settings_second_screen, R.string.settings_second_screen_hint, R.drawable.ic_tv, R.string.find8_kw_second_screen),
 

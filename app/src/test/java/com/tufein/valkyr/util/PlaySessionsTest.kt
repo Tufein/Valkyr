@@ -72,4 +72,24 @@ class PlaySessionsTest {
         assertEquals(PlaySessions.Totals.EMPTY, PlaySessions.totals(emptyList(), g, p))
         assertNull(PlaySessions.totals(emptyList(), g, p).firstPlayedMs)
     }
+
+    @Test fun `closing bounds a session and drops an absurd one`() {
+        val running = PlaySessions.Session(g, p, 1_000L, 0L)
+        assertEquals(5_000L, PlaySessions.close(running, 6_000L).lengthMs)
+        assertEquals(PlaySessions.MAX_SESSION_MS, PlaySessions.close(running, Long.MAX_VALUE).lengthMs)
+        assertEquals(0L, PlaySessions.close(running, 500L).lengthMs)
+    }
+
+    @Test fun `the file round trips and ignores a future version`() {
+        val sessions = listOf(PlaySessions.Session(g, p, 1_000L, 6_000L), PlaySessions.Session("nds|z", p, 9_000L, 12_000L))
+        assertEquals(sessions.sortedBy { it.startMs }, PlaySessions.fromJson(PlaySessions.toJson(sessions)).sortedBy { it.startMs })
+        assertEquals(emptyList<PlaySessions.Session>(), PlaySessions.fromJson("""{"format":"valkyr-play-sessions","version":99,"sessions":[]}"""))
+        assertEquals(emptyList<PlaySessions.Session>(), PlaySessions.fromJson("{ broken"))
+    }
+
+    @Test fun `a bounded file keeps the newest sessions`() {
+        val many = (1L..4_010L).map { PlaySessions.Session(g, p, it, it + 10L) }
+        assertEquals(PlaySessions.MAX_SESSIONS, PlaySessions.trim(many).size)
+        assertEquals(4_010L, PlaySessions.trim(many).first().startMs)
+    }
 }

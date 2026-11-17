@@ -123,7 +123,7 @@ class GameReadinessViewModel @Inject constructor(
                 access.check(owner)
                 kotlin.check(_ui.value == shown && settings.profiles.first() == shown.profileConfiguration)
                 // The indexed game is revalidated under the same lock as the external launch.
-                val outcome = launcher.launch(context, console, game, handler, false)
+                val outcome = launcher.launch(context, console, game, handler, false, trackPlay = false)
                 _ui.update { it.copy(result = when(outcome) {
                     LaunchOutcome.STARTED -> R.string.ready25_opened
                     LaunchOutcome.NEEDS_EXTRACT -> R.string.ready25_extract
