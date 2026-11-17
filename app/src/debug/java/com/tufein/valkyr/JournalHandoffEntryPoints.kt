@@ -18,6 +18,7 @@ interface Journal28TestEntryPoint {
     fun journalFavourites(): FavouriteDao
     fun journalDownloads(): DownloadHistoryDao
     fun journalWishlist(): WishlistDao
+    fun journalOverrides(): GameOverrideDao
 }
 
 @EntryPoint @InstallIn(SingletonComponent::class)

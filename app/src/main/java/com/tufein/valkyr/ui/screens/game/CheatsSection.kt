@@ -98,10 +98,11 @@ fun CheatsSection(consoleId: String, fileName: String, viewModel: CheatsViewMode
             enabled = buildSet { entries.forEachIndexed { i, _ -> if (viewModel.enabled(name, i)) add(i) } }
         }
     }
+    val importedText = stringResource(R.string.v90_cheats_imported)
     val import = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
             viewModel.import(context, uri)
-            notice = context.getString(R.string.v90_cheats_imported)
+            notice = importedText
         }
     }
 

@@ -73,7 +73,7 @@ class ReadinessProfileRegressionTest {
             val profiles = graph.readinessProfiles()
             val library = graph.readinessLibrary()
             library.refresh()
-            val launcher = GameLaunchService(isolated, library, graph.readinessLog(), profiles)
+            val launcher = GameLaunchService(isolated, library, graph.readinessLog(), profiles, PlaySessionService(isolated, profiles))
             val readiness = GameReadinessService(context, library, launcher, graph.readinessBios())
             val access = JournalGameAccess(settings, DownloadableFileRepository(files, profiles))
             val model = GameReadinessViewModel(files, library, launcher, readiness, profiles, settings, access)
