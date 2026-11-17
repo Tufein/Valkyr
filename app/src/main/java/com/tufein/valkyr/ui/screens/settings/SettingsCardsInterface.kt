@@ -107,6 +107,15 @@ internal fun SettingsEnv.lookCardRows(): List<SettingsRow> = listOf(
             onAdjust = { extra.setBoldFocus(context, it > 0) }
         ) { ThemedSwitch(appPrefs.boldFocus) { extra.setBoldFocus(context, it) } }
     },
+    SettingsRow(key = SettingKeys.A11Y_PALETTE) {
+        SettingRow(
+            icon = R.drawable.ic_palette,
+            title = stringResource(R.string.v90_a11y_palette),
+            hint = stringResource(R.string.v90_a11y_palette_hint),
+            onClick = { extra.setAccessiblePalette(context, !appPrefs.accessiblePalette) },
+            onAdjust = { extra.setAccessiblePalette(context, it > 0) }
+        ) { ThemedSwitch(appPrefs.accessiblePalette) { extra.setAccessiblePalette(context, it) } }
+    },
     SettingsRow(key = SettingKeys.ANIMATIONS) {
         SettingRow(
             icon = R.drawable.ic_animation,

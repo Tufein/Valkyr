@@ -117,7 +117,7 @@ object SettingsLayout {
 
     /** The rows behind each card's "Advanced" row, in order; a card without any has no such row. */
     val advanced: Map<SettingsGroup, List<String>> = linkedMapOf(
-        SettingsGroup.LOOK to listOf(K.TV_MODE, K.SECOND_SCREEN, K.BOLD_FOCUS, K.COMPACT, K.ANIMATIONS, K.GLOW),
+        SettingsGroup.LOOK to listOf(K.TV_MODE, K.SECOND_SCREEN, K.BOLD_FOCUS, K.A11Y_PALETTE, K.COMPACT, K.ANIMATIONS, K.GLOW),
         SettingsGroup.LIBRARY to listOf(K.MAX_RESULTS, K.RECENT_MENU, K.MANUALS_WITH_GAME, K.MANUALS_CAP),
         SettingsGroup.DOWNLOADS to listOf(
             K.SEPARATE_CONSOLE, K.MIN_FREE, K.STORAGE, K.CONCURRENT, K.PER_SERVER, K.SPEED_LIMIT, K.SPEED_DAY_ONLY,

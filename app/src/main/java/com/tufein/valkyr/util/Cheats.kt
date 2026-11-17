@@ -9,6 +9,13 @@ package com.tufein.valkyr.util
  * downloaded from a cheat site.
  */
 object Cheats {
+    const val MAX_FILE_BYTES = 4L * 1024 * 1024
+
+    fun isCheatFile(name: String): Boolean = name.endsWith(".cht", ignoreCase = true)
+
+    /** A plain file name: no separators, no traversal, bounded length. */
+    fun safeName(name: String): String =
+        name.trim().replace('\\', '/').substringAfterLast('/').take(80).ifBlank { "cheats.cht" }
 
     data class Cheat(val name: String, val code: String, val enabled: Boolean = false)
 

@@ -1,5 +1,9 @@
 package com.tufein.valkyr.util
 
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+
 /**
  * 9.0: play sessions measured around a launch and the app returning to the foreground.
  *
@@ -9,6 +13,14 @@ package com.tufein.valkyr.util
  * the running session, and a session is never counted twice.
  */
 object PlaySessions {
+    const val FORMAT = "valkyr-play-sessions"
+    const val VERSION = 1
+
+    /** A device left with the emulator open is not twelve hours of play. */
+    const val MAX_SESSION_MS = 12 * 60 * 60 * 1000L
+
+    /** A bounded file: 20 games played twice a day for three months still fits. */
+    const val MAX_SESSIONS = 4_000
 
     /** One measured session. [endMs] of 0 means "still running" (lost on a crash). */
     data class Session(
@@ -75,4 +87,51 @@ object PlaySessions {
     /** Sessions in a single calendar day (by epoch ms range, inclusive start, exclusive end). */
     fun inDay(sessions: List<Session>, dayStartMs: Long, dayEndMs: Long): List<Session> =
         sessions.filter { it.startMs in dayStartMs until dayEndMs }
+
+    /** Keeps the newest sessions, so the file cannot grow without bound. */
+    fun trim(sessions: List<Session>): List<Session> =
+        sessions.sortedByDescending { it.startMs }.take(MAX_SESSIONS)
+
+    /** Closes a running session, bounded by [MAX_SESSION_MS]. */
+    fun close(session: Session, now: Long): Session {
+        val end = minOf(now, session.startMs + MAX_SESSION_MS)
+        return clamp(session.copy(endMs = if (end > session.startMs) end else 0L))
+    }
+
+    /** Fixed field names: this file is written on the device and may be copied with a backup. */
+    fun toJson(sessions: List<Session>): String {
+        val root = JsonObject()
+        root.addProperty("format", FORMAT)
+        root.addProperty("version", VERSION)
+        val array = JsonArray()
+        trim(sessions).forEach { s ->
+            val o = JsonObject()
+            o.addProperty("gameId", s.gameId)
+            o.addProperty("profileId", s.profileId)
+            o.addProperty("startMs", s.startMs)
+            o.addProperty("endMs", s.endMs)
+            array.add(o)
+        }
+        root.add("sessions", array)
+        return root.toString()
+    }
+
+    /** An unknown version or a broken row is ignored rather than losing the whole history. */
+    fun fromJson(json: String?): List<Session> {
+        if (json.isNullOrBlank()) return emptyList()
+        val root = runCatching { JsonParser.parseString(json).asJsonObject }.getOrNull() ?: return emptyList()
+        if (root.field("format") != FORMAT || root.fieldLong("version")?.toInt() != VERSION) return emptyList()
+        val rows = runCatching { root.getAsJsonArray("sessions") }.getOrNull() ?: return emptyList()
+        return rows.mapNotNull { row ->
+            val o = runCatching { row.asJsonObject }.getOrNull() ?: return@mapNotNull null
+            val gameId = o.field("gameId") ?: return@mapNotNull null
+            val profileId = o.field("profileId") ?: return@mapNotNull null
+            val start = o.fieldLong("startMs") ?: return@mapNotNull null
+            val end = o.fieldLong("endMs") ?: return@mapNotNull null
+            if (gameId.isBlank() || start <= 0L) null else Session(gameId, profileId, start, end)
+        }.let(::trim)
+    }
+
+    private fun JsonObject.field(name: String): String? = runCatching { get(name)?.asString }.getOrNull()
+    private fun JsonObject.fieldLong(name: String): Long? = runCatching { get(name)?.asLong }.getOrNull()
 }

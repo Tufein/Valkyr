@@ -50,7 +50,8 @@ class CoverRepository @Inject constructor(
     steamGridDb: SteamGridDbService,
     igdb: IgdbService,
     private val stats: CoverSourceStats,
-    private val versionSettings: VersionPreferenceSettings
+    private val versionSettings: VersionPreferenceSettings,
+    private val overrides: GameOverrideService
 ) {
     /** The sources that need a key, by source: asked only while set up and not resting. */
     private val keyed: Map<Source, CoverLookupSource> =
@@ -81,6 +82,9 @@ class CoverRepository @Inject constructor(
     /** The best cover URL for a game, or null when none is known. */
     suspend fun coverUrl(consoleId: String, fileName: String, name: String = fileName): String? {
         val key = RommMarks.key(consoleId, fileName)
+        // 9.0: a cover the user pinned is above every provider and survives a rescan. With no
+        // corrections at all this is one in-memory check, so a large grid still scrolls fast.
+        if (overrides.hasAny()) overrides.pinnedCover(consoleId, fileName)?.takeIf { it.isNotBlank() }?.let { return it }
         memory.get(key)?.let { return it.ifEmpty { null } }
         val chain = sourceSettings.chain.first()
         if (chain.enabled(Source.ROMM)) {

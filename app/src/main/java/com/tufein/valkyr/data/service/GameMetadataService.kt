@@ -23,7 +23,8 @@ import javax.inject.Singleton
 @Singleton
 class GameMetadataService @Inject constructor(
     private val dao: GameMetadataDao,
-    private val thumbnails: ThumbnailService
+    private val thumbnails: ThumbnailService,
+    private val overrides: GameOverrideService
 ) {
     private val userAgent = "Valkyr/${BuildConfig.VERSION_NAME}"
 
@@ -33,10 +34,13 @@ class GameMetadataService @Inject constructor(
      */
     suspend fun lookup(name: String, consoleId: String, fileName: String? = null): GameDetails? {
         val found = lookupDatabases(name, consoleId)
-        if (fileName == null || found?.imageUrl?.isNotBlank() == true) return found
-        val cover = runCatching { thumbnails.boxart(consoleId, fileName) }.getOrNull() ?: return found
-        return found?.copy(imageUrl = cover, source = listOf(found.source, "libretro-thumbnails").filter { it.isNotBlank() }.joinToString(" · "))
+        if (fileName == null) return found?.let { overrides.apply(consoleId, fileName ?: name, it) }
+        val pinned = overrides.pinnedCover(consoleId, fileName)
+        if (found?.imageUrl?.isNotBlank() == true && pinned == null) return overrides.apply(consoleId, fileName, found)
+        val cover = pinned ?: runCatching { thumbnails.boxart(consoleId, fileName) }.getOrNull() ?: return found?.let { overrides.apply(consoleId, fileName, it) }
+        val result = found?.copy(imageUrl = cover, source = listOf(found.source, "libretro-thumbnails").filter { it.isNotBlank() }.joinToString(" · "))
             ?: GameDetails(GameTitleCleaner.clean(name), "", emptyList(), "", "", cover, "libretro-thumbnails")
+        return overrides.apply(consoleId, fileName, result)
     }
 
     /** What the cache says about a game, without a network call (see [peek]). */

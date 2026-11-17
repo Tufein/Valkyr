@@ -7,6 +7,7 @@ import com.tufein.valkyr.ui.screens.tools.ACTION_HISTORY_ROUTE
 import com.tufein.valkyr.ui.screens.tools.FRONTEND_COVERS_ROUTE
 import com.tufein.valkyr.ui.screens.tools.GAME_TRANSFER_ROUTE
 import com.tufein.valkyr.ui.screens.tools.LIBRARY_REPAIR_ROUTE
+import com.tufein.valkyr.ui.screens.tools.NEW_DEVICE_FLOW_ROUTE
 import com.tufein.valkyr.ui.screens.tools.NEW_HANDHELD_ROUTE
 import com.tufein.valkyr.ui.screens.tools.RETROARCH_PLAYLISTS_ROUTE
 import com.tufein.valkyr.util.GamePageModel
@@ -89,6 +90,8 @@ sealed class NavRoutes(val route: String, val labelRes: Int, val icon: Int) {
     object RetroArchPlaylists : NavRoutes(RETROARCH_PLAYLISTS_ROUTE, R.string.playlists35_title, R.drawable.ic_playlist_add)
     /** 3.5.0: the checklist that takes a fresh install to a ready handheld, step by step. */
     object NewHandheld : NavRoutes(NEW_HANDHELD_ROUTE, R.string.wizard35_title, R.drawable.ic_devices)
+    /** 9.0: restore, folders, emulators, BIOS, library and the first game in one flow. */
+    object NewDeviceFlow : NavRoutes(NEW_DEVICE_FLOW_ROUTE, R.string.v90_flow_title, R.drawable.ic_devices)
 
     object SearchAll : NavRoutes("search_all", R.string.find8_title, R.drawable.ic_search)
     /** 4.3.0: the cover sources, their order and the ScreenScraper login (Settings → Cover sources). */
@@ -97,7 +100,7 @@ sealed class NavRoutes(val route: String, val labelRes: Int, val icon: Int) {
     companion object {
         /** The four sections shown as tabs (3.8.0); every other screen is reached from More. */
         val tabs by lazy { listOf(Home, Downloads, Sources, More) }
-        val allRoutes by lazy { tabs + Settings + Contact + Romm + SaveSync + Overview + Duplicates + Tools + Sets + Storage + Wishlist + Files + Collections + Switch + Dat + ImportList + Bios + Stats + Profiles + RetroAchievements + Frontends + Cloud + CloudBackup + CollectionGoals + History + Health + Recap + BestGames + FrontendMetadata + BetterVersions + FreeSpace + SearchAll + Recovery + PackageTransfer + ActionHistory + VersionPreference + UpNext + LibraryRepair + ReportProblem + PerfCheck + GameTransfer + FrontendCovers + RetroArchPlaylists + NewHandheld + CoverSources + WifiReceive + EmulatorCheck }
+        val allRoutes by lazy { tabs + Settings + Contact + Romm + SaveSync + Overview + Duplicates + Tools + Sets + Storage + Wishlist + Files + Collections + Switch + Dat + ImportList + Bios + Stats + Profiles + RetroAchievements + Frontends + Cloud + CloudBackup + CollectionGoals + History + Health + Recap + BestGames + FrontendMetadata + BetterVersions + FreeSpace + SearchAll + Recovery + PackageTransfer + ActionHistory + VersionPreference + UpNext + LibraryRepair + ReportProblem + PerfCheck + GameTransfer + FrontendCovers + RetroArchPlaylists + NewHandheld + NewDeviceFlow + CoverSources + WifiReceive + EmulatorCheck }
     }
 }
 

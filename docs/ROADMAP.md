@@ -219,7 +219,7 @@ library lists (favourites, wishlist, collections), which today merge as a union.
 sync, and one device going offline for a week does not lose its week. Tickets:
 **[plans/8.0.md](plans/8.0.md)**.
 
-## 9.0 — One evening, one handheld
+## 9.0 — One evening, one handheld (shipped in 9.0.0)
 
 The first release under the rule above, and what the small ones were meant to add up to: a
 wiped device becomes a playable handheld in one sitting, and the library starts to feel lived-in

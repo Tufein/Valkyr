@@ -28,6 +28,12 @@ class CheatsTest {
         org.junit.Assert.assertFalse(Cheats.matchesFile("zelda.cht", "mario.nes"))
     }
 
+    @Test fun `imported file names cannot escape the cheats folder`() {
+        assertEquals("mario.cht", Cheats.safeName("../../mario.cht"))
+        assertEquals("mario.cht", Cheats.safeName("C:\\cheats\\mario.cht"))
+        assertEquals("cheats.cht", Cheats.safeName("   "))
+    }
+
     @Test fun `a broken file yields no cheats`() {
         assertEquals(0, Cheats.parse("this is not a cheat file").size)
         assertEquals(0, Cheats.parse("").size)

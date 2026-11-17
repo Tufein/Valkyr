@@ -67,7 +67,8 @@ class BackupService @Inject constructor(
     private val wishlistDao: WishlistDao,
     private val collections: CollectionsRepository,
     private val journal: GameJournalService,
-    private val profiles: AppSettings
+    private val profiles: AppSettings,
+    private val overrides: GameOverrideService
 ) {
     data class Summary(
         val settings: Int,
@@ -122,6 +123,7 @@ class BackupService @Inject constructor(
                     ?.let { add("collections", it) }
             }
             add("downloadHistory", BackupJson.historyToJson(history))
+            add("gameOverrides", BackupJson.overridesToJson(overrides.all()))
         }
         val text = gson.toJson(root)
         require(text.toByteArray(Charsets.UTF_8).size <= MAX_BACKUP_BYTES) { "Backup is too large" }
@@ -189,10 +191,13 @@ class BackupService @Inject constructor(
         val savedCollections = backup.get("collections")?.let { SourcesJson.parseCollections(JsonObject().apply { add("_collections", it) }.toString()) }.orEmpty()
         val journalEntries = backup.get("gameJournal")?.let(journal::validateRestore)
         journalEntries?.let { journal.preflightRestore(it) }
+        // 9.0: an older backup has no section; then the current corrections stay as they are.
+        val savedOverrides = BackupJson.overridesFromJson(backup.get("gameOverrides"))
 
         return withContext(NonCancellable) {
             // A missing journal section keeps the current notes; conflicting imported notes are retained.
             journalEntries?.let { journal.restore(it) }
+            if (backup.has("gameOverrides")) overrides.restore(savedOverrides)
             // Restore collection names before their settings: numeric ids differ on another install.
             collections.import(savedCollections)
             val identities = collections.identities().entries.associate { it.value to it.key }

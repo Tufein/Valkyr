@@ -4,7 +4,7 @@ import kotlin.math.abs
 
 /** The text size setting: a percentage on top of Android's own font size, in a few fixed steps. */
 object TextSize {
-    val STEPS = listOf(85, 100, 115, 130, 150)
+    val STEPS = listOf(85, 100, 115, 130, 150, 175, 200)
     const val DEFAULT = 100
 
     /** The step [delta] places from [current]; a value between steps counts as the nearest step. */

@@ -7,8 +7,9 @@ class TextSizeTest {
     @Test fun `steps move one at a time and stop at both ends`() {
         assertEquals(115, TextSize.shift(100, 1))
         assertEquals(85, TextSize.shift(100, -1))
-        assertEquals(150, TextSize.shift(150, 1))
+        assertEquals(200, TextSize.shift(200, 1))
         assertEquals(85, TextSize.shift(85, -1))
+        assertEquals(200, TextSize.shift(150, 2))
         assertEquals(130, TextSize.shift(100, 2))
     }
 

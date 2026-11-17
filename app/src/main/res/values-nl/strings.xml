@@ -1306,7 +1306,7 @@
     <string name="downloads_eta_minutes">ongeveer %1$d min</string>
     <string name="whats_new_title">Nieuw in Valkyr %1$s</string>
     <string-array name="whats_new_items">
-        <item>6.0: een Consoles-weergave, gegroepeerde versies, handleidingenlezer, offline-chip, tweede-scherm-hub, Syncthing-mapmodus voor saves en een korte rondleiding.</item>
+        <item>9.0: een lege handheld in één flow instellen, speeltijd per game, geïmporteerde cheats met hardcore-guard, correcties voor verkeerde matches en een leesbaar palet.</item>
     </string-array>
 
     <!-- 4.0 -->

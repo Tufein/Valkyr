@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 9.0: one evening, one handheld -->
+<resources>
+    <string name="v90_played_title">Time played</string>
+    <string name="v90_played_total">Played %1$s in %2$d sessions</string>
+    <string name="v90_played_minutes">%1$d min</string>
+    <string name="v90_played_hours">%1$d h %2$02d min</string>
+    <string name="v90_played_never">No play time recorded yet.</string>
+    <string name="v90_played_dates">First %1$s · Last %2$s</string>
+    <string name="v90_played_hint">Measured from the moment a game starts until you come back. A device left running counts until its screen turns off.</string>
+    <string name="v90_fix_action">Fix this match</string>
+    <string name="v90_fix_title">Fix this match</string>
+    <string name="v90_fix_hint">Leave a field empty to keep using what the providers say. A correction survives a rescan and goes with your backup.</string>
+    <string name="v90_fix_name">Title (currently %1$s)</string>
+    <string name="v90_fix_year">Year (currently %1$s)</string>
+    <string name="v90_fix_genre">Genre (currently %1$s)</string>
+    <string name="v90_fix_cover">Pin a cover URL (https only)</string>
+    <string name="v90_fix_save">Save</string>
+    <string name="v90_fix_reset">Clear all</string>
+    <string name="v90_cheats_title">Cheats</string>
+    <string name="v90_cheats_import">Import a .cht file</string>
+    <string name="v90_cheats_imported">Cheat file imported.</string>
+    <string name="v90_cheats_none">No cheat file imported. Valkyr never downloads cheats.</string>
+    <string name="v90_cheats_hardcore">RetroAchievements hardcore is on</string>
+    <string name="v90_cheats_hardcore_hint">Cheats are switched off while hardcore is on. Turn it off here when you are playing in softcore.</string>
+    <string name="v90_cheats_note">Files stay in this app and are only shared when you ask. Valkyr cannot write into another emulator\'s private storage.</string>
+    <string name="v90_cheats_share">Share this file with an emulator</string>
+    <string name="v90_flow_title">Set up this handheld</string>
+    <string name="v90_flow_hint">From a wiped device to your first game: restore, folders, emulators, BIOS, library, play. Nothing is installed or written without asking.</string>
+    <string name="v90_flow_progress">%1$d of %2$d steps ready</string>
+    <string name="v90_flow_check">Checked by: %1$s</string>
+    <string name="v90_flow_mark">Mark done</string>
+    <string name="v90_flow_undo">Undo</string>
+    <string name="v90_flow_skipped">Not needed</string>
+    <string name="v90_flow_reset">Start over</string>
+    <string name="v90_step_restore">Restore a backup</string>
+    <string name="v90_step_folders">Confirm the folders</string>
+    <string name="v90_step_emulators">Set up the emulators</string>
+    <string name="v90_step_bios">Check the BIOS files</string>
+    <string name="v90_step_library">Verify the library</string>
+    <string name="v90_step_launch">Play the first game</string>
+    <string name="v90_a11y_cover">%1$s, %2$s, %3$s</string>
+    <string name="v90_a11y_plain">in the library</string>
+    <string name="v90_a11y_palette">Colour-blind safe console colours</string>
+    <string name="v90_a11y_palette_hint">Distinct hues for every console family, so colour is never the only cue.</string>
+</resources>

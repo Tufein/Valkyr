@@ -6,7 +6,7 @@ object SettingSchema {
         fun keys(type: String, names: String) = names.split(Regex("\\s+")).filter(String::isNotEmpty).forEach { put(it, type) }
         keys("b", """
             auto_backup auto_m3u auto_retry_failed auto_scan auto_scan_charging auto_scan_night auto_scan_wifi
-            auto_unzip bold_focus csave_continue_playing dav_last_shared_sent dav_last_sync_sent download_charging_only
+            a11y_palette auto_unzip bold_focus cheats_hardcore csave_continue_playing dav_last_shared_sent dav_last_sync_sent download_charging_only
             download_night_only download_wifi_only esde_artwork look_animations look_compact_lists look_glow look_list_covers
             meta7_auto meta7_esde meta7_pegasus offline_collections_wifi onboarding_done pegasus_artwork pick_best_source
             power_heat power_low_battery queue_held queue_summary requeue_after_restart resume_downloads romm5_favourites_two_way
@@ -33,6 +33,7 @@ object SettingSchema {
             smart_collection_rules smart_storage_last smart_storage_sd_uri theme_mode torbox_api_key tv8_mode
         """)
         keys("ss", """
+            new_device_flow_marks
             coll6_goal_consoles console_download_directories console_scanned_at favorite_languages offline_collections_fetched
             offline_collections_ids offline_collections_quotas romm_platform_map smart_storage_records upg7_better_ignored wishlist_romm_announced
         """)

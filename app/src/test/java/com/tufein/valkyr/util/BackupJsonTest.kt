@@ -3,6 +3,7 @@ package com.tufein.valkyr.util
 import com.tufein.valkyr.data.local.SettingsKeys
 import com.tufein.valkyr.data.local.entity.DownloadHistoryEntity
 import com.tufein.valkyr.data.local.entity.FavouriteEntity
+import com.tufein.valkyr.data.local.entity.GameOverrideEntity
 import com.tufein.valkyr.data.local.entity.WishlistEntity
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -14,6 +15,15 @@ import org.junit.Test
 class BackupJsonTest {
 
     private fun setting(type: String, value: String) = JsonParser.parseString("""{"t":"$type","v":$value}""")
+
+    @Test
+    fun gameOverridesRoundTripAndMissingSection() {
+        val original = GameOverrideEntity("gba|mario", "Mario", 1990, "Platform", "https://art", 123L)
+        val roundTripped = BackupJson.overridesFromJson(BackupJson.overridesToJson(listOf(original)))
+        assertEquals(listOf(original), roundTripped)
+        assertEquals(emptyList<GameOverrideEntity>(), BackupJson.overridesFromJson(null))
+        assertEquals(emptyList<GameOverrideEntity>(), BackupJson.overridesFromJson(JsonParser.parseString("""[{"key":1}]""")))
+    }
 
     @Test
     fun everySettingTypeRoundTrips() {
