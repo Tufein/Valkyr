@@ -68,6 +68,7 @@ import com.tufein.valkyr.ui.components.focusRing
 import com.tufein.valkyr.ui.components.pillColors
 import com.tufein.valkyr.ui.components.rememberFocusSource
 import com.tufein.valkyr.ui.theme.AccentPresets
+import com.tufein.valkyr.ui.theme.ConsolePalette
 import com.tufein.valkyr.ui.theme.DogmatixTheme
 import com.tufein.valkyr.ui.theme.LocalDogmatixTokens
 import com.tufein.valkyr.ui.theme.LocalReduceMotion
@@ -105,6 +106,8 @@ class CreateShortcutActivity : AppCompatActivity() {
             val glow by look.glow.collectAsStateWithLifecycle(initialValue = true)
             val animations by look.animations.collectAsStateWithLifecycle(initialValue = true)
             val boldFocus by appSettings.boldFocus.collectAsStateWithLifecycle(initialValue = false)
+            val accessiblePalette by appSettings.accessiblePalette.collectAsStateWithLifecycle(initialValue = false)
+            ConsolePalette.accessible = accessiblePalette
             val swapFaceButtons by settings.swapFaceButtons.collectAsStateWithLifecycle(initialValue = false)
             // This activity can start before the main one: the pad setting is process-wide state.
             LaunchedEffect(swapFaceButtons) { Gamepad.swapFaceButtons.value = swapFaceButtons }

@@ -29,7 +29,7 @@ class CheatsService @Inject constructor(@param:ApplicationContext private val co
     private fun readState(): MutableMap<String, Boolean> = runCatching {
         if (!stateFile.baseFile.exists()) return emptyMap<String, Boolean>().toMutableMap()
         val type = object : TypeToken<Map<String, Boolean>>() {}.type
-        Gson().fromJson<Map<String, Boolean>>(stateFile.readFully().toString(Charsets.UTF_8), type).toMutableMap()
+        gson.fromJson<Map<String, Boolean>>(stateFile.readFully().toString(Charsets.UTF_8), type).toMutableMap()
     }.getOrElse { mutableMapOf() }
 
     private fun writeState(state: Map<String, Boolean>) {

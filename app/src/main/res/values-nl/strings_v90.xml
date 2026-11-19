@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="v90_played_title">Speeltijd</string>
-    <string name="v90_played_total">%1$s gespeeld in %2$d sessies</string>
+    <plurals name="v90_played_total">
+        <item quantity="one">%1$s gespeeld in %2$d sessie</item>
+        <item quantity="other">%1$s gespeeld in %2$d sessies</item>
+    </plurals>
     <string name="v90_played_minutes">%1$d min</string>
     <string name="v90_played_hours">%1$d u %2$02d min</string>
     <string name="v90_played_never">Nog geen speeltijd vastgelegd.</string>
@@ -19,11 +22,14 @@
     <string name="v90_cheats_title">Cheats</string>
     <string name="v90_cheats_import">Een .cht-bestand importeren</string>
     <string name="v90_cheats_imported">Cheatbestand geïmporteerd.</string>
+    <string name="v90_cheats_import_failed">Niet geïmporteerd: alleen een .cht-bestand tot 4 MB wordt ondersteund.</string>
     <string name="v90_cheats_none">Geen cheatbestand geïmporteerd. Valkyr downloadt nooit cheats.</string>
     <string name="v90_cheats_hardcore">RetroAchievements hardcore staat aan</string>
     <string name="v90_cheats_hardcore_hint">Cheats staan uit zolang hardcore aan staat. Zet het hier uit als je in softcore speelt.</string>
     <string name="v90_cheats_note">Bestanden blijven in deze app en worden alleen gedeeld als jij dat vraagt. Valkyr kan niet in de privéopslag van een andere emulator schrijven.</string>
     <string name="v90_cheats_share">Dit bestand delen met een emulator</string>
+    <string name="v90_cheats_for_this_game">Vernoemd naar deze game — een emulator die hem leest kan hem gebruiken.</string>
+    <string name="v90_cheats_other_file">Vernoemd naar een andere game; RetroArch kan hem alsnog tonen.</string>
     <string name="v90_flow_title">Deze handheld instellen</string>
     <string name="v90_flow_hint">Van een leeg apparaat naar je eerste game: terugzetten, mappen, emulators, BIOS, bibliotheek, spelen. Niets wordt geïnstalleerd of geschreven zonder vragen.</string>
     <string name="v90_flow_progress">%1$d van %2$d stappen klaar</string>

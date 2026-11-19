@@ -68,6 +68,7 @@ import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.tufein.valkyr.R
+import com.tufein.valkyr.data.local.AppSettings
 import com.tufein.valkyr.data.local.CloudSavesSettings
 import com.tufein.valkyr.data.local.LookSettings
 import com.tufein.valkyr.data.service.ContinuePlayingService
@@ -90,6 +91,7 @@ import com.tufein.valkyr.ui.components.rememberCoverRepository
 import com.tufein.valkyr.ui.components.stripExtension
 import com.tufein.valkyr.ui.navigation.NavRoutes
 import com.tufein.valkyr.ui.theme.AccentPresets
+import com.tufein.valkyr.ui.theme.ConsolePalette
 import com.tufein.valkyr.ui.theme.DogmatixTheme
 import com.tufein.valkyr.ui.theme.LocalDogmatixTokens
 import com.tufein.valkyr.ui.theme.LocalReduceMotion
@@ -157,6 +159,7 @@ object SecondScreenState {
 interface SecondScreenEntryPoint {
     fun settings(): SettingsDataStore
     fun look(): LookSettings
+    fun appSettings(): AppSettings
     fun files(): DownloadableFileDao
     fun downloads(): DownloadService
     fun shelf(): ContinuePlayingService
@@ -269,6 +272,9 @@ internal fun SecondScreenRoot(
     val accentHex by remember(env) { env.settings().accentColor }.collectAsState(initial = null)
     val glow by remember(env) { env.look().glow }.collectAsState(initial = true)
     val animations by remember(env) { env.look().animations }.collectAsState(initial = true)
+    // 9.0: the same console palette as the main screen (chips and cover placeholders).
+    val accessiblePalette by remember(env) { env.appSettings().accessiblePalette }.collectAsState(initial = false)
+    ConsolePalette.accessible = accessiblePalette
     val systemAnimationsOff = remember {
         runCatching { Settings.Global.getFloat(context.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f }.getOrDefault(false)
     }

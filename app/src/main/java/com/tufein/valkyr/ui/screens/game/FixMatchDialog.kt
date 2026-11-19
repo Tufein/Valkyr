@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tufein.valkyr.R
 import com.tufein.valkyr.data.service.GameOverrideService
+import com.tufein.valkyr.ui.components.closeOnGamepadB
 import com.tufein.valkyr.util.MetadataOverrides
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -70,6 +71,7 @@ fun FixMatchDialog(
     }
     AlertDialog(
         onDismissRequest = onDismiss,
+        modifier = Modifier.closeOnGamepadB(onDismiss),
         title = { Text(stringResource(R.string.v90_fix_title)) },
         text = {
             Column(Modifier.verticalScroll(rememberScrollState()).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
