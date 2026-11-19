@@ -54,13 +54,15 @@ class CheatsViewModel @Inject constructor(
 
     fun refresh() { viewModelScope.launch { _files.value = service.files() } }
 
-    fun import(context: Context, uri: Uri) = viewModelScope.launch {
+    /** True when the file was imported: a wrong type or an oversized file is reported, not ignored. */
+    fun import(context: Context, uri: Uri, onDone: (Boolean) -> Unit) = viewModelScope.launch {
         val name = context.contentResolver.query(uri, null, null, null, null)?.use { c ->
             val i = c.getColumnIndex(OpenableColumns.DISPLAY_NAME)
             if (i >= 0 && c.moveToFirst()) c.getString(i) else null
         } ?: uri.lastPathSegment.orEmpty()
-        runCatching { service.import(uri, name.substringAfterLast('/')) }
+        val imported = runCatching { service.import(uri, name.substringAfterLast('/')) }.isSuccess
         refresh()
+        onDone(imported)
     }
 
     suspend fun parsed(name: String): List<Cheats.Cheat> = service.parsed(name)
@@ -85,6 +87,8 @@ fun CheatsSection(consoleId: String, fileName: String, viewModel: CheatsViewMode
     val context = LocalContext.current
     val files by viewModel.files.collectAsStateWithLifecycle()
     val hardcore by viewModel.hardcore.collectAsStateWithLifecycle(initialValue = true)
+    // The files this game can use come first (a .cht named after the ROM), the rest stay reachable.
+    val ordered = remember(files, fileName) { files.sortedByDescending { Cheats.matchesFile(it, fileName) } }
     var open by remember { mutableStateOf<String?>(null) }
     var entries by remember { mutableStateOf<List<Cheats.Cheat>>(emptyList()) }
     var enabled by remember { mutableStateOf<Set<Int>>(emptySet()) }
@@ -99,22 +103,28 @@ fun CheatsSection(consoleId: String, fileName: String, viewModel: CheatsViewMode
         }
     }
     val importedText = stringResource(R.string.v90_cheats_imported)
+    val importFailedText = stringResource(R.string.v90_cheats_import_failed)
     val import = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
-            viewModel.import(context, uri)
-            notice = importedText
+            viewModel.import(context, uri) { ok -> notice = if (ok) importedText else importFailedText }
         }
     }
 
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         SectionTitle(stringResource(R.string.v90_cheats_title), icon = R.drawable.ic_controller)
         Panel(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            if (files.isEmpty()) Text(stringResource(R.string.v90_cheats_none), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            files.forEach { name ->
+            if (ordered.isEmpty()) Text(stringResource(R.string.v90_cheats_none), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            ordered.forEach { name ->
                 ActionPill(name, {
                     open = if (open == name) null else name
                 }, modifier = Modifier.heightIn(min = 48.dp), icon = R.drawable.ic_content_copy)
                 if (open == name) {
+                    Text(
+                        if (Cheats.matchesFile(name, fileName)) stringResource(R.string.v90_cheats_for_this_game)
+                        else stringResource(R.string.v90_cheats_other_file),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                     entries.forEachIndexed { index, cheat ->
                         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                             Text(cheat.name, Modifier.weight(1f), style = MaterialTheme.typography.bodySmall)

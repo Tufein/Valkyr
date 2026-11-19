@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="v90_played_title">Tempo de jogo</string>
-    <string name="v90_played_total">%1$s jogados em %2$d sessões</string>
+    <plurals name="v90_played_total">
+        <item quantity="one">%1$s jogados em %2$d sessão</item>
+        <item quantity="other">%1$s jogados em %2$d sessões</item>
+    </plurals>
     <string name="v90_played_minutes">%1$d min</string>
     <string name="v90_played_hours">%1$d h %2$02d min</string>
     <string name="v90_played_never">Ainda não há tempo registado.</string>
@@ -19,11 +22,14 @@
     <string name="v90_cheats_title">Cheats</string>
     <string name="v90_cheats_import">Importar um ficheiro .cht</string>
     <string name="v90_cheats_imported">Ficheiro de cheat importado.</string>
+    <string name="v90_cheats_import_failed">Não importado: só é suportado um ficheiro .cht até 4 MB.</string>
     <string name="v90_cheats_none">Nenhum ficheiro importado. O Valkyr nunca descarrega cheats.</string>
     <string name="v90_cheats_hardcore">O modo hardcore do RetroAchievements está ativo</string>
     <string name="v90_cheats_hardcore_hint">Os cheats ficam desativados enquanto o hardcore estiver ativo. Desative-o aqui se jogar em softcore.</string>
     <string name="v90_cheats_note">Os ficheiros ficam nesta app e só são partilhados a seu pedido. O Valkyr não pode escrever no armazenamento privado de outro emulador.</string>
     <string name="v90_cheats_share">Partilhar este ficheiro com um emulador</string>
+    <string name="v90_cheats_for_this_game">Tem o nome deste jogo — um emulador que o leia pode usá-lo.</string>
+    <string name="v90_cheats_other_file">Tem o nome de outro jogo; o RetroArch ainda o pode mostrar.</string>
     <string name="v90_flow_title">Configurar esta handheld</string>
     <string name="v90_flow_hint">De um dispositivo vazio ao primeiro jogo: restaurar, pastas, emuladores, BIOS, biblioteca, jogar. Nada é instalado ou escrito sem perguntar.</string>
     <string name="v90_flow_progress">%1$d de %2$d passos prontos</string>

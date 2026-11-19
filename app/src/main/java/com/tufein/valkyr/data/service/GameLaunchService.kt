@@ -218,9 +218,12 @@ class GameLaunchService @Inject constructor(
         }
         if (outcome == LaunchOutcome.STARTED) {
             actionLog.played(consoleId, game.name)
-            if (trackPlay) playSessions.start(consoleId, gameFileName ?: game.name) else playSessions.abandon()
+            // 9.0: a session is keyed by the library file; without one there is nothing to
+            // attach the time to, and a display name would never match the game page.
+            if (trackPlay && gameFileName != null) playSessions.start(consoleId, gameFileName)
         }
         if (outcome != LaunchOutcome.STARTED && trackPlay) playSessions.abandon()
+        if (outcome == LaunchOutcome.STARTED && !trackPlay) playSessions.abandon()
         if (outcome == LaunchOutcome.STARTED && remember) setPreferred(consoleId, if (automatic) GameLaunchKeys.AUTOMATIC else handler.key)
         return outcome
     }

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="v90_played_title">Temps de jeu</string>
-    <string name="v90_played_total">%1$s joués sur %2$d sessions</string>
+    <plurals name="v90_played_total">
+        <item quantity="one">%1$s joués sur %2$d session</item>
+        <item quantity="other">%1$s joués sur %2$d sessions</item>
+    </plurals>
     <string name="v90_played_minutes">%1$d min</string>
     <string name="v90_played_hours">%1$d h %2$02d min</string>
     <string name="v90_played_never">Aucun temps de jeu enregistré.</string>
@@ -19,11 +22,14 @@
     <string name="v90_cheats_title">Astuces</string>
     <string name="v90_cheats_import">Importer un fichier .cht</string>
     <string name="v90_cheats_imported">Fichier d\'astuces importé.</string>
+    <string name="v90_cheats_import_failed">Non importé : seuls les fichiers .cht de 4 Mo maximum sont pris en charge.</string>
     <string name="v90_cheats_none">Aucun fichier importé. Valkyr ne télécharge jamais d\'astuces.</string>
     <string name="v90_cheats_hardcore">Le mode hardcore de RetroAchievements est actif</string>
     <string name="v90_cheats_hardcore_hint">Les astuces sont désactivées tant que le mode hardcore est actif. Désactivez-le ici si vous jouez en softcore.</string>
     <string name="v90_cheats_note">Les fichiers restent dans cette application et ne sont partagés qu\'à votre demande. Valkyr ne peut pas écrire dans le stockage privé d\'un autre émulateur.</string>
     <string name="v90_cheats_share">Partager ce fichier avec un émulateur</string>
+    <string name="v90_cheats_for_this_game">Nommé d\'après ce jeu — un émulateur qui le lit peut l\'utiliser.</string>
+    <string name="v90_cheats_other_file">Nommé d\'après un autre jeu ; RetroArch peut quand même l\'afficher.</string>
     <string name="v90_flow_title">Configurer cette handheld</string>
     <string name="v90_flow_hint">D\'un appareil vide à votre premier jeu : restauration, dossiers, émulateurs, BIOS, bibliothèque, jeu. Rien n\'est installé ni écrit sans demande.</string>
     <string name="v90_flow_progress">%1$d étapes sur %2$d prêtes</string>

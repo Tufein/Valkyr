@@ -2,7 +2,10 @@
 <!-- 9.0: one evening, one handheld -->
 <resources>
     <string name="v90_played_title">Time played</string>
-    <string name="v90_played_total">Played %1$s in %2$d sessions</string>
+    <plurals name="v90_played_total">
+        <item quantity="one">Played %1$s in %2$d session</item>
+        <item quantity="other">Played %1$s in %2$d sessions</item>
+    </plurals>
     <string name="v90_played_minutes">%1$d min</string>
     <string name="v90_played_hours">%1$d h %2$02d min</string>
     <string name="v90_played_never">No play time recorded yet.</string>
@@ -20,11 +23,14 @@
     <string name="v90_cheats_title">Cheats</string>
     <string name="v90_cheats_import">Import a .cht file</string>
     <string name="v90_cheats_imported">Cheat file imported.</string>
+    <string name="v90_cheats_import_failed">Not imported: only a .cht file up to 4 MB is supported.</string>
     <string name="v90_cheats_none">No cheat file imported. Valkyr never downloads cheats.</string>
     <string name="v90_cheats_hardcore">RetroAchievements hardcore is on</string>
     <string name="v90_cheats_hardcore_hint">Cheats are switched off while hardcore is on. Turn it off here when you are playing in softcore.</string>
     <string name="v90_cheats_note">Files stay in this app and are only shared when you ask. Valkyr cannot write into another emulator\'s private storage.</string>
     <string name="v90_cheats_share">Share this file with an emulator</string>
+    <string name="v90_cheats_for_this_game">Named after this game — an emulator that reads it can use it.</string>
+    <string name="v90_cheats_other_file">Named after another game; RetroArch may still list it.</string>
     <string name="v90_flow_title">Set up this handheld</string>
     <string name="v90_flow_hint">From a wiped device to your first game: restore, folders, emulators, BIOS, library, play. Nothing is installed or written without asking.</string>
     <string name="v90_flow_progress">%1$d of %2$d steps ready</string>

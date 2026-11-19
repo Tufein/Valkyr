@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="v90_played_title">Spielzeit</string>
-    <string name="v90_played_total">%1$s in %2$d Sitzungen gespielt</string>
+    <plurals name="v90_played_total">
+        <item quantity="one">%1$s in %2$d Sitzung gespielt</item>
+        <item quantity="other">%1$s in %2$d Sitzungen gespielt</item>
+    </plurals>
     <string name="v90_played_minutes">%1$d Min.</string>
     <string name="v90_played_hours">%1$d Std. %2$02d Min.</string>
     <string name="v90_played_never">Noch keine Spielzeit erfasst.</string>
@@ -19,11 +22,14 @@
     <string name="v90_cheats_title">Cheats</string>
     <string name="v90_cheats_import">.cht-Datei importieren</string>
     <string name="v90_cheats_imported">Cheat-Datei importiert.</string>
+    <string name="v90_cheats_import_failed">Nicht importiert: nur eine .cht-Datei bis 4 MB wird unterstützt.</string>
     <string name="v90_cheats_none">Keine Cheat-Datei importiert. Valkyr lädt nie Cheats herunter.</string>
     <string name="v90_cheats_hardcore">RetroAchievements Hardcore ist an</string>
     <string name="v90_cheats_hardcore_hint">Cheats sind aus, solange Hardcore an ist. Schalte es hier aus, wenn du im Softcore-Modus spielst.</string>
     <string name="v90_cheats_note">Dateien bleiben in dieser App und werden nur auf Wunsch geteilt. Valkyr kann nicht in den privaten Speicher eines anderen Emulators schreiben.</string>
     <string name="v90_cheats_share">Datei mit einem Emulator teilen</string>
+    <string name="v90_cheats_for_this_game">Nach diesem Spiel benannt — ein Emulator, der sie liest, kann sie verwenden.</string>
+    <string name="v90_cheats_other_file">Nach einem anderen Spiel benannt; RetroArch kann sie trotzdem anzeigen.</string>
     <string name="v90_flow_title">Handheld einrichten</string>
     <string name="v90_flow_hint">Vom leeren Gerät zum ersten Spiel: wiederherstellen, Ordner, Emulatoren, BIOS, Bibliothek, spielen. Nichts wird ohne Rückfrage installiert oder geschrieben.</string>
     <string name="v90_flow_progress">%1$d von %2$d Schritten bereit</string>
