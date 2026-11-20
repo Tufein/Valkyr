@@ -39,6 +39,10 @@ class DatabaseMigration16RegressionTest {
                 raw.execSQL("DROP TRIGGER IF EXISTS room_fts_content_sync_downloadable_files_fts_$it")
             }
             raw.execSQL("DROP TABLE IF EXISTS `downloadable_files_fts`")
+            // The file was created by the current schema; take back what 17 -> 18 adds, so that migration can run.
+            listOf("sourceUrl", "originalSourceUrl", "switchedFrom").forEach {
+                raw.execSQL("ALTER TABLE `download_history` DROP COLUMN `$it`")
+            }
             raw.execSQL("DROP TABLE `downloadable_files`")
             raw.execSQL(
                 "CREATE TABLE IF NOT EXISTS `downloadable_files` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, " +
