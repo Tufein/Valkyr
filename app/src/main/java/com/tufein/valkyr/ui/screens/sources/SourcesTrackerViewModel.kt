@@ -26,7 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SourcesTrackerViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
-    sources: SourcesRepository,
+    private val sources: SourcesRepository,
     scanResults: SourceScanResults,
     private val sourceTrack: SourceTrackService,
     private val scanService: SourceScanService
@@ -46,6 +46,22 @@ class SourcesTrackerViewModel @Inject constructor(
         if (_rescanning.value || !row.enabled) return
         _rescanning.value = true
         scanService.scanSelectedUrls(mapOf(row.consoleId to setOf(row.url))).invokeOnCompletion { _rescanning.value = false }
+    }
+
+    /** Switches one source on or off; the list updates itself from the repository. */
+    fun setEnabled(row: SourceTrackerRow, enabled: Boolean) {
+        viewModelScope.launch { sources.setUrlEnabled(row.consoleId, row.index, enabled) }
+    }
+
+    /** The sources that would be paused: failing ones, never a console's last working source. */
+    fun pausable(): List<SourceTrackerRow> = SourceTracker.pausable(rows.value, System.currentTimeMillis())
+
+    /** Switches those sources off (they stay in the list and can be switched on again). Returns how many. */
+    fun pause(targets: List<SourceTrackerRow>, onDone: (Int) -> Unit) {
+        viewModelScope.launch {
+            targets.forEach { sources.setUrlEnabled(it.consoleId, it.index, false) }
+            onDone(targets.size)
+        }
     }
 
     /** Writes a redacted track record into the exports folder and hands back a shareable URI. */

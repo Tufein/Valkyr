@@ -4,11 +4,10 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 8.5.0** (Android build 93). The core loop is complete — find a game, download it into
+**Now: 9.1.0** (Android build 95). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
-libraries), and finishing what 7.0 and 7.1 started. The 8.x line closes here: the next release
-is **9.0**, built under the rule below.
+libraries), and finishing what 7.0 and 7.1 started. The 8.x line closed at 8.5.0; 9.0 and 9.1 were built under the rule below.
 
 ## How a release is chosen
 
@@ -242,6 +241,27 @@ on the way.
 without opening Settings, a week of use fills the recap with numbers that survive a restart, and
 TalkBack can walk from the library to a game and back without a dead end. Tickets:
 **[plans/9.0.md](plans/9.0.md)**.
+
+## 9.1 — Sources tracker (shipped in 9.1.0)
+
+Sources are the part of Valkyr that breaks without warning: a host goes away, a mirror slows down,
+a tracker list goes stale. This release makes that visible, and fixable from one place.
+
+- **Sources tracker**: every source of every console in one list, worst first, with its scan
+  health, download track record (speed, success rate, 30-day failure trend) and a one-tap rescan
+  of just that address. The record can be exported with addresses, keys and file names left out.
+- **Pause failing sources**: switch a source off or on from its row, or pause every failing one
+  after a preview. Nothing is removed, and a console always keeps a source that works.
+- **Where a game came from**: downloads and the game page name the first source and the source a
+  download was switched to, kept across restarts and in backups.
+- **Torrent trackers**: your own announce addresses, switched on or off and tested (http and https),
+  added to every torrent, magnet and debrid request.
+
+*Done when* a source that keeps failing is visible in the list within one scan, can be paused in two
+taps without losing the console's last working source, and a download that switched source says so
+afterwards. Still to check on a device: the tracker list in landscape with buttons and at large
+text, and the pause dialog with a D-pad. Not built: an automatic pause (the app only asks), and
+testing a `udp://` announce.
 
 ## Later, if there is a reason
 

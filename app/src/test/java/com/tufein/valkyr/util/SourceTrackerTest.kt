@@ -67,4 +67,38 @@ class SourceTrackerTest {
         assertNotNull(row.downloadTrend)
         assertEquals(FailureClass.SERVER, row.downloadTrend?.last)
     }
+
+    private val broken = SourceRecord(failures = 10, failureStreak = 3, lastFailureAt = now - 1_000)
+    private val mirror = "https://mirror.example.net/files"
+
+    private fun twoOf(vararg entries: UrlEntry) =
+        listOf(Manufacturer("n", "N", listOf(Console("snes", "SNES", entries.toList()))))
+
+    @Test fun `a row knows its position in the console list`() {
+        val rows = SourceTracker.rows(twoOf(UrlEntry(web), UrlEntry(mirror)), emptyMap(), emptyMap(), now)
+        assertEquals(0, rows.first { it.url == web }.index)
+        assertEquals(1, rows.first { it.url == mirror }.index)
+    }
+
+    @Test fun `a failing source is paused when another one still works`() {
+        val rows = SourceTracker.rows(twoOf(UrlEntry(web), UrlEntry(mirror)), emptyMap(), mapOf(web to broken), now)
+        assertEquals(listOf(web), SourceTracker.pausable(rows, now).map { it.url })
+    }
+
+    @Test fun `the last working source of a console is never paused`() {
+        val rows = SourceTracker.rows(twoOf(UrlEntry(web), UrlEntry(mirror)), emptyMap(), mapOf(web to broken, mirror to broken), now)
+        assertTrue(SourceTracker.pausable(rows, now).isEmpty())
+    }
+
+    @Test fun `a switched off source does not count as a working one`() {
+        val rows = SourceTracker.rows(twoOf(UrlEntry(web), UrlEntry(mirror, enabled = false)), emptyMap(), mapOf(web to broken), now)
+        assertTrue(SourceTracker.pausable(rows, now).isEmpty())
+    }
+
+    @Test fun `a failed scan counts as needing attention`() {
+        val scan = SourceScanResult(files = 0, at = now, failure = FailureKind.NOT_FOUND)
+        val rows = SourceTracker.rows(twoOf(UrlEntry(web), UrlEntry(mirror)), mapOf("snes|$web" to scan), emptyMap(), now)
+        assertTrue(SourceTracker.needsAttention(rows.first { it.url == web }, now))
+        assertEquals(listOf(web), SourceTracker.pausable(rows, now).map { it.url })
+    }
 }

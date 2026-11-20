@@ -31,4 +31,14 @@
     <string name="src91_no_trackers_msg">Aggiungi indirizzi di annuncio per aiutare i torrent a trovare peer. I tracker delle tue fonti restano in uso.</string>
     <string name="src91_on">Attivo</string>
     <string name="src91_off">Disattivo</string>
+
+    <!-- 9.1: pause failing sources -->
+    <string name="src91_pause">Metti in pausa le fonti con errori</string>
+    <string name="src91_pause_title">Mettere in pausa le fonti con errori?</string>
+    <string name="src91_pause_message">%1$d fonti hanno fallito l\'ultima scansione o fanno fallire i download. Vengono disattivate, non rimosse, e ogni console mantiene una fonte funzionante. Puoi riattivarle da questo elenco.</string>
+    <string name="src91_pause_confirm">Metti in pausa</string>
+    <string name="src91_pause_none">Nessuna fonte da mettere in pausa</string>
+    <string name="src91_paused">%1$d fonti messe in pausa</string>
+    <string name="src91_switch_off">Disattiva</string>
+    <string name="src91_switch_on">Attiva</string>
 </resources>

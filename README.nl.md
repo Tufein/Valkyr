@@ -96,6 +96,7 @@ Je hebt **Android 10 of nieuwer** nodig. De app staat niet in Google Play.
 - **Bronnen**: met de hand toevoegen, importeren en exporteren, delen als QR-codes, optionele inhoudscatalogus met Libretro-content voor 29 systemen, de freeware-avonturenspellen van ScummVM en gratis Game Boy-homebrew van Homebrew Hub, steeds met de aanbieder erbij, reserveadressen en automatische achtergrondscans die overslaan wat niet veranderde.
 - **Bronnen-tracker** (*Bronnen → Bronnen-tracker*): één lijst van elke bron op elke console, de slechtste eerst, met scanstatus, downloadverleden (snelheid, slagingspercentage, fouttrend) en één tik om opnieuw te scannen. Downloads en gamepagina's tonen van welke bron een spel kwam, ook na een wissel. Het verleden is te exporteren zonder adressen of sleutels.
 - **Torrenttrackers** (*Instellingen → Torrents → Torrenttrackers*): beheer eigen announce-adressen, zet ze aan of uit, test http(s)-adressen en voeg ze toe aan torrents en magnets (ook via debrid). De trackers van je eigen bronnen blijven gebruikt.
+- **Falende bronnen pauzeren** (*Bronnen → Bronnen-tracker*): zet elke bron uit of aan vanaf zijn rij, of pauzeer alle falende bronnen in één keer na een voorbeeld. Gepauzeerde bronnen blijven in de lijst staan en elke console houdt een bron die werkt.
 
 ### Veilig ontworpen
 - **Prullenbak en herstelcentrum**: verwijderde games, onderbroken verplaatsingen, vervangen bestanden en savebackups zijn te herstellen, telkens met een voorbeeld. Kopieën worden gecontroleerd voordat iets wordt verwijderd.

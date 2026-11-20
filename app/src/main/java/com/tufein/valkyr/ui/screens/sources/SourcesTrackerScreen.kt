@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -32,6 +35,7 @@ import com.tufein.valkyr.ui.components.Pill
 import com.tufein.valkyr.ui.components.PillTone
 import com.tufein.valkyr.ui.components.requestFocusWhenReady
 import com.tufein.valkyr.ui.navigation.NavRoutes
+import com.tufein.valkyr.ui.screens.sources.components.ConfirmDialog
 import com.tufein.valkyr.ui.screens.sources.components.failureText
 import com.tufein.valkyr.ui.screens.tools.PublishLegend
 import com.tufein.valkyr.ui.screens.tools.StatGrid
@@ -42,6 +46,7 @@ import com.tufein.valkyr.ui.screens.tools.ToolStat
 import com.tufein.valkyr.ui.screens.tools.ToolsTitle
 import com.tufein.valkyr.util.SourceKind
 import com.tufein.valkyr.util.SourceRanking
+import com.tufein.valkyr.util.SourceTracker
 import com.tufein.valkyr.util.SourceTrackerRow
 import com.tufein.valkyr.util.ToastUtil
 
@@ -74,7 +79,31 @@ fun SourcesTrackerScreen(
         runCatching { share.launch(Intent.createChooser(intent, shareTitle)) }
     }
 
-    val failing = rows.count { it.enabled && (it.scanFailure != null || SourceRanking.isDemoted(it.record, System.currentTimeMillis())) }
+    val failing = rows.count { SourceTracker.needsAttention(it, System.currentTimeMillis()) }
+    var pauseTargets by remember { mutableStateOf<List<SourceTrackerRow>?>(null) }
+    var pausedCount by remember { mutableStateOf<Int?>(null) }
+    pausedCount?.let { n ->
+        val text = stringResource(R.string.src91_paused, n)
+        LaunchedEffect(n) {
+            ToastUtil.showSuccess(context, text)
+            pausedCount = null
+        }
+    }
+    val nothingToPause = stringResource(R.string.src91_pause_none)
+    pauseTargets?.let { targets ->
+        ConfirmDialog(
+            title = stringResource(R.string.src91_pause_title),
+            message = stringResource(R.string.src91_pause_message, targets.size) + "\n\n" +
+                targets.joinToString("\n") { "• ${it.label} (${it.consoleName})" },
+            confirmText = stringResource(R.string.src91_pause_confirm),
+            onConfirm = {
+                pauseTargets = null
+                viewModel.pause(targets) { n -> pausedCount = n }
+            },
+            onDismiss = { pauseTargets = null },
+            icon = R.drawable.ic_warning
+        )
+    }
     val downloads = rows.sumOf { it.record?.total ?: 0 }
 
     LazyColumn(
@@ -103,6 +132,10 @@ fun SourcesTrackerScreen(
             ToolsActions {
                 ActionPill(stringResource(R.string.src91_export), onClick = { viewModel.exportTrackRecord { uri -> share(uri) } }, icon = R.drawable.ic_share)
                 ActionPill(stringResource(R.string.src91_trackers_title), onClick = { navController.navigate(NavRoutes.TorrentTrackers.route) }, icon = R.drawable.ic_hub)
+                ActionPill(stringResource(R.string.src91_pause), onClick = {
+                    val targets = viewModel.pausable()
+                    if (targets.isEmpty()) ToastUtil.showSuccess(context, nothingToPause) else pauseTargets = targets
+                }, icon = R.drawable.ic_warning)
                 if (rescanning) CircularProgressIndicator()
             }
         }
@@ -140,7 +173,14 @@ fun SourcesTrackerScreen(
                     )
                 },
                 trailing = {
-                    ToolAction(stringResource(R.string.pad_rescan), icon = R.drawable.ic_sync, onClick = { viewModel.rescan(row) })
+                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        ToolAction(stringResource(R.string.pad_rescan), icon = R.drawable.ic_sync, onClick = { viewModel.rescan(row) })
+                        ToolAction(
+                            stringResource(if (row.enabled) R.string.src91_switch_off else R.string.src91_switch_on),
+                            icon = if (row.enabled) R.drawable.ic_close else R.drawable.ic_check_circle,
+                            onClick = { viewModel.setEnabled(row, !row.enabled) }
+                        )
+                    }
                 }
             )
         }

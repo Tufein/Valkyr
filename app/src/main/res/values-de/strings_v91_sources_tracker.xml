@@ -31,4 +31,14 @@
     <string name="src91_no_trackers_msg">Füge Announce-Adressen hinzu, damit Torrents Peers finden. Die Tracker deiner eigenen Quellen werden weiterhin verwendet.</string>
     <string name="src91_on">An</string>
     <string name="src91_off">Aus</string>
+
+    <!-- 9.1: pause failing sources -->
+    <string name="src91_pause">Fehlerhafte Quellen pausieren</string>
+    <string name="src91_pause_title">Fehlerhafte Quellen pausieren?</string>
+    <string name="src91_pause_message">%1$d Quellen sind beim letzten Scan fehlgeschlagen oder lassen Downloads scheitern. Sie werden ausgeschaltet, nicht entfernt, und jede Konsole behält eine funktionierende Quelle. In dieser Liste kannst du sie wieder einschalten.</string>
+    <string name="src91_pause_confirm">Pausieren</string>
+    <string name="src91_pause_none">Keine Quelle muss pausiert werden</string>
+    <string name="src91_paused">%1$d Quellen pausiert</string>
+    <string name="src91_switch_off">Ausschalten</string>
+    <string name="src91_switch_on">Einschalten</string>
 </resources>

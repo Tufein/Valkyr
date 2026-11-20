@@ -31,4 +31,14 @@
     <string name="src91_no_trackers_msg">Añade direcciones de anuncio para ayudar a los torrentes a encontrar pares. Los trackers de tus propias fuentes siguen usándose.</string>
     <string name="src91_on">Activado</string>
     <string name="src91_off">Desactivado</string>
+
+    <!-- 9.1: pause failing sources -->
+    <string name="src91_pause">Pausar fuentes con fallos</string>
+    <string name="src91_pause_title">¿Pausar las fuentes con fallos?</string>
+    <string name="src91_pause_message">%1$d fuentes fallaron en su último análisis o hacen fallar las descargas. Se desactivan, no se eliminan, y cada consola conserva una fuente que funciona. Puedes volver a activarlas desde esta lista.</string>
+    <string name="src91_pause_confirm">Pausar</string>
+    <string name="src91_pause_none">Ninguna fuente necesita pausa</string>
+    <string name="src91_paused">%1$d fuentes pausadas</string>
+    <string name="src91_switch_off">Desactivar</string>
+    <string name="src91_switch_on">Activar</string>
 </resources>

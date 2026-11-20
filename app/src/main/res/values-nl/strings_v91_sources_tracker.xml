@@ -31,4 +31,14 @@
     <string name="src91_no_trackers_msg">Voeg announce-adressen toe zodat torrents peers kunnen vinden. De trackers van je eigen bronnen blijven gebruikt.</string>
     <string name="src91_on">Aan</string>
     <string name="src91_off">Uit</string>
+
+    <!-- 9.1: pause failing sources -->
+    <string name="src91_pause">Pauzeer falende bronnen</string>
+    <string name="src91_pause_title">Falende bronnen pauzeren?</string>
+    <string name="src91_pause_message">%1$d bronnen faalden bij hun laatste scan of laten downloads mislukken. Ze worden uitgezet, niet verwijderd, en elke console houdt een werkende bron. Zet ze later in deze lijst weer aan.</string>
+    <string name="src91_pause_confirm">Pauzeren</string>
+    <string name="src91_pause_none">Geen bron hoeft gepauzeerd</string>
+    <string name="src91_paused">%1$d bronnen gepauzeerd</string>
+    <string name="src91_switch_off">Uitzetten</string>
+    <string name="src91_switch_on">Aanzetten</string>
 </resources>

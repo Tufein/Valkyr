@@ -31,4 +31,14 @@
     <string name="src91_no_trackers_msg">Add announce addresses to help torrents find peers. The trackers of your own sources are still used.</string>
     <string name="src91_on">On</string>
     <string name="src91_off">Off</string>
+
+    <!-- 9.1: pause failing sources -->
+    <string name="src91_pause">Pause failing sources</string>
+    <string name="src91_pause_title">Pause failing sources?</string>
+    <string name="src91_pause_message">%1$d sources failed their last scan or keep failing downloads. They are switched off, not removed, and every console keeps a working source. Switch them on again from this list.</string>
+    <string name="src91_pause_confirm">Pause</string>
+    <string name="src91_pause_none">No source needs pausing</string>
+    <string name="src91_paused">%1$d sources paused</string>
+    <string name="src91_switch_off">Switch off</string>
+    <string name="src91_switch_on">Switch on</string>
 </resources>

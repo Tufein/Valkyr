@@ -3,6 +3,7 @@
 #  - when a push changes docs/release-notes/ (or this file) and the version in
 #    app/build.gradle.kts has notes (docs/release-notes/v<versionName>.md) but no release yet:
 #    the release and its tag are created on the pushed commit.
+# A pre-release of the same version (debug APK only) is replaced by the full release.
 # Public releases follow v1.0.0, v1.1.0, …, v1.9.0, v2.0.0. Every release is regular.
 # The text is the notes file, with Android build metadata and SHA-256 checksums appended.
 #
@@ -44,8 +45,15 @@ jobs:
               exit 0
             fi
             if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-              echo "$tag is already released."
-              exit 0
+              # A pre-release of this version (a test build, debug APK only) is replaced by the
+              # full release: it and its tag go, and the release is created on the pushed commit.
+              if [ "$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json isPrerelease --jq .isPrerelease)" = "true" ]; then
+                echo "Replacing the pre-release $tag with the full release."
+                gh release delete "$tag" --repo "$GITHUB_REPOSITORY" --cleanup-tag --yes
+              else
+                echo "$tag is already released."
+                exit 0
+              fi
             fi
           fi
           apk_version=$(sed -n 's/^ *versionName = "\(.*\)"/\1/p' app/build.gradle.kts | head -1)

@@ -6,6 +6,8 @@ import com.tufein.valkyr.data.state.SourceScanResult
 /** One source in the Sources tracker, with both records joined and already reduced to safe labels. */
 data class SourceTrackerRow(
     val consoleId: String,
+    /** Position of this address in its console's list, the handle for switching it on or off. */
+    val index: Int,
     val consoleName: String,
     val manufacturerName: String,
     val url: String,
@@ -31,11 +33,12 @@ object SourceTracker {
     ): List<SourceTrackerRow> {
         val rows = manufacturers.flatMap { manufacturer ->
             manufacturer.consoles.flatMap { console ->
-                console.urls.map { entry ->
+                console.urls.mapIndexed { index, entry ->
                     val result = results[scanKey(console.id, entry.url)]
                     val record = records[entry.url]
                     SourceTrackerRow(
                         consoleId = console.id,
+                        index = index,
                         consoleName = console.name,
                         manufacturerName = manufacturer.name,
                         url = entry.url,
@@ -55,6 +58,21 @@ object SourceTracker {
         }
         return rows.sortedWith(compareBy<SourceTrackerRow> { !it.enabled }.thenBy { it.score }.thenBy { it.label.lowercase() })
     }
+
+    /** Whether a source is worth pausing: its last scan failed, or its downloads keep failing. */
+    fun needsAttention(row: SourceTrackerRow, now: Long): Boolean =
+        row.enabled && (row.scanFailure != null || SourceRanking.isDemoted(row.record, now))
+
+    /**
+     * The sources a "Pause failing sources" would switch off. A console always keeps at least one
+     * enabled source that is not itself failing, so pausing never leaves a console with nothing to
+     * download from; a console where every enabled source fails is left alone.
+     */
+    fun pausable(rows: List<SourceTrackerRow>, now: Long): List<SourceTrackerRow> =
+        rows.groupBy { it.consoleId }.values.flatMap { group ->
+            val healthy = group.count { it.enabled && !needsAttention(it, now) }
+            if (healthy == 0) emptyList() else group.filter { needsAttention(it, now) }
+        }
 }
 
 /** Kept local so this object needs no Android dependency; the same shape SourceScanResults uses. */

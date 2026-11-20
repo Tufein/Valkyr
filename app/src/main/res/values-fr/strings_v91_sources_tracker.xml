@@ -31,4 +31,14 @@
     <string name="src91_no_trackers_msg">Ajoutez des adresses d’annonce pour aider les torrents à trouver des pairs. Les trackers de vos propres sources restent utilisés.</string>
     <string name="src91_on">Activé</string>
     <string name="src91_off">Désactivé</string>
+
+    <!-- 9.1: pause failing sources -->
+    <string name="src91_pause">Mettre en pause les sources en échec</string>
+    <string name="src91_pause_title">Mettre en pause les sources en échec ?</string>
+    <string name="src91_pause_message">%1$d sources ont échoué à leur dernier scan ou font échouer les téléchargements. Elles sont désactivées, pas supprimées, et chaque console garde une source qui fonctionne. Réactivez-les depuis cette liste.</string>
+    <string name="src91_pause_confirm">Mettre en pause</string>
+    <string name="src91_pause_none">Aucune source à mettre en pause</string>
+    <string name="src91_paused">%1$d sources mises en pause</string>
+    <string name="src91_switch_off">Désactiver</string>
+    <string name="src91_switch_on">Activer</string>
 </resources>
