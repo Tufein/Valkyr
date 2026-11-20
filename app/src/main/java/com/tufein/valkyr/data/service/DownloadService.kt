@@ -20,6 +20,7 @@ import com.tufein.valkyr.data.model.DebridProvider
 import com.tufein.valkyr.data.model.DownloadFailure
 import com.tufein.valkyr.data.model.DownloadFailureCategory
 import com.tufein.valkyr.data.model.DownloadItemModel
+import com.tufein.valkyr.data.model.DownloadProvenance
 import com.tufein.valkyr.data.model.DownloadStatus
 import com.tufein.valkyr.data.model.DownloadSourceChoices
 import com.tufein.valkyr.data.model.DownloadSourceOption
@@ -142,7 +143,8 @@ class DownloadService @Inject constructor(
     internal val moveGate: StorageMoveGate,
     internal val gamePackages: GamePackageService,
     internal val storageAvailability: StorageAvailabilityService,
-    internal val storageHolds: StorageDownloadHolds
+    internal val storageHolds: StorageDownloadHolds,
+    internal val trackerSettings: com.tufein.valkyr.data.local.TorrentTrackerSettings
 ) {
     val downloads: StateFlow<List<DownloadItemModel>> = downloadProgressTracker.downloads
 
@@ -326,6 +328,7 @@ class DownloadService @Inject constructor(
     internal suspend fun restoreHistory() {
         try {
             val rows = historyDao.getAll()
+            rows.forEach(::adoptProvenance)
             rows.forEach { row -> downloadEntities.putIfAbsent(row.fileName, row.toEntity()) }
             val held = try { storageHolds.snapshot() } catch (_: Exception) {
                 // A damaged hold journal must not hide the user's durable download history.
@@ -509,6 +512,45 @@ class DownloadService @Inject constructor(
     /** 7.5: file name -> short name of the source a failed download moved to ("Switched to <source>"). */
     val switchedSources: StateFlow<Map<String, String>> = _switchedTo.asStateFlow()
 
+    private data class ProvenanceRow(val sourceUrl: String, val originalUrl: String, val switchedFrom: String)
+    private val provenanceRows = ConcurrentHashMap<String, ProvenanceRow>()
+    internal val _provenance = MutableStateFlow<Map<String, DownloadProvenance>>(emptyMap())
+    /** Sources tracker: file name -> where this download came from (safe labels). */
+    val provenance: StateFlow<Map<String, DownloadProvenance>> = _provenance.asStateFlow()
+
+    /** Adopt the durable provenance of a restored history row without recomputing its labels. */
+    internal fun adoptProvenance(row: DownloadHistoryEntity) {
+        if (row.sourceUrl.isEmpty()) return
+        val original = row.originalSourceUrl.ifEmpty { row.sourceUrl }
+        provenanceRows[row.fileName] = ProvenanceRow(row.sourceUrl, original, row.switchedFrom)
+        _provenance.update { it + (row.fileName to DownloadProvenance(
+            source = DownloadSourcePolicy.safeLabel(row.sourceUrl),
+            original = DownloadSourcePolicy.safeLabel(original),
+            switchedFrom = row.switchedFrom
+        )) }
+    }
+
+    /**
+     * Remember [sourceUrl] as the current source of [fileName], keeping the first source and noting
+     * a switch when the source really changed. Called after each history upsert so the REPLACE
+     * cannot erase the earlier provenance.
+     */
+    internal suspend fun publishProvenance(fileName: String, sourceUrl: String) {
+        if (sourceUrl.isEmpty()) return
+        val previous = provenanceRows[fileName]
+        val original = previous?.originalUrl?.ifEmpty { sourceUrl } ?: sourceUrl
+        val from = if (previous == null || previous.sourceUrl == sourceUrl) previous?.switchedFrom.orEmpty()
+                   else DownloadSourcePolicy.safeLabel(previous.sourceUrl)
+        val row = ProvenanceRow(sourceUrl, original, from)
+        provenanceRows[fileName] = row
+        _provenance.update { it + (fileName to DownloadProvenance(
+            source = DownloadSourcePolicy.safeLabel(sourceUrl),
+            original = DownloadSourcePolicy.safeLabel(original),
+            switchedFrom = from
+        )) }
+        runCatching { historyDao.setProvenance(fileName, sourceUrl, original, from) }
+    }
+
     private data class SourceChoiceSession(
         val choices: DownloadSourceChoices,
         val current: DownloadableFileEntity,
@@ -608,6 +650,7 @@ class DownloadService @Inject constructor(
                     }
                     if (item != null) {
                         historyDao.upsertAll(listOf(DownloadHistoryEntity.from(next, item)))
+                        publishProvenance(fileName, next.sourceUrl)
                         downloadProgressTracker.persistCurrentStatuses(listOf(fileName))
                     }
                     selection.complete(next)
@@ -662,6 +705,7 @@ class DownloadService @Inject constructor(
             launchCleanup(fileName, "Preparing the next source for $fileName", transfer = null) {
                 partials.remove(fileName)
                 rewriteHistory(next)
+                publishProvenance(fileName, next.sourceUrl)
             }
         }
         cleanup.join()

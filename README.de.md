@@ -23,7 +23,7 @@ Valkyr führt eine große, durchsuchbare Liste mit den Spielen aus den Quellen, 
 
 *Die Screenshots verwenden erfundene Spieltitel und leere Platzhalterdateien und zeigen die App auf Englisch.*
 
-**Neueste Version: [9.0.0](https://github.com/Tufein/Valkyr/releases/tag/v9.0.0)** (Android-Build 94).
+**Neueste Version: [9.1.0](https://github.com/Tufein/Valkyr/releases/tag/v9.1.0)** (Android-Build 95).
 
 Bis 3.9.0 hieß die App Dogmatix+. Valkyr 6.0.0 hat eine eigene App-ID und wird daher neben der alten App installiert: Nutze *Einstellungen → Sichern* in der alten App und *Sicherung wiederherstellen* in Valkyr und entferne danach die alte App.
 
@@ -94,6 +94,8 @@ Du brauchst **Android 10 oder neuer**. Die App ist nicht bei Google Play erhält
 - **Spiele per WLAN empfangen** (aus, bis du es einschaltest): schicke deine eigenen Spieldateien aus einem Browser in deinem Netzwerk in den richtigen Konsolenordner, mit PIN, nur im lokalen Netzwerk, jede Datei wird geprüft und nichts ersetzt.
 - **Gesundheitsprüfung** mit einer Lösung pro Problem und ein **Scanbericht** für fehlgeschlagene Quellen. Jede Quelle merkt sich ihre letzten zwölf Scans und meldet, wenn sie immer wieder ausfällt.
 - **Quellen**: von Hand hinzufügen, importieren und exportieren, als QR-Codes teilen, optionaler Inhaltskatalog mit Libretro-Inhalten für 29 Systeme, den Freeware-Adventures von ScummVM und kostenlosen Game-Boy-Homebrews von Homebrew Hub, jeweils mit Anbieter, Reserveadressen und automatische Hintergrundscans, die Unverändertes überspringen.
+- **Quellen-Tracker** (*Quellen → Quellen-Tracker*): eine Liste jeder Quelle auf jeder Konsole, die problematischsten zuerst, mit Scan-Status, Download-Verlauf (Geschwindigkeit, Erfolgsquote, Fehlertrend) und Scan per Klick. Downloads und Spieseiten nennen die Quelle eines Spiels — auch nach einem Wechsel. Der Verlauf lässt sich ohne Adressen oder Schlüssel exportieren.
+- **Torrent-Tracker** (*Einstellungen → Torrents → Torrent-Tracker*): eigene Announce-Adressen verwalten, an- und ausschalten, http(s)-Adressen testen und sie Torrents und Magnet-Links hinzufügen (auch über Debrid). Die Tracker der eigenen Quellen bleiben in Gebrauch.
 
 ### Sicher gebaut
 - **Papierkorb und Wiederherstellungscenter**: entfernte Spiele, unterbrochene Verschiebungen, ersetzte Dateien und Spielstand-Backups lassen sich wiederherstellen, jeweils mit Vorschau. Kopien werden geprüft, bevor etwas entfernt wird.

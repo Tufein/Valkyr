@@ -33,9 +33,10 @@ class StorageRecoveryServiceFactory @Inject constructor(
     private val moveGate: StorageMoveGate,
     private val packages: GamePackageService,
     private val storage: StorageAvailabilityService,
-    private val holds: StorageDownloadHolds
+    private val holds: StorageDownloadHolds,
+    private val trackers: com.tufein.valkyr.data.local.TorrentTrackerSettings
 ) {
     fun create(history: DownloadHistoryDao): DownloadService = DownloadService(context, settings, extractor,
         speed, bandwidth, http, DownloadProgressTracker(history), files, torrents, handles, history, torbox,
-        debrid, romm, gate, conditions, consoles, app, partials, dat, sources, moveGate, packages, storage, holds)
+        debrid, romm, gate, conditions, consoles, app, partials, dat, sources, moveGate, packages, storage, holds, trackers)
 }

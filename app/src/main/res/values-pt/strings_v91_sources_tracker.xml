@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 9.1: Sources tracker -->
+    <string name="src91_tracker_title">Rastreador de fontes</string>
+    <string name="src91_tracker_hint">Cada fonte, o estado da varredura e o histórico de downloads</string>
+    <string name="src91_trackers_title">Trackers de torrent</string>
+    <string name="src91_trackers_hint">Endereços de anúncio adicionados aos seus torrents</string>
+    <string name="find8_kw_tracker">tracker anúncio fontes estado histórico</string>
+
+    <string name="src91_from">De %1$s</string>
+    <string name="src91_sources">Fontes</string>
+    <string name="src91_failing">Precisa de atenção</string>
+    <string name="src91_downloads">Downloads registrados</string>
+    <string name="src91_games">%1$d jogos indexados</string>
+    <string name="src91_never_scanned">Nunca verificado</string>
+    <string name="src91_dl_trend">%1$d falhas nos últimos %2$d downloads, último: %3$s</string>
+    <string name="src91_copied">Endereço copiado</string>
+    <string name="src91_export">Exportar histórico</string>
+    <string name="src91_export_share">Compartilhar histórico de fontes</string>
+
+    <string name="src91_add">Adicionar tracker</string>
+    <string name="src91_add_hint">udp://tracker.example.org:1337/announce</string>
+    <string name="src91_invalid">Este não é um endereço de anúncio válido</string>
+    <string name="src91_remove">Remover</string>
+    <string name="src91_test">Testar</string>
+    <string name="src91_testing">Testando…</string>
+    <string name="src91_test_http_ok">Respondeu (HTTP %1$d)</string>
+    <string name="src91_test_http_fail">Não respondeu (%1$s)</string>
+    <string name="src91_test_udp">udp:// não pode ser verificado aqui — apenas o endereço foi validado</string>
+    <string name="src91_no_trackers">Ainda não há trackers</string>
+    <string name="src91_no_trackers_msg">Adicione endereços de anúncio para ajudar os torrents a encontrar pares. Os trackers das suas próprias fontes continuam sendo usados.</string>
+    <string name="src91_on">Ativado</string>
+    <string name="src91_off">Desativado</string>
+</resources>

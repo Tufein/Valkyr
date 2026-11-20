@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.tufein.valkyr.data.model.DownloadSourceChoices
 import com.tufein.valkyr.data.model.SourceChangeResult
 import com.tufein.valkyr.data.model.DownloadItemModel
+import com.tufein.valkyr.data.model.DownloadProvenance
 import com.tufein.valkyr.data.model.DownloadStatus
 import com.tufein.valkyr.data.model.DownloadableFileWithTags
 import com.tufein.valkyr.data.repository.DownloadRepository
@@ -97,6 +98,8 @@ class DownloadViewModel @Inject constructor(
     val verification: StateFlow<Map<String, VerifyState>> = downloadService.verification
     /** 7.5: file name -> source a failed download moved to by itself ("Switched to <source>"). */
     val switchedSources: StateFlow<Map<String, String>> = downloadService.switchedSources
+    /** Sources tracker: file name -> where this download came from. */
+    val provenance: StateFlow<Map<String, DownloadProvenance>> = downloadService.provenance
 
     val pendingAutoRetries = downloadService.pendingAutoRetries
 

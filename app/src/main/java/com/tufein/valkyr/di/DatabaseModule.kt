@@ -37,7 +37,7 @@ object DatabaseModule {
         Room.databaseBuilder(context, DogmatixDatabase::class.java, "dogmatix_db")
             .addMigrations(DogmatixDatabase.MIGRATION_1_2, DogmatixDatabase.MIGRATION_2_3, DogmatixDatabase.MIGRATION_3_4, DogmatixDatabase.MIGRATION_4_5, DogmatixDatabase.MIGRATION_5_6, DogmatixDatabase.MIGRATION_6_7, DogmatixDatabase.MIGRATION_7_8, DogmatixDatabase.MIGRATION_8_9, DogmatixDatabase.MIGRATION_9_10, DogmatixDatabase.MIGRATION_10_11, DogmatixDatabase.MIGRATION_11_12, DogmatixDatabase.MIGRATION_12_13, DogmatixDatabase.MIGRATION_13_14)
             .addMigrations(DogmatixDatabase.MIGRATION_14_15, DogmatixDatabase.MIGRATION_15_16)
-            .addMigrations(DogmatixDatabase.MIGRATION_16_17)
+            .addMigrations(DogmatixDatabase.MIGRATION_16_17, DogmatixDatabase.MIGRATION_17_18)
             .build()
 
     @Provides

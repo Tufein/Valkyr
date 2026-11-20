@@ -207,6 +207,7 @@ private fun GamePageContent(
     val progressAvailable by viewModel.progressAvailable.collectAsStateWithLifecycle()
     val collections by viewModel.collections.collectAsStateWithLifecycle()
     val ranking by viewModel.versionRanking.collectAsStateWithLifecycle()
+    val downloadFrom by viewModel.downloadFrom.collectAsStateWithLifecycle()
     val owned = viewModel.isOwned(rom, ownedKeys)
     // One source for the primary action, Share / More and the header, so they never disagree about the queue.
     val queue = GamePageModel.queueOf(downloadStates[rom.fileName])
@@ -581,7 +582,8 @@ private fun GamePageContent(
             viewModel = viewModel,
             onOpenVersionPreference = onOpenVersionPreference,
             onSeries = { viewModel.showSeries(state.item.file); onBack() },
-            onFixMatch = { showFixMatch = true }
+            onFixMatch = { showFixMatch = true },
+            downloadFrom = downloadFrom
         )
     }
 
@@ -688,7 +690,8 @@ private fun TabContent(
     viewModel: GamePageViewModel,
     onOpenVersionPreference: (() -> Unit)?,
     onSeries: () -> Unit,
-    onFixMatch: () -> Unit
+    onFixMatch: () -> Unit,
+    downloadFrom: String? = null
 ) {
     val rom = state.item.file
     val scheme = MaterialTheme.colorScheme
@@ -708,6 +711,10 @@ private fun TabContent(
                         GameDescription(state)
                         state.details?.let { details ->
                             Text(stringResource(R.string.details_source, details.source), style = MaterialTheme.typography.labelSmall, color = scheme.onSurfaceVariant)
+                        }
+                        // Sources tracker: where the game was downloaded from (never an address with a key).
+                        downloadFrom?.let {
+                            Text(stringResource(R.string.src91_from, it), style = MaterialTheme.typography.labelSmall, color = scheme.onSurfaceVariant)
                         }
                         val coverFrom by produceState<com.tufein.valkyr.util.CoverSources.Source?>(null, rom.consoleId, rom.fileName) {
                             value = viewModel.coverSource(rom.consoleId, rom.fileName)

@@ -192,6 +192,8 @@ import com.tufein.valkyr.ui.screens.next.UpNextScreen
 import com.tufein.valkyr.ui.screens.settings.SettingsJump
 import com.tufein.valkyr.ui.screens.settings.VersionPreferenceScreen
 import com.tufein.valkyr.ui.screens.settings.covers.CoverSourcesScreen
+import com.tufein.valkyr.ui.screens.settings.trackers.TorrentTrackersScreen
+import com.tufein.valkyr.ui.screens.sources.SourcesTrackerScreen
 import com.tufein.valkyr.ui.screens.tools.ActionHistoryScreen
 import com.tufein.valkyr.ui.screens.tools.FrontendCoversScreen
 import com.tufein.valkyr.ui.screens.tools.GameReadinessScreen
@@ -776,8 +778,10 @@ private fun DogmatixApp(pendingFilters: PendingLibraryFilters) {
                     }
                     composable(NavRoutes.VersionPreference.route) { VersionPreferenceScreen() }
                     composable(NavRoutes.CoverSources.route) { CoverSourcesScreen() }
+                    composable(NavRoutes.TorrentTrackers.route) { TorrentTrackersScreen() }
                     composable(NavRoutes.Downloads.route) { DownloadScreen(navController) }
-                    composable(NavRoutes.Sources.route) { SourcesScreen() }
+                    composable(NavRoutes.Sources.route) { SourcesScreen(onOpenTracker = { navController.navigate(NavRoutes.SourcesTracker.route) }) }
+                    composable(NavRoutes.SourcesTracker.route) { SourcesTrackerScreen(navController) }
                     composable(NavRoutes.Settings.route) { SettingsScreen(navController) }
                     composable(NavRoutes.Contact.route) { ContactScreen(navController) }
                     composable(NavRoutes.Romm.route) { RommScreen() }

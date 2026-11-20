@@ -163,6 +163,7 @@ fun ToolsHubScreen(navController: NavController, viewModel: ToolsHubViewModel = 
             item { Tool(go, NavRoutes.CollectionGoals, R.string.coll6_goals_title, R.string.lead6_goals_hint) }
             item { Tool(go, NavRoutes.History, R.string.coll6_history_title, R.string.lead6_history_hint) }
             item { Tool(go, NavRoutes.Health, R.string.health6_title, R.string.lead6_health_hint) }
+            item { Tool(go, NavRoutes.SourcesTracker, R.string.src91_tracker_title, R.string.src91_tracker_hint) }
             item { Tool(go, NavRoutes.Recap, R.string.quick7_title, R.string.quick7_hint) }
             item { Tool(go, NavRoutes.ReportProblem, R.string.report30_title, R.string.report30_hint) }
             item { Tool(go, NavRoutes.EmulatorCheck, R.string.emucheck67_title, R.string.emucheck67_hint) }

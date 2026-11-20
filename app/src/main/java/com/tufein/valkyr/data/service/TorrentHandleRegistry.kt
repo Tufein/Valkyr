@@ -2,9 +2,11 @@ package com.tufein.valkyr.data.service
 
 import android.content.Context
 import android.util.Log
+import com.tufein.valkyr.data.local.TorrentTrackerSettings
 import com.tufein.valkyr.data.repository.SettingsRepository
 import com.tufein.valkyr.util.FileParsingUtils
 import com.tufein.valkyr.util.TorrentConstants
+import com.tufein.valkyr.util.TorrentTrackers
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.security.MessageDigest
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +19,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import org.libtorrent4j.AddTorrentParams
+import org.libtorrent4j.AnnounceEntry
 import org.libtorrent4j.Priority
 import org.libtorrent4j.SessionManager
 import org.libtorrent4j.SettingsPack
@@ -32,7 +35,8 @@ import javax.inject.Singleton
 class TorrentHandleRegistry @Inject constructor(
     @ApplicationContext private val context: Context,
     private val settingsRepository: SettingsRepository,
-    private val progressBridge: TorrentProgressBridge
+    private val progressBridge: TorrentProgressBridge,
+    private val trackerSettings: TorrentTrackerSettings
 ) {
 
     private val session = SessionManager()
@@ -260,6 +264,14 @@ class TorrentHandleRegistry @Inject constructor(
                     }
                 }
                 resolved to !existed
+            }
+
+            // Sources tracker: the user's announce addresses join the torrent's own list. Doing this
+            // on the handle (not only in the magnet URI) covers .torrent sources and metadata-cache
+            // hits, whose cached files carry no announce list at all.
+            TorrentTrackers.enabled(trackerSettings.entries.first()).forEach { url ->
+                runCatching { handle.addTracker(AnnounceEntry(url)) }
+                    .onFailure { Log.w(TAG, "Could not add tracker $url: ${it.message}") }
             }
 
             withMetadataPreflight(handle, newlyAdded, ::discardUncachedMetadataHandle) { pending ->

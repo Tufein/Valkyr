@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 9.1: Sources tracker -->
+    <string name="src91_tracker_title">Suivi des sources</string>
+    <string name="src91_tracker_hint">Chaque source, son état de analyse et son historique de téléchargement</string>
+    <string name="src91_trackers_title">Trackers torrent</string>
+    <string name="src91_trackers_hint">Adresses d’annonce ajoutées à vos torrents</string>
+    <string name="find8_kw_tracker">tracker announce sources état historique</string>
+
+    <string name="src91_from">Depuis %1$s</string>
+    <string name="src91_sources">Sources</string>
+    <string name="src91_failing">À vérifier</string>
+    <string name="src91_downloads">Téléchargements enregistrés</string>
+    <string name="src91_games">%1$d jeux indexés</string>
+    <string name="src91_never_scanned">Jamais analysé</string>
+    <string name="src91_dl_trend">%1$d échecs sur les %2$d derniers téléchargements, dernier : %3$s</string>
+    <string name="src91_copied">Adresse copiée</string>
+    <string name="src91_export">Exporter l’historique</string>
+    <string name="src91_export_share">Partager l’historique des sources</string>
+
+    <string name="src91_add">Ajouter un tracker</string>
+    <string name="src91_add_hint">udp://tracker.example.org:1337/announce</string>
+    <string name="src91_invalid">Ce n’est pas une adresse d’annonce valide</string>
+    <string name="src91_remove">Supprimer</string>
+    <string name="src91_test">Tester</string>
+    <string name="src91_testing">Test en cours…</string>
+    <string name="src91_test_http_ok">Réponse reçue (HTTP %1$d)</string>
+    <string name="src91_test_http_fail">Aucune réponse (%1$s)</string>
+    <string name="src91_test_udp">udp:// ne peut pas être vérifié ici — seule l’adresse a été validée</string>
+    <string name="src91_no_trackers">Aucun tracker pour l’instant</string>
+    <string name="src91_no_trackers_msg">Ajoutez des adresses d’annonce pour aider les torrents à trouver des pairs. Les trackers de vos propres sources restent utilisés.</string>
+    <string name="src91_on">Activé</string>
+    <string name="src91_off">Désactivé</string>
+</resources>

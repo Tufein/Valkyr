@@ -36,7 +36,13 @@ data class DownloadHistoryEntity(
     /** Safe diagnostic metadata only; exception text, provider messages and URLs are never stored here. */
     @ColumnInfo(defaultValue = "NULL") val failureCategory: String? = null,
     @ColumnInfo(defaultValue = "NULL") val failureHttpStatusCode: Int? = null,
-    @ColumnInfo(defaultValue = "NULL") val failureAt: Long? = null
+    @ColumnInfo(defaultValue = "NULL") val failureAt: Long? = null,
+    /** The source this download actually came from (the address as configured in Sources). */
+    @ColumnInfo(defaultValue = "") val sourceUrl: String = "",
+    /** The first source, kept when a failed download is switched to another one. */
+    @ColumnInfo(defaultValue = "") val originalSourceUrl: String = "",
+    /** A safe, short label of the source switched away from; empty when there was no switch. */
+    @ColumnInfo(defaultValue = "") val switchedFrom: String = ""
 ) {
     fun toEntity(): DownloadableFileEntity = DownloadableFileEntity(
         name = name,
@@ -89,6 +95,8 @@ data class DownloadHistoryEntity(
             startedAt = item.startedAt,
             finishedAt = item.finishedAt,
             expectedHash = file.expectedHash,
+            sourceUrl = file.sourceUrl,
+            originalSourceUrl = file.sourceUrl,
             failureCategory = item.failure?.category?.name,
             failureHttpStatusCode = PersistedDownloadFailure.httpCode(item.failure?.httpStatusCode),
             failureAt = if (item.failure != null) PersistedDownloadFailure.timestamp(item.failureAt) else null

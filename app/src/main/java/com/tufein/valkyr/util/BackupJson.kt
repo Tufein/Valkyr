@@ -151,6 +151,9 @@ object BackupJson {
                 addProperty("fileExtension", h.fileExtension)
                 h.torrentFileIndex?.let { addProperty("torrentFileIndex", it) }
                 h.torrentMagnet?.let { addProperty("torrentMagnet", it) }
+                if (h.sourceUrl.isNotEmpty()) addProperty("sourceUrl", h.sourceUrl)
+                if (h.originalSourceUrl.isNotEmpty()) addProperty("originalSourceUrl", h.originalSourceUrl)
+                if (h.switchedFrom.isNotEmpty()) addProperty("switchedFrom", h.switchedFrom)
                 addProperty("status", h.status)
                 addProperty("startedAt", h.startedAt)
                 h.finishedAt?.let { addProperty("finishedAt", it) }
@@ -181,6 +184,9 @@ object BackupJson {
                 torrentMagnet = o.string("torrentMagnet"),
                 status = status,
                 startedAt = o.long("startedAt") ?: 0L,
+                sourceUrl = o.string("sourceUrl").orEmpty(),
+                originalSourceUrl = o.string("originalSourceUrl").orEmpty(),
+                switchedFrom = o.string("switchedFrom").orEmpty(),
                 finishedAt = o.long("finishedAt"),
                 failureCategory = failure?.category?.name,
                 failureHttpStatusCode = failure?.httpStatusCode,

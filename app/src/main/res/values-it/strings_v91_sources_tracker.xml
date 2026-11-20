@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 9.1: Sources tracker -->
+    <string name="src91_tracker_title">Traccia delle fonti</string>
+    <string name="src91_tracker_hint">Ogni fonte, lo stato della scansione e lo storico dei download</string>
+    <string name="src91_trackers_title">Tracker torrent</string>
+    <string name="src91_trackers_hint">Indirizzi di annuncio aggiunti ai tuoi torrent</string>
+    <string name="find8_kw_tracker">tracker annuncio fonti stato storico</string>
+
+    <string name="src91_from">Da %1$s</string>
+    <string name="src91_sources">Fonti</string>
+    <string name="src91_failing">Da controllare</string>
+    <string name="src91_downloads">Download registrati</string>
+    <string name="src91_games">%1$d giochi indicizzati</string>
+    <string name="src91_never_scanned">Mai scansionato</string>
+    <string name="src91_dl_trend">%1$d fallimenti sugli ultimi %2$d download, ultimo: %3$s</string>
+    <string name="src91_copied">Indirizzo copiato</string>
+    <string name="src91_export">Esporta lo storico</string>
+    <string name="src91_export_share">Condividi lo storico delle fonti</string>
+
+    <string name="src91_add">Aggiungi tracker</string>
+    <string name="src91_add_hint">udp://tracker.example.org:1337/announce</string>
+    <string name="src91_invalid">Non è un indirizzo di annuncio valido</string>
+    <string name="src91_remove">Rimuovi</string>
+    <string name="src91_test">Prova</string>
+    <string name="src91_testing">Prova in corso…</string>
+    <string name="src91_test_http_ok">Ha risposto (HTTP %1$d)</string>
+    <string name="src91_test_http_fail">Non ha risposto (%1$s)</string>
+    <string name="src91_test_udp">udp:// non può essere verificato qui: è stato validato solo l’indirizzo</string>
+    <string name="src91_no_trackers">Ancora nessun tracker</string>
+    <string name="src91_no_trackers_msg">Aggiungi indirizzi di annuncio per aiutare i torrent a trovare peer. I tracker delle tue fonti restano in uso.</string>
+    <string name="src91_on">Attivo</string>
+    <string name="src91_off">Disattivo</string>
+</resources>

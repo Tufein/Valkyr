@@ -45,6 +45,7 @@ import com.tufein.valkyr.util.MirrorUrls
 import com.tufein.valkyr.util.ResumePlan
 import com.tufein.valkyr.util.RommSource
 import com.tufein.valkyr.util.SourceRanking
+import com.tufein.valkyr.util.TorrentTrackers
 import com.tufein.valkyr.util.DebridMatcher
 import com.tufein.valkyr.util.Checksums
 import com.tufein.valkyr.util.HoldParking
@@ -253,6 +254,9 @@ internal fun DownloadService.releaseDebrid(fileName: String) {
 
 internal suspend fun DownloadService.performDebridDownloadInner(file: DownloadableFileEntity, client: DebridClient, magnet: String) {
     val label = client.provider.label
+    // The debrid route never touches libtorrent, so the personal announce list is appended here.
+    // The info hash (and therefore the cache lookup) is unchanged by extra tr= parameters.
+    val effectiveMagnet = TorrentTrackers.appendToMagnet(magnet, TorrentTrackers.enabled(trackerSettings.entries.first()))
     // A previous run that died mid-transfer left the ids in the history: pick the same
     // torrent up again and resume the HTTP transfer from what is already on disk.
     val previous = historyDao.getByFileName(file.fileName)
@@ -272,9 +276,9 @@ internal suspend fun DownloadService.performDebridDownloadInner(file: Downloadab
         return
     }
 
-    val hash = DebridMatcher.infoHashFromMagnet(magnet)
+    val hash = DebridMatcher.infoHashFromMagnet(effectiveMagnet)
     val cached = hash?.let { client.isCached(it) } == true
-    var torrentId = client.createTorrent(magnet)
+    var torrentId = client.createTorrent(effectiveMagnet)
     debridTorrents[file.fileName] = client to torrentId
 
     /** Polls until [done] holds; cached torrents get there on the first check. */
@@ -308,7 +312,7 @@ internal suspend fun DownloadService.performDebridDownloadInner(file: Downloadab
         // TorBox zipped the whole torrent (an earlier add without allow_zip=false); re-add it unzipped.
         Log.w(TAG, "$label holds ${torrent.name} as a single zip; re-adding it unzipped")
         client.delete(torrentId)
-        torrentId = client.createTorrent(magnet)
+        torrentId = client.createTorrent(effectiveMagnet)
         debridTorrents[file.fileName] = client to torrentId
         torrent = awaitListed(torrentId)
         remote = DebridMatcher.pickFile(torrent.files, file.fileName, file.fileSize)

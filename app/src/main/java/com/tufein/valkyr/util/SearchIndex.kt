@@ -222,6 +222,7 @@ object SearchIndex {
             setting(SettingKeys.DEBRID, R.string.settings_debrid, R.string.settings_debrid_hint, R.drawable.ic_bolt, R.string.find8_kw_debrid),
             setting(SettingKeys.METADATA_TIMEOUT, R.string.settings_metadata_timeout, R.string.settings_metadata_timeout_hint, R.drawable.ic_hourglass, R.string.find8_kw_torrent),
 
+
             setting(SettingKeys.AUTOSCAN, R.string.settings_autoscan, null, R.drawable.ic_sync, R.string.find8_kw_scan),
             setting(SettingKeys.AUTOSCAN_EVERY, R.string.settings_autoscan_every, null, R.drawable.ic_timer, R.string.find8_kw_scan),
             setting(SettingKeys.AUTOSCAN_WIFI, R.string.settings43_autoscan_wifi, null, R.drawable.ic_wifi, R.string.find8_kw_scan),
@@ -257,6 +258,8 @@ object SearchIndex {
             screen(SearchGroup.TOOLS, NavRoutes.Home, R.string.nav_library, R.string.find8_hint_library, R.string.find8_kw_library),
             screen(SearchGroup.TOOLS, NavRoutes.Downloads, R.string.nav_downloads, R.string.find8_hint_downloads, R.string.find8_kw_downloads),
             screen(SearchGroup.TOOLS, NavRoutes.Sources, R.string.nav_sources, R.string.find8_hint_sources, R.string.find8_kw_sources),
+            screen(SearchGroup.TOOLS, NavRoutes.SourcesTracker, R.string.src91_tracker_title, R.string.src91_tracker_hint, R.string.find8_kw_tracker),
+            SearchEntry("torrent_trackers_screen", SearchGroup.TOOLS, R.string.src91_trackers_title, R.string.src91_trackers_hint, R.drawable.ic_hub, SearchTarget(NavRoutes.TorrentTrackers.route), R.string.find8_kw_tracker),
             screen(SearchGroup.TOOLS, NavRoutes.More, R.string.shell38_more, R.string.shell38_more_hint),
             screen(SearchGroup.TOOLS, NavRoutes.Tools, R.string.settings_tools, R.string.settings_tools_hint),
             screen(SearchGroup.TOOLS, NavRoutes.Overview, R.string.settings_overview, R.string.settings_overview_hint),

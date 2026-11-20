@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 9.1: Sources tracker -->
+    <string name="src91_tracker_title">Sources tracker</string>
+    <string name="src91_tracker_hint">Every source, its scan health and download record</string>
+    <string name="src91_trackers_title">Torrent trackers</string>
+    <string name="src91_trackers_hint">Announce addresses added to your torrents</string>
+    <string name="find8_kw_tracker">tracker announce sources health record</string>
+
+    <string name="src91_from">From %1$s</string>
+    <string name="src91_sources">Sources</string>
+    <string name="src91_failing">Needs attention</string>
+    <string name="src91_downloads">Downloads recorded</string>
+    <string name="src91_games">%1$d games indexed</string>
+    <string name="src91_never_scanned">Never scanned</string>
+    <string name="src91_dl_trend">Failed %1$d of the last %2$d downloads, last: %3$s</string>
+    <string name="src91_copied">Address copied</string>
+    <string name="src91_export">Export track record</string>
+    <string name="src91_export_share">Share source track record</string>
+
+    <string name="src91_add">Add tracker</string>
+    <string name="src91_add_hint">udp://tracker.example.org:1337/announce</string>
+    <string name="src91_invalid">That is not a valid announce address</string>
+    <string name="src91_remove">Remove</string>
+    <string name="src91_test">Test</string>
+    <string name="src91_testing">Testing…</string>
+    <string name="src91_test_http_ok">Answered (HTTP %1$d)</string>
+    <string name="src91_test_http_fail">Did not answer (%1$s)</string>
+    <string name="src91_test_udp">udp:// cannot be checked here — only the address was validated</string>
+    <string name="src91_no_trackers">No trackers yet</string>
+    <string name="src91_no_trackers_msg">Add announce addresses to help torrents find peers. The trackers of your own sources are still used.</string>
+    <string name="src91_on">On</string>
+    <string name="src91_off">Off</string>
+</resources>

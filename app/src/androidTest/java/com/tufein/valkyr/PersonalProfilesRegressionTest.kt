@@ -22,7 +22,7 @@ class PersonalProfilesRegressionTest {
     @Test fun migrationPreservesLegacyFavouritesAndSeparatesSameGameAcrossProfiles() = runBlocking {
         val name = "profiles-migration-${UUID.randomUUID()}"
         fun open() = Room.databaseBuilder(context, DogmatixDatabase::class.java, name)
-            .addMigrations(DogmatixDatabase.MIGRATION_13_14, DogmatixDatabase.MIGRATION_14_15, DogmatixDatabase.MIGRATION_15_16, DogmatixDatabase.MIGRATION_16_17).build()
+            .addMigrations(DogmatixDatabase.MIGRATION_13_14, DogmatixDatabase.MIGRATION_14_15, DogmatixDatabase.MIGRATION_15_16, DogmatixDatabase.MIGRATION_16_17, DogmatixDatabase.MIGRATION_17_18).build()
         try {
             open().also { db ->
                 db.favouriteDao().upsert(FavouriteEntity("gba", "Game.gba", 123L))

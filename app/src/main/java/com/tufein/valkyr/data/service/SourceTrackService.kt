@@ -86,9 +86,21 @@ class SourceTrackService @Inject constructor(
 
     @Synchronized
     private fun save() {
-        runCatching { file.writeText(SourceRanking.toJson(_records.value)) }
-            .onFailure { Log.w(TAG, "Could not save the source track record: ${it.message}") }
+        val tmp = File(file.parentFile, "${file.name}.tmp")
+        runCatching {
+            tmp.writeText(SourceRanking.toJson(_records.value))
+            if (!tmp.renameTo(file)) {
+                file.delete()
+                tmp.renameTo(file)
+            }
+        }.onFailure {
+            tmp.delete()
+            Log.w(TAG, "Could not save the source track record: ${it.message}")
+        }
     }
+
+    /** A shareable, redacted track record: labels and numbers, never addresses, keys or file names. */
+    fun exportTrackRecord(): String = SourceRanking.exportJson(_records.value, System.currentTimeMillis())
 
     /**
      * The source [entity] came from. Downloads restored from the history of an earlier run carry

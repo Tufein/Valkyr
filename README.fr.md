@@ -23,7 +23,7 @@ Valkyr rassemble les jeux des sources que *vous* ajoutez dans une seule grande l
 
 *Les captures d’écran utilisent des titres de jeux inventés et des fichiers vides de substitution, et montrent l’application en anglais.*
 
-**Dernière version : [9.0.0](https://github.com/Tufein/Valkyr/releases/tag/v9.0.0)** (build Android 94).
+**Dernière version : [9.1.0](https://github.com/Tufein/Valkyr/releases/tag/v9.1.0)** (build Android 95).
 
 Jusqu’à la 3.9.0, l’application s’appelait Dogmatix+. Valkyr 6.0.0 a son propre identifiant d’application et s’installe donc à côté de l’ancienne : utilisez *Réglages → Sauvegarder* dans l’ancienne appli et *Restaurer une sauvegarde* dans Valkyr, puis supprimez l’ancienne.
 
@@ -94,6 +94,8 @@ Il vous faut **Android 10 ou plus récent**. L’application n’est pas sur Goo
 - **Recevoir des jeux par Wi-Fi** (désactivé tant que vous ne l’activez pas) : envoyez vos propres fichiers de jeu depuis un navigateur de votre réseau vers le bon dossier de console, avec un code PIN, sur le réseau local uniquement, chaque fichier vérifié et rien de remplacé.
 - **Contrôle de santé** avec une solution par problème, et **rapport d’analyse** pour les sources en échec. Chaque source retient ses douze dernières analyses et signale qu’elle échoue souvent.
 - **Sources** : ajout manuel, import et export, partage par codes QR, catalogue de contenus optionnel avec du contenu Libretro pour 29 systèmes, les jeux d’aventure freeware de ScummVM et des homebrews Game Boy gratuits de Homebrew Hub, chacun avec son fournisseur, adresses de secours et analyses automatiques en arrière-plan qui sautent ce qui n’a pas changé.
+- **Suivi des sources** (*Sources → Suivi des sources*) : une liste de chaque source sur chaque console, les plus problématiques d’abord, avec l’état de l’analyse, l’historique des téléchargements (vitesse, taux de réussite, tendance des échecs) et une analyse en un geste. Les téléchargements et les pages de jeu indiquent la source d’un jeu, même après un changement. L’historique s’exporte sans adresses ni clés.
+- **Trackers torrent** (*Paramètres → Torrents → Trackers torrent*) : gérez vos adresses d’annonce, activez-les ou désactivez-les, testez celles en http(s) et ajoutez-les aux torrents et magnets (y compris via debrid). Les trackers de vos propres sources restent utilisés.
 
 ### Sûr par conception
 - **Corbeille et centre de récupération** : jeux retirés, déplacements interrompus, fichiers remplacés et sauvegardes se restaurent, chacun avec un aperçu. Les copies sont vérifiées avant tout retrait.

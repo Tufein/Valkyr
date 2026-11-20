@@ -163,9 +163,11 @@ fun DownloadItem(
     val debridLabel = if (item.status == DownloadStatus.QUEUED) viewModel.debridLabel.collectAsStateWithLifecycle().value else ""
     // 7.5: the source a failed download moved to by itself.
     val switchedTo = viewModel.switchedSources.collectAsStateWithLifecycle().value[fileName]
+    // Sources tracker: where this download came from.
+    val fromSource = viewModel.provenance.collectAsStateWithLifecycle().value[fileName]?.source
     DownloadRow(
         item, details, compact, actions, debridLabel, modifier, upload, waitingReason, queuePosition, verify,
-        selectionMode, selected, focusUp, sweep, onToggleSelection, onRowFocused, condition, canSchedule, switchedTo, pendingRetry, canChangeSource
+        selectionMode, selected, focusUp, sweep, onToggleSelection, onRowFocused, condition, canSchedule, switchedTo, pendingRetry, canChangeSource, fromSource
     )
 }
 
@@ -214,7 +216,9 @@ fun DownloadRow(
     /** Short name of the source this download moved to after failing on its first one, or null. */
     switchedTo: String? = null,
     pendingRetry: PendingAutoRetry? = null,
-    canChangeSource: Boolean = false
+    canChangeSource: Boolean = false,
+    /** Short name of the source this game was downloaded from, or null for older history rows. */
+    fromSource: String? = null
 ) {
     val scheme = MaterialTheme.colorScheme
     val source = rememberFocusSource()
@@ -289,6 +293,7 @@ fun DownloadRow(
         stringResource(R.string.download_bytes_unknown_total, formatBytes(item.downloadedBytes))
     } else stringResource(R.string.download_size_unknown)
     val detail = sizeText + (timeLabel?.let { "  ·  $it" } ?: "") +
+        (fromSource?.let { "  ·  " + stringResource(R.string.src91_from, it) } ?: "") +
         (switchedTo?.let { "  ·  " + stringResource(R.string.src75_switched_to, it) } ?: "")
     val busy = status == DownloadStatus.COPYING || status == DownloadStatus.UNZIPPING ||
         (status == DownloadStatus.QUEUED && item.progress <= 0f) || waiting || inQueue

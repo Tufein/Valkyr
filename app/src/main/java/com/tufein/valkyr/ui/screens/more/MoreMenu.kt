@@ -34,6 +34,7 @@ object MoreMenu {
                     MoreItem(NavRoutes.SearchAll, R.string.find8_title, R.string.find8_hint),
                     MoreItem(NavRoutes.LibraryRepair, R.string.repair30_title, R.string.repair30_hint),
                     MoreItem(NavRoutes.Storage, R.string.nav_storage, R.string.tools_storage_hint),
+                    MoreItem(NavRoutes.SourcesTracker, R.string.src91_tracker_title, R.string.src91_tracker_hint),
                     MoreItem(NavRoutes.FreeSpace, R.string.space7_title, R.string.space7_hint)
                 )
             ),

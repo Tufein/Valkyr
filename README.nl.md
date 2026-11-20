@@ -23,7 +23,7 @@ Valkyr houdt één grote, doorzoekbare lijst bij van de games uit de bronnen die
 
 *De screenshots gebruiken verzonnen gametitels en lege dummybestanden en tonen de app in het Engels.*
 
-**Laatste release: [9.0.0](https://github.com/Tufein/Valkyr/releases/tag/v9.0.0)** (Android build 94).
+**Laatste release: [9.1.0](https://github.com/Tufein/Valkyr/releases/tag/v9.1.0)** (Android build 95).
 
 Tot en met 3.9.0 heette de app Dogmatix+. Valkyr 6.0.0 heeft een eigen app-id en installeert dus naast de oude app: gebruik *Instellingen → Back-up maken* in de oude app en *Back-up terugzetten* in Valkyr, en verwijder daarna de oude app.
 
@@ -94,6 +94,8 @@ Je hebt **Android 10 of nieuwer** nodig. De app staat niet in Google Play.
 - **Games ontvangen via wifi** (uit tot je het aanzet): stuur je eigen gamebestanden vanuit een browser op je netwerk naar de juiste consolemap, met pincode, alleen op het lokale netwerk, elk bestand gecontroleerd en niets vervangen.
 - **Gezondheidscontrole** met een oplossing per probleem, en een **scanrapport** voor bronnen die mislukten. Elke bron onthoudt haar laatste twaalf scans en meldt het als ze blijft falen.
 - **Bronnen**: met de hand toevoegen, importeren en exporteren, delen als QR-codes, optionele inhoudscatalogus met Libretro-content voor 29 systemen, de freeware-avonturenspellen van ScummVM en gratis Game Boy-homebrew van Homebrew Hub, steeds met de aanbieder erbij, reserveadressen en automatische achtergrondscans die overslaan wat niet veranderde.
+- **Bronnen-tracker** (*Bronnen → Bronnen-tracker*): één lijst van elke bron op elke console, de slechtste eerst, met scanstatus, downloadverleden (snelheid, slagingspercentage, fouttrend) en één tik om opnieuw te scannen. Downloads en gamepagina's tonen van welke bron een spel kwam, ook na een wissel. Het verleden is te exporteren zonder adressen of sleutels.
+- **Torrenttrackers** (*Instellingen → Torrents → Torrenttrackers*): beheer eigen announce-adressen, zet ze aan of uit, test http(s)-adressen en voeg ze toe aan torrents en magnets (ook via debrid). De trackers van je eigen bronnen blijven gebruikt.
 
 ### Veilig ontworpen
 - **Prullenbak en herstelcentrum**: verwijderde games, onderbroken verplaatsingen, vervangen bestanden en savebackups zijn te herstellen, telkens met een voorbeeld. Kopieën worden gecontroleerd voordat iets wordt verwijderd.

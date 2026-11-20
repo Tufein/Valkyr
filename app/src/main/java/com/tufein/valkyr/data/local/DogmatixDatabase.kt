@@ -34,7 +34,7 @@ import com.tufein.valkyr.data.local.queries.DownloadableFileFts
 
 @Database(
     entities = [ManufacturerEntity::class, ConsoleEntity::class, DownloadableFileEntity::class, FileTagEntity::class, DownloadableFileFts::class, DownloadHistoryEntity::class, GameMetadataEntity::class, FavouriteEntity::class, WishlistEntity::class, CollectionEntity::class, CollectionItemEntity::class, DatSetEntity::class, DatRomEntity::class, CoverEntity::class, PersonalProfileEntity::class, GameOverrideEntity::class],
-    version = 17,
+    version = 18,
     exportSchema = false
 )
 abstract class DogmatixDatabase : RoomDatabase() {
@@ -56,6 +56,8 @@ abstract class DogmatixDatabase : RoomDatabase() {
 
         /** 9.0: per-game metadata overrides ("Fix the match"). */
         val MIGRATION_16_17: Migration = Migration16To17
+        /** Sources tracker: a download remembers its source and any switch. */
+        val MIGRATION_17_18: Migration = Migration17To18
         /** 2.6: safe download failure reasons survive process death. Existing rows remain readable. */
         val MIGRATION_14_15 = object : Migration(14, 15) {
             override fun migrate(db: SupportSQLiteDatabase) {

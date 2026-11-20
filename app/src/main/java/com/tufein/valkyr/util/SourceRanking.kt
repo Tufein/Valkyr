@@ -1,5 +1,6 @@
 package com.tufein.valkyr.util
 
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import java.net.URI
@@ -33,9 +34,27 @@ enum class FailureClass {
     }
 }
 
+/** One remembered download from a source: when, whether it worked, how much moved and why it failed. */
+data class SourceOutcome(
+    val at: Long,
+    val ok: Boolean,
+    val bytes: Long = 0L,
+    val failure: FailureClass? = null
+)
+
+/** What the last [SourceRanking.WINDOW_DAYS] days of one source's downloads say, for a status line. */
+data class DownloadTrend(
+    val failures: Int,
+    val downloads: Int,
+    val streak: Int,
+    val last: FailureClass,
+    val newestAt: Long
+)
+
 /**
  * How downloads from one source (the address as configured in Sources) went lately. Kept small:
- * a speed average and two counts that are halved now and then, so old history fades.
+ * a speed average and two counts that are halved now and then, plus a bounded list of individual
+ * outcomes so the trend covers weeks, not only "now" ([SourceRanking.trend]).
  */
 data class SourceRecord(
     /** Exponentially weighted average speed of finished transfers, bytes/s; 0 = not known yet. */
@@ -46,7 +65,10 @@ data class SourceRecord(
     val lastFailureAt: Long = 0L,
     /** Failures in a row since the last success. */
     val failureStreak: Int = 0,
-    val lastFailure: FailureClass? = null
+    val lastFailure: FailureClass? = null,
+    /** Oldest first, at most [SourceRanking.KEEP_OUTCOMES] entries; added after the counters so old
+     * positional constructors and old JSON files keep working. */
+    val outcomes: List<SourceOutcome> = emptyList()
 ) {
     val total: Int get() = successes + failures
     /** Share of downloads that worked (0..100), or null before the first one. */
@@ -74,6 +96,14 @@ object SourceRanking {
     const val MAX_COUNT = 100
     /** Sizes of two copies may differ this much (listings round them) and still be the same file. */
     const val SIZE_TOLERANCE = 0.05
+    /** Remember this many individual downloads per source (the scan history keeps the same number). */
+    const val KEEP_OUTCOMES = 12
+    /** The window [trend] and [exportJson] look back over. */
+    const val WINDOW_DAYS = 30L
+
+    /** [history] oldest first, with [next] appended and bounded to [KEEP_OUTCOMES]. */
+    fun appendOutcome(history: List<SourceOutcome>, next: SourceOutcome): List<SourceOutcome> =
+        (history + next).takeLast(KEEP_OUTCOMES)
 
     fun withSuccess(r: SourceRecord, bytes: Long, millis: Long, now: Long): SourceRecord {
         val speed = if (bytes >= MIN_SAMPLE_BYTES && millis >= MIN_SAMPLE_MS) bytes * 1000.0 / millis else null
@@ -82,11 +112,13 @@ object SourceRanking {
             r.bytesPerSec <= 0.0 -> speed
             else -> r.bytesPerSec + SPEED_WEIGHT * (speed - r.bytesPerSec)
         }
-        return aged(r.copy(bytesPerSec = avg, successes = r.successes + 1, lastSuccessAt = now, failureStreak = 0))
+        return aged(r.copy(bytesPerSec = avg, successes = r.successes + 1, lastSuccessAt = now, failureStreak = 0,
+            outcomes = appendOutcome(r.outcomes, SourceOutcome(now, true, bytes.coerceAtLeast(0L)))))
     }
 
     fun withFailure(r: SourceRecord, cls: FailureClass, now: Long): SourceRecord =
-        aged(r.copy(failures = r.failures + 1, lastFailureAt = now, failureStreak = r.failureStreak + 1, lastFailure = cls))
+        aged(r.copy(failures = r.failures + 1, lastFailureAt = now, failureStreak = r.failureStreak + 1, lastFailure = cls,
+            outcomes = appendOutcome(r.outcomes, SourceOutcome(now, false, failure = cls))))
 
     private fun aged(r: SourceRecord): SourceRecord =
         if (r.total <= MAX_COUNT) r else r.copy(successes = (r.successes + 1) / 2, failures = (r.failures + 1) / 2)
@@ -94,6 +126,28 @@ object SourceRanking {
     /** Failed [DEMOTE_STREAK] times or more in a row, the last time less than [DEMOTE_MS] ago. */
     fun isDemoted(r: SourceRecord?, now: Long): Boolean =
         r != null && r.failureStreak >= DEMOTE_STREAK && now - r.lastFailureAt < DEMOTE_MS
+
+    /**
+     * What [WINDOW_DAYS] days of downloads say about a source. Null while it looks healthy: one
+     * failure that was followed by a success is not news. Future timestamps are ignored (a clock
+     * change must not invent failures).
+     */
+    fun trend(r: SourceRecord?, now: Long): DownloadTrend? {
+        if (r == null) return null
+        val recent = r.outcomes.filter { now - it.at in 0..WINDOW_DAYS * 86_400_000L }
+        val failed = recent.filter { !it.ok && it.failure != null }
+        val last = failed.lastOrNull()?.failure ?: return null
+        val streak = recent.takeLastWhile { !it.ok }.size
+        if (streak < 2 && failed.size < 2) return null
+        return DownloadTrend(failed.size, recent.size, streak, last, recent.lastOrNull()?.at ?: 0L)
+    }
+
+    /** A 0..100 score for the tracker overview: reliability, halved while the source is set aside. */
+    fun score(r: SourceRecord?, now: Long): Int {
+        if (r == null) return 50
+        val base = (reliability(r) * 100).roundToInt()
+        return if (isDemoted(r, now)) base / 2 else base
+    }
 
     /**
      * Success rate with one imagined success and failure added, so an unknown source counts as
@@ -178,6 +232,71 @@ object SourceRanking {
         else -> String.format(java.util.Locale.ROOT, "%.0f KB/s", maxOf(1.0, bytesPerSec / 1024))
     }
 
+    /**
+     * An export label: only the kind of source and a short, non-reversible tag to tell several
+     * sources of the same kind apart. Not a host, not an address, not a torrent name, not a key.
+     */
+    private fun exportLabel(url: String): String {
+        val kind = when (SourceKind.of(url)) {
+            SourceKind.ROMM -> "RomM"
+            SourceKind.WEB -> "Web"
+            SourceKind.TORRENT -> "Torrent"
+            SourceKind.OTHER -> "Source"
+        }
+        val tag = (url.hashCode().toUInt() % 10_000u).toString().padStart(4, '0')
+        return "$kind $tag"
+    }
+
+    /**
+     * A shareable record of how the sources did. Neither the addresses (which can carry keys or
+     * tokens), nor paths, nor file names are written — only short labels and the numbers.
+     * [labelOf] exists so a test can prove that no address leaks.
+     */
+    fun exportJson(
+        records: Map<String, SourceRecord>,
+        now: Long,
+        labelOf: (String) -> String = { exportLabel(it) }
+    ): String {
+        val root = JsonObject().apply { addProperty("generatedAt", now) }
+        val byLabel = LinkedHashMap<String, SourceRecord>()
+        records.entries.sortedByDescending { it.value.total }.forEach { (url, record) ->
+            val name = labelOf(url).ifBlank { "Source" }.take(120)
+            var key = name
+            var suffix = 2
+            while (byLabel.containsKey(key)) { key = "$name ($suffix)"; suffix++ }
+            byLabel[key] = record
+        }
+        val array = JsonArray()
+        byLabel.forEach { (name, r) ->
+            array.add(JsonObject().apply {
+                addProperty("source", name)
+                addProperty("ok", r.successes)
+                addProperty("failed", r.failures)
+                r.okPercent?.let { addProperty("okPercent", it) }
+                addProperty("speed", r.bytesPerSec.roundToInt())
+                addProperty("lastOkAt", r.lastSuccessAt)
+                addProperty("lastFailedAt", r.lastFailureAt)
+                trend(r, now)?.let { t ->
+                    addProperty("failures30d", t.failures)
+                    addProperty("downloads30d", t.downloads)
+                    addProperty("streak", t.streak)
+                    addProperty("lastFailure", t.last.name)
+                }
+                val events = JsonArray()
+                r.outcomes.filter { now - it.at in 0..WINDOW_DAYS * 86_400_000L }.forEach { o ->
+                    events.add(JsonObject().apply {
+                        addProperty("at", o.at)
+                        addProperty("ok", o.ok)
+                        o.failure?.let { addProperty("why", it.name) }
+                    })
+                }
+                add("events", events)
+            })
+        }
+        root.add("sources", array)
+        return root.toString()
+    }
+
     // Stored as one small JSON object per source in files/source_track.json.
 
     fun toJson(records: Map<String, SourceRecord>): String {
@@ -191,6 +310,18 @@ object SourceRanking {
                 addProperty("failedAt", r.lastFailureAt)
                 addProperty("streak", r.failureStreak)
                 r.lastFailure?.let { addProperty("why", it.name) }
+                if (r.outcomes.isNotEmpty()) {
+                    val events = JsonArray()
+                    r.outcomes.forEach { outcome ->
+                        events.add(JsonObject().apply {
+                            addProperty("t", outcome.at)
+                            addProperty("ok", outcome.ok)
+                            addProperty("b", outcome.bytes)
+                            outcome.failure?.let { addProperty("why", it.name) }
+                        })
+                    }
+                    add("events", events)
+                }
             })
         }
         return o.toString()
@@ -201,12 +332,24 @@ object SourceRanking {
             val r = v.asJsonObject
             fun long(k: String) = r.get(k)?.takeUnless { it.isJsonNull }?.asLong ?: 0L
             fun int(k: String) = r.get(k)?.takeUnless { it.isJsonNull }?.asInt ?: 0
+            val events = runCatching { r.get("events")?.takeUnless { it.isJsonNull }?.asJsonArray }.getOrNull()?.mapNotNull { e ->
+                runCatching {
+                    val o = e.asJsonObject
+                    SourceOutcome(
+                        at = o.get("t")?.takeUnless { it.isJsonNull }?.asLong ?: return@runCatching null,
+                        ok = o.get("ok")?.takeUnless { it.isJsonNull }?.asBoolean ?: false,
+                        bytes = o.get("b")?.takeUnless { it.isJsonNull }?.asLong ?: 0L,
+                        failure = o.get("why")?.takeUnless { it.isJsonNull }?.asString?.let { n -> FailureClass.entries.firstOrNull { it.name == n } }
+                    )
+                }.getOrNull()
+            }.orEmpty().takeLast(KEEP_OUTCOMES)
             url to SourceRecord(
                 bytesPerSec = r.get("speed")?.takeUnless { it.isJsonNull }?.asDouble ?: 0.0,
                 successes = int("ok"), failures = int("failed"),
                 lastSuccessAt = long("okAt"), lastFailureAt = long("failedAt"),
                 failureStreak = int("streak"),
-                lastFailure = r.get("why")?.takeUnless { it.isJsonNull }?.asString?.let { n -> FailureClass.entries.firstOrNull { it.name == n } }
+                lastFailure = r.get("why")?.takeUnless { it.isJsonNull }?.asString?.let { n -> FailureClass.entries.firstOrNull { it.name == n } },
+                outcomes = events
             )
         }
     }.getOrDefault(emptyMap())

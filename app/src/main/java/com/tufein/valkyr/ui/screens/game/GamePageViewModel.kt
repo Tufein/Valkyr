@@ -114,6 +114,11 @@ class GamePageViewModel @Inject constructor(
 
     private var key: Triple<String, String, String>? = null
     private var job: Job? = null
+    private var downloadSourceJob: Job? = null
+
+    /** Sources tracker: where this game was downloaded from, or null before the first download. */
+    private val _downloadFrom = MutableStateFlow<String?>(null)
+    val downloadFrom: StateFlow<String?> = _downloadFrom.asStateFlow()
 
     /** Shows [fileName] of [consoleId]; a repeat call for the same game does nothing (recomposition, rotation). */
     fun load(consoleId: String, fileName: String) {
@@ -123,6 +128,10 @@ class GamePageViewModel @Inject constructor(
         console.value = consoleId
         preferredJob?.cancel()
         preferredJob = viewModelScope.launch { versionPreference.observe(consoleId, fileName).collect { _preferred.value = it } }
+        downloadSourceJob?.cancel()
+        downloadSourceJob = viewModelScope.launch {
+            downloadService.provenance.map { it[fileName]?.source }.distinctUntilChanged().collect { _downloadFrom.value = it }
+        }
         job?.cancel()
         _phase.value = GamePagePhase.LOADING
         _details.value = null

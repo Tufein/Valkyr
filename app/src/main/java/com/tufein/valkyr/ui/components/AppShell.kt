@@ -297,7 +297,8 @@ fun legendFor(route: String): List<LegendEntry> {
             LegendEntry("X", stringResource(R.string.pad_delete)),
             selectLegendEntry(R.string.pad_tick), section
         )
-        NavRoutes.Sources.route -> listOf(LegendEntry("A", stringResource(R.string.pad_open)), back, page, section)
+        NavRoutes.Sources.route, NavRoutes.SourcesTracker.route -> listOf(LegendEntry("A", stringResource(R.string.pad_open)), back, page, section)
+        NavRoutes.TorrentTrackers.route -> listOf(LegendEntry("A", stringResource(R.string.pad_change)), back, section)
         NavRoutes.Duplicates.route -> listOf(LegendEntry("A", stringResource(R.string.pad_delete)), back, page, section)
         NavRoutes.Overview.route -> listOf(LegendEntry("A", stringResource(R.string.pad_rescan)), back, section)
         NavRoutes.Tools.route, NavRoutes.More.route -> listOf(LegendEntry("A", stringResource(R.string.pad_open)), back, page, section)

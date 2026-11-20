@@ -156,6 +156,7 @@ internal fun DownloadService.registerDownloads(files: List<DownloadableFileEntit
                     ?.let { DownloadHistoryEntity.from(entity, it) }
             }
             historyDao.upsertAll(rows)
+            rows.forEach { adoptProvenance(it) }
             // Changes while Room was inserting may already have been updated against a
             // nonexistent row. Re-persist the canonical statuses through the tracker actor.
             downloadProgressTracker.persistCurrentStatuses(rows.map { it.fileName })

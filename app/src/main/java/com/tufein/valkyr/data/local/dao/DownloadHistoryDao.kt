@@ -44,6 +44,10 @@ interface DownloadHistoryDao {
     @Query("UPDATE download_history SET debridProvider = :provider, debridTorrentId = :torrentId, debridFileId = :fileId WHERE fileName = :fileName")
     suspend fun setDebrid(fileName: String, provider: String?, torrentId: String?, fileId: Int?)
 
+    /** Set after a REPLACE upsert so a history rewrite cannot erase the first source or a switch. */
+    @Query("UPDATE download_history SET sourceUrl = :sourceUrl, originalSourceUrl = :originalSourceUrl, switchedFrom = :switchedFrom WHERE fileName = :fileName")
+    suspend fun setProvenance(fileName: String, sourceUrl: String, originalSourceUrl: String, switchedFrom: String)
+
     @Query("DELETE FROM download_history WHERE fileName = :fileName")
     suspend fun delete(fileName: String)
 }

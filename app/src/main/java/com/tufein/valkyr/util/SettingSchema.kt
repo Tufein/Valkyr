@@ -59,6 +59,7 @@ object SettingSchema {
         putAll(SyncthingFolderSettings.TYPES)
         putAll(RommRemoteInstall.SETTING_TYPES)
         putAll(CoverArtwork.SETTING_TYPES)
+        putAll(TorrentTrackers.SETTING_TYPES)
         putAll(Manuals.SETTING_TYPES)
     }
 

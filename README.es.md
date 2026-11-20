@@ -23,7 +23,7 @@ Valkyr mantiene una gran lista, con buscador, de los juegos de las fuentes que *
 
 *Las capturas de pantalla usan títulos de juegos inventados y archivos vacíos de relleno. Las capturas muestran la app en inglés.*
 
-**Última versión: [9.0.0](https://github.com/Tufein/Valkyr/releases/tag/v9.0.0)** (build de Android 94).
+**Última versión: [9.1.0](https://github.com/Tufein/Valkyr/releases/tag/v9.1.0)** (build de Android 95).
 
 Hasta la 3.9.0 la app se llamaba Dogmatix+. Valkyr 6.0.0 tiene su propio ID de aplicación y se instala junto a la app antigua: usa *Ajustes → Copia de seguridad* en la app antigua y *Restaurar copia* en Valkyr, y luego elimina la app antigua.
 
@@ -94,6 +94,8 @@ Necesitas **Android 10 o más reciente**. La app no está en Google Play.
 - **Recibir juegos por Wi-Fi** (apagado hasta que lo actives): envía tus propios archivos de juego desde un navegador de tu red a la carpeta de consola correcta, con PIN, solo en la red local, con cada archivo comprobado y sin reemplazar nada.
 - **Comprobación de salud** con una solución por problema e **informe de escaneo** de las fuentes que fallaron. Cada fuente recuerda sus últimos doce análisis y avisa cuando falla a menudo.
 - **Fuentes**: añadir a mano, importar y exportar, compartir como códigos QR, catálogo de contenido opcional con contenido de Libretro para 29 sistemas, las aventuras freeware de ScummVM y homebrew gratuito de Game Boy de Homebrew Hub, cada uno con su proveedor, direcciones de reserva y escaneos automáticos en segundo plano que omiten lo que no cambió.
+- **Seguimiento de fuentes** (*Fuentes → Seguimiento de fuentes*): una lista de cada fuente en cada consola, primero las que van peor, con su estado de análisis, historial de descargas (velocidad, tasa de aciertos, tendencia de fallos) y un escaneo con un toque. Las descargas y las páginas de juego indican de qué fuente viene un juego, también tras un cambio. El historial se exporta sin direcciones ni claves.
+- **Trackers de torrentes** (*Ajustes → Torrentes → Trackers de torrentes*): gestiona tus direcciones de anuncio, actívalas o desactívalas, prueba las http(s) y añádelas a torrentes y magnets (también por debrid). Los trackers de tus propias fuentes siguen usándose.
 
 ### Seguro por diseño
 - **Papelera y centro de recuperación**: juegos retirados, movimientos interrumpidos, archivos reemplazados y copias de partidas se pueden restaurar, cada uno con vista previa. Las copias se verifican antes de retirar nada.

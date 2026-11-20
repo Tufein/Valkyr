@@ -33,7 +33,7 @@ class DownloadFailurePersistenceRegressionTest {
     @Test fun migrationPreservesOldHistoryAndSafeFailuresSurviveReopening() = runBlocking {
         val name = "failure-migration-${UUID.randomUUID()}"
         fun open() = Room.databaseBuilder(context, DogmatixDatabase::class.java, name)
-            .addMigrations(DogmatixDatabase.MIGRATION_14_15, DogmatixDatabase.MIGRATION_15_16, DogmatixDatabase.MIGRATION_16_17).build()
+            .addMigrations(DogmatixDatabase.MIGRATION_14_15, DogmatixDatabase.MIGRATION_15_16, DogmatixDatabase.MIGRATION_16_17, DogmatixDatabase.MIGRATION_17_18).build()
         val file = file("legacy.gba")
         try {
             open().also { db ->

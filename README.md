@@ -23,7 +23,7 @@ The app includes no games. **Sources → More romsets** offers optional free con
 
 *The screenshots use made-up game titles and empty placeholder files.*
 
-**Latest release: [9.0.0](https://github.com/Tufein/Valkyr/releases/tag/v9.0.0)** (Android build 94).
+**Latest release: [9.1.0](https://github.com/Tufein/Valkyr/releases/tag/v9.1.0)** (Android build 95).
 
 Until 3.9.0 the app was called Dogmatix+. Valkyr 6.0.0 has its own app id, so it installs next to the old app: use *Settings → Back up* in the old app and *Restore backup* in Valkyr, then remove the old app.
 
@@ -94,6 +94,8 @@ You need **Android 10 or newer**. The app is not on Google Play.
 - **Receive games over Wi-Fi** (off until you switch it on): send your own game files from a browser on your network into the right console folder, behind a PIN, on the local network only, with every file checked and nothing replaced.
 - **Health check** with a fix per problem, and a **scan report** for sources that failed. Each source remembers its last twelve scans and says when it keeps failing.
 - **Sources**: add by hand, import and export, share as QR codes, optional content catalogue with Libretro content for 29 systems, ScummVM's freeware adventure games and free Game Boy homebrew from Homebrew Hub, the provider named for each, reserve addresses and automatic background scans that skip what did not change.
+- **Sources tracker** (*Sources → Sources tracker*): one list of every source on every console, worst first, with its scan health, download track record (speed, success rate, failure trend) and a one-tap rescan. Downloads and game pages say which source a game came from, even after a switch. The track record can be exported with addresses and keys left out.
+- **Torrent trackers** (*Settings → Torrents → Torrent trackers*): keep your own announce addresses, switch them on or off, test http(s) ones, and add them to torrents and magnets (including debrid). The trackers your sources already list are still used.
 
 ### Safe by design
 - **Trash and recovery center**: removed games, interrupted moves, replaced files and save backups can be restored, each with a preview. Copies are verified before anything is removed.

@@ -68,7 +68,8 @@ import java.io.File
 
 @Composable
 fun SourcesScreen(
-    viewModel: SourcesViewModel = hiltViewModel()
+    viewModel: SourcesViewModel = hiltViewModel(),
+    onOpenTracker: () -> Unit = {}
 ) {
     val manufacturers by viewModel.manufacturers.collectAsStateWithLifecycle(initialValue = emptyList())
     val isRescanning by viewModel.isRescanning.collectAsStateWithLifecycle()
@@ -163,7 +164,8 @@ fun SourcesScreen(
                 onAddConsole = { viewModel.showAddConsoleDialog() },
                 onRescan = { viewModel.rescanAllSources() },
                 onExport = { showShare = true },
-                onImport = { viewModel.confirmImport() }
+                onImport = { viewModel.confirmImport() },
+                onOpenTracker = onOpenTracker
             )
         }
 
@@ -397,7 +399,8 @@ private fun SourcesHeader(
     onAddConsole: () -> Unit,
     onRescan: () -> Unit,
     onExport: () -> Unit,
-    onImport: () -> Unit
+    onImport: () -> Unit,
+    onOpenTracker: () -> Unit = {}
 ) {
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         ScreenTitle(
@@ -430,6 +433,7 @@ private fun SourcesHeader(
             } else {
                 ActionPill(stringResource(R.string.sources_rescan_all), onRescan, icon = R.drawable.ic_retry)
             }
+            ActionPill(stringResource(R.string.src91_tracker_title), onOpenTracker, icon = R.drawable.ic_dashboard)
             ActionPill(stringResource(R.string.sources_export), onExport, icon = R.drawable.ic_share)
             ActionPill(stringResource(R.string.sources_import), onImport, icon = R.drawable.ic_import, enabled = !isRescanning)
         }

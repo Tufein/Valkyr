@@ -96,11 +96,15 @@ sealed class NavRoutes(val route: String, val labelRes: Int, val icon: Int) {
     object SearchAll : NavRoutes("search_all", R.string.find8_title, R.drawable.ic_search)
     /** 4.3.0: the cover sources, their order and the ScreenScraper login (Settings → Cover sources). */
     object CoverSources : NavRoutes("cover_sources", R.string.covers43_title, R.drawable.ic_image_search)
+    /** Sources tracker: every source across all consoles, with its scan and download record. */
+    object SourcesTracker : NavRoutes("sources_tracker", R.string.src91_tracker_title, R.drawable.ic_globe)
+    /** Sources tracker: the user's personal announce addresses for torrents. */
+    object TorrentTrackers : NavRoutes("torrent_trackers", R.string.src91_trackers_title, R.drawable.ic_hub)
 
     companion object {
         /** The four sections shown as tabs (3.8.0); every other screen is reached from More. */
         val tabs by lazy { listOf(Home, Downloads, Sources, More) }
-        val allRoutes by lazy { tabs + Settings + Contact + Romm + SaveSync + Overview + Duplicates + Tools + Sets + Storage + Wishlist + Files + Collections + Switch + Dat + ImportList + Bios + Stats + Profiles + RetroAchievements + Frontends + Cloud + CloudBackup + CollectionGoals + History + Health + Recap + BestGames + FrontendMetadata + BetterVersions + FreeSpace + SearchAll + Recovery + PackageTransfer + ActionHistory + VersionPreference + UpNext + LibraryRepair + ReportProblem + PerfCheck + GameTransfer + FrontendCovers + RetroArchPlaylists + NewHandheld + NewDeviceFlow + CoverSources + WifiReceive + EmulatorCheck }
+        val allRoutes by lazy { tabs + Settings + Contact + Romm + SaveSync + Overview + Duplicates + Tools + Sets + Storage + Wishlist + Files + Collections + Switch + Dat + ImportList + Bios + Stats + Profiles + RetroAchievements + Frontends + Cloud + CloudBackup + CollectionGoals + History + Health + Recap + BestGames + FrontendMetadata + BetterVersions + FreeSpace + SearchAll + Recovery + PackageTransfer + ActionHistory + VersionPreference + UpNext + LibraryRepair + ReportProblem + PerfCheck + GameTransfer + FrontendCovers + RetroArchPlaylists + NewHandheld + NewDeviceFlow + CoverSources + SourcesTracker + TorrentTrackers + WifiReceive + EmulatorCheck }
     }
 }
 

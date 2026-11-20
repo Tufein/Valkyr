@@ -1,6 +1,7 @@
 package com.tufein.valkyr.di
 
 import android.content.Context
+import com.tufein.valkyr.data.local.TorrentTrackerSettings
 import com.tufein.valkyr.data.repository.SettingsRepository
 import com.tufein.valkyr.data.service.TorrentFileIndexer
 import com.tufein.valkyr.data.service.TorrentHandleRegistry
@@ -40,8 +41,9 @@ object TorrentModule {
     fun provideTorrentHandleRegistry(
         @ApplicationContext context: Context,
         settingsRepository: SettingsRepository,
-        progressBridge: TorrentProgressBridge
-    ): TorrentHandleRegistry = TorrentHandleRegistry(context, settingsRepository, progressBridge)
+        progressBridge: TorrentProgressBridge,
+        trackerSettings: TorrentTrackerSettings
+    ): TorrentHandleRegistry = TorrentHandleRegistry(context, settingsRepository, progressBridge, trackerSettings)
 
     @Provides
     @Singleton

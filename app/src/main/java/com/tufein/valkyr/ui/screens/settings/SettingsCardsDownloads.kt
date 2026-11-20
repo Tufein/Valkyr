@@ -15,6 +15,7 @@ import com.tufein.valkyr.ui.screens.settings.components.maskedSecret
 import com.tufein.valkyr.util.Constants
 import com.tufein.valkyr.util.DownloadPolicy
 import com.tufein.valkyr.util.SettingKeys
+import com.tufein.valkyr.util.SettingsGroup
 import com.tufein.valkyr.util.SettingsLayout
 
 /** The rows of the Sources card (see [SettingsLayout.groups] for their order). */
@@ -440,5 +441,14 @@ internal fun SettingsEnv.torrentsCardRows(): List<SettingsRow> = listOf(
         ) {
             SettingsStepper(stringResource(R.string.seconds_short, ui.metadataTimeoutSeconds), onDecrement = { adjustMetadataTimeout(-1) }, onIncrement = { adjustMetadataTimeout(1) })
         }
+    },
+    // A link row to its own screen, like Romm / Save sync: not a layout row (the card is full).
+    SettingsRow(section = SettingsGroup.DOWNLOADS, key = "torrent_trackers") {
+        SettingRow(
+            icon = R.drawable.ic_hub,
+            title = stringResource(R.string.src91_trackers_title),
+            hint = stringResource(R.string.src91_trackers_hint),
+            onClick = { navController.navigate(NavRoutes.TorrentTrackers.route) }
+        ) { NavChevron() }
     }
 )

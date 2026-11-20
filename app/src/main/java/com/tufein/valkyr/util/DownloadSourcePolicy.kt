@@ -40,4 +40,16 @@ object DownloadSourcePolicy {
             DownloadSourceKind.WEB -> "Source"
         }
     }
+
+    /** A user-visible label for a stored source address: a host or a kind, never a key or a path. */
+    fun safeLabel(url: String): String {
+        val u = url.trim()
+        if (u.isEmpty()) return "Source"
+        return when (SourceKind.of(u)) {
+            SourceKind.WEB -> runCatching { URI(u).host }.getOrNull().orEmpty().removePrefix("www.")
+            SourceKind.ROMM -> "RomM"
+            SourceKind.TORRENT -> "Torrent"
+            SourceKind.OTHER -> "Source"
+        }.ifEmpty { "Source" }
+    }
 }
