@@ -53,6 +53,7 @@ object SettingKeys {
     const val PER_SERVER = "per_server"
     const val SPEED_LIMIT = "speed_limit"
     const val MIN_FREE = "min_free"
+    const val MANUALS_SOURCES = "manuals_sources"
     const val MANUALS_WITH_GAME = "manuals_with_game"
     const val MANUALS_CAP = "manuals_cap"
     const val RESUME = "resume"
@@ -189,6 +190,7 @@ object SearchIndex {
             setting(SettingKeys.DOWNLOAD_DIR, R.string.settings43_download_folder, null, R.drawable.ic_folder_open, R.string.find8_kw_folder),
             setting(SettingKeys.SEPARATE_CONSOLE, R.string.settings43_separate, R.string.settings43_separate_hint, R.drawable.ic_account_tree, R.string.find8_kw_folder),
             setting(SettingKeys.MIN_FREE, R.string.settings_min_free, R.string.settings_min_free_hint, R.drawable.ic_storage, R.string.find8_kw_space),
+            setting(SettingKeys.MANUALS_SOURCES, R.string.man77_setting_sources, R.string.man77_setting_sources_hint, R.drawable.ic_cloud_sync, R.string.man60_kw),
             setting(SettingKeys.MANUALS_WITH_GAME, R.string.man60_setting_with_game, R.string.man60_setting_with_game_hint, R.drawable.ic_description, R.string.man60_kw),
             setting(SettingKeys.MANUALS_CAP, R.string.man60_setting_cap, R.string.man60_setting_cap_hint, R.drawable.ic_storage, R.string.man60_kw),
 

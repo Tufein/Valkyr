@@ -18,7 +18,7 @@
     <string name="top7_stale">Een oudere kopie van de lijst: RetroAchievements was niet bereikbaar.</string>
     <string name="top7_refine">Rangschik op spelers</string>
     <string name="top7_refine_continue">Spelers verder tellen</string>
-    <string name="top7_refine_hint">Vraagt RetroAchievements hoeveel spelers elk van de beste %1$d games heeft, één per 1,5 seconde (ongeveer een minuut). De aantallen worden een week bewaard.</string>
+    <string name="top7_refine_hint">Vraagt RetroAchievements hoeveel spelers elk van de beste %1$d games heeft, één per 1,5 seconde (een paar minuten voor de hele lijst). De aantallen worden een week bewaard.</string>
     <string name="top7_refining">Spelers tellen… %1$d van %2$d</string>
     <string name="top7_stop">Stop</string>
     <string name="top7_loading">Gamelijst ophalen…</string>

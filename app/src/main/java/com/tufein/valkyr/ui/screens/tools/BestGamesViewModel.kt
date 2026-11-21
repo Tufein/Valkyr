@@ -21,6 +21,7 @@ import com.tufein.valkyr.data.state.RescanStateHolder
 import com.tufein.valkyr.ui.components.formatBytes
 import com.tufein.valkyr.util.BestGame
 import com.tufein.valkyr.util.BestGames
+import com.tufein.valkyr.util.BestSort
 import com.tufein.valkyr.util.BulkCandidate
 import com.tufein.valkyr.util.BulkPlan
 import com.tufein.valkyr.util.BulkPlanner
@@ -30,7 +31,9 @@ import com.tufein.valkyr.util.FileParsingUtils
 import com.tufein.valkyr.util.GameMatch
 import com.tufein.valkyr.util.GameTitleCleaner
 import com.tufein.valkyr.util.LibraryKeys
+import com.tufein.valkyr.util.OwnFilter
 import com.tufein.valkyr.util.OwnState
+import com.tufein.valkyr.util.PlayerStats
 import com.tufein.valkyr.util.RaConsoleMap
 import com.tufein.valkyr.util.RaErrorKind
 import com.tufein.valkyr.util.RankBasis
@@ -76,6 +79,12 @@ data class BestRow(
     val coverFileName: String,
     /** Versions of the game the sources list. */
     val versions: Int,
+    /** Extra facts RA gives about the game. */
+    val achievements: Int,
+    val leaderboards: Int,
+    val released: String,
+    val genre: String,
+    val hardcore: Int?,
     val wished: Boolean,
     val downloading: Boolean,
     /** What to search the library for to find the game, or null when no source lists it. */
@@ -103,7 +112,12 @@ data class BestDetail(
     /** Games a "Download the ones I can get" would take. */
     val downloadable: Int,
     /** Missing games not on the wishlist yet. */
-    val wishable: Int
+    val wishable: Int,
+    /** The local ordering and ownership filter of the rows. */
+    val sort: BestSort,
+    val filter: OwnFilter,
+    /** Rows hidden by the filter, for "x of y shown". */
+    val total: Int
 )
 
 /** [account] is null until the settings were read. */
@@ -128,7 +142,7 @@ class BestGamesViewModel @Inject constructor(
     private val versionPreference: VersionPreferenceService
 ) : ViewModel() {
 
-    private data class Loaded(val consoleId: String, val games: List<BestGame>, val players: Map<Int, Int>, val stale: Boolean)
+    private data class Loaded(val consoleId: String, val games: List<BestGame>, val stats: PlayerStats, val stale: Boolean)
 
     /** The ranking against the library, ready to show; [rawNames] are the sources' file names as stored. */
     private class Matched(
@@ -138,6 +152,7 @@ class BestGamesViewModel @Inject constructor(
         val checked: Int,
         val candidates: Int,
         val matches: List<GameMatch>,
+        val stats: PlayerStats,
         val rawNames: List<String>,
         val decodedNames: List<String>
     )
@@ -146,7 +161,10 @@ class BestGamesViewModel @Inject constructor(
         val loading: Boolean = false,
         val error: RaErrorKind? = null,
         val refine: Pair<Int, Int>? = null,
-        val refineError: RaErrorKind? = null
+        val refineError: RaErrorKind? = null,
+        val basis: RankBasis = RankBasis.POINTS,
+        val sort: BestSort = BestSort.RANK,
+        val filter: OwnFilter = OwnFilter.ALL
     )
 
     private val selectedId = MutableStateFlow<String?>(null)
@@ -180,13 +198,14 @@ class BestGamesViewModel @Inject constructor(
         }
     }
 
-    private val matched: StateFlow<Matched?> = combine(loaded, sourceNames, libraryIndex.ownedKeys) { l, sources, owned ->
+    private val matched: StateFlow<Matched?> = combine(loaded, sourceNames, libraryIndex.ownedKeys, status) { l, sources, owned, s ->
         // Not ready until both the RA list and the sources of the same console are in: no flash of "missing".
         if (l == null || sources == null || sources.first != l.consoleId) return@combine null
-        val ranking = BestGames.rank(l.games, l.players)
+        val ranking = BestGames.rank(l.games, l.stats.players, l.stats.hardcore, wanted = s.basis)
         val device = CollectionGoals.ownedNames(LibraryKeys.scopesFor(l.consoleId), CollectionGoals.namesByScope(owned))
         val decoded = sources.second.map { FileParsingUtils.decodeUrlEncodedFileName(it) }
-        Matched(l.consoleId, l.stale, ranking.basis, ranking.checked, ranking.candidates, BestGames.match(ranking.games, device, decoded), sources.second, decoded)
+        Matched(l.consoleId, l.stale, ranking.basis, ranking.checked, ranking.candidates,
+            BestGames.match(ranking.games, device, decoded), l.stats, sources.second, decoded)
     }.flowOn(Dispatchers.Default).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     /** File names of the downloads that are queued or running. */
@@ -203,9 +222,13 @@ class BestGamesViewModel @Inject constructor(
     }.flowOn(Dispatchers.Default).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), BestGamesUi())
 
     private fun detailOf(console: BestConsole, m: Matched?, wishKeys: Set<String>, active: Set<String>, s: Status): BestDetail {
-        val rows = m?.matches.orEmpty().map { gm ->
+        val all = m?.matches.orEmpty()
+        val detailOfGame = m?.stats?.details.orEmpty()
+        val shown = BestGames.sort(BestGames.filter(all, s.filter), s.sort)
+        val rows = shown.map { gm ->
             val game = gm.ranked.game
             val sourceName = gm.sourceIndices.firstOrNull()?.let { m!!.decodedNames[it] }
+            val detail = detailOfGame[game.id]
             BestRow(
                 rank = gm.ranked.rank,
                 gameId = game.id,
@@ -218,10 +241,15 @@ class BestGamesViewModel @Inject constructor(
                 versions = gm.sourceIndices.size,
                 wished = SearchNormalizer.key(game.title) in wishKeys,
                 downloading = gm.sourceIndices.any { m!!.rawNames[it] in active },
-                libraryQuery = sourceName?.let { GameTitleCleaner.clean(it).ifBlank { game.title } }
+                libraryQuery = sourceName?.let { GameTitleCleaner.clean(it).ifBlank { game.title } },
+                achievements = game.achievements,
+                leaderboards = game.leaderboards,
+                released = detail?.released ?: game.released.orEmpty(),
+                genre = detail?.genre ?: game.genre.orEmpty(),
+                hardcore = gm.ranked.hardcore
             )
         }
-        val (onDevice, inSources, missing) = BestGames.tally(m?.matches.orEmpty())
+        val (onDevice, inSources, missing) = BestGames.tally(all)
         return BestDetail(
             console = console,
             loading = s.loading || (m == null && s.error == null),
@@ -237,7 +265,10 @@ class BestGamesViewModel @Inject constructor(
             inSources = inSources,
             missing = missing,
             downloadable = rows.count { it.state == OwnState.IN_SOURCE && !it.downloading },
-            wishable = rows.count { it.state == OwnState.MISSING && !it.wished }
+            wishable = rows.count { it.state == OwnState.MISSING && !it.wished },
+            sort = s.sort,
+            filter = s.filter,
+            total = all.size
         )
     }
 
@@ -272,10 +303,10 @@ class BestGamesViewModel @Inject constructor(
             try {
                 // What is kept shows at once while a refresh runs.
                 if (refresh) service.cachedGames(console.raId)?.let { cached ->
-                    loaded.value = Loaded(console.id, cached.games, service.cachedPlayers(console.raId), cached.stale)
+                    loaded.value = Loaded(console.id, cached.games, service.cachedStats(console.raId), cached.stale)
                 }
                 val list = service.games(console.raId, refresh)
-                loaded.value = Loaded(console.id, list.games, service.cachedPlayers(console.raId), list.stale)
+                loaded.value = Loaded(console.id, list.games, service.cachedStats(console.raId), list.stale)
                 status.value = Status()
             } catch (e: CancellationException) {
                 throw e
@@ -287,17 +318,18 @@ class BestGamesViewModel @Inject constructor(
 
     // ---- Player counts ----
 
-    /** Asks RA for the player counts of the top games (throttled; counts are kept for a week) and ranks by them. */
-    fun refine() {
+    /** Asks RA for the facts of the top games (throttled; kept for a week) and ranks by the wanted basis. */
+    fun refine(wanted: RankBasis = RankBasis.PLAYERS) {
         val current = loaded.value ?: return
         val console = consoles.value.firstOrNull { it.id == current.consoleId } ?: return
         if (status.value.refine != null) return
         val pool = BestGames.candidates(current.games)
         refineJob = viewModelScope.launch {
-            status.update { it.copy(refine = (pool.size - BestGames.pending(pool, current.players).size) to pool.size, refineError = null) }
+            status.update { it.copy(refine = (pool.size - BestGames.pending(pool, current.stats.players).size) to pool.size, refineError = null) }
             try {
-                val players = service.fetchPlayers(console.raId, pool) { done, total -> status.update { it.copy(refine = done to total) } }
-                loaded.update { cur -> if (cur != null && cur.consoleId == console.id) cur.copy(players = players) else cur }
+                val stats = service.fetchStats(console.raId, pool) { done, total -> status.update { it.copy(refine = done to total) } }
+                loaded.update { cur -> if (cur != null && cur.consoleId == console.id) cur.copy(stats = stats) else cur }
+                status.update { it.copy(basis = if (stats.players.size >= pool.size) wanted else RankBasis.POINTS) }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -305,8 +337,8 @@ class BestGamesViewModel @Inject constructor(
             } finally {
                 // Stopped or failed: what was counted so far is kept and shown.
                 withContext(NonCancellable) {
-                    val kept = service.cachedPlayers(console.raId)
-                    loaded.update { cur -> if (cur != null && cur.consoleId == console.id) cur.copy(players = kept) else cur }
+                    val kept = service.cachedStats(console.raId)
+                    loaded.update { cur -> if (cur != null && cur.consoleId == console.id) cur.copy(stats = kept) else cur }
                     status.update { it.copy(refine = null) }
                 }
             }
@@ -314,6 +346,17 @@ class BestGamesViewModel @Inject constructor(
     }
 
     fun stopRefine() { refineJob?.cancel() }
+
+    /** Local, instant re-ordering of the rows; no extra requests. */
+    fun cycleSort() {
+        val values = BestSort.entries
+        status.update { it.copy(sort = values[(values.indexOf(it.sort) + 1) % values.size]) }
+    }
+
+    fun cycleFilter() {
+        val values = OwnFilter.entries
+        status.update { it.copy(filter = values[(values.indexOf(it.filter) + 1) % values.size]) }
+    }
 
     // ---- Actions ----
 

@@ -251,4 +251,91 @@ class BestGamesTest {
         assertEquals("https://media.retroachievements.org/Images/001.png", BestGames.iconUrl(game(1, "A", 1, icon = "/Images/001.png")))
         assertNull(BestGames.iconUrl(game(1, "A", 1)))
     }
+
+    // ---- 9.2: more consoles, more facts, local sorting and filtering ----
+
+    @Test
+    fun `more retro console ids map to their RA systems`() {
+        assertEquals(30, RaConsoleMap.forConsole("commodore_c64")?.id)
+        assertEquals(30, RaConsoleMap.forConsole("c64")?.id)
+        assertEquals(58, RaConsoleMap.forConsole("zx_spectrum")?.id)
+        assertEquals(59, RaConsoleMap.forConsole("game_and_watch")?.id)
+        assertEquals(27, RaConsoleMap.forConsole("mame")?.id)
+        assertEquals(54, RaConsoleMap.forConsole("cassette_vision")?.id)
+        assertEquals(55, RaConsoleMap.forConsole("super_cassette_vision")?.id)
+        assertEquals(76, RaConsoleMap.forConsole("pc_engine_cd")?.id)
+        // Look-alikes still have no set of their own.
+        assertNull(RaConsoleMap.forConsole("atari_jaguar_cd"))
+        assertNull(RaConsoleMap.forConsole("nintendo_famicom_disk_system"))
+    }
+
+    @Test
+    fun `the extended answer carries hardcore counts, release and genre`() {
+        val detail = BestGames.parseDetails("""{
+            "ID":228,"Title":"X","NumDistinctPlayers":1000,"NumDistinctPlayersHardcore":"420",
+            "Released":"1990-11-21","ReleasedAtGranularity":"day","Genre":"Platformer"
+        }""")!!
+        assertEquals(1000, detail.players)
+        assertEquals(420, detail.hardcore)
+        assertEquals("1990-11-21", detail.released)
+        assertEquals("Platformer", detail.genre)
+        assertEquals(1000, BestGames.parsePlayers("""{"ID":1,"NumDistinctPlayers":1000}"""))
+        assertNull(BestGames.parseDetails("""{"message":"Unauthenticated."}"""))
+    }
+
+    @Test
+    fun `leaderboards and extra facts survive the cache`() {
+        val games = listOf(BestGame(1, "Game", 20, 500, "/Images/1.png", 12, "1990-11-21", "Platformer", 420))
+        val back = BestGames.decodeGames(BestGames.encodeGames(games)).single()
+        assertEquals(12, back.leaderboards)
+        assertEquals("1990-11-21", back.released)
+        assertEquals("Platformer", back.genre)
+        assertEquals(420, back.hardcore)
+        // Old cache entries without the new keys still load.
+        val old = BestGames.decodeGames("""[{"i":2,"t":"Old","a":3,"p":4}]""").single()
+        assertEquals(0, old.leaderboards)
+        assertNull(old.released)
+    }
+
+    @Test
+    fun `hardcore ranking only claims the basis when every candidate has a count`() {
+        val games = listOf(game(1, "A", 100), game(2, "B", 300), game(3, "C", 200))
+        val partial = BestGames.rank(games, emptyMap(), mapOf(1 to 50, 2 to 10, 3 to 5), wanted = RankBasis.HARDCORE)
+        assertEquals(RankBasis.HARDCORE, partial.basis)
+        assertEquals(listOf(1, 2, 3), partial.games.map { it.game.id })
+        val missingOne = BestGames.rank(games, emptyMap(), mapOf(1 to 50), wanted = RankBasis.HARDCORE)
+        assertEquals(RankBasis.POINTS, missingOne.basis)
+        assertEquals(1, missingOne.checked)
+    }
+
+    @Test
+    fun `local sort and filter do not change the earned ranks`() {
+        val ranked = listOf(game(3, "Zelda", 200), game(1, "Mario", 900), game(2, "Metroid", 400))
+        val matches = BestGames.match(
+            ranked.mapIndexed { i, g -> RankedGame(i + 1, g, null) },
+            listOf("Mario.gb"), listOf("Zelda.zip")
+        )
+        assertEquals(listOf("Zelda", "Mario", "Metroid"), BestGames.sort(matches, BestSort.RANK).map { it.ranked.game.title })
+        assertEquals(listOf("Mario", "Metroid", "Zelda"), BestGames.sort(matches, BestSort.TITLE).map { it.ranked.game.title })
+        assertEquals(listOf(OwnState.ON_DEVICE), BestGames.filter(matches, OwnFilter.DEVICE).map { it.state })
+        assertEquals(listOf(OwnState.IN_SOURCE), BestGames.filter(matches, OwnFilter.SOURCE).map { it.state })
+        assertEquals(listOf(OwnState.MISSING), BestGames.filter(matches, OwnFilter.MISSING).map { it.state })
+        // Sorting moves the row, not the rank RA's numbers earned.
+        assertEquals(2, BestGames.sort(matches, BestSort.TITLE).first().ranked.rank)
+    }
+
+    @Test
+    fun `fresh stats keep hardcore and details, an old cache stays empty`() {
+        val now = 10L * BestGames.WEEK_MS
+        val counts = mapOf(
+            1 to PlayerCount(500, now - 1_000, 200, "1990-01-01", "Action"),
+            2 to PlayerCount(40, now - BestGames.WEEK_MS - 1, 10, "1985-01-01", "Puzzle")
+        )
+        val back = BestGames.decodePlayers(BestGames.encodePlayers(counts))
+        val stats = BestGames.freshStats(back, now)
+        assertEquals(mapOf(1 to 500), stats.players)
+        assertEquals(mapOf(1 to 200), stats.hardcore)
+        assertEquals("Action", stats.details[1]?.genre)
+        assertTrue(stats.details[2] == null)
+    }
 }

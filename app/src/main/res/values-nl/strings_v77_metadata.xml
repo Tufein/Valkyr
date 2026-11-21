@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cover77_from">Cover van %1$s</string>
+    <string name="man77_source">Van %1$s</string>
+    <string name="man77_none_asked">Geen handleiding voor deze game. Gevraagd: %1$s.</string>
+    <string name="man77_download">Handleiding downloaden (%1$s)</string>
+    <string name="man77_other_source">Andere bron proberen</string>
+    <string name="man77_link">Downloaden via een link</string>
+    <string name="man77_link_title">Link naar handleiding</string>
+    <string name="man77_link_hint">Een directe https://-link naar een pdf</string>
+    <string name="man77_link_bad">Dat is geen weblink. Gebruik een https://- of http://-adres.</string>
+    <string name="man77_setting_sources">Bronnen voor handleidingen</string>
+    <string name="man77_setting_sources_hint">Vraag RomM, ScreenScraper en Internet Archive om een handleiding. Een bron die je uitzet wordt nooit gevraagd; een geplakte link werkt altijd.</string>
+    <string name="man77_romm">RomM</string>
+    <string name="man77_screenscraper">ScreenScraper</string>
+    <string name="man77_archive">Internet Archive</string>
+    <string name="man77_link_source">Een link</string>
+    <string name="man77_archive_detail">Item op Internet Archive</string>
 </resources>

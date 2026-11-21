@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.tufein.valkyr.R
 import com.tufein.valkyr.ui.components.ActionPill
+import com.tufein.valkyr.ui.components.ActionTone
 import com.tufein.valkyr.ui.secondscreen.SecondScreenLauncher
 import com.tufein.valkyr.util.ToastUtil
 import com.tufein.valkyr.ui.components.NavChevron
@@ -21,6 +22,7 @@ import com.tufein.valkyr.ui.navigation.NavRoutes
 import com.tufein.valkyr.ui.screens.home.labelRes
 import com.tufein.valkyr.ui.screens.search.SEARCH_ALL_ROUTE
 import com.tufein.valkyr.ui.screens.settings.covers.CoverSourcesRow
+import com.tufein.valkyr.util.ManualSource
 import com.tufein.valkyr.util.SettingKeys
 import com.tufein.valkyr.util.SettingsLayout
 import com.tufein.valkyr.util.LibraryBrowse
@@ -257,6 +259,31 @@ internal fun SettingsEnv.libraryCardRows(): List<SettingsRow> = listOf(
         VersionPreferenceRow(onOpen = { navController.navigate(NavRoutes.VersionPreference.route) })
     },
     SettingsRow(key = SettingKeys.RECENT_MENU) { RecentGamesMenuSettingRow() },
+    SettingsRow(key = SettingKeys.MANUALS_SOURCES) {
+        val vm: ManualSettingsViewModel = androidx.hilt.navigation.compose.hiltViewModel()
+        val m by vm.ui.collectAsStateWithLifecycle()
+        SettingRow(
+            icon = R.drawable.ic_cloud_sync,
+            title = stringResource(R.string.man77_setting_sources),
+            hint = stringResource(R.string.man77_setting_sources_hint),
+            onClick = { vm.setSource(ManualSource.ROMM, ManualSource.ROMM !in m.sources) }
+        ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                listOf(ManualSource.ROMM, ManualSource.SCREENSCRAPER, ManualSource.ARCHIVE).forEach { source ->
+                    val on = source in m.sources
+                    ActionPill(
+                        label = stringResource(when (source) {
+                            ManualSource.ROMM -> R.string.man77_romm
+                            ManualSource.SCREENSCRAPER -> R.string.man77_screenscraper
+                            else -> R.string.man77_archive
+                        }),
+                        onClick = { vm.setSource(source, !on) },
+                        tone = if (on) ActionTone.Accent else ActionTone.Neutral
+                    )
+                }
+            }
+        }
+    },
     SettingsRow(key = SettingKeys.MANUALS_WITH_GAME) {
         val vm: ManualSettingsViewModel = androidx.hilt.navigation.compose.hiltViewModel()
         val m by vm.ui.collectAsStateWithLifecycle()

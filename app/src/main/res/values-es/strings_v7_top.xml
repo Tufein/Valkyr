@@ -18,7 +18,7 @@
     <string name="top7_stale">Una copia antigua de la lista: no se pudo conectar con RetroAchievements.</string>
     <string name="top7_refine">Ordenar por jugadores</string>
     <string name="top7_refine_continue">Seguir contando jugadores</string>
-    <string name="top7_refine_hint">Pregunta a RetroAchievements cuántos jugadores tiene cada uno de los %1$d mejores juegos, uno cada 1,5 segundos (cerca de un minuto). Las cifras se guardan una semana.</string>
+    <string name="top7_refine_hint">Pregunta a RetroAchievements cuántos jugadores tiene cada uno de los %1$d mejores juegos, uno cada 1,5 segundos (unos minutos para toda la lista). Las cifras se guardan una semana.</string>
     <string name="top7_refining">Contando jugadores… %1$d de %2$d</string>
     <string name="top7_stop">Detener</string>
     <string name="top7_loading">Obteniendo la lista de juegos…</string>

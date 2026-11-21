@@ -139,9 +139,11 @@ needs to.
 - **Respect every provider's terms**: no scraping that a provider does not allow, and the
   provider is named wherever its data is shown.
 
-Shipped: the game page names the provider of its stored cover. Still open, because they add a
-database table and need the provider accounts to prove them: screenshots, title screens and
-manuals from the cover sources inside the app, and the source line on every other place art is shown.
+Shipped: the game page names the provider of its stored cover, and manuals come from RomM,
+ScreenScraper or the Internet Archive behind per-source switches (with a pasted link as a fourth
+way in), each remembered with its provider and a month-long definite miss. Still open, because
+they add a database table and need the provider accounts to prove them: screenshots and title
+screens from the cover sources inside the app, and the source line on every other place art is shown.
 
 *Done when* a library with no RomM gets covers, manuals and screenshots at the same quality
 bar, and a failed provider reads as a sentence rather than an empty screen. Tickets:

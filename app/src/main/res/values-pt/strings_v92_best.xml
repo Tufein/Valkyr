@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="top92_sort">Ordenar: %1$s</string>
+    <string name="top92_sort_rank">Posição</string>
+    <string name="top92_sort_title">Título</string>
+    <string name="top92_sort_year">Ano</string>
+    <string name="top92_sort_points">Pontos</string>
+    <string name="top92_sort_players">Jogadores</string>
+    <string name="top92_filter">Mostrar: %1$s</string>
+    <string name="top92_filter_all">Todos</string>
+    <string name="top92_filter_device">No dispositivo</string>
+    <string name="top92_filter_source">Numa fonte</string>
+    <string name="top92_filter_missing">Em falta</string>
+    <string name="top92_refine_hardcore">Ordenar por jogadores hardcore</string>
+    <string name="top92_basis_hardcore">Ordenado por jogadores hardcore entre os %1$d maiores conjuntos.</string>
+    <string name="top92_row_achievements">%1$d conquistas</string>
+    <string name="top92_row_leaderboards">%1$d tabelas de classificação</string>
+    <string name="top92_row_year">Lançado em %1$s</string>
+    <string name="top92_row_hardcore">%1$s hardcore</string>
+    <string name="top92_empty_filter">Nenhum jogo corresponde a este filtro.</string>
+    <string name="top92_shown">%1$d de %2$d mostrados</string>
+</resources>

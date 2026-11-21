@@ -63,7 +63,9 @@ import com.tufein.valkyr.ui.screens.cloud.sections.raErrorText
 import com.tufein.valkyr.ui.theme.accentInk
 import com.tufein.valkyr.ui.theme.inkOf
 import com.tufein.valkyr.ui.theme.tabular
+import com.tufein.valkyr.util.BestSort
 import com.tufein.valkyr.util.BulkPlan
+import com.tufein.valkyr.util.OwnFilter
 import com.tufein.valkyr.util.OwnState
 import com.tufein.valkyr.util.RankBasis
 import com.tufein.valkyr.util.ToastUtil
@@ -201,16 +203,32 @@ private fun BestList(detail: BestDetail, viewModel: BestGamesViewModel, onOpenLi
             modifier = Modifier.fillMaxSize()
         ) {
             if (detail.candidates > 0) item(key = "basis") {
-                val players = detail.basis == RankBasis.PLAYERS
+                val ranked = detail.basis != RankBasis.POINTS
                 InfoCard(
                     lines = buildList {
-                        add(stringResource(if (players) R.string.top7_basis_players else R.string.top7_basis_points, detail.candidates))
-                        if (!players && detail.checked > 0) add(stringResource(R.string.top7_basis_partial, detail.checked, detail.candidates))
+                        add(stringResource(when (detail.basis) {
+                            RankBasis.PLAYERS -> R.string.top7_basis_players
+                            RankBasis.HARDCORE -> R.string.top92_basis_hardcore
+                            RankBasis.POINTS -> R.string.top7_basis_points
+                        }, detail.candidates))
+                        if (!ranked && detail.checked > 0) add(stringResource(R.string.top7_basis_partial, detail.checked, detail.candidates))
                         if (detail.stale) add(stringResource(R.string.top7_stale))
                     },
-                    accent = players,
-                    icon = if (players) R.drawable.ic_group else R.drawable.ic_military_tech
+                    accent = ranked,
+                    icon = if (ranked) R.drawable.ic_group else R.drawable.ic_military_tech
                 )
+            }
+            if (detail.total > 0) item(key = "controls") {
+                Column(Modifier.fillMaxWidth().padding(horizontal = 12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    ToolsActions(horizontalPadding = 0.dp) {
+                        ActionPill(stringResource(R.string.top92_sort, sortLabel(detail.sort)), onClick = viewModel::cycleSort, icon = R.drawable.ic_sort)
+                        ActionPill(stringResource(R.string.top92_filter, filterLabel(detail.filter)), onClick = viewModel::cycleFilter, icon = R.drawable.ic_filter)
+                    }
+                    Text(
+                        stringResource(R.string.top92_shown, detail.rows.size, detail.total),
+                        style = MaterialTheme.typography.bodySmall, color = scheme.onSurfaceVariant
+                    )
+                }
             }
             detail.refine?.let { (done, total) ->
                 item(key = "refining") {
@@ -235,9 +253,14 @@ private fun BestList(detail: BestDetail, viewModel: BestGamesViewModel, onOpenLi
                     ToolsActions(horizontalPadding = 0.dp) {
                         ActionPill(
                             stringResource(if (detail.checked > 0) R.string.top7_refine_continue else R.string.top7_refine),
-                            onClick = viewModel::refine,
+                            onClick = { viewModel.refine(RankBasis.PLAYERS) },
                             icon = R.drawable.ic_group,
                             tone = ActionTone.Accent
+                        )
+                        ActionPill(
+                            stringResource(R.string.top92_refine_hardcore),
+                            onClick = { viewModel.refine(RankBasis.HARDCORE) },
+                            icon = R.drawable.ic_military_tech
                         )
                     }
                     Text(
@@ -261,6 +284,14 @@ private fun BestList(detail: BestDetail, viewModel: BestGamesViewModel, onOpenLi
                             ActionPill(stringResource(R.string.top7_retry), onClick = viewModel::refresh, icon = R.drawable.ic_retry, modifier = Modifier.focusRequester(firstFocus))
                         }
                     }
+                }
+                detail.rows.isEmpty() && detail.total > 0 -> item(key = "empty-filter") {
+                    EmptyState(
+                        title = stringResource(R.string.top92_empty_filter),
+                        message = stringResource(R.string.top92_shown, 0, detail.total),
+                        icon = R.drawable.ic_filter,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
                 detail.rows.isEmpty() -> item(key = "empty") {
                     EmptyState(
@@ -324,9 +355,14 @@ private fun BestGameRow(row: BestRow, consoleId: String, modifier: Modifier, onC
     val scheme = MaterialTheme.colorScheme
     val stats = buildList {
         row.players?.let { add(pluralStringResource(R.plurals.top7_row_players, it, formatCount(it))) }
+        row.hardcore?.let { if (it > 0) add(stringResource(R.string.top92_row_hardcore, formatCount(it))) }
         add(pluralStringResource(R.plurals.top7_row_points, row.points, formatCount(row.points)))
+        add(stringResource(R.string.top92_row_achievements, row.achievements))
+        if (row.leaderboards > 0) add(stringResource(R.string.top92_row_leaderboards, row.leaderboards))
     }.joinToString("  ·  ")
     val extra = buildList {
+        row.released.takeIf { it.isNotBlank() }?.let { add(stringResource(R.string.top92_row_year, it.take(4))) }
+        row.genre.takeIf { it.isNotBlank() }?.let { add(it) }
         if (row.downloading) add(stringResource(R.string.top7_downloading))
         if (row.versions > 1) add(pluralStringResource(R.plurals.top7_versions, row.versions, row.versions))
         if (row.wished && row.state == OwnState.MISSING) add(stringResource(R.string.top7_wished))
@@ -387,6 +423,23 @@ private fun BestGameRow(row: BestRow, consoleId: String, modifier: Modifier, onC
         }
     )
 }
+
+@Composable
+private fun sortLabel(sort: BestSort): String = stringResource(when (sort) {
+    BestSort.RANK -> R.string.top92_sort_rank
+    BestSort.TITLE -> R.string.top92_sort_title
+    BestSort.YEAR -> R.string.top92_sort_year
+    BestSort.POINTS -> R.string.top92_sort_points
+    BestSort.PLAYERS -> R.string.top92_sort_players
+})
+
+@Composable
+private fun filterLabel(filter: OwnFilter): String = stringResource(when (filter) {
+    OwnFilter.ALL -> R.string.top92_filter_all
+    OwnFilter.DEVICE -> R.string.top92_filter_device
+    OwnFilter.SOURCE -> R.string.top92_filter_source
+    OwnFilter.MISSING -> R.string.top92_filter_missing
+})
 
 /**
  * The game's cover from the library's usual sources; until one is found (or when there is none) RA's

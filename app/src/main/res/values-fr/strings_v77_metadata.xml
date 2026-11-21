@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cover77_from">Jaquette de %1$s</string>
+    <string name="man77_source">De %1$s</string>
+    <string name="man77_none_asked">Aucun manuel pour ce jeu. Sources interrogées : %1$s.</string>
+    <string name="man77_download">Télécharger le manuel (%1$s)</string>
+    <string name="man77_other_source">Essayer une autre source</string>
+    <string name="man77_link">Télécharger depuis un lien</string>
+    <string name="man77_link_title">Lien du manuel</string>
+    <string name="man77_link_hint">Une adresse https:// directe vers un PDF</string>
+    <string name="man77_link_bad">Ce n\'est pas un lien web. Utilisez une adresse https:// ou http://.</string>
+    <string name="man77_setting_sources">Sources des manuels</string>
+    <string name="man77_setting_sources_hint">Demander un manuel à RomM, ScreenScraper et Internet Archive. Une source désactivée n\'est jamais interrogée ; un lien collé fonctionne toujours.</string>
+    <string name="man77_romm">RomM</string>
+    <string name="man77_screenscraper">ScreenScraper</string>
+    <string name="man77_archive">Internet Archive</string>
+    <string name="man77_link_source">Un lien</string>
+    <string name="man77_archive_detail">Élément Internet Archive</string>
 </resources>

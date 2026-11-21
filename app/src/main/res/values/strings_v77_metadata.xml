@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cover77_from">Cover from %1$s</string>
+    <string name="man77_source">From %1$s</string>
+    <string name="man77_none_asked">No manual for this game. Asked: %1$s.</string>
+    <string name="man77_download">Download manual (%1$s)</string>
+    <string name="man77_other_source">Try another source</string>
+    <string name="man77_link">Download from a link</string>
+    <string name="man77_link_title">Manual link</string>
+    <string name="man77_link_hint">A direct https:// address to a PDF</string>
+    <string name="man77_link_bad">That is not a web link. Use an https:// or http:// address.</string>
+    <string name="man77_setting_sources">Manual sources</string>
+    <string name="man77_setting_sources_hint">Ask RomM, ScreenScraper and Internet Archive for a manual. A source you switch off is never asked; a pasted link always works.</string>
+    <string name="man77_romm">RomM</string>
+    <string name="man77_screenscraper">ScreenScraper</string>
+    <string name="man77_archive">Internet Archive</string>
+    <string name="man77_link_source">A link</string>
+    <string name="man77_archive_detail">Internet Archive item</string>
 </resources>

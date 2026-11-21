@@ -18,7 +18,7 @@
     <string name="top7_stale">Una copia più vecchia della lista: RetroAchievements non era raggiungibile.</string>
     <string name="top7_refine">Classifica per giocatori</string>
     <string name="top7_refine_continue">Continua a contare i giocatori</string>
-    <string name="top7_refine_hint">Chiede a RetroAchievements quanti giocatori ha ciascuno dei primi %1$d giochi, uno ogni 1,5 secondi (circa un minuto). I numeri vengono conservati per una settimana.</string>
+    <string name="top7_refine_hint">Chiede a RetroAchievements quanti giocatori ha ciascuno dei primi %1$d giochi, uno ogni 1,5 secondi (alcuni minuti per l\'intera lista). I numeri vengono conservati per una settimana.</string>
     <string name="top7_refining">Conteggio dei giocatori… %1$d di %2$d</string>
     <string name="top7_stop">Ferma</string>
     <string name="top7_loading">Recupero della lista dei giochi…</string>

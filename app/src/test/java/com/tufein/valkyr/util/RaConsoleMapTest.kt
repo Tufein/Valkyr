@@ -95,7 +95,7 @@ class RaConsoleMapTest {
         assertNull(raId("sony_playstation_3"))
         assertNull(raId("microsoft_xbox_360"))
         assertNull(raId("snk_neo_geo"))
-        assertNull(raId("commodore_64"))
+        assertEquals(30, raId("commodore_64"))
         assertNull(raId(""))
         assertNull(raId("proper_romsets"))
     }

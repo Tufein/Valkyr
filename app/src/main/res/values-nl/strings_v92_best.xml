@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="top92_sort">Sorteren: %1$s</string>
+    <string name="top92_sort_rank">Rang</string>
+    <string name="top92_sort_title">Titel</string>
+    <string name="top92_sort_year">Jaar</string>
+    <string name="top92_sort_points">Punten</string>
+    <string name="top92_sort_players">Spelers</string>
+    <string name="top92_filter">Tonen: %1$s</string>
+    <string name="top92_filter_all">Alles</string>
+    <string name="top92_filter_device">Op apparaat</string>
+    <string name="top92_filter_source">In een bron</string>
+    <string name="top92_filter_missing">Ontbreken</string>
+    <string name="top92_refine_hardcore">Rangschik op hardcore</string>
+    <string name="top92_basis_hardcore">Gerangschikt op hardcore-spelers onder de %1$d grootste sets.</string>
+    <string name="top92_row_achievements">%1$d achievements</string>
+    <string name="top92_row_leaderboards">%1$d leaderboards</string>
+    <string name="top92_row_year">Uitgebracht in %1$s</string>
+    <string name="top92_row_hardcore">%1$s hardcore</string>
+    <string name="top92_empty_filter">Geen games passen bij dit filter.</string>
+    <string name="top92_shown">%1$d van %2$d getoond</string>
+</resources>

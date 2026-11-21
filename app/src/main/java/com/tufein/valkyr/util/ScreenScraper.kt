@@ -284,6 +284,14 @@ object ScreenScraper {
     fun pickArt(game: Game, regions: List<String>, art: LibretroThumbnails.Art): String? =
         pickMedia(game, regions, if (art == LibretroThumbnails.Art.TITLE) "sstitle" else "ss")?.url?.let(::stripCredentials)
 
+    /**
+     * 7.7: a game's manual (ScreenScraper's `manual` media), in the first preferred region that has
+     * one, else any. Returned without credentials; `ScreenScraperService.signed` puts them back only
+     * on the way out, so no password is stored in the manuals folder or a cache.
+     */
+    fun pickManual(game: Game, regions: List<String>): String? =
+        pickMedia(game, regions, "manual")?.url?.let(::stripCredentials)
+
     private fun pickMedia(game: Game, regions: List<String>, type: String): Media? {
         val of = game.medias.filter { it.type.equals(type, ignoreCase = true) }
         if (of.isEmpty()) return null

@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cover77_from">Cover von %1$s</string>
+    <string name="man77_source">Von %1$s</string>
+    <string name="man77_none_asked">Kein Handbuch für dieses Spiel. Gefragt: %1$s.</string>
+    <string name="man77_download">Handbuch herunterladen (%1$s)</string>
+    <string name="man77_other_source">Andere Quelle versuchen</string>
+    <string name="man77_link">Über einen Link herunterladen</string>
+    <string name="man77_link_title">Link zum Handbuch</string>
+    <string name="man77_link_hint">Eine direkte https://-Adresse zu einer PDF</string>
+    <string name="man77_link_bad">Das ist kein Weblink. Bitte eine https://- oder http://-Adresse verwenden.</string>
+    <string name="man77_setting_sources">Handbuch-Quellen</string>
+    <string name="man77_setting_sources_hint">RomM, ScreenScraper und Internet Archive nach einem Handbuch fragen. Eine ausgeschaltete Quelle wird nie abgefragt; ein eingefügter Link funktioniert immer.</string>
+    <string name="man77_romm">RomM</string>
+    <string name="man77_screenscraper">ScreenScraper</string>
+    <string name="man77_archive">Internet Archive</string>
+    <string name="man77_link_source">Ein Link</string>
+    <string name="man77_archive_detail">Internet-Archive-Objekt</string>
 </resources>

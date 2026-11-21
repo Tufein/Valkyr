@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cover77_from">Copertina da %1$s</string>
+    <string name="man77_source">Da %1$s</string>
+    <string name="man77_none_asked">Nessun manuale per questo gioco. Fonti interrogate: %1$s.</string>
+    <string name="man77_download">Scarica manuale (%1$s)</string>
+    <string name="man77_other_source">Prova un\'altra fonte</string>
+    <string name="man77_link">Scarica da un link</string>
+    <string name="man77_link_title">Link del manuale</string>
+    <string name="man77_link_hint">Un indirizzo https:// diretto a un PDF</string>
+    <string name="man77_link_bad">Non è un link web. Usa un indirizzo https:// o http://.</string>
+    <string name="man77_setting_sources">Fonti dei manuali</string>
+    <string name="man77_setting_sources_hint">Chiedi un manuale a RomM, ScreenScraper e Internet Archive. Una fonte disattivata non viene mai interrogata; un link incollato funziona sempre.</string>
+    <string name="man77_romm">RomM</string>
+    <string name="man77_screenscraper">ScreenScraper</string>
+    <string name="man77_archive">Internet Archive</string>
+    <string name="man77_link_source">Un link</string>
+    <string name="man77_archive_detail">Elemento di Internet Archive</string>
 </resources>

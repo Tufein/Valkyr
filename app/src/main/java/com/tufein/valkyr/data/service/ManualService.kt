@@ -3,8 +3,14 @@ package com.tufein.valkyr.data.service
 import android.content.Context
 import android.util.Log
 import com.tufein.valkyr.data.local.ManualSettings
+import com.tufein.valkyr.data.local.VersionPreferenceSettings
+import com.tufein.valkyr.util.CoverSources
+import com.tufein.valkyr.util.ManualHit
+import com.tufein.valkyr.util.ManualSource
+import com.tufein.valkyr.util.ManualSources
 import com.tufein.valkyr.util.Manuals
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -16,27 +22,28 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.Semaphore
-import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.CancellationException
 
 private const val TAG = "Manuals"
 
 /** How a manual download ended. */
-enum class ManualResult { SAVED, EXISTS, NO_MANUAL, TOO_BIG, OFFLINE, FAILED }
-
-/** The manual RomM stores for a game: its RomM id and the file on the server. */
-data class RemoteManual(val romId: Int, val url: String)
+enum class ManualResult { SAVED, EXISTS, NO_MANUAL, TOO_BIG, OFFLINE, FAILED, BAD_LINK }
 
 /**
- * Game manuals in the app's own storage (`files/manuals/<console>/<game>/`, 6.0). A manual comes only
- * from the user's RomM server (its `path_manual` file) and only while "Use RomM" is on; nothing is
- * fetched from anywhere else. Writes go through a temporary file, an existing file is never replaced,
- * and the total is kept under the size cap (oldest manuals of other games go first).
+ * Game manuals in the app's own storage (`files/manuals/<console>/<game>/`, 6.0). The sources are
+ * asked in the user's chosen order (7.7): their RomM server, ScreenScraper's `manual` media and the
+ * public Internet Archive APIs, plus a link the user pastes explicitly. A definite "no manual" from
+ * a source is remembered for a month; a source that was only unavailable is simply tried again.
+ *
+ * Writes go through a temporary file, an existing file is never replaced, and the total stays under
+ * the size cap (oldest manuals of other games go first). ScreenScraper credentials are added only to
+ * the outgoing request, never to a stored URL or a log.
  */
 @Singleton
 class ManualService @Inject constructor(
@@ -44,6 +51,8 @@ class ManualService @Inject constructor(
     private val settings: ManualSettings,
     private val rommClient: RommClient,
     private val rommGames: RommGameService,
+    private val screenScraper: ScreenScraperService,
+    private val versionSettings: VersionPreferenceSettings,
     downloads: DownloadService
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -57,13 +66,13 @@ class ManualService @Inject constructor(
     val changes: StateFlow<Int> = _changes.asStateFlow()
 
     init {
-        // With "Download manual with the game" on, a finished RomM download fetches its manual too.
+        // With "Download manual with the game" on, a finished download fetches its manual too.
         scope.launch {
             downloads.finished.collect { name ->
                 if (!settings.withGame.first()) return@collect
                 val file = downloads.entityFor(name) ?: return@collect
                 launch {
-                    val r = download(file.consoleId, file.fileName)
+                    val r = downloadFound(file.consoleId, file.fileName, file.name)
                     Log.i(TAG, "Manual with the game: $r")
                 }
             }
@@ -81,29 +90,104 @@ class ManualService @Inject constructor(
 
     fun fileOf(consoleId: String, fileName: String, name: String): File = File(dirOf(consoleId, fileName), Manuals.safeSegment(name, "manual"))
 
+    /** Where each stored manual came from, by file name. */
+    suspend fun attribution(consoleId: String, fileName: String): Map<String, ManualSource> {
+        val key = Manuals.relativeDir(consoleId, fileName)
+        return settings.sourcesOf(files(consoleId, fileName).map { "$key/$it" })
+            .mapKeys { it.key.substringAfterLast('/') }
+    }
+
     /** The manual RomM has for the game; null when RomM is off, the game is not on it, or it has no manual. */
-    suspend fun remote(consoleId: String, fileName: String): RemoteManual? = withContext(Dispatchers.IO) {
+    private suspend fun rommManual(consoleId: String, fileName: String): ManualHit? = withContext(Dispatchers.IO) {
         runCatching {
             val id = rommGames.romIdFor(consoleId, fileName) ?: return@runCatching null
             val url = rommGames.details(id).manualUrl ?: return@runCatching null
-            RemoteManual(id, url)
+            ManualHit(ManualSource.ROMM, url, Manuals.fileNameFor(url))
         }.getOrNull()
     }
 
-    /** Downloads the game's manual from RomM. [known] skips the lookup when the caller already has it. */
-    suspend fun download(consoleId: String, fileName: String, known: RemoteManual? = null): ManualResult = withContext(Dispatchers.IO) {
-        // No "online" gate: a LAN-only RomM has no validated internet. The request is tried and a network failure reports OFFLINE.
-        val remote = known ?: remote(consoleId, fileName) ?: return@withContext ManualResult.NO_MANUAL
-        val name = Manuals.fileNameFor(remote.url)
+    /** All manuals the enabled sources offer, best source first. Never throws. */
+    suspend fun find(consoleId: String, fileName: String, title: String): List<ManualHit> = withContext(Dispatchers.IO) {
+        val gameKey = Manuals.relativeDir(consoleId, fileName)
+        val enabled = settings.sources.first()
+        val misses = settings.misses()
+        val order = ManualSources.askOrder(enabled, misses, gameKey, System.currentTimeMillis())
+        val found = ArrayList<ManualHit>()
+        for (source in order) {
+            val hits = when (source) {
+                ManualSource.ROMM -> listOfNotNull(rommManual(consoleId, fileName))
+                ManualSource.SCREENSCRAPER -> screenScraperManual(consoleId, fileName, title, gameKey)
+                ManualSource.ARCHIVE -> archiveManual(title, gameKey)
+                ManualSource.LINK -> emptyList() // a pasted link is an explicit action, never searched for
+            }
+            if (hits.isEmpty() && source != ManualSource.ROMM) settings.rememberMiss(gameKey, source, System.currentTimeMillis())
+            found += hits
+        }
+        ManualSources.dedupe(found)
+    }
+
+    private suspend fun screenScraperManual(
+        consoleId: String, fileName: String, title: String, gameKey: String
+    ): List<ManualHit> {
+        val regions = runCatching { versionSettings.effectiveFlow(consoleId).first().regions.orEmpty() }.getOrDefault(emptyList())
+        return when (val answer = screenScraper.findManual(consoleId, fileName, title, regions)) {
+            is CoverSources.Answer.Found -> listOf(ManualHit(
+                ManualSource.SCREENSCRAPER, answer.url,
+                Manuals.fileNameFor(answer.url, "pdf"), "ScreenScraper"
+            ))
+            CoverSources.Answer.Miss -> {
+                settings.rememberMiss(gameKey, ManualSource.SCREENSCRAPER, System.currentTimeMillis())
+                emptyList()
+            }
+            else -> emptyList() // rate limit, quota, login or offline: not a miss, try again later
+        }
+    }
+
+    /** Up to two search results are checked for a downloadable PDF; a miss is cached for a month. */
+    private suspend fun archiveManual(title: String, gameKey: String): List<ManualHit> = runCatching {
+        val body = JsonHttp.request("GET", ManualSources.archiveSearchUrl(title), readTimeoutMs = 30_000)
+        if (!body.ok) return@runCatching emptyList()
+        val items = ManualSources.parseArchiveSearch(body.body).take(2)
+        for (item in items) {
+            val meta = JsonHttp.request("GET", ManualSources.archiveMetadataUrl(item.id), readTimeoutMs = 30_000)
+            if (!meta.ok) continue
+            val name = ManualSources.parseArchiveManual(meta.body, item.title.ifBlank { title }) ?: continue
+            return@runCatching listOf(ManualHit(
+                ManualSource.ARCHIVE, ManualSources.archiveDownloadUrl(item.id, name), name,
+                item.title.ifBlank { item.id }, "https://archive.org/details/${item.id}"
+            ))
+        }
+        emptyList()
+    }.getOrDefault(emptyList())
+
+    /** Ask the sources and save the first one that has a manual (used when a game finishes downloading). */
+    suspend fun downloadFound(consoleId: String, fileName: String, title: String): ManualResult {
+        val hit = find(consoleId, fileName, title).firstOrNull() ?: return ManualResult.NO_MANUAL
+        return download(consoleId, fileName, title, hit)
+    }
+
+    /** A manual the user picked from the source list, or pasted as a link. */
+    suspend fun download(consoleId: String, fileName: String, title: String, hit: ManualHit): ManualResult = withContext(Dispatchers.IO) {
+        if (hit.source != ManualSource.ROMM && !ManualSources.validLink(hit.url) && hit.source != ManualSource.SCREENSCRAPER) {
+            return@withContext ManualResult.BAD_LINK
+        }
+        val name = ManualSources.fileName(hit, title)
         val target = fileOf(consoleId, fileName, name)
         if (target.exists()) return@withContext ManualResult.EXISTS
         val cap = Manuals.capBytes(settings.capMb.first())
         slot.withPermit {
-            // The file goes to disk while it arrives (never held in memory); the size cap applies to the stream.
             val tmp = File(target.parentFile, target.name + ".part")
             try {
                 target.parentFile?.mkdirs()
-                rommClient.downloadServerFileTo(remote.url, tmp, Manuals.maxFileBytes(cap))
+                val url = if (hit.source == ManualSource.SCREENSCRAPER) screenScraper.signed(hit.url) else hit.url
+                val max = Manuals.maxFileBytes(cap)
+                if (hit.source == ManualSource.ROMM) {
+                    rommClient.downloadServerFileTo(url, tmp, max)
+                } else {
+                    JsonHttp.downloadToFile(url, emptyMap(), tmp, max, readTimeoutMs = 120_000) { candidate ->
+                        ManualSources.acceptsRedirect(hit.source, url, candidate)
+                    }
+                }
                 lock.withLock {
                     if (target.exists()) { tmp.delete(); return@withLock ManualResult.EXISTS }
                     val existing = entries()
@@ -113,6 +197,8 @@ class ManualService @Inject constructor(
                             if (!tmp.renameTo(target)) { tmp.delete(); ManualResult.FAILED } else {
                                 // Older manuals go only after the new one is in place.
                                 fit.remove.forEach { File(root, it.path).delete() }
+                                settings.setSourceOf(Manuals.sourceKey(consoleId, fileName, name), hit.source)
+                                settings.forgetMisses(Manuals.relativeDir(consoleId, fileName))
                                 prune()
                                 _changes.update { it + 1 }
                                 ManualResult.SAVED
@@ -126,14 +212,29 @@ class ManualService @Inject constructor(
             } catch (e: Exception) {
                 tmp.delete()
                 Log.w(TAG, "Manual download failed: ${e.javaClass.simpleName}")
-                if (rommErrorKind(e) == RommErrorKind.UNREACHABLE) ManualResult.OFFLINE else ManualResult.FAILED
+                when {
+                    e is IOException -> ManualResult.OFFLINE
+                    rommErrorKind(e) == RommErrorKind.UNREACHABLE -> ManualResult.OFFLINE
+                    else -> ManualResult.FAILED
+                }
             }
         }
     }
 
+    /** Downloads a URL the user pasted; nothing is searched and the link is never stored. */
+    suspend fun downloadLink(consoleId: String, fileName: String, title: String, url: String): ManualResult {
+        if (!ManualSources.validLink(url)) return ManualResult.BAD_LINK
+        return download(consoleId, fileName, title, ManualHit(ManualSource.LINK, url.trim(), Manuals.fileNameFor(url.trim())))
+    }
+
     /** Removes every manual of the game. */
     suspend fun delete(consoleId: String, fileName: String) = withContext(Dispatchers.IO) {
-        lock.withLock { dirOf(consoleId, fileName).deleteRecursively(); prune() }
+        lock.withLock {
+            val key = Manuals.relativeDir(consoleId, fileName)
+            files(consoleId, fileName).forEach { settings.removeSourceOf("$key/$it") }
+            dirOf(consoleId, fileName).deleteRecursively()
+            prune()
+        }
         _changes.update { it + 1 }
     }
 

@@ -53,24 +53,58 @@ object RaConsoleMap {
         RaConsoleInfo(23, "Odyssey² / Videopac", listOf("odyssey 2", "videopac")),
         RaConsoleInfo(24, "Pokémon mini", listOf("pokemon mini", "pokemini")),
         RaConsoleInfo(25, "Atari 2600", listOf("atari 2600", "2600")),
+        RaConsoleInfo(26, "MS-DOS", listOf("ms dos", "msdos", "dos"), setOf("amiga", "pc")),
+        RaConsoleInfo(27, "Arcade", listOf("arcade", "mame")),
         RaConsoleInfo(28, "Virtual Boy", listOf("virtual boy", "vb")),
         RaConsoleInfo(29, "MSX", listOf("msx", "msx2")),
+        RaConsoleInfo(30, "Commodore 64", listOf("c64", "commodore 64", "commodore64")),
+        RaConsoleInfo(31, "ZX81", listOf("zx81", "zx 81")),
+        RaConsoleInfo(32, "Oric", listOf("oric", "oric atmos")),
         RaConsoleInfo(33, "SG-1000", listOf("sg 1000")),
+        RaConsoleInfo(34, "VIC-20", listOf("vic20", "vic 20", "vic-20")),
+        RaConsoleInfo(35, "Amiga", listOf("amiga", "commodore amiga")),
+        RaConsoleInfo(36, "Atari ST", listOf("atari st", "atari ST", "atari ste")),
+        RaConsoleInfo(37, "Amstrad CPC", listOf("amstrad cpc", "cpc")),
+        RaConsoleInfo(38, "Apple II", listOf("apple 2", "apple ii", "appleii", "apple 2e")),
         RaConsoleInfo(39, "Sega Saturn", listOf("saturn")),
         RaConsoleInfo(40, "Dreamcast", listOf("dreamcast", "dc")),
         RaConsoleInfo(41, "PlayStation Portable", listOf("playstation portable", "psp")),
+        RaConsoleInfo(42, "CD-i", listOf("cd i", "cdi", "philips cdi")),
         RaConsoleInfo(43, "3DO", listOf("3do")),
         RaConsoleInfo(44, "ColecoVision", listOf("colecovision", "coleco")),
         RaConsoleInfo(45, "Intellivision", listOf("intellivision")),
         RaConsoleInfo(46, "Vectrex", listOf("vectrex")),
+        RaConsoleInfo(47, "PC-8800", listOf("pc 8800", "pc88")),
+        RaConsoleInfo(48, "PC-9800", listOf("pc 9800", "pc98")),
         RaConsoleInfo(49, "PC-FX", listOf("pc fx")),
         RaConsoleInfo(50, "Atari 5200", listOf("atari 5200", "5200")),
         RaConsoleInfo(51, "Atari 7800", listOf("atari 7800", "7800")),
+        RaConsoleInfo(52, "Sharp X68000", listOf("x68000", "x68k", "sharp x68000")),
         RaConsoleInfo(53, "WonderSwan", listOf("wonderswan", "ws", "wsc")),
+        RaConsoleInfo(54, "Cassette Vision", listOf("cassette vision"), setOf("super")),
+        RaConsoleInfo(55, "Super Cassette Vision", listOf("super cassette vision")),
         RaConsoleInfo(56, "Neo Geo CD", listOf("neo geo cd")),
+        RaConsoleInfo(57, "FM Towns", listOf("fm towns", "fmtowns")),
+        RaConsoleInfo(58, "ZX Spectrum", listOf("zx spectrum", "spectrum")),
+        RaConsoleInfo(59, "Game & Watch", listOf("game and watch", "game watch", "g w")),
+        RaConsoleInfo(61, "Nokia N-Gage", listOf("n gage", "ngage", "nokia ngage")),
         RaConsoleInfo(62, "Nintendo 3DS", listOf("nintendo 3ds", "3ds", "n3ds")),
         RaConsoleInfo(63, "Watara Supervision", listOf("supervision", "watara")),
-        RaConsoleInfo(76, "PC Engine CD / TurboGrafx-CD", listOf("pc engine cd", "turbografx cd", "turbografx 16 cd", "pce cd", "turbo duo"))
+        RaConsoleInfo(64, "Sharp X1", listOf("sharp x1", "x1")),
+        RaConsoleInfo(65, "TIC-80", listOf("tic 80", "tic80")),
+        RaConsoleInfo(66, "Thomson TO8", listOf("thomson to8", "to8")),
+        RaConsoleInfo(67, "PC6000", listOf("pc 6000", "pc6000")),
+        RaConsoleInfo(68, "Pico", listOf("pico", "raspberry pico")),
+        RaConsoleInfo(69, "Mega Duck", listOf("mega duck")),
+        RaConsoleInfo(70, "Zeebo", listOf("zeebo")),
+        RaConsoleInfo(71, "Arduboy", listOf("arduboy")),
+        RaConsoleInfo(72, "WASM-4", listOf("wasm 4", "wasm4")),
+        RaConsoleInfo(73, "Arcadia 2001", listOf("arcadia 2001")),
+        RaConsoleInfo(74, "Interton VC 4000", listOf("interton vc 4000", "vc 4000")),
+        RaConsoleInfo(75, "Elektor TV Games", listOf("elektor tv games")),
+        RaConsoleInfo(76, "PC Engine CD / TurboGrafx-CD", listOf("pc engine cd", "turbografx cd", "turbografx 16 cd", "pce cd", "turbo duo")),
+        RaConsoleInfo(79, "TI-83", listOf("ti 83", "ti83")),
+        RaConsoleInfo(80, "Uzebox", listOf("uzebox"))
     )
 
     private val byRaId = all.associateBy { it.id }
@@ -136,24 +170,49 @@ data class BestGame(
     val achievements: Int,
     val points: Int,
     /** RA's icon path ("/Images/067895.png"), shown when no cover is found. */
-    val icon: String? = null
+    val icon: String? = null,
+    /** Extra facts from RA's list and (for the candidates) its game-details call. */
+    val leaderboards: Int = 0,
+    val released: String? = null,
+    val genre: String? = null,
+    val hardcore: Int = 0
 )
 
 /** How the list is ordered, and so what the screen may claim about it. */
 enum class RankBasis {
     /** Distinct players RA counts for each of the top games by achievement points. */
     PLAYERS,
+    /** Distinct hardcore players of the same games. */
+    HARDCORE,
     /** Achievement points of the set: a stand-in for popularity, as the cheap list call allows. */
     POINTS
 }
 
-data class RankedGame(val rank: Int, val game: BestGame, val players: Int?)
+/** A second, purely local ordering of the same ranked list. */
+enum class BestSort { RANK, TITLE, YEAR, POINTS, PLAYERS }
+
+/** Which games of the list are shown; the counts above the list always cover all of them. */
+enum class OwnFilter { ALL, DEVICE, SOURCE, MISSING }
+
+data class RankedGame(val rank: Int, val game: BestGame, val players: Int?, val hardcore: Int? = null)
 
 /** The ranked list plus how much of it rests on player counts: [checked] of [candidates] were asked. */
 data class Ranking(val basis: RankBasis, val games: List<RankedGame>, val checked: Int, val candidates: Int)
 
+/** The extra facts one `API_GetGameExtended` answer carries, besides the player count. */
+data class GameDetail(val players: Int, val hardcore: Int, val released: String?, val genre: String?)
+
+/** What one console's player counts look like after a week, including the hardcore counts. */
+data class PlayerStats(val players: Map<Int, Int>, val hardcore: Map<Int, Int>, val details: Map<Int, GameDetail>)
+
 /** A player count with the time it was fetched, for the 7-day cache. */
-data class PlayerCount(val players: Int, val at: Long)
+data class PlayerCount(
+    val players: Int,
+    val at: Long,
+    val hardcore: Int = 0,
+    val released: String? = null,
+    val genre: String? = null
+)
 
 enum class OwnState { ON_DEVICE, IN_SOURCE, MISSING }
 
@@ -170,10 +229,10 @@ data class GameMatch(val ranked: RankedGame, val state: OwnState, val deviceName
 object BestGames {
 
     /** How many of the top games (by points) get their player count asked, and how long the list is. */
-    const val CANDIDATES = 40
+    const val CANDIDATES = 100
 
     /** Games kept per console in the cache: more than the list shows, a few KB in all. */
-    const val KEEP = 200
+    const val KEEP = 500
 
     const val WEEK_MS = 7L * 24 * 3_600_000
 
@@ -202,7 +261,11 @@ object BestGames {
             val id = o.int("ID", "id") ?: return@mapNotNull null
             val count = o.int("NumAchievements") ?: 0
             if (id <= 0 || count <= 0) return@mapNotNull null
-            BestGame(id, o.str("Title").orEmpty().trim(), count, (o.int("Points") ?: 0).coerceAtLeast(0), o.str("ImageIcon")?.takeIf { it.isNotBlank() })
+            BestGame(
+                id, o.str("Title").orEmpty().trim(), count, (o.int("Points") ?: 0).coerceAtLeast(0),
+                o.str("ImageIcon")?.takeIf { it.isNotBlank() },
+                (o.int("NumLeaderboards", "numLeaderboards") ?: 0).coerceAtLeast(0)
+            )
         }.distinctBy { it.id }
     }.getOrDefault(emptyList())
 
@@ -210,10 +273,18 @@ object BestGames {
      * The distinct player count of `API_GetGameExtended`: 0 for a game that carries none, null when the
      * body is not a game at all (an error object, garbage).
      */
-    fun parsePlayers(json: String): Int? = runCatching {
+    fun parsePlayers(json: String): Int? = parseDetails(json)?.players
+
+    /** The player counts, hardcore counts, release date and genre of one `API_GetGameExtended` answer. */
+    fun parseDetails(json: String): GameDetail? = runCatching {
         val root = JsonParser.parseString(json) as? JsonObject ?: return@runCatching null
         if (root.int("ID", "Id", "id") == null && root.str("Title") == null) return@runCatching null
-        root.int("NumDistinctPlayers", "NumDistinctPlayersCasual", "players_total")?.coerceAtLeast(0) ?: 0
+        GameDetail(
+            players = root.int("NumDistinctPlayers", "NumDistinctPlayersCasual", "players_total")?.coerceAtLeast(0) ?: 0,
+            hardcore = (root.int("NumDistinctPlayersHardcore", "numDistinctPlayersHardcore", "players_hardcore") ?: 0).coerceAtLeast(0),
+            released = root.str("Released", "released")?.take(10)?.takeIf { it.length >= 4 },
+            genre = root.str("Genre", "genre")?.takeIf { it.isNotBlank() }
+        )
     }.getOrNull()
 
     private fun JsonObject.str(vararg names: String): String? {
@@ -266,14 +337,47 @@ object BestGames {
      * is it ranked by players ([RankBasis.PLAYERS]); otherwise it is the same candidates by points
      * ([RankBasis.POINTS]), with the counts that are known shown next to them but not used to order.
      */
-    fun rank(games: List<BestGame>, players: Map<Int, Int>, size: Int = CANDIDATES): Ranking {
+    fun rank(games: List<BestGame>, players: Map<Int, Int>, size: Int = CANDIDATES): Ranking =
+        rank(games, players, emptyMap(), size, RankBasis.PLAYERS)
+
+    /**
+     * The list for a console. Only when every candidate has a count for [wanted] is it ordered by
+     * that count; otherwise it stays ordered by points and the screen says so.
+     */
+    fun rank(
+        games: List<BestGame>,
+        players: Map<Int, Int>,
+        hardcore: Map<Int, Int> = emptyMap(),
+        size: Int = CANDIDATES,
+        wanted: RankBasis = RankBasis.PLAYERS
+    ): Ranking {
         val pool = candidates(games, size)
-        val checked = pool.count { it.id in players }
-        val ordered = if (pool.isNotEmpty() && checked == pool.size) {
-            pool.sortedWith(compareByDescending<BestGame> { players[it.id] ?: 0 }.then(byPoints))
+        val counts = if (wanted == RankBasis.HARDCORE) hardcore else players
+        val checked = pool.count { it.id in counts }
+        val complete = pool.isNotEmpty() && checked == pool.size
+        val ordered = if (complete && wanted != RankBasis.POINTS) {
+            pool.sortedWith(compareByDescending<BestGame> { counts[it.id] ?: 0 }.then(byPoints))
         } else pool
-        val basis = if (pool.isNotEmpty() && checked == pool.size) RankBasis.PLAYERS else RankBasis.POINTS
-        return Ranking(basis, ordered.mapIndexed { i, g -> RankedGame(i + 1, g, players[g.id]) }, checked, pool.size)
+        val basis = if (complete) wanted else RankBasis.POINTS
+        return Ranking(basis, ordered.mapIndexed { i, g ->
+            RankedGame(i + 1, g, players[g.id], hardcore[g.id])
+        }, checked, pool.size)
+    }
+
+    /** A local re-ordering; the rank number stays the one RA's numbers earned. */
+    fun sort(rows: List<GameMatch>, by: BestSort): List<GameMatch> = when (by) {
+        BestSort.RANK -> rows.sortedBy { it.ranked.rank }
+        BestSort.TITLE -> rows.sortedBy { it.ranked.game.title.lowercase(Locale.ROOT) }
+        BestSort.YEAR -> rows.sortedByDescending { it.ranked.game.released.orEmpty() }
+        BestSort.POINTS -> rows.sortedWith(compareByDescending<GameMatch> { it.ranked.game.points }.thenBy { it.ranked.rank })
+        BestSort.PLAYERS -> rows.sortedWith(compareByDescending<GameMatch> { it.ranked.players ?: -1 }.thenBy { it.ranked.rank })
+    }
+
+    fun filter(rows: List<GameMatch>, by: OwnFilter): List<GameMatch> = when (by) {
+        OwnFilter.ALL -> rows
+        OwnFilter.DEVICE -> rows.filter { it.state == OwnState.ON_DEVICE }
+        OwnFilter.SOURCE -> rows.filter { it.state == OwnState.IN_SOURCE }
+        OwnFilter.MISSING -> rows.filter { it.state == OwnState.MISSING }
     }
 
     /** The candidates still without a (fresh) count: what a throttled fetch has left to do, in ranking order. */
@@ -288,6 +392,10 @@ object BestGames {
             arr.add(JsonObject().apply {
                 addProperty("i", g.id); addProperty("t", g.title); addProperty("a", g.achievements); addProperty("p", g.points)
                 g.icon?.let { addProperty("m", it) }
+                if (g.leaderboards > 0) addProperty("l", g.leaderboards)
+                g.released?.let { addProperty("r", it) }
+                g.genre?.let { addProperty("g", it) }
+                if (g.hardcore > 0) addProperty("h", g.hardcore)
             })
         }
         return arr.toString()
@@ -297,13 +405,21 @@ object BestGames {
         JsonParser.parseString(json).asJsonArray.mapNotNull { el ->
             val o = el as? JsonObject ?: return@mapNotNull null
             val id = o.int("i") ?: return@mapNotNull null
-            BestGame(id, o.str("t").orEmpty(), o.int("a") ?: 0, o.int("p") ?: 0, o.str("m"))
+            BestGame(
+                id, o.str("t").orEmpty(), o.int("a") ?: 0, o.int("p") ?: 0, o.str("m"),
+                o.int("l") ?: 0, o.str("r"), o.str("g"), o.int("h") ?: 0
+            )
         }
     }.getOrDefault(emptyList())
 
     fun encodePlayers(counts: Map<Int, PlayerCount>): String {
         val root = JsonObject()
-        counts.forEach { (id, c) -> root.add(id.toString(), JsonObject().apply { addProperty("n", c.players); addProperty("at", c.at) }) }
+        counts.forEach { (id, c) -> root.add(id.toString(), JsonObject().apply {
+            addProperty("n", c.players); addProperty("at", c.at)
+            if (c.hardcore > 0) addProperty("h", c.hardcore)
+            c.released?.let { addProperty("r", it) }
+            c.genre?.let { addProperty("g", it) }
+        }) }
         return root.toString()
     }
 
@@ -313,7 +429,11 @@ object BestGames {
         for ((key, el) in root.entrySet()) {
             val id = key.toIntOrNull() ?: continue
             val o = el as? JsonObject ?: continue
-            out[id] = PlayerCount(o.int("n") ?: continue, (o.get("at")?.takeIf { it.isJsonPrimitive }?.asLong) ?: 0L)
+            out[id] = PlayerCount(
+                o.int("n") ?: continue,
+                (o.get("at")?.takeIf { it.isJsonPrimitive }?.asLong) ?: 0L,
+                o.int("h") ?: 0, o.str("r"), o.str("g")
+            )
         }
         out
     }.getOrDefault(emptyMap())
@@ -324,6 +444,19 @@ object BestGames {
     /** The counts still good at [now], as game id to players. */
     fun freshPlayers(counts: Map<Int, PlayerCount>, now: Long): Map<Int, Int> =
         counts.filterValues { isFresh(it.at, now) }.mapValues { it.value.players }
+
+    /** All fresh facts of one console, as the screen needs them. */
+    fun freshStats(counts: Map<Int, PlayerCount>, now: Long): PlayerStats {
+        val fresh = counts.filterValues { isFresh(it.at, now) }
+        return PlayerStats(
+            fresh.mapValues { it.value.players },
+            fresh.mapValues { it.value.hardcore },
+            fresh.mapValues { (id, c) ->
+                // A count from an older cache has no extra facts; keep what we already have in the list.
+                GameDetail(c.players, c.hardcore, c.released, c.genre)
+            }
+        )
+    }
 
     // ---- Matching against the library ----
 

@@ -731,8 +731,8 @@ private fun TabContent(
                         fileName = rom.fileName,
                         showSummary = state.details?.description.isNullOrBlank()
                     )
-                    // 6.0: manuals kept on the device, and the one RomM has (draws nothing without either).
-                    ManualsSection(rom.consoleId, rom.fileName)
+                    // 6.0/7.7: manuals on the device and from RomM, ScreenScraper or Internet Archive.
+                    ManualsSection(rom.consoleId, rom.fileName, rom.name)
                 }
                 Tab.VERSIONS -> Versions(state, ownedOf, downloadingOf, onDownload, viewModel, onOpenVersionPreference)
                 Tab.PROGRESS -> {

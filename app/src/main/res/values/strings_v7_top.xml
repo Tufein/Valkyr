@@ -18,7 +18,7 @@
     <string name="top7_stale">An older copy of the list: RetroAchievements could not be reached.</string>
     <string name="top7_refine">Rank by players</string>
     <string name="top7_refine_continue">Continue counting players</string>
-    <string name="top7_refine_hint">Asks RetroAchievements how many players each of the top %1$d games has, one every 1.5 seconds (about a minute). The counts are kept for a week.</string>
+    <string name="top7_refine_hint">Asks RetroAchievements how many players each of the top %1$d games has, one every 1.5 seconds (a few minutes for the whole list). The counts are kept for a week.</string>
     <string name="top7_refining">Counting players… %1$d of %2$d</string>
     <string name="top7_stop">Stop</string>
     <string name="top7_loading">Fetching the game list…</string>

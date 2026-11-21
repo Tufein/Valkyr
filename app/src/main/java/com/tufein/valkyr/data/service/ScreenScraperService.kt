@@ -119,6 +119,10 @@ class ScreenScraperService @Inject constructor(
     suspend fun findArt(consoleId: String, fileName: String, title: String, regions: List<String>, art: LibretroThumbnails.Art): CoverSources.Answer =
         lookup(consoleId, fileName, title) { game -> ScreenScraper.pickArt(game, regions, art) }
 
+    /** 7.7: a game's manual from ScreenScraper's `manual` media, with the same gates as a cover lookup. */
+    suspend fun findManual(consoleId: String, fileName: String, title: String, regions: List<String>): CoverSources.Answer =
+        lookup(consoleId, fileName, title) { game -> ScreenScraper.pickManual(game, regions) }
+
     private suspend fun lookup(consoleId: String, fileName: String, title: String, pick: (ScreenScraper.Game) -> String?): CoverSources.Answer {
         val system = ScreenScraper.systemId(consoleId) ?: return CoverSources.Answer.Miss
         val c = settings.credentials.first()

@@ -4,7 +4,9 @@ import android.content.Context
 import com.tufein.valkyr.data.local.AppSettings
 import com.tufein.valkyr.util.BestGame
 import com.tufein.valkyr.util.BestGames
+import com.tufein.valkyr.util.GameDetail
 import com.tufein.valkyr.util.PlayerCount
+import com.tufein.valkyr.util.PlayerStats
 import com.tufein.valkyr.util.RaApi
 import com.tufein.valkyr.util.RaErrorKind
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -104,6 +106,11 @@ class BestGamesService @Inject constructor(
         BestGames.freshPlayers(loadPlayers(raConsoleId), System.currentTimeMillis())
     }
 
+    /** The fresh player, hardcore and detail facts of one console, from the cache only. */
+    suspend fun cachedStats(raConsoleId: Int): PlayerStats = withContext(Dispatchers.IO) {
+        BestGames.freshStats(loadPlayers(raConsoleId), System.currentTimeMillis())
+    }
+
     /**
      * Asks RA for the player count of every game in [candidates] that has no fresh count, one at a time,
      * [THROTTLE_MS] apart, calling [onProgress] with (games with a count, games in all) after each. Counts
@@ -112,6 +119,13 @@ class BestGamesService @Inject constructor(
      * (what was fetched so far stays saved), and [CancellationException] when the caller goes away.
      */
     suspend fun fetchPlayers(raConsoleId: Int, candidates: List<BestGame>, onProgress: (done: Int, total: Int) -> Unit = { _, _ -> }): Map<Int, Int> =
+        fetchStats(raConsoleId, candidates, onProgress).players
+
+    /**
+     * As above, but also keeps the hardcore counts, release date and genre from the very same answer.
+     * One call per game serves all four facts; nothing extra is asked of RetroAchievements.
+     */
+    suspend fun fetchStats(raConsoleId: Int, candidates: List<BestGame>, onProgress: (done: Int, total: Int) -> Unit = { _, _ -> }): PlayerStats =
         withContext(Dispatchers.IO) {
             netMutex.withLock {
                 val (user, key) = credentials()
@@ -130,20 +144,20 @@ class BestGamesService @Inject constructor(
                         if (lastStart != 0L && wait > 0) delay(wait)
                         ensureActive()
                         lastStart = System.currentTimeMillis()
-                        val players = try {
+                        val detail = try {
                             val body = fetch(BestGames.gameExtendedUrl(game.id, user, key), readTimeoutMs = 30_000)
-                            BestGames.parsePlayers(body) ?: throw RetroAchievementsService.RaApiException(RaApi.unreadableKind(body))
+                            BestGames.parseDetails(body) ?: throw RetroAchievementsService.RaApiException(RaApi.unreadableKind(body))
                         } catch (e: RetroAchievementsService.RaApiException) {
                             when (e.kind) {
                                 // RA does not know this game: nothing to wait for, rank it last.
-                                RaErrorKind.NOT_FOUND -> 0
+                                RaErrorKind.NOT_FOUND -> GameDetail(0, 0, null, null)
                                 // Odd answers for a game or two are skipped; a run of them is a broken server.
                                 RaErrorKind.BAD_RESPONSE -> if (++failures >= MAX_ODD_ANSWERS) throw e else continue
                                 else -> throw e
                             }
                         }
                         failures = 0
-                        counts[game.id] = PlayerCount(players, System.currentTimeMillis())
+                        counts[game.id] = PlayerCount(detail.players, System.currentTimeMillis(), detail.hardcore, detail.released, detail.genre)
                         done++
                         onProgress(done, candidates.size)
                         if (++sinceSave >= SAVE_EVERY) { savePlayers(raConsoleId, counts); sinceSave = 0 }
@@ -152,7 +166,7 @@ class BestGamesService @Inject constructor(
                     // Cancelled or failed: keep what was fetched, the next run continues from there.
                     withContext(NonCancellable) { savePlayers(raConsoleId, counts) }
                 }
-                fresh()
+                BestGames.freshStats(counts, System.currentTimeMillis())
             }
         }
 

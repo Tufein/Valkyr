@@ -16,8 +16,16 @@ object Manuals {
     const val KEY_CAP_MB = "manuals60_cap_mb"
     const val KEY_LAST_PAGES = "manuals60_last_pages"
 
+    /** 7.7: which sources may be asked, the remembered misses and the provider of each stored manual. */
+    const val KEY_SOURCES = "manuals77_sources"
+    const val KEY_MISSES = "manuals77_misses"
+    const val KEY_ATTRIBUTION = "manuals77_attribution"
+
     /** Types for the settings backup (see SettingSchema). */
-    val SETTING_TYPES: Map<String, String> = mapOf(KEY_WITH_GAME to "b", KEY_CAP_MB to "i", KEY_LAST_PAGES to "s")
+    val SETTING_TYPES: Map<String, String> = mapOf(
+        KEY_WITH_GAME to "b", KEY_CAP_MB to "i", KEY_LAST_PAGES to "s",
+        KEY_SOURCES to "s", KEY_MISSES to "s", KEY_ATTRIBUTION to "s"
+    )
 
     /** The total space manuals may take, in MB, as the setting offers it. */
     val CAP_CHOICES_MB: List<Int> = listOf(50, 100, 250, 500, 1000, 2000)
@@ -160,8 +168,39 @@ object Manuals {
         fun get(text: String?, key: String): Int = decode(text)[key] ?: 0
     }
 
+    /** A small `key=value` map in one preference, for misses and manual attribution (7.7). */
+    object TextMap {
+        const val LIMIT = 200
+
+        fun decode(text: String?): Map<String, String> {
+            val out = LinkedHashMap<String, String>()
+            text.orEmpty().lineSequence().forEach { line ->
+                val key = line.substringBefore('=', "").takeIf { it.isNotEmpty() } ?: return@forEach
+                out[key] = line.substringAfter('=', "")
+            }
+            return out
+        }
+
+        fun encode(map: Map<String, String>): String =
+            map.entries.toList().takeLast(LIMIT).joinToString("\n") { "${it.key}=${it.value}" }
+
+        fun put(text: String?, key: String, value: String): String {
+            val out = LinkedHashMap(decode(text))
+            out.remove(key)
+            out[key] = value
+            return encode(out)
+        }
+
+        fun remove(text: String?, key: String): String = encode(decode(text).filterKeys { it != key })
+
+        fun get(text: String?, key: String): String? = decode(text)[key]
+    }
+
     /** The key a document's last page is stored under. */
     fun docKey(consoleId: String, fileName: String, doc: Doc): String = "${relativeDir(consoleId, fileName)}/${doc.files.first()}"
+
+    /** The key a stored manual's provider is stored under. */
+    fun sourceKey(consoleId: String, fileName: String, manualName: String): String = "${relativeDir(consoleId, fileName)}/$manualName"
 }
 
 /** The reader's page and zoom, as plain values: page turns clamp, zoom has fixed steps. */
