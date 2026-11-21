@@ -23,7 +23,7 @@ The app includes no games. **Sources → More romsets** offers optional free con
 
 *The screenshots use made-up game titles and empty placeholder files.*
 
-**Latest release: [9.1.0](https://github.com/Tufein/Valkyr/releases/tag/v9.1.0)** (Android build 95).
+**Latest release: [9.2.0](https://github.com/Tufein/Valkyr/releases/tag/v9.2.0)** (Android build 96).
 
 Until 3.9.0 the app was called Dogmatix+. Valkyr 6.0.0 has its own app id, so it installs next to the old app: use *Settings → Back up* in the old app and *Restore backup* in Valkyr, then remove the old app.
 
@@ -57,12 +57,12 @@ You need **Android 10 or newer**. The app is not on Google Play.
 - **Performance check** (*Tools → Performance check*): measures start-up, search speed, cover decoding, storage speed and scrolling on your own device, with a Fast/Fine/Slow verdict and a numbers-only report you can share.
 - **Emulator check** (*Tools → Emulator check*): which known emulators are installed, in which version, and for each console of your library whether something installed can start its games, with what is missing. It only looks at installed apps and installs nothing. Tap a console for its setup steps: emulator, core, BIOS, saves and disc lists, each saying what it changes.
 - **Up next and For you**: a personal play list per profile, and suggestions from your own library that always say why they were picked.
-- **Collections and goals**: favourites, your own lists, rule-based collections (console, language, genre, year, played, not played for 3, 6 or 12 months), collection goals, play history, a yearly recap and the best games per console from RetroAchievements.
+- **Collections and goals**: favourites, your own lists, rule-based collections (console, language, genre, year, played, not played for 3, 6 or 12 months), collection goals, play history, a yearly recap and the best games per console from RetroAchievements: 35 more systems, the top 100 per console, hardcore rankings, local sorting and ownership filters.
 - **Wishlist**: note games you want, get told when one appears, download them automatically and share the list.
 - **Import a list**: paste or load a text file; found games download, the rest go to the wishlist.
 
 - **Four ways to browse**: Overview, List, Covers and Consoles (a tile per console with counts), quick filters (downloaded, favourites, completed, RetroAchievements beaten/mastered), a compact search bar, and optional *Group versions* that folds regional copies into one entry.
-- **Manuals**: download a game's manual from your RomM server and read it in the app (PDF, pictures, text), plus an *Offline* chip that shows what still works.
+- **Manuals**: download a game's manual from your RomM server, ScreenScraper or the Internet Archive (or paste a direct link) and read it in the app (PDF, pictures, text), plus an *Offline* chip that shows what still works. Each manual says where it came from.
 
 ### Download
 - **Direct links, torrents and magnet links**, plus optional **TorBox** and **Real-Debrid**.

@@ -23,7 +23,7 @@ Valkyr mantiene una gran lista, con buscador, de los juegos de las fuentes que *
 
 *Las capturas de pantalla usan títulos de juegos inventados y archivos vacíos de relleno. Las capturas muestran la app en inglés.*
 
-**Última versión: [9.1.0](https://github.com/Tufein/Valkyr/releases/tag/v9.1.0)** (build de Android 95).
+**Última versión: [9.2.0](https://github.com/Tufein/Valkyr/releases/tag/v9.2.0)** (build de Android 96).
 
 Hasta la 3.9.0 la app se llamaba Dogmatix+. Valkyr 6.0.0 tiene su propio ID de aplicación y se instala junto a la app antigua: usa *Ajustes → Copia de seguridad* en la app antigua y *Restaurar copia* en Valkyr, y luego elimina la app antigua.
 
@@ -57,12 +57,12 @@ Necesitas **Android 10 o más reciente**. La app no está en Google Play.
 - **Prueba de rendimiento** (*Herramientas → Prueba de rendimiento*): mide el arranque, la velocidad de búsqueda, la decodificación de carátulas, el almacenamiento y el desplazamiento en tu propio dispositivo, con veredicto Rápido/Bien/Lento y un informe solo con números para compartir.
 - **Revisión de emuladores** (*Herramientas → Revisión de emuladores*): qué emuladores conocidos hay instalados, en qué versión, y si para cada consola de tu biblioteca algo instalado puede iniciar sus juegos, con lo que falta. Solo mira las apps instaladas y no instala nada. Toca una consola para ver sus pasos: emulador, núcleo, BIOS, partidas y listas de discos, cada uno indicando qué cambia.
 - **A continuación y Para ti**: una lista de juegos personal por perfil y sugerencias de tu propia biblioteca que siempre dicen por qué se eligieron.
-- **Colecciones y objetivos**: favoritos, listas propias, colecciones por reglas (consola, idioma, género, año, jugado, sin jugar en 3, 6 o 12 meses), objetivos de colección, historial de juego, un resumen anual y los mejores juegos por consola según RetroAchievements.
+- **Colecciones y objetivos**: favoritos, listas propias, colecciones por reglas (consola, idioma, género, año, jugado, sin jugar en 3, 6 o 12 meses), objetivos de colección, historial de juego, un resumen anual y los mejores juegos por consola según RetroAchievements: 35 sistemas más, los 100 mejores por consola, clasificación hardcore, ordenación local y filtro por lo que tienes.
 - **Lista de deseos**: anota los juegos que quieres, recibe un aviso cuando aparezca uno, descárgalos automáticamente y comparte la lista.
 - **Importar una lista**: pega o carga un archivo de texto; los juegos encontrados se descargan y el resto va a la lista de deseos.
 
 - **Cuatro vistas**: Resumen, Lista, Portadas y Consolas (una ficha por consola con recuentos), filtros rápidos (descargado, favoritos, completado, RetroAchievements superado/dominado), una barra de búsqueda compacta y opcionalmente *Agrupar versiones*.
-- **Manuales**: descarga el manual desde tu servidor RomM y léelo en la app (PDF, imágenes, texto), con un indicador *Sin conexión*.
+- **Manuales**: descarga el manual desde tu servidor RomM, ScreenScraper o Internet Archive (o pega un enlace directo) y léelo en la app (PDF, imágenes, texto), con un indicador *Sin conexión*. Cada manual indica su procedencia.
 
 ### Descargar
 - **Enlaces directos, torrents y enlaces magnet**, más **TorBox** y **Real-Debrid** opcionales.

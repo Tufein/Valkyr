@@ -23,7 +23,7 @@ Valkyr führt eine große, durchsuchbare Liste mit den Spielen aus den Quellen, 
 
 *Die Screenshots verwenden erfundene Spieltitel und leere Platzhalterdateien und zeigen die App auf Englisch.*
 
-**Neueste Version: [9.1.0](https://github.com/Tufein/Valkyr/releases/tag/v9.1.0)** (Android-Build 95).
+**Neueste Version: [9.2.0](https://github.com/Tufein/Valkyr/releases/tag/v9.2.0)** (Android-Build 96).
 
 Bis 3.9.0 hieß die App Dogmatix+. Valkyr 6.0.0 hat eine eigene App-ID und wird daher neben der alten App installiert: Nutze *Einstellungen → Sichern* in der alten App und *Sicherung wiederherstellen* in Valkyr und entferne danach die alte App.
 
@@ -57,12 +57,12 @@ Du brauchst **Android 10 oder neuer**. Die App ist nicht bei Google Play erhält
 - **Leistungsprüfung** (*Tools → Leistungsprüfung*): misst Start, Suchgeschwindigkeit, Cover-Dekodierung, Speichertempo und Scrollen auf deinem eigenen Gerät, mit Urteil Schnell/Okay/Langsam und einem Bericht nur mit Zahlen zum Teilen.
 - **Emulator-Check** (*Tools → Emulator-Check*): welche bekannten Emulatoren installiert sind, in welcher Version, und ob für jede Konsole deiner Bibliothek etwas Installiertes ihre Spiele starten kann, samt dem, was fehlt. Es prüft nur installierte Apps und installiert nichts. Tippe auf eine Konsole für ihre Einrichtungsschritte: Emulator, Core, BIOS, Spielstände und Disc-Listen, jeweils mit dem, was sich ändert.
 - **Als Nächstes und Für dich**: eine persönliche Spielliste pro Profil und Vorschläge aus deiner eigenen Bibliothek, die immer sagen, warum sie gewählt wurden.
-- **Sammlungen und Ziele**: Favoriten, eigene Listen, regelbasierte Sammlungen (Konsole, Sprache, Genre, Jahr, gespielt, seit 3, 6 oder 12 Monaten nicht gespielt), Sammlungsziele, Spielverlauf, ein Jahresrückblick und die besten Spiele je Konsole von RetroAchievements.
+- **Sammlungen und Ziele**: Favoriten, eigene Listen, regelbasierte Sammlungen (Konsole, Sprache, Genre, Jahr, gespielt, seit 3, 6 oder 12 Monaten nicht gespielt), Sammlungsziele, Spielverlauf, ein Jahresrückblick und die besten Spiele je Konsole von RetroAchievements: 35 weitere Systeme, die Top 100 je Konsole, Hardcore-Rangliste, lokale Sortierung und Filter nach Besitz.
 - **Wunschliste**: Spiele vormerken, Bescheid bekommen, wenn eines auftaucht, automatisch herunterladen und die Liste teilen.
 - **Liste importieren**: Text einfügen oder Datei laden; gefundene Spiele werden geladen, der Rest landet auf der Wunschliste.
 
 - **Vier Ansichten**: Übersicht, Liste, Cover und Konsolen (eine Kachel je Konsole mit Zahlen), Schnellfilter (heruntergeladen, Favoriten, durchgespielt, RetroAchievements besiegt/gemeistert), eine kompakte Suchleiste und optional *Versionen gruppieren*.
-- **Handbücher**: Handbuch vom RomM-Server laden und in der App lesen (PDF, Bilder, Text), dazu ein *Offline*-Chip.
+- **Handbücher**: Handbuch vom RomM-Server, von ScreenScraper oder aus dem Internet Archive laden (oder einen direkten Link einfügen) und in der App lesen (PDF, Bilder, Text), dazu ein *Offline*-Chip. Bei jedem Handbuch steht die Quelle.
 
 ### Herunterladen
 - **Direkte Links, Torrents und Magnet-Links**, dazu optional **TorBox** und **Real-Debrid**.

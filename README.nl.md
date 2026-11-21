@@ -23,7 +23,7 @@ Valkyr houdt één grote, doorzoekbare lijst bij van de games uit de bronnen die
 
 *De screenshots gebruiken verzonnen gametitels en lege dummybestanden en tonen de app in het Engels.*
 
-**Laatste release: [9.1.0](https://github.com/Tufein/Valkyr/releases/tag/v9.1.0)** (Android build 95).
+**Laatste release: [9.2.0](https://github.com/Tufein/Valkyr/releases/tag/v9.2.0)** (Android build 96).
 
 Tot en met 3.9.0 heette de app Dogmatix+. Valkyr 6.0.0 heeft een eigen app-id en installeert dus naast de oude app: gebruik *Instellingen → Back-up maken* in de oude app en *Back-up terugzetten* in Valkyr, en verwijder daarna de oude app.
 
@@ -57,12 +57,12 @@ Je hebt **Android 10 of nieuwer** nodig. De app staat niet in Google Play.
 - **Prestatiecheck** (*Tools → Prestatiecheck*): meet starten, zoeksnelheid, het decoderen van covers, opslagsnelheid en scrollen op je eigen toestel, met een Snel/Prima/Traag-oordeel en een rapport met alleen cijfers dat je kunt delen.
 - **Emulatorcontrole** (*Tools → Emulatorcontrole*): welke bekende emulators geïnstalleerd zijn, in welke versie, en of voor elke console van je bibliotheek iets geïnstalleerds de games kan starten, met wat er ontbreekt. Het kijkt alleen naar geïnstalleerde apps en installeert niets. Tik op een console voor de stappen: emulator, core, BIOS, saves en disclijsten, elk met wat het verandert.
 - **Hierna spelen en Voor jou**: een persoonlijke speellijst per profiel, en suggesties uit je eigen bibliotheek die altijd zeggen waarom ze zijn gekozen.
-- **Collecties en doelen**: favorieten, eigen lijsten, collecties op basis van regels (console, taal, genre, jaar, gespeeld, 3, 6 of 12 maanden niet gespeeld), collectiedoelen, speelgeschiedenis, een jaaroverzicht en de beste games per console van RetroAchievements.
+- **Collecties en doelen**: favorieten, eigen lijsten, collecties op basis van regels (console, taal, genre, jaar, gespeeld, 3, 6 of 12 maanden niet gespeeld), collectiedoelen, speelgeschiedenis, een jaaroverzicht en de beste games per console van RetroAchievements: 35 extra systemen, de beste 100 per console, rangschikken op hardcore, lokaal sorteren en filteren op bezit.
 - **Verlanglijst**: noteer games die je wilt, krijg een melding als er een opduikt, download ze automatisch en deel de lijst.
 - **Lijst importeren**: plak of laad een tekstbestand; gevonden games worden gedownload, de rest gaat naar de verlanglijst.
 
 - **Vier manieren om te bladeren**: Overzicht, Lijst, Covers en Consoles (een tegel per console met aantallen), snelle filters (gedownload, favorieten, uitgespeeld, RetroAchievements verslagen/gemeesterd), een compacte zoekbalk en optioneel *Versies groeperen* dat regiokopieën tot één item samenvoegt.
-- **Handleidingen**: download de handleiding van een spel van je RomM-server en lees die in de app (PDF, afbeeldingen, tekst), plus een *Offline*-chip die toont wat nog werkt.
+- **Handleidingen**: download de handleiding van een spel van je RomM-server, ScreenScraper of Internet Archive (of plak een directe link) en lees die in de app (PDF, afbeeldingen, tekst), plus een *Offline*-chip die toont wat nog werkt. Bij elke handleiding staat waar hij vandaan komt.
 
 ### Downloaden
 - **Directe links, torrents en magnetlinks**, plus optioneel **TorBox** en **Real-Debrid**.
