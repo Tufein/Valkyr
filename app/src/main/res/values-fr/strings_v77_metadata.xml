@@ -3,6 +3,9 @@
     <string name="cover77_from">Jaquette de %1$s</string>
     <string name="man77_source">De %1$s</string>
     <string name="man77_none_asked">Aucun manuel pour ce jeu. Sources interrogées : %1$s.</string>
+    <string name="man77_none_mixed">Aucun manuel via %1$s. %2$s est injoignable.</string>
+    <string name="man77_unavailable">%1$s est injoignable. Réessayez plus tard.</string>
+    <string name="man77_looking">Recherche d\'un manuel en ligne…</string>
     <string name="man77_download">Télécharger le manuel (%1$s)</string>
     <string name="man77_other_source">Essayer une autre source</string>
     <string name="man77_link">Télécharger depuis un lien</string>

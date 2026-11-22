@@ -322,6 +322,16 @@ class BestGamesTest {
         assertEquals(listOf(OwnState.MISSING), BestGames.filter(matches, OwnFilter.MISSING).map { it.state })
         // Sorting moves the row, not the rank RA's numbers earned.
         assertEquals(2, BestGames.sort(matches, BestSort.TITLE).first().ranked.rank)
+        // The release year often comes only from the extended call; it must still order the rows.
+        val years = mapOf(
+            1 to GameDetail(0, 0, "1995-01-01", null),
+            2 to GameDetail(0, 0, "2010-01-01", null),
+            3 to GameDetail(0, 0, "2001-01-01", null)
+        )
+        assertEquals(
+            listOf("Metroid", "Zelda", "Mario"),
+            BestGames.sort(matches, BestSort.YEAR, years).map { it.ranked.game.title }
+        )
     }
 
     @Test
@@ -337,5 +347,22 @@ class BestGamesTest {
         assertEquals(mapOf(1 to 200), stats.hardcore)
         assertEquals("Action", stats.details[1]?.genre)
         assertTrue(stats.details[2] == null)
+    }
+
+    @Test
+    fun `an older cache has no hardcore answer, a real zero is kept`() {
+        val now = 10L * BestGames.WEEK_MS
+        val old = BestGames.decodePlayers("""{"1":{"n":500,"at":${now - 1_000}}}""")
+        assertNull(old.getValue(1).hardcore)
+        assertTrue(BestGames.freshStats(old, now).hardcore.isEmpty())
+
+        val zero = BestGames.decodePlayers(BestGames.encodePlayers(mapOf(1 to PlayerCount(500, now - 1_000, 0))))
+        assertEquals(0, zero.getValue(1).hardcore)
+        assertEquals(mapOf(1 to 0), BestGames.freshStats(zero, now).hardcore)
+
+        val games = listOf(game(1, "A", 100), game(2, "B", 300))
+        val ranking = BestGames.rank(games, mapOf(1 to 500, 2 to 300), BestGames.freshStats(old, now).hardcore, wanted = RankBasis.HARDCORE)
+        assertEquals(RankBasis.POINTS, ranking.basis)
+        assertEquals(0, ranking.checked)
     }
 }

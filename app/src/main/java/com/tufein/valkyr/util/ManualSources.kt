@@ -25,6 +25,13 @@ data class ManualHit(
     val detail: String? = null
 )
 
+/** What one lookup produced: the hits, who was asked, and who could not answer at all. */
+data class ManualLookup(
+    val hits: List<ManualHit> = emptyList(),
+    val asked: List<ManualSource> = emptyList(),
+    val unavailable: Set<ManualSource> = emptySet()
+)
+
 /**
  * Pure rules for the manual sources (7.7): which providers are asked and in what order, how the
  * answers are named and de-duplicated, how a definite "no manual" is remembered, and the public
@@ -102,9 +109,10 @@ object ManualSources {
     /** A link a user pasted: http(s) and a host, nothing local or scripted. */
     fun validLink(url: String): Boolean = runCatching {
         val uri = URI(url.trim())
-        val host = uri.host?.lowercase(Locale.ROOT) ?: return false
-        uri.scheme?.lowercase(Locale.ROOT) in setOf("https", "http") &&
-            (host == "localhost" || host.endsWith(".localhost") || host == "127.0.0.1" || host == "::1").not()
+        val host = uri.host?.lowercase(Locale.ROOT)?.removePrefix("[")?.removeSuffix("]") ?: return false
+        val local = host == "localhost" || host.endsWith(".localhost") ||
+            host == "0.0.0.0" || host == "::" || host == "::1" || host.startsWith("127.")
+        uri.scheme?.lowercase(Locale.ROOT) in setOf("https", "http") && !local
     }.getOrDefault(false)
 
     // ---- Internet Archive: public search and metadata APIs ----

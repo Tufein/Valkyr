@@ -3,6 +3,9 @@
     <string name="cover77_from">Cover from %1$s</string>
     <string name="man77_source">From %1$s</string>
     <string name="man77_none_asked">No manual for this game. Asked: %1$s.</string>
+    <string name="man77_none_mixed">No manual from %1$s. Could not reach %2$s.</string>
+    <string name="man77_unavailable">Could not reach %1$s. Try again later.</string>
+    <string name="man77_looking">Looking for a manual online…</string>
     <string name="man77_download">Download manual (%1$s)</string>
     <string name="man77_other_source">Try another source</string>
     <string name="man77_link">Download from a link</string>

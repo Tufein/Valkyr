@@ -7,6 +7,7 @@ import com.tufein.valkyr.data.service.ManualResult
 import com.tufein.valkyr.data.service.ManualService
 import com.tufein.valkyr.util.ManualHit
 import com.tufein.valkyr.util.ManualSource
+import com.tufein.valkyr.util.ManualSources
 import com.tufein.valkyr.util.Manuals
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -26,8 +27,12 @@ data class ManualsUi(
     val hits: List<ManualHit> = emptyList(),
     /** Which sources were asked, for "no manual, RomM and ScreenScraper were asked". */
     val sources: List<ManualSource> = emptyList(),
+    /** Asked sources that could not answer (quota, login, offline): not a "no manual". */
+    val unavailable: Set<ManualSource> = emptySet(),
     /** Where each stored manual came from, by file name. */
     val attribution: Map<String, ManualSource> = emptyMap(),
+    /** A web lookup is running; show that instead of an empty panel. */
+    val looking: Boolean = false,
     val busy: Boolean = false,
     val result: ManualResult? = null
 )
@@ -43,22 +48,44 @@ class ManualsViewModel @Inject constructor(
     val ui: StateFlow<ManualsUi> = _ui.asStateFlow()
 
     private var key: String? = null
+    private var loadJob: Job? = null
     private var changesJob: Job? = null
 
     fun load(consoleId: String, fileName: String, title: String = "", force: Boolean = false) {
         val k = "$consoleId|$fileName"
         if (!force && k == key) return
         key = k
-        viewModelScope.launch {
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
             val docs = service.docs(consoleId, fileName)
             val attribution = service.attribution(consoleId, fileName)
             _ui.update { it.copy(loaded = true, docs = docs, attribution = attribution) }
             // Only look online while no manual is on the device (definite misses are cached for a month).
             if (docs.isEmpty()) {
-                val sources = settings.sources.first().let { enabled -> ManualSource.entries.filter { it in enabled && it != ManualSource.LINK } }
-                val hits = service.find(consoleId, fileName, title.ifBlank { Manuals.gameSegment(fileName) })
-                _ui.update { it.copy(hits = hits, sources = sources) }
-            } else _ui.update { it.copy(hits = emptyList(), sources = emptyList()) }
+                val enabled = settings.sources.first()
+                val fallback = ManualSources.askOrder(
+                    enabled, settings.misses(), Manuals.relativeDir(consoleId, fileName), System.currentTimeMillis()
+                )
+                _ui.update { it.copy(looking = true) }
+                try {
+                    val lookup = service.find(consoleId, fileName, title.ifBlank { Manuals.gameSegment(fileName) })
+                    _ui.update {
+                        it.copy(
+                            hits = lookup.hits, sources = lookup.asked,
+                            unavailable = lookup.unavailable, looking = false
+                        )
+                    }
+                } catch (e: kotlinx.coroutines.CancellationException) {
+                    _ui.update { it.copy(looking = false) }
+                    throw e
+                } catch (_: Exception) {
+                    _ui.update {
+                        it.copy(looking = false, sources = fallback, unavailable = fallback.toSet())
+                    }
+                }
+            } else _ui.update {
+                it.copy(hits = emptyList(), sources = emptyList(), unavailable = emptySet(), looking = false)
+            }
         }
         changesJob?.cancel()
         changesJob = viewModelScope.launch {
@@ -78,10 +105,12 @@ class ManualsViewModel @Inject constructor(
             val result = service.download(consoleId, fileName, title, hit)
             val docs = service.docs(consoleId, fileName)
             _ui.update {
+                val saved = result == ManualResult.SAVED || result == ManualResult.EXISTS
                 it.copy(
                     busy = false, result = result, docs = docs,
                     attribution = service.attribution(consoleId, fileName),
-                    hits = if (docs.isEmpty()) it.hits.filter { h -> h !== hit } else emptyList()
+                    // Keep a failed hit so the user can try the same source again.
+                    hits = if (saved) it.hits.filter { h -> h !== hit } else it.hits
                 )
             }
         }

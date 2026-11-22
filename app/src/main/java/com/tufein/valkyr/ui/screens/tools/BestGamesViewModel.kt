@@ -224,7 +224,7 @@ class BestGamesViewModel @Inject constructor(
     private fun detailOf(console: BestConsole, m: Matched?, wishKeys: Set<String>, active: Set<String>, s: Status): BestDetail {
         val all = m?.matches.orEmpty()
         val detailOfGame = m?.stats?.details.orEmpty()
-        val shown = BestGames.sort(BestGames.filter(all, s.filter), s.sort)
+        val shown = BestGames.sort(BestGames.filter(all, s.filter), s.sort, detailOfGame)
         val rows = shown.map { gm ->
             val game = gm.ranked.game
             val sourceName = gm.sourceIndices.firstOrNull()?.let { m!!.decodedNames[it] }
@@ -264,8 +264,13 @@ class BestGamesViewModel @Inject constructor(
             onDevice = onDevice,
             inSources = inSources,
             missing = missing,
-            downloadable = rows.count { it.state == OwnState.IN_SOURCE && !it.downloading },
-            wishable = rows.count { it.state == OwnState.MISSING && !it.wished },
+            downloadable = all.count { gm ->
+                gm.state == OwnState.IN_SOURCE && gm.sourceIndices.none { idx ->
+                    val name = m?.rawNames?.getOrNull(idx)
+                    name != null && name in active
+                }
+            },
+            wishable = all.count { gm -> gm.state == OwnState.MISSING && SearchNormalizer.key(gm.ranked.game.title) !in wishKeys },
             sort = s.sort,
             filter = s.filter,
             total = all.size
@@ -299,7 +304,12 @@ class BestGamesViewModel @Inject constructor(
         refineJob?.cancel()
         loaded.value = null
         loadJob = viewModelScope.launch {
-            status.value = Status(loading = true)
+            // A refresh keeps the user's sort and filter; only the ranking starts from points again.
+            val old = status.value
+            status.value = Status(
+                loading = true, sort = old.sort, filter = old.filter,
+                basis = if (refresh) old.basis else RankBasis.POINTS
+            )
             try {
                 // What is kept shows at once while a refresh runs.
                 if (refresh) service.cachedGames(console.raId)?.let { cached ->
@@ -307,11 +317,16 @@ class BestGamesViewModel @Inject constructor(
                 }
                 val list = service.games(console.raId, refresh)
                 loaded.value = Loaded(console.id, list.games, service.cachedStats(console.raId), list.stale)
-                status.value = Status()
+                status.update {
+                    it.copy(
+                        loading = false, error = null, refine = null, refineError = null,
+                        basis = if (refresh) old.basis else RankBasis.POINTS
+                    )
+                }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                status.value = Status(error = kindOf(e))
+                status.update { it.copy(loading = false, error = kindOf(e), refine = null) }
             }
         }
     }
@@ -325,11 +340,21 @@ class BestGamesViewModel @Inject constructor(
         if (status.value.refine != null) return
         val pool = BestGames.candidates(current.games)
         refineJob = viewModelScope.launch {
-            status.update { it.copy(refine = (pool.size - BestGames.pending(pool, current.stats.players).size) to pool.size, refineError = null) }
+            val known = when (wanted) {
+                RankBasis.HARDCORE -> current.stats.hardcore
+                RankBasis.PLAYERS -> current.stats.players
+                RankBasis.POINTS -> emptyMap()
+            }
+            status.update { it.copy(refine = (pool.size - BestGames.pending(pool, known).size) to pool.size, refineError = null) }
             try {
-                val stats = service.fetchStats(console.raId, pool) { done, total -> status.update { it.copy(refine = done to total) } }
+                val stats = service.fetchStats(console.raId, pool, wanted) { done, total -> status.update { it.copy(refine = done to total) } }
                 loaded.update { cur -> if (cur != null && cur.consoleId == console.id) cur.copy(stats = stats) else cur }
-                status.update { it.copy(basis = if (stats.players.size >= pool.size) wanted else RankBasis.POINTS) }
+                val complete = when (wanted) {
+                    RankBasis.HARDCORE -> stats.hardcore.size >= pool.size
+                    RankBasis.PLAYERS -> stats.players.size >= pool.size
+                    RankBasis.POINTS -> true
+                }
+                status.update { it.copy(basis = if (complete) wanted else RankBasis.POINTS) }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {

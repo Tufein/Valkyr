@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
@@ -17,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -34,12 +36,14 @@ import com.tufein.valkyr.ui.components.closeOnGamepadB
 import com.tufein.valkyr.ui.components.rememberInitialFocus
 import com.tufein.valkyr.util.ManualHit
 import com.tufein.valkyr.util.ManualSource
+import com.tufein.valkyr.util.ManualSources
 import com.tufein.valkyr.util.Manuals
 
 /**
  * The manuals of a game: the ones kept on the device (read in the in-app reader), what RomM,
- * ScreenScraper and Internet Archive offer, and a link the user can paste. Draws nothing when
- * either there is a manual or a source was asked and had nothing.
+ * ScreenScraper and Internet Archive offer, and a link the user can paste. While the web lookup
+ * runs it says so instead of disappearing; when it is done it draws nothing only if there is no
+ * manual and no source had anything to say.
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -51,7 +55,7 @@ fun ManualsSection(consoleId: String, fileName: String, title: String = "", modi
     var confirmDelete by remember { mutableStateOf(false) }
     var showLink by remember { mutableStateOf(false) }
     var showSources by remember { mutableStateOf(false) }
-    if (!ui.loaded || (ui.docs.isEmpty() && ui.hits.isEmpty() && ui.sources.isEmpty() && ui.result == null)) return
+    if (!ui.loaded || (ui.docs.isEmpty() && ui.hits.isEmpty() && ui.sources.isEmpty() && ui.result == null && !ui.looking)) return
 
     reading?.let { doc -> ManualReaderDialog(consoleId, fileName, doc, vm) { reading = null } }
     if (confirmDelete) {
@@ -69,8 +73,10 @@ fun ManualsSection(consoleId: String, fileName: String, title: String = "", modi
     if (showLink) LinkDialog(vm, consoleId, fileName, title) { showLink = false }
 
     Panel(modifier = modifier.fillMaxWidth(), contentPadding = PaddingValues(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        IconTile(R.drawable.ic_description, size = 30.dp)
-        SectionTitle(stringResource(R.string.man60_title))
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            IconTile(R.drawable.ic_description, size = 30.dp)
+            SectionTitle(stringResource(R.string.man60_title))
+        }
         if (ui.docs.isNotEmpty()) {
             Text(stringResource(R.string.man60_on_device), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -85,31 +91,60 @@ fun ManualsSection(consoleId: String, fileName: String, title: String = "", modi
                         }
                     }
                 }
-                ActionPill(stringResource(R.string.man60_delete), { confirmDelete = true }, icon = R.drawable.ic_trash)
+                ActionPill(stringResource(R.string.man60_delete), { confirmDelete = true }, icon = R.drawable.ic_trash, enabled = !ui.busy)
             }
         } else {
-            val hit = ui.hits.firstOrNull()
-            if (hit != null) {
-                Text(stringResource(R.string.man60_available), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                ActionPill(
-                    label = stringResource(R.string.man77_download, sourceName(hit.source)),
-                    onClick = { vm.download(consoleId, fileName, title, hit) }, icon = R.drawable.ic_download, enabled = !ui.busy, tone = ActionTone.Accent
-                )
-                if (ui.hits.size > 1) ActionPill(stringResource(R.string.man77_other_source), { showSources = true }, icon = R.drawable.ic_swap_horiz)
-            } else if (ui.sources.isNotEmpty()) {
-                val labels = ui.sources.map { sourceName(it) }
+            if (ui.looking) {
                 Text(
-                    stringResource(R.string.man77_none_asked, labels.joinToString(", ")),
-                    style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant
+                    stringResource(R.string.man77_looking),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+            } else {
+                val hit = ui.hits.firstOrNull()
+                if (hit != null) {
+                    Text(stringResource(R.string.man60_available), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    ActionPill(
+                        label = stringResource(R.string.man77_download, sourceName(hit.source)),
+                        onClick = { vm.download(consoleId, fileName, title, hit) }, icon = R.drawable.ic_download, enabled = !ui.busy, tone = ActionTone.Accent
+                    )
+                    if (ui.hits.size > 1) ActionPill(stringResource(R.string.man77_other_source), { showSources = true }, icon = R.drawable.ic_swap_horiz, enabled = !ui.busy)
+                } else if (ui.sources.isNotEmpty()) {
+                    val missed = ui.sources.filterNot { it in ui.unavailable }
+                    val unreachable = ui.sources.filter { it in ui.unavailable }
+                    val text = when {
+                        missed.isEmpty() -> stringResource(
+                            R.string.man77_unavailable, unreachable.map { sourceName(it) }.joinToString(", ")
+                        )
+                        unreachable.isEmpty() -> stringResource(
+                            R.string.man77_none_asked, missed.map { sourceName(it) }.joinToString(", ")
+                        )
+                        else -> stringResource(
+                            R.string.man77_none_mixed,
+                            missed.map { sourceName(it) }.joinToString(", "),
+                            unreachable.map { sourceName(it) }.joinToString(", ")
+                        )
+                    }
+                    Text(
+                        text,
+                        style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
-            ActionPill(stringResource(R.string.man77_link), { showLink = true }, icon = R.drawable.ic_link)
+            ActionPill(stringResource(R.string.man77_link), { showLink = true }, icon = R.drawable.ic_link, enabled = !ui.busy)
         }
         ui.result?.let { r ->
             Text(
                 stringResource(resultText(r)),
                 style = MaterialTheme.typography.bodySmall,
                 color = if (r == ManualResult.SAVED || r == ManualResult.EXISTS) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.error
+            )
+        }
+        if (ui.busy) {
+            Text(
+                stringResource(R.string.man60_downloading),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -149,6 +184,7 @@ private fun SourcePicker(hits: List<ManualHit>, vm: ManualsViewModel, consoleId:
 private fun LinkDialog(vm: ManualsViewModel, consoleId: String, fileName: String, title: String, onClose: () -> Unit) {
     var text by remember { mutableStateOf("") }
     val focus = rememberInitialFocus()
+    val valid = ManualSources.validLink(text)
     AlertDialog(
         modifier = Modifier.closeOnGamepadB(onClose),
         onDismissRequest = onClose,
@@ -156,14 +192,18 @@ private fun LinkDialog(vm: ManualsViewModel, consoleId: String, fileName: String
         text = {
             OutlinedTextField(
                 value = text, onValueChange = { text = it }, singleLine = true,
-                label = { Text(stringResource(R.string.man77_link_hint)) }
+                label = { Text(stringResource(R.string.man77_link_hint)) },
+                isError = text.isNotBlank() && !valid,
+                supportingText = {
+                    if (text.isNotBlank() && !valid) Text(stringResource(R.string.man77_link_bad))
+                }
             )
         },
         confirmButton = {
             DialogButton(stringResource(R.string.man60_download), {
                 onClose()
                 vm.downloadLink(consoleId, fileName, title, text)
-            })
+            }, enabled = valid)
         },
         dismissButton = { DialogButton(stringResource(R.string.pad_cancel), onClose, initialFocus = focus) }
     )

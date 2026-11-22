@@ -97,12 +97,12 @@ fun BestGamesScreen(
     val detail = ui.detail
     BackHandler(enabled = detail != null) { viewModel.close() }
     when {
-        ui.account == null -> Column(Modifier.fillMaxSize().padding(horizontal = 4.dp, vertical = 12.dp)) {
+        ui.account == null -> Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 4.dp, vertical = 12.dp)) {
             ToolsTitle(stringResource(R.string.top7_title), icon = R.drawable.ic_military_tech)
         }
         ui.account == false -> NoAccount(onOpenRetroAchievements)
         detail != null -> BestList(detail, viewModel, onOpenLibrary)
-        ui.consoles.isEmpty() -> Column(Modifier.fillMaxSize().padding(horizontal = 4.dp, vertical = 12.dp)) {
+        ui.consoles.isEmpty() -> Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 4.dp, vertical = 12.dp)) {
             ToolsTitle(stringResource(R.string.top7_title), icon = R.drawable.ic_military_tech, subtitle = stringResource(R.string.top7_subtitle))
             EmptyState(
                 title = stringResource(R.string.top7_no_consoles_title),
@@ -119,7 +119,7 @@ fun BestGamesScreen(
 private fun NoAccount(onOpenRetroAchievements: () -> Unit) {
     val focus = remember { FocusRequester() }
     LaunchedEffect(Unit) { focus.requestFocusWhenReady() }
-    Column(Modifier.fillMaxSize().padding(horizontal = 4.dp, vertical = 12.dp)) {
+    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 4.dp, vertical = 12.dp)) {
         ToolsTitle(stringResource(R.string.top7_title), icon = R.drawable.ic_military_tech, subtitle = stringResource(R.string.top7_subtitle))
         EmptyState(
             title = stringResource(R.string.top7_no_key_title),

@@ -42,23 +42,36 @@ class ManualSettings @Inject constructor(@param:ApplicationContext private val c
     suspend fun setWithGame(on: Boolean) { context.dataStore.edit { it[Keys.WITH_GAME] = on } }
     suspend fun setCapMb(mb: Int) { context.dataStore.edit { it[Keys.CAP_MB] = Manuals.clampCapMb(mb) } }
     suspend fun setSource(source: ManualSource, on: Boolean) {
-        val current = sources.first()
-        val next = if (on) current + source else current - source
-        context.dataStore.edit { it[Keys.SOURCES] = ManualSources.encodeEnabled(next) }
+        context.dataStore.edit { prefs ->
+            val current = prefs[Keys.SOURCES]?.let { ManualSources.decodeEnabled(it) } ?: ManualSources.DEFAULT_ENABLED
+            val next = if (on) current + source else current - source
+            prefs[Keys.SOURCES] = ManualSources.encodeEnabled(next)
+        }
     }
 
     suspend fun misses(): Map<String, Long> = Manuals.TextMap.decode(context.dataStore.data.first()[Keys.MISSES])
         .mapValues { it.value.toLongOrNull() ?: 0L }
 
     suspend fun rememberMiss(gameKey: String, source: ManualSource, now: Long) {
-        val next = ManualSources.rememberMiss(misses(), gameKey, source, now)
-        context.dataStore.edit { it[Keys.MISSES] = Manuals.TextMap.encode(next.mapValues { (_, at) -> at.toString() }) }
+        context.dataStore.edit { prefs ->
+            // Decode and write inside the transform so two finished downloads cannot overwrite each other.
+            val next = ManualSources.rememberMiss(decodeMisses(prefs[Keys.MISSES]), gameKey, source, now)
+            prefs[Keys.MISSES] = encodeMisses(next)
+        }
     }
 
     suspend fun forgetMisses(gameKey: String) {
-        val next = misses().filterKeys { !it.startsWith("$gameKey|") }
-        context.dataStore.edit { it[Keys.MISSES] = Manuals.TextMap.encode(next.mapValues { (_, at) -> at.toString() }) }
+        context.dataStore.edit { prefs ->
+            val next = decodeMisses(prefs[Keys.MISSES]).filterKeys { !it.startsWith("$gameKey|") }
+            prefs[Keys.MISSES] = encodeMisses(next)
+        }
     }
+
+    private fun decodeMisses(value: String?): Map<String, Long> =
+        Manuals.TextMap.decode(value).mapValues { it.value.toLongOrNull() ?: 0L }
+
+    private fun encodeMisses(misses: Map<String, Long>): String =
+        Manuals.TextMap.encode(misses.mapValues { (_, at) -> at.toString() })
 
     suspend fun sourceOf(key: String): ManualSource? =
         Manuals.TextMap.get(context.dataStore.data.first()[Keys.ATTRIBUTION], key)?.let { ManualSource.entries.firstOrNull { s -> s.key == it } }

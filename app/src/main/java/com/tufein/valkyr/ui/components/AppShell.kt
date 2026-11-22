@@ -110,7 +110,7 @@ fun ShellHeader(
         Spacer(Modifier.weight(1f))
         CloudStatusIndicator(onClick = onOpenCloud, modifier = Modifier.padding(end = 8.dp))
         RescanIndicator(modifier = Modifier.widthIn(max = if (slim) 260.dp else 200.dp))
-        trailing?.let { Spacer(Modifier.padding(start = 12.dp)); it() }
+        trailing?.let { Spacer(Modifier.width(12.dp)); it() }
     }
 }
 

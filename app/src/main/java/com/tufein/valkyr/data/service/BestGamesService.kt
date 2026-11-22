@@ -4,6 +4,7 @@ import android.content.Context
 import com.tufein.valkyr.data.local.AppSettings
 import com.tufein.valkyr.util.BestGame
 import com.tufein.valkyr.util.BestGames
+import com.tufein.valkyr.util.RankBasis
 import com.tufein.valkyr.util.GameDetail
 import com.tufein.valkyr.util.PlayerCount
 import com.tufein.valkyr.util.PlayerStats
@@ -119,19 +120,28 @@ class BestGamesService @Inject constructor(
      * (what was fetched so far stays saved), and [CancellationException] when the caller goes away.
      */
     suspend fun fetchPlayers(raConsoleId: Int, candidates: List<BestGame>, onProgress: (done: Int, total: Int) -> Unit = { _, _ -> }): Map<Int, Int> =
-        fetchStats(raConsoleId, candidates, onProgress).players
+        fetchStats(raConsoleId, candidates, onProgress = onProgress).players
 
     /**
      * As above, but also keeps the hardcore counts, release date and genre from the very same answer.
      * One call per game serves all four facts; nothing extra is asked of RetroAchievements.
      */
-    suspend fun fetchStats(raConsoleId: Int, candidates: List<BestGame>, onProgress: (done: Int, total: Int) -> Unit = { _, _ -> }): PlayerStats =
+    suspend fun fetchStats(
+        raConsoleId: Int,
+        candidates: List<BestGame>,
+        wanted: RankBasis = RankBasis.PLAYERS,
+        onProgress: (done: Int, total: Int) -> Unit = { _, _ -> }
+    ): PlayerStats =
         withContext(Dispatchers.IO) {
             netMutex.withLock {
                 val (user, key) = credentials()
                 val counts = LinkedHashMap(loadPlayers(raConsoleId))
-                val fresh = { BestGames.freshPlayers(counts, System.currentTimeMillis()) }
-                val todo = BestGames.pending(candidates, fresh())
+                val now = { System.currentTimeMillis() }
+                val known = {
+                    val stats = BestGames.freshStats(counts, now())
+                    if (wanted == RankBasis.HARDCORE) stats.hardcore else stats.players
+                }
+                val todo = BestGames.pending(candidates, known())
                 var done = candidates.size - todo.size
                 onProgress(done, candidates.size)
                 var lastStart = 0L
@@ -149,7 +159,8 @@ class BestGamesService @Inject constructor(
                             BestGames.parseDetails(body) ?: throw RetroAchievementsService.RaApiException(RaApi.unreadableKind(body))
                         } catch (e: RetroAchievementsService.RaApiException) {
                             when (e.kind) {
-                                // RA does not know this game: nothing to wait for, rank it last.
+                                // RA does not know this game: nothing to wait for, rank it last. A real
+                                // zero hardcore count is stored too, so a hardcore refine does not ask again.
                                 RaErrorKind.NOT_FOUND -> GameDetail(0, 0, null, null)
                                 // Odd answers for a game or two are skipped; a run of them is a broken server.
                                 RaErrorKind.BAD_RESPONSE -> if (++failures >= MAX_ODD_ANSWERS) throw e else continue

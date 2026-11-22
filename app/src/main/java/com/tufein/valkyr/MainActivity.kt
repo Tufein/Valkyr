@@ -510,7 +510,14 @@ private fun OnboardingHost() {
 }
 
 /** The screens built from the settings kit: they get the plain AMOLED ground (see SettingsSurface). */
-private val SettingsKitRoutes = setOf(NavRoutes.Settings.route, NavRoutes.Romm.route, NavRoutes.SaveSync.route, NavRoutes.VersionPreference.route, NavRoutes.CoverSources.route)
+private val SettingsKitRoutes = setOf(
+    NavRoutes.Settings.route,
+    NavRoutes.Romm.route,
+    NavRoutes.SaveSync.route,
+    NavRoutes.VersionPreference.route,
+    NavRoutes.CoverSources.route,
+    NavRoutes.TorrentTrackers.route
+)
 
 @Composable
 private fun DogmatixApp(pendingFilters: PendingLibraryFilters) {

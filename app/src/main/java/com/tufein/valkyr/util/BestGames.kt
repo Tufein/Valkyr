@@ -209,7 +209,8 @@ data class PlayerStats(val players: Map<Int, Int>, val hardcore: Map<Int, Int>, 
 data class PlayerCount(
     val players: Int,
     val at: Long,
-    val hardcore: Int = 0,
+    /** Null when an older cache entry predates hardcore counts; a real zero is kept. */
+    val hardcore: Int? = null,
     val released: String? = null,
     val genre: String? = null
 )
@@ -365,10 +366,11 @@ object BestGames {
     }
 
     /** A local re-ordering; the rank number stays the one RA's numbers earned. */
-    fun sort(rows: List<GameMatch>, by: BestSort): List<GameMatch> = when (by) {
+    fun sort(rows: List<GameMatch>, by: BestSort, details: Map<Int, GameDetail> = emptyMap()): List<GameMatch> = when (by) {
         BestSort.RANK -> rows.sortedBy { it.ranked.rank }
         BestSort.TITLE -> rows.sortedBy { it.ranked.game.title.lowercase(Locale.ROOT) }
-        BestSort.YEAR -> rows.sortedByDescending { it.ranked.game.released.orEmpty() }
+        // The release date comes from the extended call, not from the list; fall back to the list when absent.
+        BestSort.YEAR -> rows.sortedByDescending { details[it.ranked.game.id]?.released ?: it.ranked.game.released.orEmpty() }
         BestSort.POINTS -> rows.sortedWith(compareByDescending<GameMatch> { it.ranked.game.points }.thenBy { it.ranked.rank })
         BestSort.PLAYERS -> rows.sortedWith(compareByDescending<GameMatch> { it.ranked.players ?: -1 }.thenBy { it.ranked.rank })
     }
@@ -416,7 +418,7 @@ object BestGames {
         val root = JsonObject()
         counts.forEach { (id, c) -> root.add(id.toString(), JsonObject().apply {
             addProperty("n", c.players); addProperty("at", c.at)
-            if (c.hardcore > 0) addProperty("h", c.hardcore)
+            c.hardcore?.let { addProperty("h", it) }
             c.released?.let { addProperty("r", it) }
             c.genre?.let { addProperty("g", it) }
         }) }
@@ -432,7 +434,7 @@ object BestGames {
             out[id] = PlayerCount(
                 o.int("n") ?: continue,
                 (o.get("at")?.takeIf { it.isJsonPrimitive }?.asLong) ?: 0L,
-                o.int("h") ?: 0, o.str("r"), o.str("g")
+                o.int("h"), o.str("r"), o.str("g")
             )
         }
         out
@@ -450,10 +452,11 @@ object BestGames {
         val fresh = counts.filterValues { isFresh(it.at, now) }
         return PlayerStats(
             fresh.mapValues { it.value.players },
-            fresh.mapValues { it.value.hardcore },
-            fresh.mapValues { (id, c) ->
+            // An entry from the older cache has no hardcore count: leave it out rather than claim a zero.
+            fresh.mapNotNull { (id, c) -> c.hardcore?.let { id to it } }.toMap(),
+            fresh.mapValues { (_, c) ->
                 // A count from an older cache has no extra facts; keep what we already have in the list.
-                GameDetail(c.players, c.hardcore, c.released, c.genre)
+                GameDetail(c.players, c.hardcore ?: 0, c.released, c.genre)
             }
         )
     }

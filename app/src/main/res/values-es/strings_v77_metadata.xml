@@ -3,6 +3,9 @@
     <string name="cover77_from">Carátula de %1$s</string>
     <string name="man77_source">De %1$s</string>
     <string name="man77_none_asked">No hay manual para este juego. Fuentes consultadas: %1$s.</string>
+    <string name="man77_none_mixed">No hay manual en %1$s. No se pudo acceder a %2$s.</string>
+    <string name="man77_unavailable">No se pudo acceder a %1$s. Inténtalo de nuevo más tarde.</string>
+    <string name="man77_looking">Buscando un manual en línea…</string>
     <string name="man77_download">Descargar manual (%1$s)</string>
     <string name="man77_other_source">Probar otra fuente</string>
     <string name="man77_link">Descargar desde un enlace</string>

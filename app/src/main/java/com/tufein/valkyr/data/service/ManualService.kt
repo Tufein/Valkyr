@@ -6,6 +6,7 @@ import com.tufein.valkyr.data.local.ManualSettings
 import com.tufein.valkyr.data.local.VersionPreferenceSettings
 import com.tufein.valkyr.util.CoverSources
 import com.tufein.valkyr.util.ManualHit
+import com.tufein.valkyr.util.ManualLookup
 import com.tufein.valkyr.util.ManualSource
 import com.tufein.valkyr.util.ManualSources
 import com.tufein.valkyr.util.Manuals
@@ -34,6 +35,20 @@ private const val TAG = "Manuals"
 
 /** How a manual download ended. */
 enum class ManualResult { SAVED, EXISTS, NO_MANUAL, TOO_BIG, OFFLINE, FAILED, BAD_LINK }
+
+/** The Internet Archive answer: a hit, a definite "nothing there", or a source we could not reach. */
+private sealed interface ArchiveLookup {
+    data class Found(val hit: ManualHit) : ArchiveLookup
+    data object Miss : ArchiveLookup
+    data object Unavailable : ArchiveLookup
+}
+
+/** One source's answer, keeping "nothing there" apart from "could not ask". */
+private sealed interface Lookup {
+    data class Hits(val hits: List<ManualHit>) : Lookup
+    data object Miss : Lookup
+    data object Unavailable : Lookup
+}
 
 /**
  * Game manuals in the app's own storage (`files/manuals/<console>/<game>/`, 6.0). The sources are
@@ -72,7 +87,15 @@ class ManualService @Inject constructor(
                 if (!settings.withGame.first()) return@collect
                 val file = downloads.entityFor(name) ?: return@collect
                 launch {
-                    val r = downloadFound(file.consoleId, file.fileName, file.name)
+                    val r = try {
+                        downloadFound(file.consoleId, file.fileName, file.name)
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (e: Exception) {
+                        // A manual is a nice extra: never let its lookup take the app down.
+                        Log.w(TAG, "Manual with the game failed: ${e.javaClass.simpleName}")
+                        ManualResult.FAILED
+                    }
                     Log.i(TAG, "Manual with the game: $r")
                 }
             }
@@ -106,63 +129,113 @@ class ManualService @Inject constructor(
         }.getOrNull()
     }
 
+    /** Remember a definite miss without letting a settings write failure break the whole lookup. */
+    private suspend fun rememberMiss(gameKey: String, source: ManualSource) {
+        try {
+            settings.rememberMiss(gameKey, source, System.currentTimeMillis())
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not remember the ${source.key} miss: ${e.javaClass.simpleName}")
+        }
+    }
+
     /** All manuals the enabled sources offer, best source first. Never throws. */
-    suspend fun find(consoleId: String, fileName: String, title: String): List<ManualHit> = withContext(Dispatchers.IO) {
+    suspend fun find(
+        consoleId: String,
+        fileName: String,
+        title: String,
+        firstOnly: Boolean = false
+    ): ManualLookup = withContext(Dispatchers.IO) {
         val gameKey = Manuals.relativeDir(consoleId, fileName)
         val enabled = settings.sources.first()
         val misses = settings.misses()
         val order = ManualSources.askOrder(enabled, misses, gameKey, System.currentTimeMillis())
         val found = ArrayList<ManualHit>()
+        val asked = ArrayList<ManualSource>()
+        val unavailable = LinkedHashSet<ManualSource>()
         for (source in order) {
-            val hits = when (source) {
-                ManualSource.ROMM -> listOfNotNull(rommManual(consoleId, fileName))
+            asked += source
+            val answer = when (source) {
+                ManualSource.ROMM -> rommManual(consoleId, fileName).let {
+                    if (it == null) Lookup.Miss else Lookup.Hits(listOf(it))
+                }
                 ManualSource.SCREENSCRAPER -> screenScraperManual(consoleId, fileName, title, gameKey)
-                ManualSource.ARCHIVE -> archiveManual(title, gameKey)
-                ManualSource.LINK -> emptyList() // a pasted link is an explicit action, never searched for
+                ManualSource.ARCHIVE -> when (val archive = archiveManual(title)) {
+                    is ArchiveLookup.Found -> Lookup.Hits(listOf(archive.hit))
+                    ArchiveLookup.Miss -> {
+                        // Only a successful search with no usable manual is a definite miss.
+                        rememberMiss(gameKey, ManualSource.ARCHIVE)
+                        Lookup.Miss
+                    }
+                    ArchiveLookup.Unavailable -> Lookup.Unavailable
+                }
+                ManualSource.LINK -> Lookup.Miss // a pasted link is an explicit action, never searched for
             }
-            if (hits.isEmpty() && source != ManualSource.ROMM) settings.rememberMiss(gameKey, source, System.currentTimeMillis())
-            found += hits
+            when (answer) {
+                is Lookup.Hits -> found += answer.hits
+                Lookup.Miss -> Unit
+                Lookup.Unavailable -> unavailable += source
+            }
+            if (firstOnly && found.isNotEmpty()) break
         }
-        ManualSources.dedupe(found)
+        ManualLookup(ManualSources.dedupe(found), asked, unavailable)
     }
 
     private suspend fun screenScraperManual(
         consoleId: String, fileName: String, title: String, gameKey: String
-    ): List<ManualHit> {
+    ): Lookup {
         val regions = runCatching { versionSettings.effectiveFlow(consoleId).first().regions.orEmpty() }.getOrDefault(emptyList())
         return when (val answer = screenScraper.findManual(consoleId, fileName, title, regions)) {
-            is CoverSources.Answer.Found -> listOf(ManualHit(
+            is CoverSources.Answer.Found -> Lookup.Hits(listOf(ManualHit(
                 ManualSource.SCREENSCRAPER, answer.url,
-                Manuals.fileNameFor(answer.url, "pdf"), "ScreenScraper"
-            ))
+                Manuals.fileNameFor(answer.url, "pdf")
+            )))
             CoverSources.Answer.Miss -> {
-                settings.rememberMiss(gameKey, ManualSource.SCREENSCRAPER, System.currentTimeMillis())
-                emptyList()
+                rememberMiss(gameKey, ManualSource.SCREENSCRAPER)
+                Lookup.Miss
             }
-            else -> emptyList() // rate limit, quota, login or offline: not a miss, try again later
+            else -> Lookup.Unavailable // rate limit, quota, login or offline: not a miss, try again later
         }
     }
 
-    /** Up to two search results are checked for a downloadable PDF; a miss is cached for a month. */
-    private suspend fun archiveManual(title: String, gameKey: String): List<ManualHit> = runCatching {
-        val body = JsonHttp.request("GET", ManualSources.archiveSearchUrl(title), readTimeoutMs = 30_000)
-        if (!body.ok) return@runCatching emptyList()
-        val items = ManualSources.parseArchiveSearch(body.body).take(2)
-        for (item in items) {
-            val meta = JsonHttp.request("GET", ManualSources.archiveMetadataUrl(item.id), readTimeoutMs = 30_000)
-            if (!meta.ok) continue
-            val name = ManualSources.parseArchiveManual(meta.body, item.title.ifBlank { title }) ?: continue
-            return@runCatching listOf(ManualHit(
-                ManualSource.ARCHIVE, ManualSources.archiveDownloadUrl(item.id, name), name,
-                item.title.ifBlank { item.id }, "https://archive.org/details/${item.id}"
-            ))
+    /** Up to two search results are checked for a downloadable PDF. */
+    private suspend fun archiveManual(title: String): ArchiveLookup {
+        return try {
+            val body = JsonHttp.request("GET", ManualSources.archiveSearchUrl(title), readTimeoutMs = 30_000)
+            if (!body.ok) return ArchiveLookup.Unavailable
+            val items = ManualSources.parseArchiveSearch(body.body).take(2)
+            if (items.isEmpty()) return ArchiveLookup.Miss
+            var metadataAnswered = false
+            for (item in items) {
+                val meta = try {
+                    JsonHttp.request("GET", ManualSources.archiveMetadataUrl(item.id), readTimeoutMs = 30_000)
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (_: Exception) {
+                    continue
+                }
+                if (!meta.ok) continue
+                metadataAnswered = true
+                val name = ManualSources.parseArchiveManual(meta.body, item.title.ifBlank { title }) ?: continue
+                return ArchiveLookup.Found(ManualHit(
+                    ManualSource.ARCHIVE, ManualSources.archiveDownloadUrl(item.id, name), name,
+                    item.title.ifBlank { item.id }, "https://archive.org/details/${item.id}"
+                ))
+            }
+            // A metadata call that failed is not a "no manual": only an answered search is.
+            if (metadataAnswered) ArchiveLookup.Miss else ArchiveLookup.Unavailable
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            ArchiveLookup.Unavailable
         }
-        emptyList()
-    }.getOrDefault(emptyList())
+    }
 
     /** Ask the sources and save the first one that has a manual (used when a game finishes downloading). */
     suspend fun downloadFound(consoleId: String, fileName: String, title: String): ManualResult {
-        val hit = find(consoleId, fileName, title).firstOrNull() ?: return ManualResult.NO_MANUAL
+        // Stop at the first hit: an automatic download should not wait for every other source.
+        val hit = find(consoleId, fileName, title, firstOnly = true).hits.firstOrNull() ?: return ManualResult.NO_MANUAL
         return download(consoleId, fileName, title, hit)
     }
 

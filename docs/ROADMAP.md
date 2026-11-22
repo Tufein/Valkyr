@@ -4,10 +4,10 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 9.1.0** (Android build 95). The core loop is complete — find a game, download it into
+**Now: 9.3.0** (Android build 97). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
-libraries), and finishing what 7.0 and 7.1 started. The 8.x line closed at 8.5.0; 9.0 and 9.1 were built under the rule below.
+libraries), and finishing what 7.0 and 7.1 started. The 8.x line closed at 8.5.0; 9.0–9.3 were built under the rule below.
 
 ## How a release is chosen
 

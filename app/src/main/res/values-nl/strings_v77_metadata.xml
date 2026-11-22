@@ -3,6 +3,9 @@
     <string name="cover77_from">Cover van %1$s</string>
     <string name="man77_source">Van %1$s</string>
     <string name="man77_none_asked">Geen handleiding voor deze game. Gevraagd: %1$s.</string>
+    <string name="man77_none_mixed">Geen handleiding via %1$s. %2$s niet bereikbaar.</string>
+    <string name="man77_unavailable">Geen verbinding met %1$s. Probeer het later opnieuw.</string>
+    <string name="man77_looking">Handleiding online zoeken…</string>
     <string name="man77_download">Handleiding downloaden (%1$s)</string>
     <string name="man77_other_source">Andere bron proberen</string>
     <string name="man77_link">Downloaden via een link</string>
