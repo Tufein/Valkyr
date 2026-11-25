@@ -4,10 +4,10 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 9.3.0** (Android build 97). The core loop is complete — find a game, download it into
+**Now: 9.4.0** (Android build 98). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
-libraries), and finishing what 7.0 and 7.1 started. The 8.x line closed at 8.5.0; 9.0–9.3 were built under the rule below.
+libraries), and finishing what 7.0 and 7.1 started. The 8.x line closed at 8.5.0; 9.0–9.4 were built under the rule below.
 
 ## How a release is chosen
 
@@ -264,6 +264,19 @@ taps without losing the console's last working source, and a download that switc
 afterwards. Still to check on a device: the tracker list in landscape with buttons and at large
 text, and the pause dialog with a D-pad. Not built: an automatic pause (the app only asks), and
 testing a `udp://` announce.
+
+## 9.4 — Played on every handheld (shipped in 9.4.0)
+
+The sessions measured since 9.0 were local to one handheld. Now the history follows you.
+
+- **Play history sync**: finished sessions travel as their own document next to Up next, merged as a
+  union and named after the handheld they were played on.
+- **Played on…** on the game page, a **play history card** in the Cloud hub, and the history
+  **inside app backups** (a restore adds to what was played here).
+
+*Done when* two handhelds on the same cloud folder show the same time played for a game after a
+sync. Still to check on two real devices. Not built: profiles that travel, and a conflict-free
+delete of a session (history is only ever added).
 
 ## Later, if there is a reason
 

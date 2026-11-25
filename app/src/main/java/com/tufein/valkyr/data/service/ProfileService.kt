@@ -54,6 +54,9 @@ class ProfileService @Inject constructor(private val settings: AppSettings, priv
 
     fun currentIdNow(): String = settings.activeProfileSnapshot ?: activeId.value
 
+    /** 9.4: the active profile's name, which names its shared documents. */
+    fun currentNameNow(): String = currentIdNow().let { id -> profiles.value.firstOrNull { it.id == id }?.name.orEmpty() }
+
     val pinHash: StateFlow<String> = settings.profilePinHash.stateIn(scope, SharingStarted.Eagerly, "")
 
     suspend fun save(profile: Profile) {

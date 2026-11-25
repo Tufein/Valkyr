@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 9.4: play history between your handhelds -->
+<resources>
+    <string name="v94_played_on">Giocato su: %1$s</string>
+    <string name="v94_history_title">Cronologia di gioco</string>
+    <plurals name="v94_history_pill">
+        <item quantity="one">%1$s in %2$d sessione</item>
+        <item quantity="other">%1$s in %2$d sessioni</item>
+    </plurals>
+    <plurals name="v94_history_devices">
+        <item quantity="one">%1$d portatile</item>
+        <item quantity="other">%1$d portatili</item>
+    </plurals>
+    <string name="v94_history_body">Le tue sessioni di gioco viaggiano con la sincronizzazione cloud, ognuna con il nome del portatile su cui è stata giocata. Niente viene contato due volte e niente va perso.</string>
+</resources>

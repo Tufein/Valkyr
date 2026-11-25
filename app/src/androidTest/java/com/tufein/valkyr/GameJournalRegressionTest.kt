@@ -112,7 +112,7 @@ class GameJournalRegressionTest {
         val key = JournalKey("journal-parent", "gba", "Game.gba")
         val isolated = object : ContextWrapper(context) { override fun getFilesDir() = dir }
         val backup = BackupService(isolated, graph.journalSources(), graph.journalFavourites(), graph.journalDownloads(),
-            graph.journalWishlist(), graph.journalCollections(), service, settings, GameOverrideService(graph.journalOverrides()))
+            graph.journalWishlist(), graph.journalCollections(), service, settings, GameOverrideService(graph.journalOverrides()), graph.playSessions())
         service.saveNote(key, 0, "backup chapter") { true }
         val exported = JsonParser.parseString(backup.export().first).asJsonObject
         assertEquals("backup chapter", GameJournal.decode(exported.get("gameJournal")).single().note)

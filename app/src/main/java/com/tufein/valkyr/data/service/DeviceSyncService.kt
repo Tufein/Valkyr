@@ -23,6 +23,9 @@ import com.tufein.valkyr.util.DocSyncEngine
 import com.tufein.valkyr.util.NoteDoc
 import com.tufein.valkyr.util.NotesCodec
 import com.tufein.valkyr.util.NotesSync
+import com.tufein.valkyr.util.PlayHistoryCodec
+import com.tufein.valkyr.util.PlayHistorySync
+import com.tufein.valkyr.util.SyncSession
 import com.tufein.valkyr.util.ProgressCodec
 import com.tufein.valkyr.util.ProgressEntry
 import com.tufein.valkyr.util.ProgressSync
@@ -84,7 +87,8 @@ class DeviceSyncService @Inject constructor(
     private val actionLog: ActionLogService,
     private val upNext: UpNextService,
     private val progress: GameProgressService,
-    private val journal: GameJournalService
+    private val journal: GameJournalService,
+    private val plays: PlaySessionService
 ) {
     /** Why a background sync was asked for. */
     enum class Trigger { START, LOCAL_CHANGE, BACKGROUND, SCHEDULED }
@@ -165,6 +169,7 @@ class DeviceSyncService @Inject constructor(
             syncUpNext(session)
             syncProgress(session)
             syncNotes(session)
+            syncPlayHistory(session)
             when (val outcome = engine.sync(device, allowMassRemoval, onlyIfLocalChanges)) {
                 is DeviceSyncEngine.Outcome.Synced -> {
                     settings.recordSync(System.currentTimeMillis(), outcome.added, outcome.removed, outcome.sent)
@@ -257,6 +262,26 @@ class DeviceSyncService @Inject constructor(
             throw e
         } catch (e: Exception) {
             Log.w(TAG, "Notes sync skipped: ${e.javaClass.simpleName}")
+        }
+    }
+
+    /** 9.4: the finished play sessions of the active profile, each named after its handheld; a union, so nothing is counted twice or lost. */
+    private suspend fun syncPlayHistory(session: CloudConnection.Session) {
+        try {
+            val deviceName = settings.deviceName.first()
+            val (profileId, profileName, _) = plays.forSync(deviceName)
+            val side = object : DocSyncEngine.Local<List<SyncSession>, List<SyncSession>> {
+                override suspend fun snapshot() = plays.forSync(deviceName).third
+                override fun merge(mine: List<SyncSession>, remote: List<SyncSession>?) = PlayHistorySync.merge(mine, remote)
+                override fun docOf(merged: List<SyncSession>) = merged
+                override suspend fun commit(merged: List<SyncSession>, mine: List<SyncSession>) = plays.commitSync(profileId, merged)
+            }
+            val outcome = DocSyncEngine(session.store, session.serverUrl, session.rootUrl, PlayHistorySync.fileName(profileName), side, PlayHistoryCodec).sync()
+            if (outcome.changedHere || outcome.sent) Log.i(TAG, "Play history sync${if (outcome.changedHere) ": changed here" else ""}${if (outcome.sent) ", sent" else ""}")
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.w(TAG, "Play history sync skipped: ${e.javaClass.simpleName}")
         }
     }
 

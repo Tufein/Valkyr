@@ -84,6 +84,7 @@ fun CloudScreen(navController: NavController, viewModel: CloudViewModel = hiltVi
     val debrid by viewModel.debrid.collectAsStateWithLifecycle()
     val overall by viewModel.overall.collectAsStateWithLifecycle()
     val conflicts by viewModel.syncConflicts.collectAsStateWithLifecycle()
+    val plays by viewModel.playSummary.collectAsStateWithLifecycle()
     var deciding by remember { mutableStateOf(false) }
     if (deciding && conflicts.isEmpty()) deciding = false
     if (deciding) ConflictsDialog(conflicts, onResolve = viewModel::resolveConflict, onClose = { deciding = false })
@@ -110,6 +111,7 @@ fun CloudScreen(navController: NavController, viewModel: CloudViewModel = hiltVi
         } else {
             add { m -> DavPitchCard(m) { open(NavRoutes.CloudBackup) } }
         }
+        if (dav.configured && plays.sessions > 0) add { m -> PlayHistoryCard(plays, m) }
         if (conflicts.isNotEmpty()) add { m -> ConflictsCard(conflicts.size, m) { deciding = true } }
         add { m ->
             RaUserSummaryCard(
@@ -210,6 +212,25 @@ private fun Pitch(text: String) {
 @Composable
 private fun FactLine(text: String, color: Color = MaterialTheme.colorScheme.onSurfaceVariant) {
     Text(text, style = MaterialTheme.typography.bodySmall.tabular(), color = color)
+}
+
+// ---- Play history (9.4) -----------------------------------------------------------------------------
+
+@Composable
+private fun PlayHistoryCard(summary: com.tufein.valkyr.util.PlaySessions.Summary, modifier: Modifier) {
+    val minutes = ((summary.timePlayedMs + 59_999L) / 60_000L).coerceAtLeast(1L)
+    val time = if (minutes < 60) stringResource(R.string.v90_played_minutes, minutes) else stringResource(R.string.v90_played_hours, minutes / 60L, minutes % 60L)
+    CloudCard(
+        icon = R.drawable.ic_devices,
+        title = stringResource(R.string.v94_history_title),
+        modifier = modifier,
+        pills = {
+            Pill(pluralStringResource(R.plurals.v94_history_pill, summary.sessions, time, summary.sessions), icon = R.drawable.ic_devices)
+            if (summary.devices > 1) Pill(pluralStringResource(R.plurals.v94_history_devices, summary.devices, summary.devices))
+        }
+    ) {
+        Pitch(stringResource(R.string.v94_history_body))
+    }
 }
 
 // ---- Sync conflicts (8.3) ---------------------------------------------------------------------------

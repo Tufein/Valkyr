@@ -3,7 +3,11 @@ package com.tufein.valkyr.data.service
 import android.content.Context
 import android.util.AtomicFile
 import android.util.Log
+import com.tufein.valkyr.util.PlayHistorySync
 import com.tufein.valkyr.util.PlaySessions
+import com.tufein.valkyr.util.SyncSession
+import com.google.gson.JsonElement
+import com.google.gson.JsonParser
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -119,5 +123,53 @@ class PlaySessionService @Inject constructor(
     /** All finished sessions of the active profile, for tests and tools. */
     suspend fun sessions(): List<PlaySessions.Session> = withContext(Dispatchers.IO) {
         lock.withLock { PlaySessions.finished(read(profiles.currentIdNow())) }
+    }
+
+    /** 9.4: the active profile, its name for the document, and its finished sessions as they would travel. */
+    suspend fun forSync(deviceName: String): Triple<String, String, List<SyncSession>> = withContext(Dispatchers.IO) {
+        lock.withLock {
+            val id = profiles.currentIdNow()
+            Triple(id, profiles.currentNameNow(), PlayHistorySync.snapshot(read(id), id, deviceName))
+        }
+    }
+
+    /**
+     * 9.4: keeps what a sync merged. Sessions played here while the sync ran, and a session still
+     * running, stay; the file is only written when something was added or named. True when it changed.
+     */
+    suspend fun commitSync(profileId: String, merged: List<SyncSession>): Boolean = withContext(Dispatchers.IO) {
+        lock.withLock {
+            val now = read(profileId)
+            val next = PlaySessions.trim(PlaySessions.merge(PlayHistorySync.toSessions(merged, profileId), now))
+            val changed = next.toSet() != now.toSet()
+            if (changed) write(profileId, next)
+            changed
+        }
+    }
+
+    /** 9.4: the play history of the active profile for a backup file, without the profile id (it differs per install). */
+    suspend fun exportForBackup(): JsonElement = withContext(Dispatchers.IO) {
+        lock.withLock {
+            val id = profiles.currentIdNow()
+            JsonParser.parseString(PlaySessions.toJson(PlaySessions.finished(read(id)).map { it.copy(profileId = "") }))
+        }
+    }
+
+    /** 9.4: sessions of a backup are added to the active profile; nothing played here is replaced. */
+    fun validateBackup(element: JsonElement?): List<PlaySessions.Session>? =
+        element?.let { PlaySessions.fromJson(it.toString()) }
+
+    suspend fun restoreFromBackup(incoming: List<PlaySessions.Session>) = withContext(Dispatchers.IO) {
+        lock.withLock {
+            val id = profiles.currentIdNow()
+            val now = read(id)
+            val next = PlaySessions.trim(PlaySessions.merge(now, incoming.map { it.copy(profileId = id) }))
+            if (next.toSet() != now.toSet()) write(id, next)
+        }
+    }
+
+    /** 9.4: time, sessions and handhelds of the active profile, for the Cloud hub. */
+    suspend fun summary(): PlaySessions.Summary = withContext(Dispatchers.IO) {
+        lock.withLock { profiles.currentIdNow().let { PlaySessions.summary(read(it), it) } }
     }
 }

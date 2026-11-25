@@ -19,6 +19,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -42,6 +43,7 @@ class CloudViewModel @Inject constructor(
     private val cloudBackup: CloudBackupService,
     private val deviceSync: DeviceSyncService,
     private val progress: com.tufein.valkyr.data.service.GameProgressService,
+    private val plays: com.tufein.valkyr.data.service.PlaySessionService,
     settingsRepository: SettingsRepository,
     appSettings: AppSettings,
     cloudStatus: CloudStatusService,
@@ -55,6 +57,11 @@ class CloudViewModel @Inject constructor(
     /** 8.3: games whose status or rating was changed differently on two handhelds, waiting for a decision. */
     val syncConflicts: StateFlow<List<com.tufein.valkyr.util.ProgressConflict>> = progress.conflicts
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    /** 9.4: what the active profile has played, across the handhelds a sync has named; refreshed whenever a session is saved. */
+    val playSummary: StateFlow<com.tufein.valkyr.util.PlaySessions.Summary> = plays.revision
+        .map { plays.summary() }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), com.tufein.valkyr.util.PlaySessions.Summary(0L, 0, 0))
 
     fun resolveConflict(key: String, keepMine: Boolean) {
         viewModelScope.launch { progress.resolve(key, keepMine) }

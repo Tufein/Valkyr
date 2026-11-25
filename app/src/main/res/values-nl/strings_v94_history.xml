@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 9.4: play history between your handhelds -->
+<resources>
+    <string name="v94_played_on">Gespeeld op: %1$s</string>
+    <string name="v94_history_title">Speelgeschiedenis</string>
+    <plurals name="v94_history_pill">
+        <item quantity="one">%1$s in %2$d sessie</item>
+        <item quantity="other">%1$s in %2$d sessies</item>
+    </plurals>
+    <plurals name="v94_history_devices">
+        <item quantity="one">%1$d handheld</item>
+        <item quantity="other">%1$d handhelds</item>
+    </plurals>
+    <string name="v94_history_body">Je speelsessies reizen mee met de cloudsync, elk met de naam van de handheld waarop je speelde. Niets wordt dubbel geteld en niets gaat verloren.</string>
+</resources>

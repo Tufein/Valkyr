@@ -19,6 +19,7 @@ interface Journal28TestEntryPoint {
     fun journalDownloads(): DownloadHistoryDao
     fun journalWishlist(): WishlistDao
     fun journalOverrides(): GameOverrideDao
+    fun playSessions(): com.tufein.valkyr.data.service.PlaySessionService
 }
 
 @EntryPoint @InstallIn(SingletonComponent::class)

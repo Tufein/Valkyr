@@ -81,6 +81,13 @@ fun PlayTimeSection(consoleId: String, fileName: String, viewModel: PlayTimeView
                     color = scheme.onSurfaceVariant
                 )
             }
+            if (totals.devices.size > 1) {
+                Text(
+                    stringResource(R.string.v94_played_on, totals.devices.joinToString(", ")),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = scheme.onSurfaceVariant
+                )
+            }
             Text(stringResource(R.string.v90_played_hint), style = MaterialTheme.typography.bodySmall, color = scheme.onSurfaceVariant)
         }
     }

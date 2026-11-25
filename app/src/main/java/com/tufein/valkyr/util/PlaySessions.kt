@@ -27,7 +27,9 @@ object PlaySessions {
         val gameId: String,
         val profileId: String,
         val startMs: Long,
-        val endMs: Long
+        val endMs: Long,
+        /** 9.4: the handheld the session was played on; empty until a sync names it. */
+        val device: String = ""
     ) {
         /** Length in ms, never negative. A running session (endMs 0) counts 0 until it stops. */
         val lengthMs: Long get() = when {
@@ -41,10 +43,23 @@ object PlaySessions {
         val timePlayedMs: Long,
         val sessions: Int,
         val firstPlayedMs: Long?,
-        val lastPlayedMs: Long?
+        val lastPlayedMs: Long?,
+        /** 9.4: the handhelds this game was played on, as far as a sync named them. */
+        val devices: List<String> = emptyList()
     ) {
         companion object { val EMPTY = Totals(0L, 0, null, null) }
     }
+
+    /** 9.4: everything one profile has played, for the Cloud hub. */
+    data class Summary(val timePlayedMs: Long, val sessions: Int, val devices: Int)
+
+    fun summary(sessions: List<Session>, profileId: String): Summary {
+        val mine = finished(sessions).filter { it.profileId == profileId }
+        return Summary(mine.sumOf { it.lengthMs }, mine.size, mine.map { it.device }.filter { it.isNotBlank() }.toSet().size)
+    }
+
+    /** The key two copies of one session share, whoever named the handheld. */
+    fun key(s: Session): String = "${s.gameId}|${s.profileId}|${s.startMs}|${s.endMs}"
 
     /** Clamp a session whose clock jumped backwards: it becomes a zero-length session. */
     fun clamp(session: Session): Session =
@@ -53,15 +68,15 @@ object PlaySessions {
     /** Drop sessions that are still running (endMs 0) — a crash loses at most the running one. */
     fun finished(sessions: List<Session>): List<Session> = sessions.filter { it.endMs > 0L }
 
-    /** Merge two session lists, dropping exact duplicates (same game, profile, start, end). */
+    /** Merge two session lists, dropping exact duplicates (same game, profile, start, end); a copy that names its handheld wins. */
     fun merge(a: List<Session>, b: List<Session>): List<Session> {
-        val seen = HashSet<String>()
-        val out = ArrayList<Session>()
+        val out = LinkedHashMap<String, Session>()
         for (s in a + b) {
-            val key = "${s.gameId}|${s.profileId}|${s.startMs}|${s.endMs}"
-            if (seen.add(key)) out += s
+            val key = key(s)
+            val known = out[key]
+            if (known == null || (known.device.isBlank() && s.device.isNotBlank())) out[key] = s
         }
-        return out
+        return out.values.toList()
     }
 
     /** Sessions for one game and profile. */
@@ -76,7 +91,8 @@ object PlaySessions {
             timePlayedMs = mine.sumOf { it.lengthMs },
             sessions = mine.size,
             firstPlayedMs = mine.minOf { it.startMs },
-            lastPlayedMs = mine.maxOf { it.endMs }
+            lastPlayedMs = mine.maxOf { it.endMs },
+            devices = mine.map { it.device }.filter { it.isNotBlank() }.distinct().sorted()
         )
     }
 
@@ -110,6 +126,7 @@ object PlaySessions {
             o.addProperty("profileId", s.profileId)
             o.addProperty("startMs", s.startMs)
             o.addProperty("endMs", s.endMs)
+            if (s.device.isNotBlank()) o.addProperty("device", s.device)
             array.add(o)
         }
         root.add("sessions", array)
@@ -128,7 +145,7 @@ object PlaySessions {
             val profileId = o.field("profileId") ?: return@mapNotNull null
             val start = o.fieldLong("startMs") ?: return@mapNotNull null
             val end = o.fieldLong("endMs") ?: return@mapNotNull null
-            if (gameId.isBlank() || start <= 0L) null else Session(gameId, profileId, start, end)
+            if (gameId.isBlank() || start <= 0L) null else Session(gameId, profileId, start, end, o.field("device").orEmpty().take(PlayHistorySync.MAX_DEVICE))
         }.let(::trim)
     }
 
