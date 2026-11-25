@@ -4,10 +4,10 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 9.6.0** (Android build 100). The core loop is complete — find a game, download it into
+**Now: 9.7.0** (Android build 101). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
-libraries), and finishing what 7.0 and 7.1 started. The 8.x line closed at 8.5.0; 9.0–9.6 were built under the rule below.
+libraries), and finishing what 7.0 and 7.1 started. The 8.x line closed at 8.5.0; 9.0–9.7 were built under the rule below.
 
 ## How a release is chosen
 
@@ -301,6 +301,19 @@ Emulators already write a picture beside every save state. Valkyr now shows them
 *Done when* a game with several save states shows its pictures, each opens and can be shared,
 and nothing in the folder changes. Not built: deleting pictures or a size cap (the files sit beside
 save states), and emulator screenshot folders.
+
+## 9.7 — Launches that tell the truth (shipped in 9.7.0)
+
+A launch that silently fails is worse than an error. Valkyr cannot see inside the emulator, but it
+can see how long the game stayed open.
+
+- **"It started and stopped again"** on the game page when the app is back within 15 seconds,
+  with the usual reasons and a button to the readiness check.
+- **Honest play time**: a start that never ran is not saved as a session.
+
+*Done when* a launch that fails within seconds shows the card and leaves play time unchanged.
+Still to check on a handheld with a missing BIOS. Not built: naming the emulator version and
+recipe in the report, and feeding the new-handheld checklist from the same check.
 
 ## Later, if there is a reason
 

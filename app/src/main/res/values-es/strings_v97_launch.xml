@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 9.7: a launch that stopped within seconds -->
+<resources>
+    <string name="v97_quick_title">Arrancó y se detuvo otra vez</string>
+    <plurals name="v97_quick_body">
+        <item quantity="one">Valkyr volvió al primer plano tras %1$d segundo, así que quizá el juego no arrancó. Motivos habituales: falta un archivo BIOS, el emulador necesita otro core o el archivo hay que descomprimirlo. Esta parada no cuenta como tiempo de juego.</item>
+        <item quantity="other">Valkyr volvió al primer plano tras %1$d segundos, así que quizá el juego no arrancó. Motivos habituales: falta un archivo BIOS, el emulador necesita otro core o el archivo hay que descomprimirlo. Esta parada no cuenta como tiempo de juego.</item>
+    </plurals>
+    <string name="v97_quick_check">Comprobar este juego</string>
+    <string name="v97_quick_dismiss">Cerrar</string>
+</resources>

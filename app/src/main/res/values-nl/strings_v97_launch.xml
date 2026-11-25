@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 9.7: a launch that stopped within seconds -->
+<resources>
+    <string name="v97_quick_title">Hij startte en stopte weer</string>
+    <plurals name="v97_quick_body">
+        <item quantity="one">Valkyr stond na %1$d seconde weer vooraan, dus de game is misschien niet gestart. Gewone oorzaken: een BIOS-bestand ontbreekt, de emulator wil een andere core, of het bestand moet nog uitgepakt. Deze stop telt niet mee als speeltijd.</item>
+        <item quantity="other">Valkyr stond na %1$d seconden weer vooraan, dus de game is misschien niet gestart. Gewone oorzaken: een BIOS-bestand ontbreekt, de emulator wil een andere core, of het bestand moet nog uitgepakt. Deze stop telt niet mee als speeltijd.</item>
+    </plurals>
+    <string name="v97_quick_check">Controleer deze game</string>
+    <string name="v97_quick_dismiss">Sluiten</string>
+</resources>

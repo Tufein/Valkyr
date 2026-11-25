@@ -19,6 +19,9 @@ object PlaySessions {
     /** A device left with the emulator open is not twelve hours of play. */
     const val MAX_SESSION_MS = 12 * 60 * 60 * 1000L
 
+    /** 9.7: a start that is over this fast did not run: it is not counted as play time, and the game page says so. */
+    const val QUICK_STOP_MS = 15_000L
+
     /** A bounded file: 20 games played twice a day for three months still fits. */
     const val MAX_SESSIONS = 4_000
 
@@ -107,6 +110,9 @@ object PlaySessions {
     /** Keeps the newest sessions, so the file cannot grow without bound. */
     fun trim(sessions: List<Session>): List<Session> =
         sessions.sortedByDescending { it.startMs }.take(MAX_SESSIONS)
+
+    /** True for a closed session shorter than [QUICK_STOP_MS]. */
+    fun quickStop(session: Session): Boolean = session.endMs > session.startMs && session.endMs - session.startMs < QUICK_STOP_MS
 
     /** Closes a running session, bounded by [MAX_SESSION_MS]. */
     fun close(session: Session, now: Long): Session {

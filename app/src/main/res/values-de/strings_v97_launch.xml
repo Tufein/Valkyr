@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 9.7: a launch that stopped within seconds -->
+<resources>
+    <string name="v97_quick_title">Gestartet und gleich wieder beendet</string>
+    <plurals name="v97_quick_body">
+        <item quantity="one">Valkyr war nach %1$d Sekunde wieder im Vordergrund, das Spiel ist also vielleicht nicht gestartet. Häufige Gründe: eine BIOS-Datei fehlt, der Emulator braucht einen anderen Core oder die Datei muss erst entpackt werden. Dieser Abbruch zählt nicht als Spielzeit.</item>
+        <item quantity="other">Valkyr war nach %1$d Sekunden wieder im Vordergrund, das Spiel ist also vielleicht nicht gestartet. Häufige Gründe: eine BIOS-Datei fehlt, der Emulator braucht einen anderen Core oder die Datei muss erst entpackt werden. Dieser Abbruch zählt nicht als Spielzeit.</item>
+    </plurals>
+    <string name="v97_quick_check">Dieses Spiel prüfen</string>
+    <string name="v97_quick_dismiss">Schließen</string>
+</resources>

@@ -92,4 +92,16 @@ class PlaySessionsTest {
         assertEquals(PlaySessions.MAX_SESSIONS, PlaySessions.trim(many).size)
         assertEquals(4_010L, PlaySessions.trim(many).first().startMs)
     }
+
+    @Test fun aStartThatEndsWithinSecondsIsAQuickStop() {
+        val start = 1_000_000L
+        fun session(len: Long) = PlaySessions.Session("gba|A.gba", "p1", start, start + len)
+        assertEquals(true, PlaySessions.quickStop(session(3_000)))
+        assertEquals(true, PlaySessions.quickStop(session(PlaySessions.QUICK_STOP_MS - 1)))
+        assertEquals(false, PlaySessions.quickStop(session(PlaySessions.QUICK_STOP_MS)))
+        assertEquals(false, PlaySessions.quickStop(session(3_600_000)))
+        // A running session and a clock that went backwards are not quick stops.
+        assertEquals(false, PlaySessions.quickStop(PlaySessions.Session("gba|A.gba", "p1", start, 0L)))
+        assertEquals(false, PlaySessions.quickStop(PlaySessions.close(PlaySessions.Session("gba|A.gba", "p1", start, 0L), start - 5_000)))
+    }
 }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 9.7: a launch that stopped within seconds -->
+<resources>
+    <string name="v97_quick_title">It started and stopped again</string>
+    <plurals name="v97_quick_body">
+        <item quantity="one">Valkyr was back in front after %1$d second, so the game may not have started. Usual reasons: a BIOS file is missing, the emulator needs another core, or the file needs unpacking. This stop is not counted as play time.</item>
+        <item quantity="other">Valkyr was back in front after %1$d seconds, so the game may not have started. Usual reasons: a BIOS file is missing, the emulator needs another core, or the file needs unpacking. This stop is not counted as play time.</item>
+    </plurals>
+    <string name="v97_quick_check">Check this game</string>
+    <string name="v97_quick_dismiss">Dismiss</string>
+</resources>

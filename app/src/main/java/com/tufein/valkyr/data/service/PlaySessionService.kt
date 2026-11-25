@@ -41,6 +41,13 @@ class PlaySessionService @Inject constructor(
     private val _revision = MutableStateFlow(0L)
     val revision: StateFlow<Long> = _revision.asStateFlow()
 
+    /** 9.7: a launch that was over within seconds: the game key and how long it lasted. Shown on that game's page until dismissed. */
+    data class QuickStop(val gameId: String, val seconds: Int)
+
+    private val _quickStop = MutableStateFlow<QuickStop?>(null)
+    val quickStop: StateFlow<QuickStop?> = _quickStop.asStateFlow()
+    fun dismissQuickStop() { _quickStop.value = null }
+
     /** The session waiting for the app to return. In memory only across a process restart. */
     private var active: PlaySessions.Session? = null
 
@@ -88,7 +95,14 @@ class PlaySessionService @Inject constructor(
                 val open = active ?: return@withLock
                 val closed = PlaySessions.close(open, System.currentTimeMillis())
                 active = null
-                write(open.profileId, read(open.profileId).map { if (it == open) closed else it }.let(PlaySessions::trim))
+                if (PlaySessions.quickStop(closed)) {
+                    // It did not run: no play time is recorded, and the game page says what to check.
+                    write(open.profileId, read(open.profileId).filterNot { it == open })
+                    _quickStop.value = QuickStop(open.gameId, ((closed.endMs - closed.startMs) / 1000L).toInt().coerceAtLeast(1))
+                } else {
+                    _quickStop.value = null
+                    write(open.profileId, read(open.profileId).map { if (it == open) closed else it }.let(PlaySessions::trim))
+                }
             }
         }
     }

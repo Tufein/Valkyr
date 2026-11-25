@@ -2,6 +2,7 @@ package com.tufein.valkyr.ui.screens.game
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,6 +22,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.tufein.valkyr.R
 import com.tufein.valkyr.data.service.PlaySessionService
+import com.tufein.valkyr.ui.components.ActionPill
+import com.tufein.valkyr.ui.components.ActionTone
 import com.tufein.valkyr.ui.components.Panel
 import com.tufein.valkyr.ui.components.SectionTitle
 import com.tufein.valkyr.util.PlaySessions
@@ -35,6 +38,8 @@ class PlayTimeViewModel @Inject constructor(private val sessions: PlaySessionSer
     private val _totals = MutableStateFlow(PlaySessions.Totals.EMPTY)
     val totals = _totals.asStateFlow()
     val revision = sessions.revision
+    val quickStop = sessions.quickStop
+    fun dismissQuickStop() = sessions.dismissQuickStop()
 
     fun load(consoleId: String, fileName: String) {
         viewModelScope.launch { _totals.value = sessions.totals(consoleId, fileName) }
@@ -89,6 +94,29 @@ fun PlayTimeSection(consoleId: String, fileName: String, viewModel: PlayTimeView
                 )
             }
             Text(stringResource(R.string.v90_played_hint), style = MaterialTheme.typography.bodySmall, color = scheme.onSurfaceVariant)
+        }
+    }
+}
+
+/**
+ * 9.7: a start that was over within seconds did not run. Said on the game page, with the way to
+ * the readiness check (which names a missing BIOS file or an unsupported format); the stop is not
+ * counted as play time.
+ */
+@Composable
+fun QuickStopCard(consoleId: String, fileName: String, onCheck: (() -> Unit)?, viewModel: PlayTimeViewModel = hiltViewModel()) {
+    val quick by viewModel.quickStop.collectAsStateWithLifecycle()
+    val stop = quick?.takeIf { it.gameId == "$consoleId|$fileName" } ?: return
+    Panel(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Text(stringResource(R.string.v97_quick_title), style = MaterialTheme.typography.titleSmall)
+        Text(
+            pluralStringResource(R.plurals.v97_quick_body, stop.seconds, stop.seconds),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            if (onCheck != null) ActionPill(stringResource(R.string.v97_quick_check), onCheck, icon = R.drawable.ic_tune, tone = ActionTone.Accent)
+            ActionPill(stringResource(R.string.v97_quick_dismiss), viewModel::dismissQuickStop)
         }
     }
 }

@@ -504,6 +504,7 @@ private fun GamePageContent(
         // The live ranking (the same as the Versions tab), so a pin or a preference change shows at once.
         val best = ranking?.pick ?: state.best
         GameMoreActions(modifier = Modifier.padding(horizontal = 16.dp)) {
+            QuickStopCard(rom.consoleId, rom.fileName, onReadiness?.let { open -> { open(rom.consoleId, rom.fileName) } })
             StatePreviewCard(statePreview, newestSave)
             ScreenshotGallery(rom.fileName, pictures)
             // The round buttons of 3.8 that the bar no longer carries.

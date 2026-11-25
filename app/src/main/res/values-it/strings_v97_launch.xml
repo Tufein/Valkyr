@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 9.7: a launch that stopped within seconds -->
+<resources>
+    <string name="v97_quick_title">Si è avviato e fermato di nuovo</string>
+    <plurals name="v97_quick_body">
+        <item quantity="one">Valkyr è tornato in primo piano dopo %1$d secondo, quindi il gioco potrebbe non essersi avviato. Cause comuni: manca un file BIOS, l\'emulatore vuole un altro core o il file va prima estratto. Questa interruzione non conta come tempo di gioco.</item>
+        <item quantity="other">Valkyr è tornato in primo piano dopo %1$d secondi, quindi il gioco potrebbe non essersi avviato. Cause comuni: manca un file BIOS, l\'emulatore vuole un altro core o il file va prima estratto. Questa interruzione non conta come tempo di gioco.</item>
+    </plurals>
+    <string name="v97_quick_check">Controlla questo gioco</string>
+    <string name="v97_quick_dismiss">Chiudi</string>
+</resources>
