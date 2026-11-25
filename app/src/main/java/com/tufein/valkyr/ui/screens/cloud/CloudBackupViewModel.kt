@@ -59,6 +59,17 @@ data class CloudBackupUi(
 )
 
 /** The list of backups in the cloud. */
+/** 9.5: the second cloud as the screen shows it. */
+data class MirrorUi(
+    val server: String = "",
+    val user: String = "",
+    val hasPassword: Boolean = false,
+    val folder: String = "",
+    val records: com.tufein.valkyr.data.local.MirrorRecords = com.tufein.valkyr.data.local.MirrorRecords()
+) {
+    val configured: Boolean get() = server.isNotBlank()
+}
+
 sealed class DavListState {
     object Idle : DavListState()
     object Loading : DavListState()
@@ -83,7 +94,9 @@ class CloudBackupViewModel @Inject constructor(
     private val sync: DeviceSyncService,
     private val shared: SharedWishlistService,
     private val rescanState: RescanStateHolder,
-    private val scanService: SourceScanService
+    private val scanService: SourceScanService,
+    private val mirrorService: com.tufein.valkyr.data.service.CloudMirrorService,
+    private val mirrorSettings: com.tufein.valkyr.data.local.CloudMirrorSettings
 ) : ViewModel() {
 
     private data class Basics(val config: CloudConfig, val hasPassphrase: Boolean, val autoBackup: Boolean, val keep: Int)
@@ -120,6 +133,48 @@ class CloudBackupViewModel @Inject constructor(
             }
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), CloudBackupUi())
+
+    val mirror: StateFlow<MirrorUi> = combine(mirrorService.config, mirrorService.records) { c, r ->
+        MirrorUi(c.server, c.user, c.password.isNotEmpty(), c.folder, r)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), MirrorUi())
+
+    private val _mirrorSelected = MutableStateFlow(false)
+    /** The list of backups shows the second cloud instead of the main one. */
+    val mirrorSelected: StateFlow<Boolean> = _mirrorSelected.asStateFlow()
+
+    private val _mirrorTesting = MutableStateFlow(false)
+    val mirrorTesting: StateFlow<Boolean> = _mirrorTesting.asStateFlow()
+
+    fun selectSource(mirror: Boolean) {
+        if (_mirrorSelected.value == mirror) return
+        _mirrorSelected.value = mirror
+        _list.value = DavListState.Idle
+        refreshList()
+    }
+
+    fun setMirrorServer(value: String) = viewModelScope.launch { mirrorSettings.setServer(value) }
+    fun setMirrorUser(value: String) = viewModelScope.launch { mirrorSettings.setUser(value) }
+    fun setMirrorPassword(value: String) = viewModelScope.launch { mirrorSettings.setPassword(value) }
+    fun setMirrorFolder(value: String) = viewModelScope.launch { mirrorSettings.setFolder(value) }
+    fun clearMirror() = viewModelScope.launch {
+        mirrorSettings.clear()
+        if (_mirrorSelected.value) { _mirrorSelected.value = false; _list.value = DavListState.Idle }
+    }
+
+    fun testMirror(context: Context) {
+        if (_mirrorTesting.value) return
+        val app = context.applicationContext
+        viewModelScope.launch {
+            _mirrorTesting.value = true
+            try {
+                mirrorService.test()
+                    .onSuccess { ToastUtil.showSuccess(app, context.getString(R.string.dav_test_done)) }
+                    .onFailure { ToastUtil.showError(app, context.getString(R.string.dav_test_failed, CloudMessages.of(context, it))) }
+            } finally {
+                _mirrorTesting.value = false
+            }
+        }
+    }
 
     /** A connection test is running. */
     private val _testing = MutableStateFlow(false)
@@ -261,7 +316,7 @@ class CloudBackupViewModel @Inject constructor(
         if (_list.value is DavListState.Loading) return
         viewModelScope.launch {
             _list.value = DavListState.Loading
-            _list.value = when (val result = backup.list()) {
+            _list.value = when (val result = backup.list(_mirrorSelected.value)) {
                 is CloudResult.Ok -> DavListState.Loaded(result.value)
                 is CloudResult.Failed -> DavListState.Failed(result.error)
             }
@@ -275,7 +330,7 @@ class CloudBackupViewModel @Inject constructor(
         viewModelScope.launch {
             _reading.value = item.name
             try {
-                when (val result = backup.prepareRestore(item)) {
+                when (val result = backup.prepareRestore(item, _mirrorSelected.value)) {
                     is CloudResult.Ok -> _pendingRestore.value = result.value
                     is CloudResult.Failed -> ToastUtil.showError(app, context.getString(R.string.dav_restore_failed, CloudMessages.of(context, result.error)))
                 }

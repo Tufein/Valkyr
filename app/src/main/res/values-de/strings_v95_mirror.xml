@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 9.5: the second cloud copy of every backup -->
+<resources>
+    <string name="v95_mirror_section">Zweite Kopie</string>
+    <string name="v95_mirror_note">Jedes Backup wird zusätzlich in eine zweite Cloud geschrieben, einen WebDAV-Server oder einen S3-Bucket, mit gleichem Namen und gleicher Aufbewahrungsregel. Ist die Haupt-Cloud nicht erreichbar, wird die Kopie trotzdem angelegt. Es gilt dieselbe Passphrase.</string>
+    <string name="v95_mirror_last_copy">Letzte Kopie %1$s</string>
+    <string name="v95_mirror_stop">Kopieren beenden</string>
+    <string name="v95_mirror_stop_hint">Entfernt diese Anmeldung vom Handheld. Bereits vorhandene Backups bleiben.</string>
+    <string name="v95_mirror_stop_action">Beenden</string>
+    <string name="v95_source_title">Backups anzeigen von</string>
+    <string name="v95_source_main">Haupt-Cloud</string>
+    <string name="v95_source_mirror">Zweite Kopie</string>
+    <string name="v95_hub_failed">Die letzte Kopie ist fehlgeschlagen. Den Grund zeigen die Backup-Einstellungen.</string>
+    <string name="v95_hub_waiting">Eingerichtet. Das nächste Backup wird auch hier abgelegt.</string>
+</resources>

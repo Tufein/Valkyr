@@ -4,10 +4,10 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 9.4.0** (Android build 98). The core loop is complete — find a game, download it into
+**Now: 9.5.0** (Android build 99). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
-libraries), and finishing what 7.0 and 7.1 started. The 8.x line closed at 8.5.0; 9.0–9.4 were built under the rule below.
+libraries), and finishing what 7.0 and 7.1 started. The 8.x line closed at 8.5.0; 9.0–9.5 were built under the rule below.
 
 ## How a release is chosen
 
@@ -277,6 +277,19 @@ The sessions measured since 9.0 were local to one handheld. Now the history foll
 *Done when* two handhelds on the same cloud folder show the same time played for a game after a
 sync. Still to check on two real devices. Not built: profiles that travel, and a conflict-free
 delete of a session (history is only ever added).
+
+## 9.5 — A backup you cannot lose (shipped in 9.5.0)
+
+One server is one point of failure. The backup is the one thing that must survive it.
+
+- **Second copy**: every backup also goes to a second cloud (WebDAV or S3) with the same name and
+  keep rule, even when the main upload fails.
+- **Restore from either** cloud, with the same passphrase and checks, and a status card in the
+  Cloud hub.
+
+*Done when* a backup exists on both clouds after one *Back up now*, and a restore from the second
+one works with the main server switched off. Still to check against two real servers. Not built:
+SMB and SFTP, device sync to several clouds, and certificate pinning for the second cloud.
 
 ## Later, if there is a reason
 

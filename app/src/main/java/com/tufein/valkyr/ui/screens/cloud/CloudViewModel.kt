@@ -44,6 +44,7 @@ class CloudViewModel @Inject constructor(
     private val deviceSync: DeviceSyncService,
     private val progress: com.tufein.valkyr.data.service.GameProgressService,
     private val plays: com.tufein.valkyr.data.service.PlaySessionService,
+    private val mirrorService: com.tufein.valkyr.data.service.CloudMirrorService,
     settingsRepository: SettingsRepository,
     appSettings: AppSettings,
     cloudStatus: CloudStatusService,
@@ -62,6 +63,11 @@ class CloudViewModel @Inject constructor(
     val playSummary: StateFlow<com.tufein.valkyr.util.PlaySessions.Summary> = plays.revision
         .map { plays.summary() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), com.tufein.valkyr.util.PlaySessions.Summary(0L, 0, 0))
+
+    /** 9.5: the second cloud, for the hub card. */
+    val mirror: StateFlow<MirrorUi> = combine(mirrorService.config, mirrorService.records) { c, r ->
+        MirrorUi(c.server, c.user, c.password.isNotEmpty(), c.folder, r)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), MirrorUi())
 
     fun resolveConflict(key: String, keepMine: Boolean) {
         viewModelScope.launch { progress.resolve(key, keepMine) }

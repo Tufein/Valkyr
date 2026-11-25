@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 9.5: the second cloud copy of every backup -->
+<resources>
+    <string name="v95_mirror_section">Second copy</string>
+    <string name="v95_mirror_note">Every backup is also written to a second cloud, a WebDAV server or an S3 bucket, with the same name and keep rule. When the main cloud is down the copy is still made. It uses the same passphrase.</string>
+    <string name="v95_mirror_last_copy">Last copy %1$s</string>
+    <string name="v95_mirror_stop">Stop copying</string>
+    <string name="v95_mirror_stop_hint">Removes this login from the handheld. Backups already there stay.</string>
+    <string name="v95_mirror_stop_action">Stop</string>
+    <string name="v95_source_title">Show backups of</string>
+    <string name="v95_source_main">Main cloud</string>
+    <string name="v95_source_mirror">Second copy</string>
+    <string name="v95_hub_failed">The last copy failed. Open the backup settings for the reason.</string>
+    <string name="v95_hub_waiting">Set up. The next backup is copied here.</string>
+</resources>

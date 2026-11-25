@@ -39,7 +39,7 @@ object CloudSettingKeys {
     )
 
     /** Values that must never be written into a backup file nor read back from one. */
-    val SECRETS: Set<String> = setOf(PASSWORD)
+    val SECRETS: Set<String> = setOf(PASSWORD, "mirror_password")
 
     /**
      * 4.3.0: the ScreenScraper passwords (developer and user) stay out of backups the same way.

@@ -85,6 +85,7 @@ fun CloudScreen(navController: NavController, viewModel: CloudViewModel = hiltVi
     val overall by viewModel.overall.collectAsStateWithLifecycle()
     val conflicts by viewModel.syncConflicts.collectAsStateWithLifecycle()
     val plays by viewModel.playSummary.collectAsStateWithLifecycle()
+    val mirror by viewModel.mirror.collectAsStateWithLifecycle()
     var deciding by remember { mutableStateOf(false) }
     if (deciding && conflicts.isEmpty()) deciding = false
     if (deciding) ConflictsDialog(conflicts, onResolve = viewModel::resolveConflict, onClose = { deciding = false })
@@ -111,6 +112,7 @@ fun CloudScreen(navController: NavController, viewModel: CloudViewModel = hiltVi
         } else {
             add { m -> DavPitchCard(m) { open(NavRoutes.CloudBackup) } }
         }
+        if (mirror.configured) add { m -> MirrorCard(mirror, m) { open(NavRoutes.CloudBackup) } }
         if (dav.configured && plays.sessions > 0) add { m -> PlayHistoryCard(plays, m) }
         if (conflicts.isNotEmpty()) add { m -> ConflictsCard(conflicts.size, m) { deciding = true } }
         add { m ->
@@ -212,6 +214,32 @@ private fun Pitch(text: String) {
 @Composable
 private fun FactLine(text: String, color: Color = MaterialTheme.colorScheme.onSurfaceVariant) {
     Text(text, style = MaterialTheme.typography.bodySmall.tabular(), color = color)
+}
+
+// ---- Second copy (9.5) -------------------------------------------------------------------------
+
+@Composable
+private fun MirrorCard(mirror: MirrorUi, modifier: Modifier, onOpen: () -> Unit) {
+    val failed = mirror.records.lastError.isNotEmpty()
+    CloudCard(
+        icon = R.drawable.ic_backup,
+        title = stringResource(R.string.v95_mirror_section),
+        modifier = modifier,
+        pills = {
+            when {
+                failed -> Pill(stringResource(R.string.dav_status_problem), tone = PillTone.Danger, icon = R.drawable.ic_error_circle)
+                mirror.records.lastCopyAt > 0 -> Pill(stringResource(R.string.dav_status_ok), tone = PillTone.Success, icon = R.drawable.ic_check_circle)
+                else -> Pill(stringResource(R.string.dav_status_untested), tone = PillTone.Warning, icon = R.drawable.ic_warning)
+            }
+        },
+        actions = { ActionPill(stringResource(R.string.settings_change), onOpen, icon = R.drawable.ic_tune) }
+    ) {
+        Pitch(
+            if (failed) stringResource(R.string.v95_hub_failed)
+            else if (mirror.records.lastCopyAt > 0) stringResource(R.string.v95_mirror_last_copy, android.text.format.DateUtils.getRelativeTimeSpanString(mirror.records.lastCopyAt, System.currentTimeMillis(), android.text.format.DateUtils.MINUTE_IN_MILLIS).toString())
+            else stringResource(R.string.v95_hub_waiting)
+        )
+    }
 }
 
 // ---- Play history (9.4) -----------------------------------------------------------------------------

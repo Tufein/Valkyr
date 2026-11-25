@@ -22,11 +22,11 @@ object SettingSchema {
         """)
         keys("l", """
             auto_backup_last auto_scan_last dav_last_backup_at dav_last_backup_bytes dav_last_backup_error_at dav_last_shared_at
-            dav_last_shared_error_at dav_last_sync_at dav_last_sync_error_at dav_last_test_at upg7_digest_last_sent
+            dav_last_shared_error_at dav_last_sync_at dav_last_sync_error_at dav_last_test_at mirror_copy_at mirror_copy_bytes mirror_test_at upg7_digest_last_sent
         """)
         keys("s", """
             accent_color active_profile auto_backup_dir bios_dir dav_device_id dav_device_name dav_last_backup_error
-            dav_last_backup_name dav_last_shared_error dav_last_sync_error dav_last_test_error dav_last_test_key dav_passphrase
+            dav_last_backup_name dav_last_shared_error dav_last_sync_error dav_last_test_error dav_last_test_key dav_passphrase mirror_copy_name mirror_error mirror_folder mirror_password mirror_url mirror_user
             debrid_provider download_directory esde_directory gamepad_layout iisu_directory library_views offline_collections_last
             profile_pin_hash profiles ra_api_key ra_user realdebrid_api_key recent_searches retroarch_thumbnails_dir romm_token
             romm_trust_fingerprint romm_url save_sync_emulator_folders save_sync_saves_dir save_sync_states_dir search_all_recent

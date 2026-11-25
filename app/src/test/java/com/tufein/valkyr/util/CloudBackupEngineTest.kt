@@ -104,6 +104,25 @@ class CloudBackupEngineTest {
         }
     }
 
+    @Test fun `a second cloud gets the same backup under the same name and keeps its own rotation`() {
+        val main = FakeDavStore("/dav"); val copy = FakeDavStore("/dav")
+        val a = CloudBackupEngine.connect(main, "https://one.local/dav", "", "Games/Valkyr")
+        val b = CloudBackupEngine.connect(copy, "https://two.local/dav", "", "Backups")
+        val sealed = BackupCrypto.seal(json, "passphrase one")
+        (1..4).forEach {
+            val at = Instant.parse("2026-10-0${it}T03:00:00Z")
+            val first = CloudBackupEngine.upload(main, a.serverUrl, a.rootUrl, sealed, "Thor", keep = 2, now = at, deviceId = "d1")
+            val second = CloudBackupEngine.upload(copy, b.serverUrl, b.rootUrl, sealed, "Thor", keep = 2, now = at, deviceId = "d1")
+            assertEquals(first.name, second.name)
+            assertEquals(first.deleted, second.deleted)
+        }
+        val names = { store: FakeDavStore, c: CloudBackupEngine.Connection -> CloudBackupEngine.list(store, c.rootUrl, "Thor", "d1").map { it.name } }
+        assertEquals(names(main, a), names(copy, b))
+        assertEquals(2, names(copy, b).size)
+        // A backup written to the second cloud restores with the same passphrase.
+        assertEquals(json, CloudBackupEngine.download(copy, CloudBackupEngine.list(copy, b.rootUrl, "Thor", "d1")[0].url, "passphrase one"))
+    }
+
     @Test fun `with keep everything on, a long run of backups leaves every remote file in place`() {
         val store = FakeDavStore("/dav")
         val c = CloudBackupEngine.connect(store, "https://nas.local/dav", "", "Games/Dogmatix")

@@ -54,7 +54,8 @@ class CloudBackupService @Inject constructor(
     private val backupService: BackupService,
     private val deviceSync: DeviceSyncService,
     private val history: OperationHistoryService,
-    private val actionLog: ActionLogService
+    private val actionLog: ActionLogService,
+    private val mirror: CloudMirrorService
 ) {
     /** A downloaded, decrypted and checked backup waiting for the user's confirmation. */
     class Prepared(val name: String, val backup: JsonObject, val createdAt: Long, val appVersion: String)
@@ -100,16 +101,30 @@ class CloudBackupService @Inject constructor(
             if (json.length > BackupService.MAX_BACKUP_BYTES) throw CloudBackupTooLargeException(json.length.toLong(), BackupService.MAX_BACKUP_BYTES.toLong())
             val sealed = BackupCrypto.seal(json, passphrase)
             if (sealed.size > BackupService.MAX_BACKUP_BYTES) throw CloudBackupTooLargeException(sealed.size.toLong(), BackupService.MAX_BACKUP_BYTES.toLong())
-            val session = connection.open()
-            val uploaded = CloudBackupEngine.upload(
-                session.store, session.serverUrl, session.rootUrl, sealed,
-                settings.deviceName.first(), settings.keep.first(), Instant.ofEpochMilli(startedAt), settings.deviceId()
-            )
-            settings.recordBackup(System.currentTimeMillis(), uploaded.name, uploaded.bytes)
-            Log.i(TAG, "Backup sent: ${uploaded.bytes} bytes, ${uploaded.deleted.size} old removed")
+            val deviceName = settings.deviceName.first()
+            val deviceId = settings.deviceId()
+            val keep = settings.keep.first()
+            // 9.5: the main cloud first, then the second one whatever happened, so one server down never means no backup.
+            var mainError: Exception? = null
+            val uploaded = try {
+                val session = connection.open()
+                CloudBackupEngine.upload(session.store, session.serverUrl, session.rootUrl, sealed, deviceName, keep, Instant.ofEpochMilli(startedAt), deviceId)
+                    .also {
+                        settings.recordBackup(System.currentTimeMillis(), it.name, it.bytes)
+                        Log.i(TAG, "Backup sent: ${it.bytes} bytes, ${it.deleted.size} old removed")
+                    }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                mainError = e
+                null
+            }
+            val copied = mirror.copy(sealed, deviceName, keep, Instant.ofEpochMilli(startedAt), deviceId)
+            if (mainError != null) throw mainError
+            if (copied) Log.i(TAG, "Backup copied to the second cloud")
             history.event("cloud_backup", "")
-            actionLog.record(ActionKind.BACKED_UP, topic = ActionTopic.CLOUD_BACKUP, bytes = uploaded.bytes)
-            CloudResult.Ok(uploaded)
+            actionLog.record(ActionKind.BACKED_UP, topic = ActionTopic.CLOUD_BACKUP, bytes = uploaded!!.bytes)
+            CloudResult.Ok(uploaded!!)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
@@ -127,15 +142,15 @@ class CloudBackupService @Inject constructor(
     }
 
     /** The backups in the cloud, newest first. */
-    suspend fun list(): CloudResult<List<CloudBackupNames.Listed>> = withContext(Dispatchers.IO) {
+    suspend fun list(fromMirror: Boolean = false): CloudResult<List<CloudBackupNames.Listed>> = withContext(Dispatchers.IO) {
         try {
-            val session = connection.open()
+            val session = if (fromMirror) mirror.open() else connection.open()
             CloudResult.Ok(CloudBackupEngine.list(session.store, session.rootUrl, settings.deviceName.first(), settings.deviceId()))
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             Log.w(TAG, "Listing failed: ${e.javaClass.simpleName}")
-            connection.noteFailure(e)
+            if (!fromMirror) connection.noteFailure(e)
             CloudResult.Failed(e)
         }
     }
@@ -144,12 +159,12 @@ class CloudBackupService @Inject constructor(
      * Downloads [listed], decrypts it with the passphrase of this device and checks it is a backup
      * this version understands. Nothing on the device changes; the restore itself is [restore].
      */
-    suspend fun prepareRestore(listed: CloudBackupNames.Listed): CloudResult<Prepared> = withContext(Dispatchers.IO) {
+    suspend fun prepareRestore(listed: CloudBackupNames.Listed, fromMirror: Boolean = false): CloudResult<Prepared> = withContext(Dispatchers.IO) {
         begin()
         try {
             val passphrase = settings.passphrase.first()
             if (passphrase.isBlank()) throw CloudNoPassphraseException()
-            val session = connection.open()
+            val session = if (fromMirror) mirror.open() else connection.open()
             val text = CloudBackupEngine.download(session.store, listed.url, passphrase)
             val backup = backupService.parse(text)
             val createdAt = runCatching { backup.get("createdAt").asLong }.getOrDefault(0L).takeIf { it > 0 } ?: listed.createdAt
@@ -159,7 +174,7 @@ class CloudBackupService @Inject constructor(
             throw e
         } catch (e: Exception) {
             Log.w(TAG, "Reading a backup failed: ${e.javaClass.simpleName}")
-            connection.noteFailure(e)
+            if (!fromMirror) connection.noteFailure(e)
             CloudResult.Failed(e)
         } finally {
             end()

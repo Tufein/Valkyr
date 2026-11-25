@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 9.5: the second cloud copy of every backup -->
+<resources>
+    <string name="v95_mirror_section">Tweede kopie</string>
+    <string name="v95_mirror_note">Elke back-up wordt ook naar een tweede cloud geschreven, een WebDAV-server of een S3-bucket, met dezelfde naam en bewaarregel. Ligt de hoofdcloud eruit, dan wordt de kopie toch gemaakt. Dezelfde wachtzin geldt.</string>
+    <string name="v95_mirror_last_copy">Laatste kopie %1$s</string>
+    <string name="v95_mirror_stop">Stop met kopiëren</string>
+    <string name="v95_mirror_stop_hint">Haalt deze login van de handheld. Back-ups die er al staan blijven.</string>
+    <string name="v95_mirror_stop_action">Stop</string>
+    <string name="v95_source_title">Toon back-ups van</string>
+    <string name="v95_source_main">Hoofdcloud</string>
+    <string name="v95_source_mirror">Tweede kopie</string>
+    <string name="v95_hub_failed">De laatste kopie is mislukt. Open de back-upinstellingen voor de reden.</string>
+    <string name="v95_hub_waiting">Ingesteld. De volgende back-up wordt hier ook neergezet.</string>
+</resources>

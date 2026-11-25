@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 9.5: the second cloud copy of every backup -->
+<resources>
+    <string name="v95_mirror_section">Seconde copie</string>
+    <string name="v95_mirror_note">Chaque sauvegarde est aussi écrite dans un second cloud, un serveur WebDAV ou un bucket S3, avec le même nom et la même règle de conservation. Si le cloud principal est indisponible, la copie est quand même faite. La même phrase secrète est utilisée.</string>
+    <string name="v95_mirror_last_copy">Dernière copie %1$s</string>
+    <string name="v95_mirror_stop">Arrêter la copie</string>
+    <string name="v95_mirror_stop_hint">Retire cet identifiant de la console. Les sauvegardes déjà présentes restent.</string>
+    <string name="v95_mirror_stop_action">Arrêter</string>
+    <string name="v95_source_title">Afficher les sauvegardes de</string>
+    <string name="v95_source_main">Cloud principal</string>
+    <string name="v95_source_mirror">Seconde copie</string>
+    <string name="v95_hub_failed">La dernière copie a échoué. Ouvre les réglages de sauvegarde pour en voir la raison.</string>
+    <string name="v95_hub_waiting">Configurée. La prochaine sauvegarde sera aussi copiée ici.</string>
+</resources>

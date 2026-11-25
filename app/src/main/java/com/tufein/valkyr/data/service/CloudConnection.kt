@@ -64,6 +64,19 @@ class CloudConnection @Inject constructor(
         }
     }
 
+    /**
+     * 9.5: a tested session for any login, used for the second cloud. Unlike [test] it records
+     * nothing about the main cloud and saves nothing.
+     */
+    suspend fun connect(config: CloudConfig): Session = withContext(Dispatchers.IO) {
+        if (!config.isConfigured) throw CloudNotConfiguredException()
+        val store = clientFor(config)
+        val s3 = S3Target.parse(config.server)
+        val connection = if (s3 != null) CloudBackupEngine.connectS3(store, s3, config.folder)
+        else CloudBackupEngine.connect(store, config.server, config.user, config.folder)
+        Session(store, connection.serverUrl, connection.rootUrl)
+    }
+
     /** The store for [config]: an S3 bucket when the address is `s3://…` (access key = user, secret key = password), otherwise WebDAV. */
     private fun clientFor(config: CloudConfig): DavStore =
         S3Target.parse(config.server)?.let { S3Client(it, config.user.trim(), config.password) }

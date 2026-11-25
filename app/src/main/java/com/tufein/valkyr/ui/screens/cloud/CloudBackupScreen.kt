@@ -85,6 +85,8 @@ fun CloudBackupScreen(viewModel: CloudBackupViewModel = hiltViewModel()) {
     val reading by viewModel.reading.collectAsStateWithLifecycle()
     val pendingRestore by viewModel.pendingRestore.collectAsStateWithLifecycle()
     val certPrompt by viewModel.certPrompt.collectAsStateWithLifecycle()
+    val mirrorUi by viewModel.mirror.collectAsStateWithLifecycle()
+    val mirrorSelected by viewModel.mirrorSelected.collectAsStateWithLifecycle()
     val context = LocalContext.current
     var editor by remember { mutableStateOf<DavEditor?>(null) }
     var shown by remember { mutableIntStateOf(PAGE) }
@@ -337,6 +339,9 @@ fun CloudBackupScreen(viewModel: CloudBackupViewModel = hiltViewModel()) {
                 }
             }
 
+            // ---- The second copy (9.5) -----------------------------------------------------------
+            item(key = "mirror") { MirrorSection(viewModel) }
+
             // ---- The backups in the cloud --------------------------------------------------------
             item(key = "list") {
                 DavSection(
@@ -351,11 +356,23 @@ fun CloudBackupScreen(viewModel: CloudBackupViewModel = hiltViewModel()) {
                         )
                     }
                 ) {
+                    if (mirrorUi.configured) {
+                        DavRow(
+                            icon = R.drawable.ic_cloud_download,
+                            title = stringResource(R.string.v95_source_title),
+                            onClick = { viewModel.selectSource(!mirrorSelected) }
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                ActionPill(stringResource(R.string.v95_source_main), { viewModel.selectSource(false) }, tone = if (!mirrorSelected) ActionTone.Accent else ActionTone.Neutral)
+                                ActionPill(stringResource(R.string.v95_source_mirror), { viewModel.selectSource(true) }, tone = if (mirrorSelected) ActionTone.Accent else ActionTone.Neutral)
+                            }
+                        }
+                    }
                     when (val state = list) {
                         DavListState.Idle -> DavRow(
                             icon = R.drawable.ic_cloud_download,
-                            title = stringResource(if (configured) R.string.dav_list_idle else R.string.dav_list_needs_setup),
-                            onClick = { if (configured) viewModel.refreshList() }
+                            title = stringResource(if (configured || mirrorSelected) R.string.dav_list_idle else R.string.dav_list_needs_setup),
+                            onClick = { if (configured || mirrorSelected) viewModel.refreshList() }
                         )
                         DavListState.Loading -> Row(
                             modifier = Modifier.fillMaxWidth().padding(horizontal = settingsInset(), vertical = 14.dp),
@@ -523,12 +540,12 @@ private const val PAGE = 12
 private const val PASSWORD_DOTS = "••••••••"
 
 /** "5 minutes ago"; empty when [millis] is not a time. */
-private fun relative(millis: Long): String =
+internal fun relative(millis: Long): String =
     if (millis <= 0) "" else DateUtils.getRelativeTimeSpanString(millis, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString()
 
 /** Edits one text setting (address, user name, folder, device name, password); B cancels. */
 @Composable
-private fun DavTextDialog(
+internal fun DavTextDialog(
     title: String,
     hint: String,
     label: String,
