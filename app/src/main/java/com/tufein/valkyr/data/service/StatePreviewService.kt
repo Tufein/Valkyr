@@ -34,6 +34,21 @@ class StatePreviewService @Inject constructor(
         }.getOrNull()
     }
 
+    /** One picture in the gallery: where it is, its file name and when it changed (0 when unknown). */
+    data class Picture(val uri: Uri, val name: String, val modified: Long)
+
+    /** 9.6: every state picture of a game in the same folder, newest first; empty without a folder or pictures. */
+    suspend fun findAll(fileName: String): List<Picture> = withContext(Dispatchers.IO) {
+        runCatching {
+            val tree = settings.saveSyncStatesDir.first().takeIf { it.isNotBlank() } ?: return@runCatching emptyList()
+            val dir = DiskScanner.rootOf(tree) ?: return@runCatching emptyList()
+            val files = DiskScanner.list(context, dir).filter { !it.isDirectory }
+            StatePreviews.pictures(files.map { StatePreviews.Candidate(it.name, it.lastModified) }, fileName).mapNotNull { c ->
+                files.firstOrNull { it.name == c.name }?.let { Picture(it.uri, it.name, c.modified) }
+            }
+        }.getOrDefault(emptyList())
+    }
+
     /**
      * 7.3: the newest save or state of a game in the folders picked in Save sync: the saves and states
      * folders with the emulator / core folders inside them, and the folders of emulators that keep one

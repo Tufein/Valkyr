@@ -23,6 +23,38 @@ object StatePreviews {
             .maxWithOrNull(compareBy<Candidate> { it.modified }.thenBy { it.name })
     }
 
+    /** Most pictures the gallery of one game shows. */
+    const val MAX_PICTURES = 24
+
+    /** 9.6: every preview of [gameFileName] among [files], newest first, at most [limit]. */
+    fun pictures(files: List<Candidate>, gameFileName: String, limit: Int = MAX_PICTURES): List<Candidate> {
+        val stem = gameFileName.substringBeforeLast('.', gameFileName).lowercase(Locale.ROOT)
+        val full = gameFileName.lowercase(Locale.ROOT)
+        if (stem.isEmpty()) return emptyList()
+        return files.filter { isPreviewOf(it.name.lowercase(Locale.ROOT), stem, full) }
+            .sortedWith(compareByDescending<Candidate> { it.modified }.thenBy { it.name })
+            .take(limit)
+    }
+
+    enum class Kind { SLOT, AUTO, STATE, OTHER }
+
+    /** What a picture is called: a numbered slot (`Game.state3.png`), the automatic one, the plain one, or whatever the emulator wrote. */
+    data class Label(val kind: Kind, val slot: Int = 0, val raw: String = "")
+
+    fun label(fileName: String, gameFileName: String): Label {
+        val stem = gameFileName.substringBeforeLast('.', gameFileName).lowercase(Locale.ROOT)
+        val full = gameFileName.lowercase(Locale.ROOT)
+        val body = fileName.lowercase(Locale.ROOT).removeSuffix(".png")
+        val after = listOf(full, stem).firstNotNullOfOrNull { base -> body.removePrefix("$base.state").takeIf { it != body } } ?: return Label(Kind.OTHER, raw = fileName.removeSuffix(".png"))
+        val tail = after.trimStart('.')
+        return when {
+            tail.isEmpty() -> Label(Kind.STATE)
+            tail == "auto" -> Label(Kind.AUTO)
+            tail.all { it.isDigit() } && tail.length <= 4 -> Label(Kind.SLOT, tail.toInt())
+            else -> Label(Kind.OTHER, raw = tail.take(40))
+        }
+    }
+
     private fun isPreviewOf(name: String, stem: String, full: String): Boolean {
         if (!name.endsWith(".png")) return false
         val body = name.removeSuffix(".png")

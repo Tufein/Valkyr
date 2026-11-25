@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 9.6: the screenshot gallery of a game -->
+<resources>
+    <plurals name="v96_gallery_title">
+        <item quantity="one">%1$d screenshot</item>
+        <item quantity="other">%1$d screenshots</item>
+    </plurals>
+    <string name="v96_gallery_hint">Alle state-plaatjes van deze game in je state-map. Er wordt niets gekopieerd of verwijderd.</string>
+    <string name="v96_slot">Slot %1$d</string>
+    <string name="v96_auto">Automatische save</string>
+    <string name="v96_state">Savestate</string>
+    <string name="v96_position">%1$d van %2$d · %3$s</string>
+    <string name="v96_previous">Vorige</string>
+    <string name="v96_next">Volgende</string>
+    <string name="v96_share">Delen</string>
+    <string name="v96_close">Sluiten</string>
+</resources>

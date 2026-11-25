@@ -497,6 +497,7 @@ private fun GamePageContent(
         )
     }
     val statePreview by produceState<android.net.Uri?>(null, rom.fileName) { value = viewModel.statePreview(rom.fileName) }
+    val pictures by produceState(emptyList<com.tufein.valkyr.data.service.StatePreviewService.Picture>(), rom.fileName) { value = viewModel.statePictures(rom.fileName) }
     val newestSave by produceState<StatePreviews.SaveLine?>(null, rom.fileName) { value = viewModel.newestSave(rom.fileName) }
     val moreActions: @Composable () -> Unit = {
         val switch = state.switch
@@ -504,6 +505,7 @@ private fun GamePageContent(
         val best = ranking?.pick ?: state.best
         GameMoreActions(modifier = Modifier.padding(horizontal = 16.dp)) {
             StatePreviewCard(statePreview, newestSave)
+            ScreenshotGallery(rom.fileName, pictures)
             // The round buttons of 3.8 that the bar no longer carries.
             val quick = GameHeaderModel.quick(owned, downloading)
             if (GameHeaderModel.Quick.HOME_SCREEN in quick) {

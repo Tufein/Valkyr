@@ -4,10 +4,10 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 9.5.0** (Android build 99). The core loop is complete — find a game, download it into
+**Now: 9.6.0** (Android build 100). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
-libraries), and finishing what 7.0 and 7.1 started. The 8.x line closed at 8.5.0; 9.0–9.5 were built under the rule below.
+libraries), and finishing what 7.0 and 7.1 started. The 8.x line closed at 8.5.0; 9.0–9.6 were built under the rule below.
 
 ## How a release is chosen
 
@@ -291,6 +291,17 @@ One server is one point of failure. The backup is the one thing that must surviv
 one works with the main server switched off. Still to check against two real servers. Not built:
 SMB and SFTP, device sync to several clouds, and certificate pinning for the second cloud.
 
+## 9.6 — Your screenshots (shipped in 9.6.0)
+
+Emulators already write a picture beside every save state. Valkyr now shows them all.
+
+- **Gallery per game** on the game page from the save state folder, newest first.
+- **Full screen with a D-pad** (◀ ▶ to move, B to close) and **share one picture** at a time.
+
+*Done when* a game with several save states shows its pictures, each opens and can be shared,
+and nothing in the folder changes. Not built: deleting pictures or a size cap (the files sit beside
+save states), and emulator screenshot folders.
+
 ## Later, if there is a reason
 
 - **TV and remote depth**: every screen reachable with a remote, larger text, no touch-only
@@ -298,8 +309,8 @@ SMB and SFTP, device sync to several clouds, and certificate pinning for the sec
 - **More languages**, including right-to-left, when there are reviewers for them.
 - **Couch co-op without accounts**: two handhelds on one Wi-Fi, same core and a hash check
   before the session, through the emulators that support it. No relay, no account.
-- **Your screenshots**: a gallery per game from the state pictures that already exist, sharing
-  one at a time, and a size cap that trims with a preview.
+- **Your screenshots, more**: pictures from the emulators' own screenshot folders, and a size cap
+  that trims with a preview.
 - **More launcher layouts** and more folder names for other systems, from public
   documentation; tell us where your launcher reads covers from.
 - **Streaming unpack**: start a game from a ZIP or 7z without unpacking the whole archive

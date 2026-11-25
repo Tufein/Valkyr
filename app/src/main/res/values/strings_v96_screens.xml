@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 9.6: the screenshot gallery of a game -->
+<resources>
+    <plurals name="v96_gallery_title">
+        <item quantity="one">%1$d screenshot</item>
+        <item quantity="other">%1$d screenshots</item>
+    </plurals>
+    <string name="v96_gallery_hint">Every state picture of this game in your save state folder. Nothing is copied or deleted.</string>
+    <string name="v96_slot">Slot %1$d</string>
+    <string name="v96_auto">Automatic save</string>
+    <string name="v96_state">Save state</string>
+    <string name="v96_position">%1$d of %2$d · %3$s</string>
+    <string name="v96_previous">Previous</string>
+    <string name="v96_next">Next</string>
+    <string name="v96_share">Share</string>
+    <string name="v96_close">Close</string>
+</resources>

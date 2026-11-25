@@ -51,4 +51,30 @@ class StatePreviewsTest {
         assertNull(StatePreviews.newestSave(files("Zelda (USA).gba" to 5, "Zelda (USA) (Rev 1).srm" to 9, "Zelda (USA).some long note.txt" to 9), "Zelda (USA).gba"))
         assertNull(StatePreviews.newestSave(emptyList(), "Zelda (USA).gba"))
     }
+
+    @Test fun `every picture of the game is listed newest first and nothing else`() {
+        val files = listOf(
+            Candidate("Sonic.state.png", 100), Candidate("Sonic.state1.png", 300), Candidate("sonic.state.auto.png", 200),
+            Candidate("Sonic.state1", 400), Candidate("Sonic Two.state.png", 500), Candidate("Sonic.srm", 600)
+        )
+        assertEquals(listOf("Sonic.state1.png", "sonic.state.auto.png", "Sonic.state.png"), StatePreviews.pictures(files, "Sonic.md").map { it.name })
+        assertEquals(StatePreviews.pick(files, "Sonic.md"), StatePreviews.pictures(files, "Sonic.md").first())
+        assertEquals(2, StatePreviews.pictures(files, "Sonic.md", limit = 2).size)
+        assertEquals(emptyList<Candidate>(), StatePreviews.pictures(files, "Other.md"))
+    }
+
+    @Test fun `the gallery is bounded`() {
+        val many = (1..100).map { Candidate("G.state$it.png", it.toLong()) }
+        assertEquals(StatePreviews.MAX_PICTURES, StatePreviews.pictures(many, "G.gba").size)
+        assertEquals("G.state100.png", StatePreviews.pictures(many, "G.gba").first().name)
+    }
+
+    @Test fun `pictures are named by slot, automatic or plain state`() {
+        assertEquals(StatePreviews.Label(StatePreviews.Kind.SLOT, 3), StatePreviews.label("Game.state3.png", "Game.gba"))
+        assertEquals(StatePreviews.Label(StatePreviews.Kind.SLOT, 12), StatePreviews.label("Game.gba.state.12.png", "Game.gba"))
+        assertEquals(StatePreviews.Label(StatePreviews.Kind.AUTO), StatePreviews.label("game.state.auto.png", "Game.gba"))
+        assertEquals(StatePreviews.Label(StatePreviews.Kind.STATE), StatePreviews.label("Game.state.png", "Game.gba"))
+        assertEquals(StatePreviews.Label(StatePreviews.Kind.OTHER, raw = "quick"), StatePreviews.label("Game.state.quick.png", "Game.gba"))
+        assertEquals(StatePreviews.Label(StatePreviews.Kind.OTHER, raw = "weird"), StatePreviews.label("weird.png", "Game.gba"))
+    }
 }

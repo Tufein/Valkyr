@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 9.6: the screenshot gallery of a game -->
+<resources>
+    <plurals name="v96_gallery_title">
+        <item quantity="one">%1$d Screenshot</item>
+        <item quantity="other">%1$d Screenshots</item>
+    </plurals>
+    <string name="v96_gallery_hint">Alle Zustandsbilder dieses Spiels aus deinem Zustandsordner. Es wird nichts kopiert oder gelöscht.</string>
+    <string name="v96_slot">Slot %1$d</string>
+    <string name="v96_auto">Automatischer Spielstand</string>
+    <string name="v96_state">Spielzustand</string>
+    <string name="v96_position">%1$d von %2$d · %3$s</string>
+    <string name="v96_previous">Zurück</string>
+    <string name="v96_next">Weiter</string>
+    <string name="v96_share">Teilen</string>
+    <string name="v96_close">Schließen</string>
+</resources>

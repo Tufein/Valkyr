@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 9.6: the screenshot gallery of a game -->
+<resources>
+    <plurals name="v96_gallery_title">
+        <item quantity="one">%1$d captura</item>
+        <item quantity="other">%1$d capturas</item>
+    </plurals>
+    <string name="v96_gallery_hint">Todas las imágenes de estado de este juego en tu carpeta de estados. No se copia ni se borra nada.</string>
+    <string name="v96_slot">Ranura %1$d</string>
+    <string name="v96_auto">Guardado automático</string>
+    <string name="v96_state">Estado guardado</string>
+    <string name="v96_position">%1$d de %2$d · %3$s</string>
+    <string name="v96_previous">Anterior</string>
+    <string name="v96_next">Siguiente</string>
+    <string name="v96_share">Compartir</string>
+    <string name="v96_close">Cerrar</string>
+</resources>
