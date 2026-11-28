@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 10.0: profiles travel; synced documents also go to the second cloud -->
+<resources>
+    <string name="v100_profiles_travel">Avec la synchronisation d’appareils activée, les profils voyagent entre tes consoles par nom : ce qu’un profil masque et la modification la plus récente comptent. Le code PIN et le profil actif restent sur cet appareil, et supprimer un profil ici ne le supprime pas ailleurs.</string>
+    <string name="v100_mirror_docs">Synchroniser aussi les documents ici</string>
+    <string name="v100_mirror_docs_hint">À suivre, progression, notes, historique de jeu et profils vont aussi dans ce cloud. Rien n’est supprimé dans l’un ou l’autre cloud.</string>
+</resources>

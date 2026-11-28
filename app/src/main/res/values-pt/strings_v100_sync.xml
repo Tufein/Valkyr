@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 10.0: profiles travel; synced documents also go to the second cloud -->
+<resources>
+    <string name="v100_profiles_travel">Com a sincronização de dispositivos ligada, os perfis viajam entre os teus portáteis por nome: contam o que um perfil esconde e a edição mais recente. O PIN e o perfil ativo ficam neste dispositivo, e apagar um perfil aqui não o apaga noutros.</string>
+    <string name="v100_mirror_docs">Sincronizar também os documentos aqui</string>
+    <string name="v100_mirror_docs_hint">A seguir, progresso, notas, histórico de jogo e perfis também vão para esta nuvem. Nada é removido de nenhuma das duas nuvens.</string>
+</resources>

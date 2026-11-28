@@ -14,6 +14,7 @@ import com.tufein.valkyr.data.local.entity.DownloadableFileEntity
 import com.tufein.valkyr.util.ApkAssets
 import com.tufein.valkyr.util.DiskScanner
 import com.tufein.valkyr.util.EmulatorCatalog
+import com.tufein.valkyr.util.LaunchWith
 import com.tufein.valkyr.util.FileRef
 import com.tufein.valkyr.util.GameLaunchKeys
 import com.tufein.valkyr.util.GameEmulatorOverrides
@@ -201,6 +202,12 @@ class GameLaunchService @Inject constructor(
         } catch (_: PackageManager.NameNotFoundException) { null }
     }
 
+    /** 10.0: the emulator of [handler] with the version Android reports, for the "stopped again" card. */
+    private fun startedWith(handler: GameHandler): String? {
+        val version = runCatching { context.packageManager.getPackageInfo(handler.packageName, 0).versionName }.getOrNull()
+        return LaunchWith.describe(labelOf(handler.key) ?: handler.label, version)
+    }
+
     /** Which catalogue packages are installed (the manifest `<queries>` must list them, or Android 11+ hides them). */
     private fun installedPackages(): Set<String> = EmulatorCatalog.allPackages().filterTo(HashSet()) { ApkAssets.isInstalled(context, it) }
 
@@ -220,7 +227,7 @@ class GameLaunchService @Inject constructor(
             actionLog.played(consoleId, game.name)
             // 9.0: a session is keyed by the library file; without one there is nothing to
             // attach the time to, and a display name would never match the game page.
-            if (trackPlay && gameFileName != null) playSessions.start(consoleId, gameFileName)
+            if (trackPlay && gameFileName != null) playSessions.start(consoleId, gameFileName, startedWith(handler))
         }
         if (outcome != LaunchOutcome.STARTED && trackPlay) playSessions.abandon()
         if (outcome == LaunchOutcome.STARTED && !trackPlay) playSessions.abandon()

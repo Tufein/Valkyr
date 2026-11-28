@@ -3,7 +3,9 @@ package com.tufein.valkyr.data.service
 import com.tufein.valkyr.data.local.AppSettings
 import com.tufein.valkyr.util.LibraryRestrictions
 import com.tufein.valkyr.util.Profile
+import com.tufein.valkyr.util.ProfileSync
 import com.tufein.valkyr.util.Profiles
+import com.tufein.valkyr.util.SyncProfile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -62,6 +64,16 @@ class ProfileService @Inject constructor(private val settings: AppSettings, priv
     suspend fun save(profile: Profile) {
         val others = Profiles.fromJson(settings.profiles.first()).filterNot { it.id == profile.id }
         settings.setProfiles(Profiles.toJson(others + profile))
+    }
+
+    /** 10.0: the profiles as stored, for the sync. */
+    suspend fun listNow(): List<Profile> = Profiles.fromJson(settings.profiles.first())
+
+    /** 10.0: takes synced profiles in (changed hiding, new profiles); ids, PINs and names stay. True when the list changed. */
+    suspend fun applySynced(merged: Map<String, SyncProfile>): Boolean = switchLock.withLock {
+        val local = Profiles.fromJson(settings.profiles.first())
+        val next = ProfileSync.apply(local, merged) { java.util.UUID.randomUUID().toString() }
+        if (next == local) false else { settings.setProfiles(Profiles.toJson(next)); true }
     }
 
     suspend fun delete(id: String) {

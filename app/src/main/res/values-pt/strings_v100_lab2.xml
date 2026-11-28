@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 10.0: Handheld lab extra -->
+<resources>
+    <string name="lab100_konami">Código Konami! 30 vidas para ti.</string>
+</resources>

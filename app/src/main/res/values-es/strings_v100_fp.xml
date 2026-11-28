@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 10.0: file fingerprint card on the game page -->
+<resources>
+    <string name="v100_fp_title">Huella del archivo</string>
+    <string name="v100_fp_hint">CRC32, MD5 y SHA-1 de los archivos de este juego, para comparar un volcado con una entrada de DAT o Redump. Los archivos solo se leen; no se cambia ni se envía nada.</string>
+    <string name="v100_fp_start">Calcular</string>
+    <string name="v100_fp_again">Calcular de nuevo</string>
+    <string name="v100_fp_stop">Detener</string>
+    <string name="v100_fp_copy">Copiar sumas</string>
+    <string name="v100_fp_reading">Leyendo: %1$s</string>
+    <string name="v100_fp_failed">No se pudieron leer los archivos.</string>
+</resources>

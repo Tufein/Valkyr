@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 10.0: Handheld lab touch and speaker tests -->
+<resources>
+    <string name="lab100_touch_title">Aanraaktest</string>
+    <string name="lab100_touch_hint">Veeg over het hele scherm tot elk vakje oplicht; een vakje dat donker blijft is een dode plek. Terug sluit de test.</string>
+    <string name="lab100_touch_count">Aangeraakt: %1$d van %2$d vakjes</string>
+    <string name="lab100_touch_done">Elk vakje reageerde: geen dode plekken gevonden.</string>
+    <string name="lab100_snd_title">Luidsprekertest</string>
+    <string name="lab100_snd_hint">Een korte toon op links, rechts of beide luidsprekers. Zet eerst het volume zacht.</string>
+    <string name="lab100_snd_left">Links</string>
+    <string name="lab100_snd_right">Rechts</string>
+    <string name="lab100_snd_both">Beide</string>
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 10.0: file fingerprint card on the game page -->
+<resources>
+    <string name="v100_fp_title">Impressão digital do ficheiro</string>
+    <string name="v100_fp_hint">CRC32, MD5 e SHA-1 dos ficheiros deste jogo, para comparar um dump com uma entrada DAT ou Redump. Os ficheiros são apenas lidos; nada é alterado ou enviado.</string>
+    <string name="v100_fp_start">Calcular</string>
+    <string name="v100_fp_again">Calcular de novo</string>
+    <string name="v100_fp_stop">Parar</string>
+    <string name="v100_fp_copy">Copiar somas</string>
+    <string name="v100_fp_reading">A ler: %1$s</string>
+    <string name="v100_fp_failed">Não foi possível ler os ficheiros.</string>
+</resources>

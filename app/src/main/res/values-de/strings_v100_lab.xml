@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 10.0: the Handheld lab -->
+<resources>
+    <string name="lab100_title">Handheld-Labor</string>
+    <string name="lab100_subtitle">Teste Controller, Display und Akku</string>
+    <string name="lab100_hint">Tests für Controller, Display und Akku</string>
+    <string name="lab100_kw">controller test stick drift tote zone toter pixel display einbrennen akku temperatur hitze gamepad tasten</string>
+    <string name="lab100_what">Alles hier schaut und misst nur. Nichts wird gespeichert und nichts verlässt das Gerät.</string>
+    <string name="lab100_ctl_title">Controller-Test</string>
+    <string name="lab100_ctl_hint">Drücke jede Taste, bewege beide Sticks und sieh, was Android empfängt.</string>
+    <string name="lab100_ctl_leave">Zurück beendet den Test. Manche Handhelds senden B als Zurück; nutze dann die Schaltfläche Fertig.</string>
+    <string name="lab100_ctl_none">Nichts gedrückt</string>
+    <string name="lab100_ctl_pressed">Gedrückt: %1$s</string>
+    <string name="lab100_ctl_seen">Bisher gesehene Tasten: %1$d</string>
+    <string name="lab100_ctl_left">Linker Stick</string>
+    <string name="lab100_ctl_right">Rechter Stick</string>
+    <string name="lab100_ctl_triggers">Trigger</string>
+    <string name="lab100_ctl_drift_start">Stick-Drift messen</string>
+    <string name="lab100_ctl_drift_running">Lass beide Sticks 3 Sekunden los …</string>
+    <string name="lab100_ctl_done">Fertig</string>
+    <string name="lab100_drift_ok">ruht in der Mitte (größter Ausschlag %1$s)</string>
+    <string name="lab100_drift_slight">leichter Drift von %1$s; für die meisten Spiele okay, erhöhe die Totzone des Emulators, falls ein Spiel schleicht</string>
+    <string name="lab100_drift_bad">driftet um %1$s; eine Totzone im Emulator verdeckt einen Teil, Reinigen oder Ersetzen des Sticks kann nötig sein</string>
+    <string name="lab100_scr_title">Display-Test</string>
+    <string name="lab100_scr_hint">Vollbild-Farben und Muster, um tote Pixel, Einbrennen und ungleichmäßiges Licht zu finden.</string>
+    <string name="lab100_scr_leave">Tippen oder rechts drücken für das nächste, Zurück zum Beenden</string>
+    <string name="lab100_pat_black">Schwarz</string>
+    <string name="lab100_pat_white">Weiß</string>
+    <string name="lab100_pat_red">Rot</string>
+    <string name="lab100_pat_green">Grün</string>
+    <string name="lab100_pat_blue">Blau</string>
+    <string name="lab100_pat_ramp">Graustufenverlauf</string>
+    <string name="lab100_pat_grid">Raster</string>
+    <string name="lab100_bat_title">Akku und Hitze</string>
+    <string name="lab100_bat_hint">Aktualisiert sich alle zwei Sekunden, solange dieser Bildschirm offen ist.</string>
+    <string name="lab100_bat_level">Ladung: %1$s, %2$s</string>
+    <string name="lab100_bat_temp">Temperatur: %1$s</string>
+    <string name="lab100_bat_volt">Spannung: %1$s</string>
+    <string name="lab100_bat_charging">lädt</string>
+    <string name="lab100_bat_on_battery">im Akkubetrieb</string>
+    <string name="lab100_bat_full">voll</string>
+    <string name="lab100_bat_unknown">Zustand unbekannt</string>
+    <string name="lab100_heat_cool">Kühl</string>
+    <string name="lab100_heat_warm">Warm</string>
+    <string name="lab100_heat_hot">Heiß</string>
+    <string name="lab100_heat_cool_text">Kühl genug für lange Sitzungen.</string>
+    <string name="lab100_heat_warm_text">Für eine Weile okay, aber gib ihm etwas Luft.</string>
+    <string name="lab100_heat_hot_text">Heiß: das Gerät kann langsamer werden. Pausiere, nimm die Hülle ab und senke die Helligkeit.</string>
+</resources>

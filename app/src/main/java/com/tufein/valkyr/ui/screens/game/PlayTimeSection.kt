@@ -114,6 +114,9 @@ fun QuickStopCard(consoleId: String, fileName: String, onCheck: (() -> Unit)?, v
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+        stop.startedWith?.let {
+            Text(stringResource(R.string.v100_quick_with, it), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             if (onCheck != null) ActionPill(stringResource(R.string.v97_quick_check), onCheck, icon = R.drawable.ic_tune, tone = ActionTone.Accent)
             ActionPill(stringResource(R.string.v97_quick_dismiss), viewModel::dismissQuickStop)

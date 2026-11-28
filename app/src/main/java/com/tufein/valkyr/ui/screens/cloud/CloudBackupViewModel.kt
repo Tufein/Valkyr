@@ -65,7 +65,8 @@ data class MirrorUi(
     val user: String = "",
     val hasPassword: Boolean = false,
     val folder: String = "",
-    val records: com.tufein.valkyr.data.local.MirrorRecords = com.tufein.valkyr.data.local.MirrorRecords()
+    val records: com.tufein.valkyr.data.local.MirrorRecords = com.tufein.valkyr.data.local.MirrorRecords(),
+    val syncDocs: Boolean = false
 ) {
     val configured: Boolean get() = server.isNotBlank()
 }
@@ -134,8 +135,8 @@ class CloudBackupViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), CloudBackupUi())
 
-    val mirror: StateFlow<MirrorUi> = combine(mirrorService.config, mirrorService.records) { c, r ->
-        MirrorUi(c.server, c.user, c.password.isNotEmpty(), c.folder, r)
+    val mirror: StateFlow<MirrorUi> = combine(mirrorService.config, mirrorService.records, mirrorService.syncDocs) { c, r, docs ->
+        MirrorUi(c.server, c.user, c.password.isNotEmpty(), c.folder, r, docs)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), MirrorUi())
 
     private val _mirrorSelected = MutableStateFlow(false)
@@ -156,6 +157,7 @@ class CloudBackupViewModel @Inject constructor(
     fun setMirrorUser(value: String) = viewModelScope.launch { mirrorSettings.setUser(value) }
     fun setMirrorPassword(value: String) = viewModelScope.launch { mirrorSettings.setPassword(value) }
     fun setMirrorFolder(value: String) = viewModelScope.launch { mirrorSettings.setFolder(value) }
+    fun setMirrorSyncDocs(value: Boolean) = viewModelScope.launch { mirrorSettings.setSyncDocs(value) }
     fun clearMirror() = viewModelScope.launch {
         mirrorSettings.clear()
         if (_mirrorSelected.value) { _mirrorSelected.value = false; _list.value = DavListState.Idle }

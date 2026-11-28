@@ -1,6 +1,7 @@
 package com.tufein.valkyr.data.local
 
 import android.content.Context
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -41,6 +42,7 @@ class CloudMirrorSettings @Inject constructor(@param:ApplicationContext private 
         val COPY_BYTES = longPreferencesKey("mirror_copy_bytes")
         val TEST_AT = longPreferencesKey("mirror_test_at")
         val ERROR = stringPreferencesKey("mirror_error")
+        val SYNC_DOCS = booleanPreferencesKey("mirror_sync_docs")
     }
 
     private val store get() = context.mirrorStore
@@ -57,6 +59,11 @@ class CloudMirrorSettings @Inject constructor(@param:ApplicationContext private 
     val records: Flow<MirrorRecords> = store.data.map { p ->
         MirrorRecords(p[Keys.COPY_AT] ?: 0L, p[Keys.COPY_NAME].orEmpty(), p[Keys.COPY_BYTES] ?: 0L, p[Keys.TEST_AT] ?: 0L, p[Keys.ERROR].orEmpty())
     }.distinctUntilChanged()
+
+    /** 10.0: whether the small synced documents (Up next, progress, notes, play history, profiles) also go to this cloud. Off until chosen. */
+    val syncDocs: Flow<Boolean> = store.data.map { it[Keys.SYNC_DOCS] ?: false }.distinctUntilChanged()
+
+    suspend fun setSyncDocs(value: Boolean) = store.edit { it[Keys.SYNC_DOCS] = value }
 
     /** Changing the address or login makes the earlier result meaningless. */
     private fun androidx.datastore.preferences.core.MutablePreferences.forgetResult() {

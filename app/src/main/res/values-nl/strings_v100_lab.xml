@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 10.0: the Handheld lab -->
+<resources>
+    <string name="lab100_title">Handheld-lab</string>
+    <string name="lab100_subtitle">Test je controller, scherm en accu</string>
+    <string name="lab100_hint">Controller-, scherm- en accutests</string>
+    <string name="lab100_kw">controller test stick drift dode zone dode pixel scherm inbranden accu temperatuur warmte gamepad knoppen</string>
+    <string name="lab100_what">Alles hier kijkt en meet alleen. Er wordt niets opgeslagen en niets verlaat het apparaat.</string>
+    <string name="lab100_ctl_title">Controllertest</string>
+    <string name="lab100_ctl_hint">Druk op elke knop, beweeg beide sticks en zie wat Android ontvangt.</string>
+    <string name="lab100_ctl_leave">Terug sluit de test. Sommige handhelds sturen B als Terug; gebruik dan de knop Klaar.</string>
+    <string name="lab100_ctl_none">Niets ingedrukt</string>
+    <string name="lab100_ctl_pressed">Ingedrukt: %1$s</string>
+    <string name="lab100_ctl_seen">Verschillende knoppen gezien: %1$d</string>
+    <string name="lab100_ctl_left">Linkerstick</string>
+    <string name="lab100_ctl_right">Rechterstick</string>
+    <string name="lab100_ctl_triggers">Triggers</string>
+    <string name="lab100_ctl_drift_start">Meet stick-drift</string>
+    <string name="lab100_ctl_drift_running">Laat beide sticks 3 seconden los…</string>
+    <string name="lab100_ctl_done">Klaar</string>
+    <string name="lab100_drift_ok">ligt rustig in het midden (grootste uitslag %1$s)</string>
+    <string name="lab100_drift_slight">lichte drift van %1$s; prima voor de meeste games, zet de dode zone van de emulator hoger als een game kruipt</string>
+    <string name="lab100_drift_bad">drift met %1$s; een dode zone in de emulator verbergt een deel, schoonmaken of vervangen van de stick kan nodig zijn</string>
+    <string name="lab100_scr_title">Schermtest</string>
+    <string name="lab100_scr_hint">Schermvullende kleuren en patronen om dode pixels, inbranden en ongelijk licht te zien.</string>
+    <string name="lab100_scr_leave">tik of druk rechts voor de volgende, Terug om te sluiten</string>
+    <string name="lab100_pat_black">Zwart</string>
+    <string name="lab100_pat_white">Wit</string>
+    <string name="lab100_pat_red">Rood</string>
+    <string name="lab100_pat_green">Groen</string>
+    <string name="lab100_pat_blue">Blauw</string>
+    <string name="lab100_pat_ramp">Grijsverloop</string>
+    <string name="lab100_pat_grid">Raster</string>
+    <string name="lab100_bat_title">Accu en warmte</string>
+    <string name="lab100_bat_hint">Ververst elke twee seconden zolang dit scherm open is.</string>
+    <string name="lab100_bat_level">Lading: %1$s, %2$s</string>
+    <string name="lab100_bat_temp">Temperatuur: %1$s</string>
+    <string name="lab100_bat_volt">Spanning: %1$s</string>
+    <string name="lab100_bat_charging">aan het laden</string>
+    <string name="lab100_bat_on_battery">op accu</string>
+    <string name="lab100_bat_full">vol</string>
+    <string name="lab100_bat_unknown">toestand onbekend</string>
+    <string name="lab100_heat_cool">Koel</string>
+    <string name="lab100_heat_warm">Warm</string>
+    <string name="lab100_heat_hot">Heet</string>
+    <string name="lab100_heat_cool_text">Koel genoeg voor lange sessies.</string>
+    <string name="lab100_heat_warm_text">Prima voor even, maar geef het wat lucht.</string>
+    <string name="lab100_heat_hot_text">Heet: het apparaat kan trager worden. Pauzeer, haal het hoesje eraf en zet de helderheid lager.</string>
+</resources>

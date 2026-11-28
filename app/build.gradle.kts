@@ -23,8 +23,8 @@ android {
         applicationId = "com.tufein.valkyr"
         minSdk = 29
         targetSdk = 36
-        versionCode = 101
-        versionName = "9.7.0"
+        versionCode = 102
+        versionName = "10.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 

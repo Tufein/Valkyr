@@ -122,7 +122,7 @@ fun ProfilesScreen(viewModel: ProfilesViewModel = hiltViewModel()) {
 
     Column(Modifier.fillMaxSize().padding(horizontal = 4.dp, vertical = 12.dp)) {
         ToolsTitle(stringResource(R.string.settings_profiles), icon = NavRoutes.Profiles.icon, subtitle = stringResource(R.string.profiles25_hint))
-        InfoCard(listOf(stringResource(R.string.profiles_intro)), icon = R.drawable.ic_info)
+        InfoCard(listOf(stringResource(R.string.profiles_intro), stringResource(R.string.v100_profiles_travel)), icon = R.drawable.ic_info)
         LazyColumn(verticalArrangement = Arrangement.spacedBy(2.dp), contentPadding = PaddingValues(bottom = 16.dp)) {
             item(key = "all") {
                 ToolRow(stringResource(R.string.profiles_everything), listOf(stringResource(R.string.profiles_everything_hint)), onClick = { switch("") },

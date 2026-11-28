@@ -129,6 +129,12 @@ internal fun MirrorSection(viewModel: CloudBackupViewModel) {
         }
         if (ui.configured) {
             DavRow(
+                icon = R.drawable.ic_sync,
+                title = stringResource(R.string.v100_mirror_docs),
+                hint = stringResource(R.string.v100_mirror_docs_hint),
+                onClick = { viewModel.setMirrorSyncDocs(!ui.syncDocs) }
+            ) { DavSwitch(ui.syncDocs) { viewModel.setMirrorSyncDocs(it) } }
+            DavRow(
                 icon = R.drawable.ic_cloud_off,
                 title = stringResource(R.string.v95_mirror_stop),
                 hint = stringResource(R.string.v95_mirror_stop_hint),

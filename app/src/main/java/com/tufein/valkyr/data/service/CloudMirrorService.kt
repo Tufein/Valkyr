@@ -28,6 +28,9 @@ class CloudMirrorService @Inject constructor(
     val config = settings.config
     val records = settings.records
 
+    /** 10.0: the small synced documents also go to this cloud. */
+    val syncDocs = settings.syncDocs
+
     /** Tests the login: finds the working address, prepares the folder and writes a test file. */
     suspend fun test(): Result<Unit> = withContext(Dispatchers.IO) {
         try {

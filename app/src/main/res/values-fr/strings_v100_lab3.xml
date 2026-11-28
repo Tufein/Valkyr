@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 10.0: Handheld lab touch and speaker tests -->
+<resources>
+    <string name="lab100_touch_title">Test tactile</string>
+    <string name="lab100_touch_hint">Balaie tout l’écran jusqu’à ce que chaque carré s’allume ; un carré qui reste sombre est une zone morte. Retour quitte le test.</string>
+    <string name="lab100_touch_count">Touchés : %1$d carrés sur %2$d</string>
+    <string name="lab100_touch_done">Chaque carré a répondu : aucune zone morte trouvée.</string>
+    <string name="lab100_snd_title">Test des haut-parleurs</string>
+    <string name="lab100_snd_hint">Une courte tonalité à gauche, à droite ou sur les deux haut-parleurs. Baisse d’abord le volume.</string>
+    <string name="lab100_snd_left">Gauche</string>
+    <string name="lab100_snd_right">Droite</string>
+    <string name="lab100_snd_both">Les deux</string>
+</resources>

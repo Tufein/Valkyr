@@ -72,6 +72,7 @@ import com.tufein.valkyr.data.state.PendingLibraryFilters
 import com.tufein.valkyr.util.QuickAction
 import com.tufein.valkyr.data.state.RescanStateHolder
 import com.tufein.valkyr.util.ConsoleFormatter
+import com.tufein.valkyr.util.QueryOperators
 import com.tufein.valkyr.util.Constants
 import com.tufein.valkyr.util.DeepLinkResolver
 import com.tufein.valkyr.util.StorageHelper
@@ -105,6 +106,9 @@ import com.tufein.valkyr.data.service.SourceTrackService
 import com.tufein.valkyr.data.service.VersionPreferenceService
 import com.tufein.valkyr.util.DownloadCondition
 import kotlinx.coroutines.sync.Mutex
+
+/** 10.0: a `console:` word that matches no console: an id nothing has, so the list is empty. */
+private const val NO_CONSOLE = "\u0000none"
 
 /** How long a deep link waits for consoles / tag catalogue before applying what it has. */
 private const val RESOLVE_TIMEOUT_MS = 5_000L
@@ -743,9 +747,14 @@ class HomeViewModel @Inject constructor(
                 pageSize,
                 // 6.0: genre / decade; the index only matters (and re-runs the search) while one is active.
                 combine(_genres, _decades, discoverIndex, statusForSearch) { g, d, idx, st -> Quad(g, d, if (g.isNotEmpty() || d.isNotEmpty()) idx else null, st) }
-            ) { (query, consoles, tags), extra, _, limit, (genres, decades, _, status) ->
+            ) { (rawQuery, chipConsoles, chipTags), extra, _, limit, (genres, decades, _, status) ->
+                // 10.0: `console:snes tag:hack is:fav` words become filters; the rest is searched as before.
+                val ops = QueryOperators.parse(rawQuery)
+                val query = ops.text
+                val consoles = if (ops.consoleWords.isEmpty()) chipConsoles else chipConsoles + operatorConsoles(ops.consoleWords)
+                val tags = chipTags + ops.tags
                 FilterParams(
-                    query = query, consoles = consoles, tags = tags, sort = extra.sort, favouritesOnly = extra.favouritesOnly, source = extra.source, limit = limit,
+                    query = query, consoles = consoles, tags = tags, sort = extra.sort, favouritesOnly = extra.favouritesOnly || ops.favouritesOnly, source = extra.source, limit = limit,
                     newSince = if (extra.newOnly) NewGames.since(System.currentTimeMillis()) else 0L, collectionId = extra.collectionId,
                     genres = genres, decades = decades, ownership = _ownership.value,
                     completed = status.completed, raStatus = status.ra
@@ -814,6 +823,14 @@ class HomeViewModel @Inject constructor(
 
     fun clearConsoleFilters() {
         _selectedConsoles.value = emptySet()
+    }
+
+    /** 10.0: the library consoles the words of `console:` operators mean; a word that matches none gives an id that matches nothing, so the list says so by being empty. */
+    private fun operatorConsoles(words: List<String>): Set<String> {
+        val ids = _consoles.value.map { it.id }
+        return words.flatMapTo(HashSet()) { w ->
+            QueryOperators.matchConsoles(w, ids, ConsoleFormatter::getConsoleDisplayName).ifEmpty { setOf(NO_CONSOLE) }
+        }
     }
 
     fun setSearch(query: String) {

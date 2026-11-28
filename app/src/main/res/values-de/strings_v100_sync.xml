@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 10.0: profiles travel; synced documents also go to the second cloud -->
+<resources>
+    <string name="v100_profiles_travel">Mit eingeschaltetem Geräte-Sync wandern Profile nach Namen zwischen deinen Handhelds: was ein Profil verbirgt und die neueste Änderung gelten. PIN und aktives Profil bleiben auf diesem Gerät, und ein hier gelöschtes Profil wird anderswo nicht gelöscht.</string>
+    <string name="v100_mirror_docs">Synchronisierte Dokumente auch hier</string>
+    <string name="v100_mirror_docs_hint">Als Nächstes, Fortschritt, Notizen, Spielverlauf und Profile gehen auch in diese Cloud. Aus keiner der beiden Clouds wird etwas entfernt.</string>
+</resources>

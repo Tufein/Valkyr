@@ -169,6 +169,7 @@ fun ToolsHubScreen(navController: NavController, viewModel: ToolsHubViewModel = 
             item { Tool(go, NavRoutes.EmulatorCheck, R.string.emucheck67_title, R.string.emucheck67_hint) }
             item { Tool(go, NavRoutes.WifiReceive, R.string.wifi66_title, R.string.wifi66_hint) }
             item { Tool(go, NavRoutes.PerfCheck, R.string.measure47_title, R.string.measure47_hint) }
+            item { Tool(go, NavRoutes.HandheldLab, R.string.lab100_title, R.string.lab100_hint) }
             item { ToolsGroup(stringResource(R.string.tools_group_games), icon = R.drawable.ic_gamepad) }
             item { Tool(go, NavRoutes.ImportList, R.string.nav_import_list, R.string.tools_import_list_hint) }
             item { Tool(go, NavRoutes.Wishlist, R.string.nav_wishlist, R.string.tools_wishlist_hint, count = wishCount) }

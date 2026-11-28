@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 10.0: Handheld lab touch and speaker tests -->
+<resources>
+    <string name="lab100_touch_title">Touch test</string>
+    <string name="lab100_touch_hint">Swipe over the whole screen until every square lights up; a square that stays dark is a dead spot. Back leaves.</string>
+    <string name="lab100_touch_count">Touched: %1$d of %2$d squares</string>
+    <string name="lab100_touch_done">Every square responded: no dead spots found.</string>
+    <string name="lab100_snd_title">Speaker test</string>
+    <string name="lab100_snd_hint">A short tone on the left, the right or both speakers. Turn the volume down first.</string>
+    <string name="lab100_snd_left">Left</string>
+    <string name="lab100_snd_right">Right</string>
+    <string name="lab100_snd_both">Both</string>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 10.0: profiles travel; synced documents also go to the second cloud -->
+<resources>
+    <string name="v100_profiles_travel">Con la sincronizzazione dei dispositivi attiva, i profili viaggiano tra i tuoi handheld per nome: contano ciò che un profilo nasconde e la modifica più recente. Il PIN e il profilo attivo restano su questo dispositivo, ed eliminare un profilo qui non lo elimina altrove.</string>
+    <string name="v100_mirror_docs">Sincronizza qui anche i documenti</string>
+    <string name="v100_mirror_docs_hint">Prossimi, progressi, note, cronologia di gioco e profili vanno anche in questo cloud. Non viene rimosso nulla da nessuno dei due cloud.</string>
+</resources>

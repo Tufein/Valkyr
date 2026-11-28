@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 10.0: profiles travel; synced documents also go to the second cloud -->
+<resources>
+    <string name="v100_profiles_travel">Met Apparaten synchroniseren aan reizen profielen op naam mee tussen je handhelds: wat een profiel verbergt en de nieuwste wijziging gelden. De pincode en het actieve profiel blijven op dit apparaat, en een profiel hier verwijderen verwijdert het elders niet.</string>
+    <string name="v100_mirror_docs">Gesynchroniseerde documenten ook hier</string>
+    <string name="v100_mirror_docs_hint">Hierna spelen, voortgang, notities, speelgeschiedenis en profielen gaan ook naar deze cloud. Er wordt niets uit een van beide clouds verwijderd.</string>
+</resources>

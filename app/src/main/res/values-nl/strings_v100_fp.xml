@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 10.0: file fingerprint card on the game page -->
+<resources>
+    <string name="v100_fp_title">Bestandsvingerafdruk</string>
+    <string name="v100_fp_hint">CRC32, MD5 en SHA-1 van de bestanden van deze game, om een dump te vergelijken met een DAT- of Redump-regel. Bestanden worden alleen gelezen; er wordt niets gewijzigd of verstuurd.</string>
+    <string name="v100_fp_start">Berekenen</string>
+    <string name="v100_fp_again">Opnieuw berekenen</string>
+    <string name="v100_fp_stop">Stop</string>
+    <string name="v100_fp_copy">Kopieer sommen</string>
+    <string name="v100_fp_reading">Aan het lezen: %1$s</string>
+    <string name="v100_fp_failed">De bestanden konden niet worden gelezen.</string>
+</resources>

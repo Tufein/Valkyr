@@ -1062,6 +1062,10 @@ fun HomeScreen(
                                     recentSearches, onPick = viewModel::setSearch, onClear = viewModel::clearRecentSearches,
                                     modifier = Modifier.padding(top = 8.dp)
                                 )
+                                if (query.isNotEmpty() && !query.contains(':')) OperatorTipsRow(
+                                    onPick = { viewModel.setSearch(query.trimEnd() + " " + it) },
+                                    modifier = Modifier.padding(top = 8.dp)
+                                )
                                 quickRow(Modifier.padding(top = 8.dp), FilterLayout.EDGE_LANDSCAPE)
                                 if (!showShelves) ConsoleChips(
                                     options = consoleOptions,

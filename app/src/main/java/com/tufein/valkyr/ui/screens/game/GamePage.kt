@@ -507,6 +507,7 @@ private fun GamePageContent(
             QuickStopCard(rom.consoleId, rom.fileName, onReadiness?.let { open -> { open(rom.consoleId, rom.fileName) } })
             StatePreviewCard(statePreview, newestSave)
             ScreenshotGallery(rom.fileName, pictures)
+            if (owned) FingerprintCard(rom)
             // The round buttons of 3.8 that the bar no longer carries.
             val quick = GameHeaderModel.quick(owned, downloading)
             if (GameHeaderModel.Quick.HOME_SCREEN in quick) {

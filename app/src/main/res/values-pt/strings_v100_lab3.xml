@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 10.0: Handheld lab touch and speaker tests -->
+<resources>
+    <string name="lab100_touch_title">Teste de toque</string>
+    <string name="lab100_touch_hint">Desliza por todo o ecrã até cada quadrado acender; um quadrado que fica escuro é uma zona morta. Voltar sai do teste.</string>
+    <string name="lab100_touch_count">Tocados: %1$d de %2$d quadrados</string>
+    <string name="lab100_touch_done">Todos os quadrados responderam: sem zonas mortas.</string>
+    <string name="lab100_snd_title">Teste das colunas</string>
+    <string name="lab100_snd_hint">Um tom curto à esquerda, à direita ou nas duas colunas. Baixa primeiro o volume.</string>
+    <string name="lab100_snd_left">Esquerda</string>
+    <string name="lab100_snd_right">Direita</string>
+    <string name="lab100_snd_both">Ambas</string>
+</resources>

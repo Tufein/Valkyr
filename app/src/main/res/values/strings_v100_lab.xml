@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 10.0: the Handheld lab -->
+<resources>
+    <string name="lab100_title">Handheld lab</string>
+    <string name="lab100_subtitle">Test your controller, screen and battery</string>
+    <string name="lab100_hint">Controller, screen and battery tests</string>
+    <string name="lab100_kw">controller test stick drift dead zone dead pixel screen burn-in battery temperature heat gamepad buttons</string>
+    <string name="lab100_what">Everything here only looks and measures. Nothing is saved and nothing leaves the device.</string>
+    <string name="lab100_ctl_title">Controller test</string>
+    <string name="lab100_ctl_hint">Press every button, move both sticks and see what Android receives.</string>
+    <string name="lab100_ctl_leave">Back leaves the test. Some handhelds send B as Back; use the Done button then.</string>
+    <string name="lab100_ctl_none">Nothing pressed</string>
+    <string name="lab100_ctl_pressed">Pressed: %1$s</string>
+    <string name="lab100_ctl_seen">Different buttons seen so far: %1$d</string>
+    <string name="lab100_ctl_left">Left stick</string>
+    <string name="lab100_ctl_right">Right stick</string>
+    <string name="lab100_ctl_triggers">Triggers</string>
+    <string name="lab100_ctl_drift_start">Measure stick drift</string>
+    <string name="lab100_ctl_drift_running">Let go of both sticks for 3 seconds…</string>
+    <string name="lab100_ctl_done">Done</string>
+    <string name="lab100_drift_ok">rests in the middle (largest reading %1$s)</string>
+    <string name="lab100_drift_slight">slight drift of %1$s; fine for most games, raise the emulator’s dead zone if a game creeps</string>
+    <string name="lab100_drift_bad">drifts by %1$s; an emulator dead zone hides some of it, and cleaning or replacing the stick may be needed</string>
+    <string name="lab100_scr_title">Screen test</string>
+    <string name="lab100_scr_hint">Full-screen colours and patterns to spot dead pixels, burn-in and uneven light.</string>
+    <string name="lab100_scr_leave">tap or press right for the next, Back to leave</string>
+    <string name="lab100_pat_black">Black</string>
+    <string name="lab100_pat_white">White</string>
+    <string name="lab100_pat_red">Red</string>
+    <string name="lab100_pat_green">Green</string>
+    <string name="lab100_pat_blue">Blue</string>
+    <string name="lab100_pat_ramp">Grey ramp</string>
+    <string name="lab100_pat_grid">Grid</string>
+    <string name="lab100_bat_title">Battery and heat</string>
+    <string name="lab100_bat_hint">Updates every two seconds while this screen is open.</string>
+    <string name="lab100_bat_level">Charge: %1$s, %2$s</string>
+    <string name="lab100_bat_temp">Temperature: %1$s</string>
+    <string name="lab100_bat_volt">Voltage: %1$s</string>
+    <string name="lab100_bat_charging">charging</string>
+    <string name="lab100_bat_on_battery">on battery</string>
+    <string name="lab100_bat_full">full</string>
+    <string name="lab100_bat_unknown">state unknown</string>
+    <string name="lab100_heat_cool">Cool</string>
+    <string name="lab100_heat_warm">Warm</string>
+    <string name="lab100_heat_hot">Hot</string>
+    <string name="lab100_heat_cool_text">Cool enough for long sessions.</string>
+    <string name="lab100_heat_warm_text">Fine for a while, but give it some air.</string>
+    <string name="lab100_heat_hot_text">Hot: the device may slow down. Pause, take off the case and lower the brightness.</string>
+</resources>

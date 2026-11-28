@@ -4,10 +4,10 @@ Where Valkyr is going. This is a direction, not a promise: releases are reordere
 bug or a request matters more, and requests are welcome as
 [issues](https://github.com/Tufein/Valkyr/issues).
 
-**Now: 9.7.0** (Android build 101). The core loop is complete — find a game, download it into
+**Now: 10.0.0** (Android build 102). The core loop is complete — find a game, download it into
 the right folder, play it, keep the collection healthy, and move saves and backups around.
 What is left is breadth (more emulators, clouds and catalogues), scale (much bigger
-libraries), and finishing what 7.0 and 7.1 started. The 8.x line closed at 8.5.0; 9.0–9.7 were built under the rule below.
+libraries), and finishing what 7.0 and 7.1 started. The 8.x line closed at 8.5.0; 9.0–9.7 were built under the rule below; 10.0 is the one deliberate exception (see its section).
 
 ## How a release is chosen
 
@@ -315,6 +315,34 @@ can see how long the game stayed open.
 Still to check on a handheld with a missing BIOS. Not built: naming the emulator version and
 recipe in the report, and feeding the new-handheld checklist from the same check.
 
+## 10.0 — The handheld lab and the travelling library (shipped in 10.0.0)
+
+A deliberately big major release, asked for as one: many small but real tools in one go. It breaks the
+"one theme, three to five features" rule on purpose, and it has **not** had the two-device soak the rule
+asks for; every item below is covered by unit tests and CI, and none has run on a real handheld yet.
+
+- **Handheld lab** (Tools): a controller test (every button, D-pad, both sticks, both triggers, and a
+  3-second stick drift measurement with a verdict), a full-screen screen test (black, white, red, green,
+  blue, grey ramp, grid) for dead pixels and burn-in, a touch test (colour in every square to find dead
+  spots), a speaker test (left, right, both) and a live battery and heat readout. It only looks and
+  measures. A Konami code in the controller test gives 30 lives.
+- **Profiles that travel**: with Device sync on, profiles (what they hide) sync between handhelds by name,
+  newest edit wins. The PIN and the active profile stay on the device; deleting a profile does not travel.
+- **Both clouds**: Up next, progress, notes, play history and profiles also sync with the second cloud
+  from 9.5 when *Sync documents here too* is switched on (off by default). Nothing is removed from either.
+- **Power search**: `console:snes`, `c:"game boy"`, `tag:hack` and `is:fav` in the search box become
+  filters, with one-tap hints while typing; ordinary titles with a colon still search as text.
+- **File fingerprint** on the game page: CRC32, MD5 and SHA-1 of the game's files, with copy, to compare a
+  dump with a DAT or Redump entry. Read only, can be stopped.
+- **Launches name their tools**: the "It started and stopped again" card says which emulator (core and
+  version) the game was started with.
+
+*Done when* each tool works on a real phone and handheld in landscape with buttons. Not built, and
+why: SMB and SFTP (a protocol library that cannot be proven without a real server), a play-time
+reminder (needs a settings card and notification plumbing), trimming screenshots (the files sit beside
+save states that emulators manage), the recipe name in the launch report, and syncing the library sync
+itself to two clouds (it removes things, so a second server must not take part until it has a tombstone design).
+
 ## Later, if there is a reason
 
 - **TV and remote depth**: every screen reachable with a remote, larger text, no touch-only
@@ -324,6 +352,10 @@ recipe in the report, and feeding the new-handheld checklist from the same check
   before the session, through the emulators that support it. No relay, no account.
 - **Your screenshots, more**: pictures from the emulators' own screenshot folders, and a size cap
   that trims with a preview.
+- **Bigger than 10.x**: SMB and SFTP as cloud and source targets; couch co-op set-up (netplay checklist
+  and a hash check before the session); Valkyr as an optional launcher for single-purpose handhelds;
+  the library sync on two clouds; a play-time reminder; MAME catalogue and arcade covers; right-to-left
+  languages; an accessibility audit with a screen-reader pass.
 - **More launcher layouts** and more folder names for other systems, from public
   documentation; tell us where your launcher reads covers from.
 - **Streaming unpack**: start a game from a ZIP or 7z without unpacking the whole archive

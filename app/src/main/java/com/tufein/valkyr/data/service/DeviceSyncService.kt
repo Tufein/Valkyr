@@ -24,6 +24,9 @@ import com.tufein.valkyr.util.NoteDoc
 import com.tufein.valkyr.util.NotesCodec
 import com.tufein.valkyr.util.NotesSync
 import com.tufein.valkyr.util.PlayHistoryCodec
+import com.tufein.valkyr.util.ProfileSync
+import com.tufein.valkyr.util.ProfilesCodec
+import com.tufein.valkyr.util.SyncProfile
 import com.tufein.valkyr.util.PlayHistorySync
 import com.tufein.valkyr.util.SyncSession
 import com.tufein.valkyr.util.ProgressCodec
@@ -88,7 +91,9 @@ class DeviceSyncService @Inject constructor(
     private val upNext: UpNextService,
     private val progress: GameProgressService,
     private val journal: GameJournalService,
-    private val plays: PlaySessionService
+    private val plays: PlaySessionService,
+    private val profileService: ProfileService,
+    private val mirror: CloudMirrorService
 ) {
     /** Why a background sync was asked for. */
     enum class Trigger { START, LOCAL_CHANGE, BACKGROUND, SCHEDULED }
@@ -107,6 +112,7 @@ class DeviceSyncService @Inject constructor(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val lock = Mutex()
     private val baseFile = AtomicFile(File(context.filesDir, BASE_FILE))
+    private val profileBaseFile = AtomicFile(File(context.filesDir, "sync_profiles_base.json"))
 
     private val _running = MutableStateFlow(false)
     /** A sync is talking to the server right now. */
@@ -166,10 +172,8 @@ class DeviceSyncService @Inject constructor(
                 account = DeviceSyncEngine.accountKey(settings.user.first())
             )
             val device = DeviceSyncEngine.Device(settings.deviceId(), settings.deviceName.first())
-            syncUpNext(session)
-            syncProgress(session)
-            syncNotes(session)
-            syncPlayHistory(session)
+            syncDocuments(session)
+            syncMirrorDocuments()
             when (val outcome = engine.sync(device, allowMassRemoval, onlyIfLocalChanges)) {
                 is DeviceSyncEngine.Outcome.Synced -> {
                     settings.recordSync(System.currentTimeMillis(), outcome.added, outcome.removed, outcome.sent)
@@ -200,6 +204,65 @@ class DeviceSyncService @Inject constructor(
             Result.Failed(e)
         } finally {
             _running.value = false
+        }
+    }
+
+    /** The small shared documents of one cloud, one after the other; none of them can fail the library sync. */
+    private suspend fun syncDocuments(session: CloudConnection.Session) {
+        syncUpNext(session)
+        syncProgress(session)
+        syncNotes(session)
+        syncPlayHistory(session)
+        syncProfiles(session)
+    }
+
+    /**
+     * 10.0: the same documents with the second cloud when it is set up and switched on for them. Every
+     * document merges as a union or by the newer edit and nothing is removed, so a cloud that holds
+     * less (or more) never takes anything away: what one cloud knows ends up on both after a few syncs.
+     */
+    private suspend fun syncMirrorDocuments() {
+        try {
+            if (!mirror.syncDocs.first() || !mirror.config.first().isConfigured) return
+            syncDocuments(mirror.open())
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.w(TAG, "Second cloud documents skipped: ${e.javaClass.simpleName}")
+        }
+    }
+
+    /** 10.0: profiles (what each hides) between handhelds, matched by name. The PIN and the active profile never travel. */
+    private suspend fun syncProfiles(session: CloudConnection.Session) {
+        try {
+            val side = object : DocSyncEngine.Local<Map<String, SyncProfile>, Map<String, SyncProfile>> {
+                override suspend fun snapshot() = ProfileSync.snapshot(profileService.listNow(), readProfileBase(), System.currentTimeMillis())
+                override fun merge(mine: Map<String, SyncProfile>, remote: Map<String, SyncProfile>?) = ProfileSync.merge(mine, remote)
+                override fun docOf(merged: Map<String, SyncProfile>) = merged
+                override suspend fun commit(merged: Map<String, SyncProfile>, mine: Map<String, SyncProfile>): Boolean {
+                    val changed = profileService.applySynced(merged)
+                    writeProfileBase(ProfileSync.baseOf(merged))
+                    return changed
+                }
+            }
+            val outcome = DocSyncEngine(session.store, session.serverUrl, session.rootUrl, ProfileSync.FILE_NAME, side, ProfilesCodec).sync()
+            if (outcome.changedHere || outcome.sent) Log.i(TAG, "Profile sync${if (outcome.changedHere) ": changed here" else ""}${if (outcome.sent) ", sent" else ""}")
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Log.w(TAG, "Profile sync skipped: ${e.javaClass.simpleName}")
+        }
+    }
+
+    private suspend fun readProfileBase(): Map<String, ProfileSync.Base> = withContext(Dispatchers.IO) {
+        runCatching { ProfileSync.decodeBase(profileBaseFile.readFully().toString(Charsets.UTF_8)) }.getOrDefault(emptyMap())
+    }
+
+    private suspend fun writeProfileBase(base: Map<String, ProfileSync.Base>) = withContext(Dispatchers.IO) {
+        runCatching {
+            val stream = profileBaseFile.startWrite()
+            try { stream.write(ProfileSync.encodeBase(base).toByteArray(Charsets.UTF_8)); profileBaseFile.finishWrite(stream) }
+            catch (e: Exception) { profileBaseFile.failWrite(stream); throw e }
         }
     }
 

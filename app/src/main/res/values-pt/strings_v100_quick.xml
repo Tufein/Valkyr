@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 10.0: the stopped-again card names the emulator and its version -->
+<resources>
+    <string name="v100_quick_with">Iniciado com %1$s</string>
+</resources>

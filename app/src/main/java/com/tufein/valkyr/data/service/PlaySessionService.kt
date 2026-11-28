@@ -42,7 +42,7 @@ class PlaySessionService @Inject constructor(
     val revision: StateFlow<Long> = _revision.asStateFlow()
 
     /** 9.7: a launch that was over within seconds: the game key and how long it lasted. Shown on that game's page until dismissed. */
-    data class QuickStop(val gameId: String, val seconds: Int)
+    data class QuickStop(val gameId: String, val seconds: Int, val startedWith: String? = null)
 
     private val _quickStop = MutableStateFlow<QuickStop?>(null)
     val quickStop: StateFlow<QuickStop?> = _quickStop.asStateFlow()
@@ -50,6 +50,9 @@ class PlaySessionService @Inject constructor(
 
     /** The session waiting for the app to return. In memory only across a process restart. */
     private var active: PlaySessions.Session? = null
+
+    /** 10.0: what the open session was started with (emulator, core and version), for the quick-stop card. */
+    private var activeWith: String? = null
 
     private fun file(profileId: String): AtomicFile =
         AtomicFile(File(dir, "sessions_${profileId.ifBlank { "default" }.take(40)}.json"))
@@ -76,13 +79,14 @@ class PlaySessionService @Inject constructor(
     }
 
     /** Called when a game actually started. Fire-and-forget: a launch must never wait on disk. */
-    fun start(consoleId: String, fileName: String?) {
+    fun start(consoleId: String, fileName: String?, startedWith: String? = null) {
         if (fileName.isNullOrBlank()) return
         scope.launch {
             lock.withLock {
                 val id = profiles.currentIdNow()
                 val session = PlaySessions.Session("$consoleId|$fileName", id, System.currentTimeMillis(), 0L)
                 active = session
+                activeWith = startedWith
                 write(id, PlaySessions.merge(read(id), listOf(session)).let(PlaySessions::trim))
             }
         }
@@ -98,7 +102,7 @@ class PlaySessionService @Inject constructor(
                 if (PlaySessions.quickStop(closed)) {
                     // It did not run: no play time is recorded, and the game page says what to check.
                     write(open.profileId, read(open.profileId).filterNot { it == open })
-                    _quickStop.value = QuickStop(open.gameId, ((closed.endMs - closed.startMs) / 1000L).toInt().coerceAtLeast(1))
+                    _quickStop.value = QuickStop(open.gameId, ((closed.endMs - closed.startMs) / 1000L).toInt().coerceAtLeast(1), activeWith)
                 } else {
                     _quickStop.value = null
                     write(open.profileId, read(open.profileId).map { if (it == open) closed else it }.let(PlaySessions::trim))

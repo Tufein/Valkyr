@@ -572,6 +572,24 @@ internal fun RecentSearchesRow(searches: List<String>, onPick: (String) -> Unit,
     }
 }
 
+/** 10.0: the power-search words, one tap each: they are added to what is typed. */
+@Composable
+internal fun OperatorTipsRow(onPick: (String) -> Unit, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        Text(
+            stringResource(R.string.v100_ops_try),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(end = 2.dp)
+        )
+        listOf("console:", "tag:", "is:fav").forEach { word -> RecentPill(word) { onPick(word) } }
+    }
+}
+
 /** One recent search as a neutral pill (focus ring, press flash). */
 @Composable
 internal fun RecentPill(label: String, onClick: () -> Unit) {

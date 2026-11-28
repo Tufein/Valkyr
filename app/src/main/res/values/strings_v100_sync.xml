@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 10.0: profiles travel; synced documents also go to the second cloud -->
+<resources>
+    <string name="v100_profiles_travel">With Device sync on, profiles travel between your handhelds by name: what a profile hides and the newest edit win. The PIN and the active profile stay on this device, and deleting a profile here does not delete it elsewhere.</string>
+    <string name="v100_mirror_docs">Sync documents here too</string>
+    <string name="v100_mirror_docs_hint">Up next, progress, notes, play history and profiles also go to this cloud. Nothing is removed from either cloud.</string>
+</resources>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 10.0: the Handheld lab -->
+<resources>
+    <string name="lab100_title">Laboratorio dell\'handheld</string>
+    <string name="lab100_subtitle">Prova controller, schermo e batteria</string>
+    <string name="lab100_hint">Test di controller, schermo e batteria</string>
+    <string name="lab100_kw">controller test stick drift zona morta pixel morto schermo burn-in batteria temperatura calore pulsanti</string>
+    <string name="lab100_what">Qui tutto guarda e misura soltanto. Non viene salvato nulla e nulla lascia il dispositivo.</string>
+    <string name="lab100_ctl_title">Test del controller</string>
+    <string name="lab100_ctl_hint">Premi ogni pulsante, muovi entrambi gli stick e guarda cosa riceve Android.</string>
+    <string name="lab100_ctl_leave">Indietro chiude il test. Alcuni handheld inviano B come Indietro; usa allora il pulsante Fatto.</string>
+    <string name="lab100_ctl_none">Niente premuto</string>
+    <string name="lab100_ctl_pressed">Premuto: %1$s</string>
+    <string name="lab100_ctl_seen">Pulsanti diversi visti: %1$d</string>
+    <string name="lab100_ctl_left">Stick sinistro</string>
+    <string name="lab100_ctl_right">Stick destro</string>
+    <string name="lab100_ctl_triggers">Grilletti</string>
+    <string name="lab100_ctl_drift_start">Misura il drift degli stick</string>
+    <string name="lab100_ctl_drift_running">Lascia entrambi gli stick per 3 secondi…</string>
+    <string name="lab100_ctl_done">Fatto</string>
+    <string name="lab100_drift_ok">riposa al centro (lettura massima %1$s)</string>
+    <string name="lab100_drift_slight">drift lieve di %1$s; va bene per quasi tutti i giochi, alza la zona morta dell’emulatore se un gioco si muove da solo</string>
+    <string name="lab100_drift_bad">deriva di %1$s; una zona morta nell’emulatore ne nasconde una parte, potrebbe servire pulire o sostituire lo stick</string>
+    <string name="lab100_scr_title">Test dello schermo</string>
+    <string name="lab100_scr_hint">Colori e motivi a schermo intero per vedere pixel morti, burn-in e luce irregolare.</string>
+    <string name="lab100_scr_leave">tocca o premi destra per il successivo, Indietro per uscire</string>
+    <string name="lab100_pat_black">Nero</string>
+    <string name="lab100_pat_white">Bianco</string>
+    <string name="lab100_pat_red">Rosso</string>
+    <string name="lab100_pat_green">Verde</string>
+    <string name="lab100_pat_blue">Blu</string>
+    <string name="lab100_pat_ramp">Gradiente di grigi</string>
+    <string name="lab100_pat_grid">Griglia</string>
+    <string name="lab100_bat_title">Batteria e calore</string>
+    <string name="lab100_bat_hint">Si aggiorna ogni due secondi finché questa schermata è aperta.</string>
+    <string name="lab100_bat_level">Carica: %1$s, %2$s</string>
+    <string name="lab100_bat_temp">Temperatura: %1$s</string>
+    <string name="lab100_bat_volt">Tensione: %1$s</string>
+    <string name="lab100_bat_charging">in carica</string>
+    <string name="lab100_bat_on_battery">a batteria</string>
+    <string name="lab100_bat_full">piena</string>
+    <string name="lab100_bat_unknown">stato sconosciuto</string>
+    <string name="lab100_heat_cool">Fresca</string>
+    <string name="lab100_heat_warm">Calda</string>
+    <string name="lab100_heat_hot">Molto calda</string>
+    <string name="lab100_heat_cool_text">Abbastanza fresca per sessioni lunghe.</string>
+    <string name="lab100_heat_warm_text">Va bene per un po’, ma lasciala respirare.</string>
+    <string name="lab100_heat_hot_text">Molto calda: il dispositivo può rallentare. Fai una pausa, togli la custodia e abbassa la luminosità.</string>
+</resources>
